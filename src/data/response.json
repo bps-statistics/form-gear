@@ -1,0 +1,155 @@
+{
+   "description":"sample template",
+   "dataKey":"sample_tpl1",
+   "answers":[
+      {
+         "dataKey":"agree",
+         "answer":true
+      },
+      {
+         "dataKey":"nama_lengkap",
+         "answer":"Agunga"
+      },
+      {
+         "dataKey":"alamat",
+         "answer":"Jalan Otista"
+      },
+      {
+         "dataKey":"penggunaan_lahan",
+         "answer":[
+            {
+               "label": "lastId#1",
+               "value": "0"
+            },
+            {
+               "label": "Sawah",
+               "value": "1"
+            },
+            {
+               "label": "Padang Rumput Permanen",
+               "value": "4"
+            }
+         ]
+      },
+      {
+         "dataKey":"provinsi",
+         "answer":[
+            {
+               "label": "[12] SUMATERA UTARA",
+               "value": "12"
+            }
+         ]
+      },
+      {
+         "dataKey":"luas_lahan#1",
+         "answer":"1"
+      },
+      {
+         "dataKey":"luas_rumah#1",
+         "answer":"20"
+      },
+      {
+         "dataKey":"l2_r402#1",
+         "answer":[
+            {
+               "label": "lastId#1",
+               "value": "0"
+            },
+            {
+               "label": "Padi Ladang",
+               "value": "2"
+            }
+         ]
+      },
+      {
+         "dataKey":"luas_lahan#4",
+         "answer":"40"
+      },
+      {
+         "dataKey":"luas_rumah#4",
+         "answer":"50"
+      },
+      {
+         "dataKey":"l2_r402#4",
+         "answer":[
+            {
+               "label": "lastId#1",
+               "value": "0"
+            },
+            {
+               "label": "Padi Sawah",
+               "value": "1"
+            }
+         ]
+      },
+      {
+         "dataKey":"pekerjaan",
+         "answer":"PNS"
+      },
+      {
+         "dataKey":"npwp",
+         "answer":"803424327665321"
+      },
+      {
+         "dataKey":"hp",
+         "answer":"82361105896"
+      },
+      {
+         "dataKey":"anggota",
+         "answer": [{
+            "value" : "3",
+            "label" : "Clementine Bauch"
+         }]
+      },
+      {
+         "dataKey" : "todos",
+         "answer" : [{
+            "value" : "41",
+            "label" : "aliquid amet impedit consequatur aspernatur placeat eaque fugiat suscipit"
+         }]
+      },
+      {
+         "dataKey":"jenis_kelamin",
+         "answer":[
+            {
+               "value" : "P",
+               "label" : "Perempuan"
+            }
+         ]
+      },
+      {
+         "dataKey":"penghasilan",
+         "answer":"10000000.555"
+      },
+      {
+         "dataKey":"num_rows",
+         "answer":"1"
+      },
+      {
+         "dataKey":"jenis_peliharaan#2",
+         "answer":"anjing"
+      },
+      {
+         "dataKey":"jumlah_peliharaan#3",
+         "answer":"1"
+      },
+      {
+         "dataKey":"genre_musik",
+         "answer":[
+            {
+               "label": "lastId#0",
+               "value": "0"
+            },
+            {
+               "label": "Pop",
+               "value": "1"
+            },
+            {
+               "label": "Jazz",
+               "value": "2"
+            }
+         ]
+      }
+   ]
+}
+ 

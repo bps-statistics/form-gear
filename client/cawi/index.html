@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+
+  <title>FormGear</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/form-gear/dist/style.css">
+  <!-- <link rel="stylesheet" href="./data/style.css"> -->
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+
+  <div id="FormGear-loader" class="bg-gray-200  dark:bg-[#181f30] ">
+
+    <div class=" md:max-w-6xl mx-auto md:px-8 md:py-8">
+      <div
+        class="bg-gray-50 dark:bg-gray-900 dark:text-white text-gray-600 flex overflow-hidden text-sm font-montserrat rounded-lg shadow-xl dark:shadow-gray-800">
+        <div class=" flex-grow flex flex-col bg-white dark:bg-gray-900 z-0">
+
+          <div class="relative  md:flex   ">
+
+            <div
+              class="bg-gray-50 dark:bg-gray-900 w-72 flex-shrink-0  dark:border-gray-800 h-full  p-5 space-y-4
+            absolute inset-y-0 left-0 transform -translate-x-full transition-transform duration-500 ease-in-out md:relative md:translate-x-0 z-10">
+
+              <div class="animate-pulse flex space-x-4">
+                <div class="flex-1 space-y-3 py-1">
+                  <div class="w-full  shadow-2xl rounded-lg">
+
+                    <div class="h-32 bg-gray-100 rounded-tr-lg rounded-tl-lg animate-pulse"></div>
+
+                    <div class="p-5">
+                      <div class="h-20 px-2 rounded-lg bg-gray-100 animate-pulse mb-4"></div>
+                      <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-10 mb-4"></div>
+                      <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
+                      <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
+
+                      <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-10 mb-4"></div>
+                      <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
+                      <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
+
+                      <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-10 mb-4"></div>
+                      <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
+                      <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
+
+                      <div class="h-20 px-2 rounded-lg bg-gray-100 animate-pulse mt-10 mb-4"></div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="flex-grow bg-white dark:bg-gray-900 transition duration-500 ease-in-out z-10 p-5 space-y-4
+            ">
+
+              <div class="flex-grow bg-white dark:bg-gray-900 ">
+                <div class=" w-full mx-auto">
+                  <div class="animate-pulse flex space-x-4">
+                    <div class="flex-1 space-y-3 py-1">
+                      <div
+                        class="min-h-screen flex items-start justify-start bg-gradient-to-br from-gray-200 to-gray-400">
+
+                        <div class="w-full bg-white  shadow-2xl rounded-lg">
+
+                          <div class="h-32 bg-gray-100 rounded-tr-lg rounded-tl-lg animate-pulse"></div>
+
+                          <div class="p-5">
+                            <div class="h-20 px-2 rounded-lg bg-gray-100 animate-pulse mb-4"></div>
+                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-10 mb-4"></div>
+                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
+                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
+
+                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-10 mb-4"></div>
+                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
+                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
+
+                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-10 mb-4"></div>
+                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
+                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
+
+                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-10 mb-4"></div>
+                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
+                          </div>
+
+                        </div>
+
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="FormGear-root"></div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="module">
+      import { FormGear } from 'https://unpkg.com/form-gear/dist/form-gear.es.js'
+      // import { FormGear } from './data/form-gear.es.js'
+      let config = {
+        clientMode : 1, // CAWI = 1, CAPI = 2
+        token : `eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJpZFwiOlwiNTlGQjk2NjctRUQ3QS00QjA1LTlGNDUtODMyMjFBMzkxODFEXCIsXCJ1c2VybmFtZVwiOlwicGNscHVzYXRfMzMxM18xXCIsXCJmdWxsbmFtZVwiOlwicGNscHVzYXRfMzMxM18xXCIsXCJlbWFpbFwiOlwicGNscHVzYXRfMzMxM18xQHkuY29tXCIsXCJyb2xlSWRcIjpcIkVFMzFGN0M0LTVDNkEtNDMwQy1BRjEzLUJDRDRDNkQ5RTVCRVwiLFwicm9sZU5hbWVcIjpcIlBFVFVHQVNcIixcInByb3ZpbmNlSWRcIjpcIjZCQjEyODAyLTVDNUUtNEJGMS1BOTA2LUM1N0NCNEZDRTQwN1wiLFwicHJvdmluY2VOYW1lXCI6XCJKYXdhIFRlbmdhaFwiLFwicmVnZW5jeUlkXCI6XCJFRENFMDcwMi03QzIzLTQyQTMtQjgzOC1BNUVEMzQxRTlBNTJcIixcInJlZ2VuY3lOYW1lXCI6XCJLYXJhbmdhbnlhclwiLFwid29ya1VuaXRJZFwiOlwiQzM4QzU2NjctM0JCMC00NDNDLUE0MzUtMUVFQ0Q3QzZERkEyXCIsXCJ3b3JrVW5pdE5hbWVcIjpcIkJBREFOIFBVU0FUIFNUQVRJU1RJS1wifSIsImF1ZCI6Im5vbi1jYXdpIiwiZXhwIjoxNjUwMzc2MzM3LCJyb2wiOiJQRVRVR0FTIn0.JW2CzU5rLnqtksI2J7weMiSYmzzxO0XnP4vGm9xEZ-XYKhUo5JRyVdbXaeGptdciW6Sd9BbO14N_XBn-iUuemg`,
+        baseUrl : `https://api-survey.bps.go.id/designer/api/lookup-data/json`,
+        lookupKey : `key%5B%5D`,
+        lookupValue : `value%5B%5D`,
+        username : 'AdityaSetyadi'
+      }
+
+      var cameraFunction = null;
+      var cameraGPSFunction = null;
+      var respons = null;
+      var remarks = null;
+
+      const setBearer = () => {
+        return ({
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + config.token
+            }
+        })
+    }
+
+    // pencarian online
+    let onlineSearch = async (url) =>
+    (await fetch(url, setBearer())
+      .then((res) => {
+        let temp = res.json();
+        return temp;
+      }).then((res) => {
+        return res;
+      }));
+
+      function result(action, result, customData) {
+        if (action == "GET_LOC") {
+          resultGps(result);
+        } else if (action == "CAMERA") {
+          resultCamera(result);
+        } else if (action == "CAMERA_GPS") {
+          resultCameraGPS(result);
+        } else if (action == "SIGNATURE") {
+          resultSignature(result);
+        } else if (action == "BARCODE") {
+          resultBarcode(result);
+        } else if (action == "AUDIO") {
+          resultAudio(result);
+        } else if (action == "GET_ANSWER") {
+          resultAnswer(result, customData);
+        } else if (action == "LOOKUP") {
+          resultAnswer(result, customData);
+        }
+      }
+
+      function resultCamera(result) {
+        console.log('camera_result : ' + result);
+        if (cameraFunction != null) {
+          console.log('camera_result_funcion : not null');
+          cameraFunction(result);
+        } else {
+          console.log('camera_result_funcion : null');
+        }
+      }
+
+      function resultCameraGPS(result) {
+        console.log('gps-results: ' + result);
+        const obj = JSON.parse(result);
+        var remark = obj.remark;
+        cameraGPSFunction(obj, remark);
+      }
+
+      function openCamera() {
+          window.MyHandler.action("CAMERA", "", "", "");
+          console.log('open camera');
+      }
+
+      function openCameraGPS(needPhoto) {
+        var isNeedPhoto = false
+        if (needPhoto !== null && needPhoto !== undefined)
+          isNeedPhoto = needPhoto
+        console.log("new-capi: open-camera-gps " + isNeedPhoto.toString())
+
+        window.MyHandler.action("CAMERA_GPS", "", isNeedPhoto.toString(), "");
+      }
+
+      let uploadHandler = function(setValue) {
+          console.log('camera handler', setValue  );
+          cameraFunction = setValue;
+          openCamera();
+      }
+
+      let GpsHandler = function(setter, isPhoto) {
+          console.log('camera handler', setter);
+          isPhoto = false,
+          cameraGPSFunction = setter;
+          openCameraGPS(isPhoto);
+      }
+
+      let setResponseMobile = function(res, rem) {
+        respons = res
+        remarks = rem
+
+        console.log('respons', respons)
+        console.log('remarks', remarks)
+      }
+
+      let openMap = function(koordinat) {
+        koordinat = koordinat
+
+        console.log('hasilny adalah : ', koordinat)
+      }
+
+      const data = Promise.all([
+                      fetch("./data/template.json").then((res) => res.json()) || [],
+                      fetch("./data/preset.json").then((res) => res.json()) || [],
+                      fetch("./data/response.json").then((res) => res.json()) || [],
+                      fetch("./data/validation.json").then((res) => res.json()) || [],
+                      fetch("./data/remark.json").then((res) => res.json()) || []
+                    ]);
+
+      data.then(([template, preset, response, validation, remark]) => initForm(template, preset, response, validation, remark));
+
+      function initForm(template, preset, response, validation, remark){
+
+        let form = new FormGear(template, preset, response, validation, remark, config, uploadHandler, GpsHandler, onlineSearch, setResponseMobile, openMap);
+
+        return form;
+      }
+    </script>
+</body>
+
+</html>
