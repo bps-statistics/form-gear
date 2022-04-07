@@ -1,0 +1,1040 @@
+{
+   "description":"PENCACAHAN UNIT USAHA PERTANIAN – PERUSAHAAN PERTANIAN BERBADAN HUKUM",
+   "dataKey":"ST2023-L2_Usaha",
+   "title":"Survey Pertanian 2023 Gladi Kotor",
+   "acronym":"ST2023-L2.USAHA",
+   "version":"0.0.1",
+   "components":[
+      [
+         {
+            "label":"Home",
+            "dataKey":"onboarding",
+            "description":"Onboarding",
+            "type":1,
+            "components":[
+               [  
+                  {
+                     "label":"Coba:",
+                     "dataKey":"fav_coba",
+                     "type":4,
+                     "expression":"'11 - ACEH'",
+                     "componentVar":[],
+                     "render":true,
+                     "renderType":1
+                  },
+                  {
+                     "label":"TB Lain",
+                     "dataKey":"tb_lain",
+                     "type":4,
+                     "expression":"let tb_lain = [ {\"value\": \"1203\", \"label\": \"[1203] Kacang tanah\"}, {\"value\": \"1204\", \"label\": \"[1204] Kacang hijau\"}, {\"value\": \"1205\", \"label\": \"[1205] Ubi kayu\"}, {\"value\": \"1206\", \"label\": \"[1206] Ubi jalar\"}, {\"value\": \"1207\", \"label\": \"[1207] Sorgum\"}, {\"value\": \"1208\", \"label\": \"[1208] Gandum\"}, {\"value\": \"1209\", \"label\": \"[1209] Talas\"}, {\"value\": \"1210\", \"label\": \"[1210] Ganyong\"}, {\"value\": \"1211\", \"label\": \"[1211] Garut\"}, {\"value\": \"1212\", \"label\": \"[1212] Jagung manis\"}, {\"value\": \"1216\", \"label\": \"[1216] Hotong\"}, {\"value\": \"1217\", \"label\": \"[1217] Gembili\"}, {\"value\": \"1218\", \"label\": \"[1218] Kimpul\"}, {\"value\": \"1219\", \"label\": \"[1219] Iles-iles\"}, {\"value\": \"1220\", \"label\": \"[1220] Juwawut\"}, {\"value\": \"1221\", \"label\": \"[1221] Gadung\"}, {\"value\": \"1222\", \"label\": \"[1222] Suweg\"}, {\"value\": \"1223\", \"label\": \"[1223] Ubi saut\"}, {\"value\": \"1224\", \"label\": \"[1224] Kacang Babi\"}, {\"value\": \"1225\", \"label\": \"[1225] Kacang Bogor\"}, {\"value\": \"1226\", \"label\": \"[1226] Kacang Gude/Hiris\"}, {\"value\": \"1227\", \"label\": \"[1227] Kacang Komak\"}, {\"value\": \"1228\", \"label\": \"[1228] Kacang Koro Benguk\"}, {\"value\": \"1229\", \"label\": \"[1229] Kacang Merah\"}, {\"value\": \"1230\", \"label\": \"[1230] Kacang Nagara\"}, {\"value\": \"1231\", \"label\": \"[1231] Kacang Rawai\"}, {\"value\": \"1232\", \"label\": \"[1232] Kacang Tunggak\"}, {\"value\": \"1299\", \"label\": \"[1299] Palawija lainnya\"}, {\"value\": \"2101\", \"label\": \"[2101] Alpukat\"}, {\"value\": \"2102\", \"label\": \"[2102] Anggur\"}, {\"value\": \"2103\", \"label\": \"[2103] Apel\"}, {\"value\": \"2104\", \"label\": \"[2104] Belimbing Dewa/Dewi\"}, {\"value\": \"2105\", \"label\": \"[2105] Belimbing Demak Kunir\"}, {\"value\": \"2106\", \"label\": \"[2106] Belimbing Karang Sari\"}, {\"value\": \"2107\", \"label\": \"[2107] Belimbing Lainnya\"}, {\"value\": \"2108\", \"label\": \"[2108] Buah Naga\"}, {\"value\": \"2109\", \"label\": \"[2109] Buah Nona/Srikaya\"}, {\"value\": \"2110\", \"label\": \"[2110] Cempedak\"}, {\"value\": \"2111\", \"label\": \"[2111] Duku\"}, {\"value\": \"2112\", \"label\": \"[2112] Durian Monthong\"}, {\"value\": \"2113\", \"label\": \"[2113] Durian Lai\"}, {\"value\": \"2114\", \"label\": \"[2114] Durian Lainnya\"}, {\"value\": \"2115\", \"label\": \"[2115] Duwet/Juwet\"}, {\"value\": \"2116\", \"label\": \"[2116] Jambu Air\"}, {\"value\": \"2117\", \"label\": \"[2117] Jambu Air Citra\"}, {\"value\": \"2118\", \"label\": \"[2118] Jambu Air Dalhari\"}, {\"value\": \"2119\", \"label\": \"[2119] Jambu Air Camplong\"}, {\"value\": \"2120\", \"label\": \"[2120] Jambu Biji\"}, {\"value\": \"2121\", \"label\": \"[2121] Jambu Biji Putih\"}, {\"value\": \"2122\", \"label\": \"[2122] Jambu Biji Merah\"}, {\"value\": \"2123\", \"label\": \"[2123] Jambu Bol\"}, {\"value\": \"2124\", \"label\": \"[2124] Jeruk Siam\"}, {\"value\": \"2125\", \"label\": \"[2125] Jeruk Keprok\"}, {\"value\": \"2126\", \"label\": \"[2126] Jeruk Besar\"}, {\"value\": \"2127\", \"label\": \"[2127] Jeruk Manis/Baby Pacitan\"}, {\"value\": \"2128\", \"label\": \"[2128] Jeruk Lainnya\"}, {\"value\": \"2129\", \"label\": \"[2129] Kedondong\"}, {\"value\": \"2130\", \"label\": \"[2130] Kesemek\"}, {\"value\": \"2131\", \"label\": \"[2131] Langsat\"}, {\"value\": \"2132\", \"label\": \"[2132] Lengkeng\"}, {\"value\": \"2133\", \"label\": \"[2133] Mangga Arumanis\"}, {\"value\": \"2134\", \"label\": \"[2134] Mangga Cengkir Indramayu\"}, {\"value\": \"2135\", \"label\": \"[2135] Mangga Gedong Gincu\"}, {\"value\": \"2136\", \"label\": \"[2136] Mangga Gedong\"}, {\"value\": \"2137\", \"label\": \"[2137] Mangga Kweni/Kebembem\"}, {\"value\": \"2138\", \"label\": \"[2138] Mangga Manalagi\"}, {\"value\": \"2139\", \"label\": \"[2139] Mangga Lainnya\"}, {\"value\": \"2140\", \"label\": \"[2140] Manggis\"}, {\"value\": \"2141\", \"label\": \"[2141] Markisa Konyal\"}, {\"value\": \"2142\", \"label\": \"[2142] Markisa Siuh\"}, {\"value\": \"2143\", \"label\": \"[2143] Markisa Lainnya\"}, {\"value\": \"2144\", \"label\": \"[2144] Matoa Buah\"}, {\"value\": \"2145\", \"label\": \"[2145] Nangka\"}, {\"value\": \"2146\", \"label\": \"[2146] Nenas Queen\"}, {\"value\": \"2147\", \"label\": \"[2147] Nenas Smooth Cayenne\"}, {\"value\": \"2148\", \"label\": \"[2148] Nenas Lainnya\"}, {\"value\": \"2149\", \"label\": \"[2149] Pepaya Besar/Dampit\"}, {\"value\": \"2150\", \"label\": \"[2150] Pepaya Sedang/Calina/Carissa\"}, {\"value\": \"2151\", \"label\": \"[2151] Pepaya Kecil/Hawaii\"}, {\"value\": \"2152\", \"label\": \"[2152] Pepaya Lainnya\"}, {\"value\": \"2153\", \"label\": \"[2153] Pisang Mas/Lampung\"}, {\"value\": \"2154\", \"label\": \"[2154] Pisang Ambon\"}, {\"value\": \"2155\", \"label\": \"[2155] Pisang Kepok\"}, {\"value\": \"2156\", \"label\": \"[2156] Pisang Raja\"} ]; tb_lain; ",
+                     "componentVar":[],
+                     "render":false,
+                     "renderType":2
+                  },
+                  {
+                     "label": "Aset Berhargaku",
+                     "dataKey": "asetku",
+                     "type": 23,
+                     "options": [
+                        {
+                           "label": "Tanah",
+                           "value": "1"
+                        },
+                        {
+                           "label": "Rumah",
+                           "value": "2"
+                        },
+                        {
+                           "label": "Perhiasan",
+                           "value": "3"
+                        },
+                        {
+                           "label": "Mobil",
+                           "value": "4"
+                        },
+                        {
+                           "label": "Motor",
+                           "value": "5"
+                        },
+                        {
+                           "label": "Kebun",
+                           "value": "6"
+                        }
+                     ]
+                  },
+                  {
+                     "label":"Nama tanaman semusim (tanaman pangan, hortikultura, dan perkebunan)",
+                     "dataKey":"tb_r402",
+                     "type":22,
+                     "sourceOption":"hobi",
+                     "typeOption":3,
+                     "titleModalDelete":"Konfirmasi",
+                     "contentModalDelete":"Penghapusan juga akan menghapus komponen terkait, termasuk komponen turunan dari induk ini.",
+                     "answer":[
+                        {
+                           "label": "lastId#0",
+                           "value": "0"
+                        }
+                     ],
+                     "options":[
+                        {
+                           "label":"1.&emsp;Perkotaan",
+                           "value":"1"
+                        },
+                        {
+                           "label":"2.&emsp;Perdesaan",
+                           "value":"2"
+                        }
+                     ],
+                     "sourceSelect":[
+                        {
+                           "id": "4b330d3a-8fec-4777-ae2d-91fe957a4a53",
+                           "tableName": "hutan_lain",
+                           "value": "Kode",
+                           "desc": "Komoditas",
+                           "parentCondition": []  
+                        }
+                     ]
+                  },
+                  {
+                     "label":"Usia",
+                     "dataKey":"usia",
+                     "answer": "10",
+                     "type":28
+                  },
+                  {
+                     "label":"<!DOCTYPE html><html lang=\"en\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\"><head><meta charset=\"utf8\"><meta http-equiv=\"x-ua-compatible\" content=\"ie=edge\"><meta dataKey=\"viewport\" content=\"width=device-width,initial-scale=1\"><meta dataKey=\"x-apple-disable-message-reformatting\"><title>Algolia Newsletter</title><style>.bg-linkedin{background-color:#0077b5!important}.text-algolia-link{color:#00aeff!important}@media screen{img{max-width:100%}td,th{box-sizing:border-box}u~div .wrapper{min-width:100vw}a[x-apple-data-detectors]{color:inherit;text-decoration:none}.all-font-montserrat{font-family:Montserrat,-apple-system,\"Segoe UI\",Helvetica,sans-serif!important}}@media (max-width:600px){.sm-inline-block{display:inline-block!important}.sm-px-14{padding-left:14px!important;padding-right:14px!important}.sm-px-32{padding-left:32px!important;padding-right:32px!important}.sm-pb-20{padding-bottom:20px!important}.sm-text-center{text-align:center!important}.sm-w-full{width:100%!important}}</style></head><body style=\"box-sizing:border-box;margin:0;padding:0;width:100%;word-break:break-word;-webkit-font-smoothing:antialiased\"><div style=\"display:none;line-height:0;font-size:0\">Updates from the Algolia team</div><div pardot-region pardot-repeatable><table class=\"wrapper\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\"><tr><td align=\"center\" width=\"100%\" bgcolor=\"#f2f2f7\"><table class=\"sm-w-full\" width=\"600\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\"><tr><td style=\"padding-left:24px;padding-right:24px;padding-top:40px;padding-bottom:40px;text-align:center\" align=\"center\"><a href=\"https://goto.algolia.com/webmail/139121/272951473/a27aac752f3f4edd30141dc3803234c6b49f26ee74cfc4b9aded656f73c5afd3\" class=\"all-font-montserrat\" style=\"color:#c4c8d8;font-size:12px;text-decoration:none\">Difficulties reading this email? View it online</a></td></tr></table></td></tr></table></div><div pardot-region pardot-repeatable><table class=\"wrapper\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\"><tr><td align=\"center\" width=\"100%\" bgcolor=\"#f2f2f7\"><table class=\"sm-w-full\" width=\"600\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\"><tr><td class=\"sm-text-center\" style=\"padding-left:40px;padding-right:40px;padding-top:20px;padding-bottom:40px;text-align:left\" align=\"left\"><a href=\"https://goto.algolia.com/e/139121/2018-09-21/2dn35v/272951473\" style=\"text-decoration:none\"><img src=\"https://res.cloudinary.com/hilnmyskv/image/upload/v1511789228/algolia-master-Hy4CFBiKtl_2_lolywh.png\" alt=\"Algolia\" width=\"165\" style=\"border:0;line-height:100%;vertical-align:middle\"></a></td></tr></table></td></tr></table></div><div pardot-region pardot-repeatable><table class=\"wrapper all-font-montserrat\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\"><tr><td align=\"center\" class=\"sm-px-14\" style=\"padding-bottom:24px\" width=\"100%\" bgcolor=\"#f2f2f7\"><table class=\"sm-w-full\" width=\"600\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\"><tr><td class=\"sm-px-32\" style=\"border-bottom:6px solid #dddfed;border-radius:4px;padding:40px;text-align:left\" bgcolor=\"#ffffff\" align=\"left\"><h3 style=\"font-weight:500;margin-top:0;color:#1f1c3f;font-size:24px\">Algolia for Zendesk</h3><p style=\"line-height:22px;margin-bottom:32px;color:#495588;font-size:16px\">A little under two years ago, we released an extension for Zendesk, our first integration with a Help Center solution. Last week, we were proud to have become an official Zendesk Guide and Zendesk Guide Enterprise partner. Here is what Algolia search brings to your Zendesk Help Center:</p><ul><li><p style=\"line-height:22px;color:#495588;font-size:16px\"><strong>Federated search</strong>: break down content silos and empower your customers to find answers across all of your content.</p></li><li><p style=\"line-height:22px;color:#495588;font-size:16px\"><strong>Real-time search</strong>: direct customers to the right content with results that update with each keystroke, regardless of typos.</p></li><li><p style=\"line-height:22px;color:#495588;font-size:16px\"><strong>Analytics & insights</strong>: understand what drives your customers' search requests, and prioritize new Help Center content based on zero result search queries.</p></li><li><p style=\"line-height:22px;color:#495588;font-size:16px\"><strong>Customizability</strong>: our code is open source. Fork it, make it your own and design the experience that best fits your brand.</p></li></ul><p style=\"line-height:22px;color:#495588;font-size:16px\">Read the<a href=\"https://goto.algolia.com/e/139121/zendesk-guide-search-/29bqhh/272951473\" class=\"text-algolia-link\" style=\"color:#00aeff;text-decoration:none\">blog post</a>about the release, or just<a href=\"https://goto.algolia.com/e/139121/integrations-zendesk/29bqhk/272951473\" class=\"text-algolia-link\" style=\"color:#00aeff;text-decoration:none\">get started</a>!</p><img src=\"http://goto.algolia.com/l/139121/2018-04-12/29bpyf/139121/89624/zendesk.gif\" alt=\"Algolia for Zendesk\" width=\"520\" style=\"border:0;line-height:100%;vertical-align:middle\"></td></tr></table></td></tr></table></div><div pardot-region pardot-repeatable><table class=\"wrapper all-font-montserrat\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\"><tr><td align=\"center\" style=\"padding-bottom:24px\" width=\"100%\" bgcolor=\"#f2f2f7\"><table class=\"sm-w-full\" width=\"600\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\"><tr><td style=\"padding-top:32px;padding-bottom:48px\"><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\"><tr><td class=\"sm-w-full sm-inline-block sm-px-14 sm-pb-20\" style=\"padding-right:6px\" width=\"25%\"><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\"><tr><td style=\"mso-padding-alt:5px 24px 10px;border-radius:4px;text-align:center\" bgcolor=\"#41454e\" align=\"center\"><a href=\"https://goto.algolia.com/e/139121/algolia/27tfc1/272951473\" style=\"display:block;padding-top:10px;padding-bottom:10px;padding-left:24px;padding-right:24px;color:#fff;font-size:12px;text-decoration:none\">GitHub</a></td></tr></table></td><td class=\"sm-w-full sm-inline-block sm-px-14 sm-pb-20\" style=\"padding-left:6px;padding-right:6px\" width=\"25%\"><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\"><tr><td style=\"mso-padding-alt:5px 24px 10px;border-radius:4px;text-align:center\" bgcolor=\"#4267b2\" align=\"center\"><a href=\"https://goto.algolia.com/e/139121/algolia/27tfc3/272951473\" style=\"display:block;padding-top:10px;padding-bottom:10px;padding-left:24px;padding-right:24px;color:#fff;font-size:12px;text-decoration:none\">Facebook</a></td></tr></table></td><td class=\"sm-w-full sm-inline-block sm-px-14 sm-pb-20\" style=\"padding-left:6px;padding-right:6px\" width=\"25%\"><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\"><tr><td style=\"mso-padding-alt:5px 24px 10px;border-radius:4px;text-align:center\" bgcolor=\"#1da1f2\" align=\"center\"><a href=\"https://goto.algolia.com/e/139121/algolia/27tfc5/272951473\" style=\"display:block;padding-top:10px;padding-bottom:10px;padding-left:24px;padding-right:24px;color:#fff;font-size:12px;text-decoration:none\">Twitter</a></td></tr></table></td><td class=\"sm-w-full sm-inline-block sm-px-14 sm-pb-20\" style=\"padding-left:6px\" width=\"25%\"><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\"><tr><td class=\"bg-linkedin\" style=\"mso-padding-alt:5px 24px 10px;border-radius:4px;text-align:center\" bgcolor=\"#0077b5\" align=\"center\"><a href=\"https://goto.algolia.com/e/139121/company-2728700-/27tfc7/272951473\" style=\"display:block;padding-top:10px;padding-bottom:10px;padding-left:24px;padding-right:24px;color:#fff;font-size:12px;text-decoration:none\">LinkedIn</a></td></tr></table></td></tr></table></td></tr></table></td></tr></table></div><div pardot-region pardot-repeatable><table class=\"wrapper all-font-montserrat\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\"><tr><td align=\"center\" width=\"100%\" bgcolor=\"#f2f2f7\"><table class=\"sm-w-full\" width=\"600\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\"><tr><td style=\"padding-left:24px;padding-right:24px;padding-bottom:8px;text-align:center\" align=\"center\"><a href=\"https://goto.algolia.com/e/139121/2018-09-21/2dn35v/272951473\" style=\"text-decoration:none\"><img src=\"https://res.cloudinary.com/hilnmyskv/image/upload/v1511789228/algolia-master-Hy4CFBiKtl_2_lolywh.png\" alt=\"Algolia\" width=\"140\" style=\"border:0;line-height:100%;vertical-align:middle\"></a></td></tr><tr><td class=\"sm-px-14\" style=\"text-align:center\" align=\"center\"><p style=\"color:#8994c6;font-size:12px;font-style:italic\">589 Howard St, San Francisco • 55 Rue d'Amsterdam, Paris</p></td></tr><tr><td style=\"line-height:64px\" height=\"64\">&zwnj;</td></tr><tr><td style=\"text-align:center\" align=\"center\"><p><a href=\"https://example.com\" style=\"color:#c4c8d8;font-size:12px;text-decoration:none\">Unsubscribe from this list.</a></p></td></tr><tr><td style=\"line-height:40px\" height=\"40\">&zwnj;</td></tr></table></td></tr></table></div></body></html>",
+                     "dataKey":"innerhtml",
+                     "type":3
+                  },
+                  {
+                     "label":"I Agree to Privacy Policy <a href=\"https://www.bps.go.id/\" target=\"_blank\" class=\"font-medium underline\">here</a> I Agree to Privacy Policy <a href=\"https://www.bps.go.id/\" target=\"_blank\" class=\"font-medium underline\">here</a> I Agree to Privacy Policy <a href=\"https://www.bps.go.id/\" target=\"_blank\" class=\"font-medium underline\">here</a> I Agree to Privacy Policy <a href=\"https://www.bps.go.id/\" target=\"_blank\" class=\"font-medium underline\">here</a> I Agree to Privacy Policy <a href=\"https://www.bps.go.id/\" target=\"_blank\" class=\"font-medium underline\">here</a> I Agree to Privacy Policy <a href=\"https://www.bps.go.id/\" target=\"_blank\" class=\"font-medium underline\">here</a> I Agree to Privacy Policy <a href=\"https://www.bps.go.id/\" target=\"_blank\" class=\"font-medium underline\">here</a>",
+                     "dataKey":"agree_toggle",
+                     "type":17,
+                     "enableCondition": "getValue('agree') == true",
+                     "componentEnable": ["agree"]
+                  },
+                  {
+                     "label":"I Agree to Privacy Policy <a href=\"https://www.bps.go.id/\" target=\"_blank\" class=\"font-medium underline\">here</a>",
+                     "dataKey":"agree",
+                     "type":16
+                  }
+               ]
+            ]
+         },
+         {
+            "label":"Bab I",
+            "dataKey":"bab_1",
+            "description":"Keterangan Tempat dan Perusahaan",
+            "type":1,
+            "components":[
+               [
+                  {
+                     "label":"<div class=\"text-center border-2 p-4 rounded-full\" style=\"backgrond-color: #FF0000\"><b>I. KETERANGAN TEMPAT DAN PERUSAHAAN</b></div>",
+                     "dataKey":"htmlBlok1",
+                     "type":3
+                  },
+                  {
+                     "label":"Nama Lengkap disertai Gelar",
+                     "dataKey":"nama_lengkap",
+                     "hint":"Nama sesoorang yang dilengkapi dengan semua identitas, seperti gelar (akademik, keagamaan) Nama sesoorang yang dilengkapi dengan semua identitas, seperti gelar (akademik, keagamaan) Nama sesoorang yang dilengkapi dengan semua identitas, seperti gelar (akademik, keagamaan)",
+                     "answer":"Ignatius",
+                     "enableRemark":true,
+                     "type":25
+                  },
+                  {
+                     "label":"Lokasi",
+                     "dataKey":"lokasi",
+                     "type":33
+                  },
+                  {
+                     "label": "Provinsi",
+                     "dataKey": "provinsi",
+                     "typeOption" : 2,
+                     "type":27,
+                     "sourceSelect":[
+                        {
+                           "id": "f796a32a-36df-4554-bb79-bf8065e28c52",
+                           "tableName": "kode_provinsi",
+                           "value": "kode_prov",
+                           "desc": "nama_prov",
+                           "parentCondition": []  
+                        }
+                     ]
+                  },
+                  {
+                     "label": "Kabupaten",
+                     "dataKey": "kabupaten",
+                     "typeOption" : 2,
+                     "type":27,
+                     "enableRemark":false,
+                     "sourceSelect":[
+                        {
+                           "id": "e6b9656d-c4c6-4f6f-8aa6-9482acdf93a9",
+                           "tableName": "kode_kab_ppkk",
+                           "value": "kdpropkab",
+                           "desc": "nmkab",
+                           "parentCondition": [
+                              {
+                                "key" : "kdprov",
+                                "value" : "provinsi"
+                              }
+                           ]  
+                        }
+                     ]
+                  },
+                  {
+                     "label": "Kecamatan",
+                     "dataKey": "kecamatan",
+                     "typeOption" : 2,
+                     "type":27,
+                     "sourceSelect":[
+                        {
+                           "id": "6be606b7-9dcc-4f34-a839-00e1fd2dd5d3",
+                           "tableName": "kode_kecamatan",
+                           "value": "kdpropkabkec",
+                           "desc": "nama_kec",
+                           "parentCondition": [
+                              {
+                                 "key" : "kdpropkab",
+                                 "value" : "kabupaten"
+                              }
+                           ]  
+                        }
+                     ]
+                  },
+                  {
+                     "label": "Komoditas Ikan",
+                     "dataKey": "komoditas",
+                     "typeOption" : 2,
+                     "type":27,
+                     "sourceSelect":[
+                           {
+                           "id": "594a2dcc-14fc-450f-94c7-115a4eaff438",
+                           "tableName": "komoditas",
+                           "value": "Kode",
+                           "desc": "Komoditas",
+                           "parentCondition": []  
+                        }
+                     ]
+                  },
+                  {
+                     "label": "Tanaman Hutan Lainnya",
+                     "dataKey": "hutan_lain",
+                     "typeOption" : 2,
+                     "type":27,
+                     "sourceSelect":[
+                        {
+                           "id": "4b330d3a-8fec-4777-ae2d-91fe957a4a53",
+                           "tableName": "hutan_lain",
+                           "value": "Kode",
+                           "desc": "Komoditas",
+                           "parentCondition": []  
+                        }
+                     ]
+                  },
+                  {
+                     "label":"Klasifikasi Desa/ Kelurahan Klasifikasi Desa/ Kelurahan Klasifikasi Desa/ Kelurahan Klasifikasi Desa/ Kelurahan Klasifikasi Desa/ Kelurahan Klasifikasi Desa/ Kelurahan Klasifikasi Desa/ Kelurahan Klasifikasi Desa/ Kelurahan Klasifikasi Desa/ Kelurahan Klasifikasi Desa/ Kelurahan Klasifikasi Desa/ Kelurahan ",
+                     "dataKey":"klasifikasi_desa",
+                     "type":26,
+                     "options":[
+                        {
+                           "label":"1.&emsp;Perkotaan",
+                           "value":"1"
+                        },
+                        {
+                           "label":"2.&emsp;Perdesaan",
+                           "value":"2"
+                        }
+                     ]
+                  },
+                  {
+                     "label":"Mbak",
+                     "dataKey":"mbak_tyas",
+                     "type":4,
+                     "expression":"getValue('klasifikasi_desa')",
+                     "componentVar":["klasifikasi_desa"],
+                     "render":true,
+                     "renderType":2
+                  },
+                  {
+                     "label":"Rating",
+                     "dataKey":"rating",
+                     "type":26,
+                     "cols":5,
+                     "options":[
+                        {
+                           "label":"",
+                           "value":"1"
+                        },
+                        {
+                           "label":"",
+                           "value":"2"
+                        },
+                        {
+                           "label":"",
+                           "value":"3"
+                        },
+                        {
+                           "label":"",
+                           "value":"4"
+                        },
+                        {
+                           "label":"",
+                           "value":"5"
+                        }
+                     ]
+                  },
+                  {
+                     "label":"Alamat",
+                     "dataKey":"alamat",
+                     "type":30,
+                     "rows":3
+                  },
+                  {
+                     "label":"Penggunaan lahan oleh unit usaha pertanian Penggunaan lahan oleh unit usaha pertanian Penggunaan lahan oleh unit usaha pertanian Penggunaan lahan oleh unit usaha pertanian Penggunaan lahan oleh unit usaha pertanian Penggunaan lahan oleh unit usaha pertanian Penggunaan lahan oleh unit usaha pertanian Penggunaan lahan oleh unit usaha pertanian Penggunaan lahan oleh unit usaha pertanian ",
+                     "dataKey":"penggunaan_lahan",
+                     "typeOption":1,
+                     "type":22,
+                     "answer":[
+                        {
+                           "label": "lastId#0",
+                           "value": "0"
+                        }
+                     ],
+                     "options": [
+                        {
+                           "label": "Sawah",
+                           "value": "1"
+                        },
+                        {
+                           "label": "Bukan Sawah",
+                           "value": "2"
+                        },
+                        {
+                           "label": "Padang Rumput Sementara",
+                           "value": "3"
+                        },
+                        {
+                           "label": "Padang Rumput Permanen",
+                           "value": "4"
+                        },
+                        {
+                           "label": "Sementara Belum Ditanami",
+                           "value": "5"
+                        },
+                        {
+                           "label": "Tanaman Tahunan",
+                           "value": "6"
+                        },
+                        {
+                           "label": "Kandang Ternak dan Bangunan Lainnya",
+                           "value": "7"
+                        },
+                        {
+                           "label": "Kegiatan Kehutanan",
+                           "value": "8"
+                        },
+                        {
+                           "label": "Kegiatan Budaya",
+                           "value": "9"
+                        },
+                        {
+                           "label": "Lahan Lainnya",
+                           "value": "10"
+                        }
+                     ]
+                  },
+                  {
+                     "label":"Penggunaan Lahan",
+                     "dataKey":"penggunaan_lahan_nested",
+                     "description":"",
+                     "type":2,
+                     "sourceQuestion":"penggunaan_lahan",
+                     "components":[
+                        [
+                           {
+                              "label":"Luas Halamanku",
+                              "dataKey":"luashalamanku",
+                              "type":4,
+                              "answer":"110",
+                              "expression":"'110'",
+                              "componentVar":[],
+                              "render":true,
+                              "renderType":0
+                           },
+                           {
+                              "label": "Provinsi",
+                              "dataKey": "provinsix",
+                              "typeOption" : 2,
+                              "type":27,
+                              "sourceSelect":[
+                                 {
+                                    "id": "f796a32a-36df-4554-bb79-bf8065e28c52",
+                                    "tableName": "kode_provinsi",
+                                    "value": "kode_prov",
+                                    "desc": "nama_prov",
+                                    "parentCondition": []  
+                                 }
+                              ]
+                           },
+                           {
+                              "label": "Kabupaten",
+                              "dataKey": "kabupatenx",
+                              "typeOption" : 2,
+                              "type":27,
+                              "enableRemark":false,
+                              "sourceSelect":[
+                                 {
+                                    "id": "e6b9656d-c4c6-4f6f-8aa6-9482acdf93a9",
+                                    "tableName": "kode_kab_ppkk",
+                                    "value": "kdpropkab",
+                                    "desc": "nmkab",
+                                    "parentCondition": [
+                                       {
+                                          "key" : "kdprov",
+                                          "value" : "provinsix@$ROW$"
+                                       }
+                                    ]  
+                                 }
+                              ]
+                           },
+                           {
+                              "label":"Luas Lahan",
+                              "dataKey":"luas_lahan",
+                              "type":25,
+                              "enableRemark":false
+                           },
+                           {
+                              "label":"Luas Rumah $NAME$",
+                              "dataKey":"luas_rumah",
+                              "type":25,
+                              "enableRemark":false
+                           },
+                           {
+                              "label":"402. Nama tanaman semusim (tanaman pangan, hortikultura, dan perkebunan)",
+                              "dataKey":"l2_r402",
+                              "type":22,
+                              "typeOption":1,
+                              "enableCondition":"getValue('luas_rumah@$ROW$') > 5",
+                              "componentEnable":["luas_rumah@$ROW$"],
+                              "titleModalDelete":"Konfirmasi",
+                              "contentModalDelete":"Penghapusan juga akan menghapus komponen terkait, termasuk komponen turunan dari induk ini.",
+                              "answer":[
+                                 {
+                                    "label": "lastId#0",
+                                    "value": "0"
+                                 }
+                              ],
+                              "options": [
+                                 {
+                                    "label": "Padi Sawah",
+                                    "value": "1"
+                                 },
+                                 {
+                                    "label": "Padi Ladang",
+                                    "value": "2"
+                                 },
+                                 {
+                                    "label": "Jagung",
+                                    "value": "3"
+                                 }
+                              ]
+                           },
+                           {
+                              "label":"Roster 1",
+                              "dataKey":"roster1",
+                              "description":"Roster [1]",
+                              "type":2,
+                              "sourceQuestion":"l2_r402",
+                              "components":[
+                                 [
+                                    {
+                                       "label":"Nama pasangan $NAME$",
+                                       "dataKey":"nama_pasangan_0",
+                                       "type":25
+                                    },
+                                    {
+                                       "label":"Umur pasangan",
+                                       "dataKey":"umur_pasangan_0",
+                                       "type":25
+                                    }
+                                 ]
+                              ]
+                           }
+                        ]
+                     ]
+                  },
+                  {
+                     "label":"Total Luas Lahan",
+                     "dataKey":"total_luas",
+                     "type":4,
+                     "expression":"let result = 0; for(let i=1; i<=10; i++){result+=Number(getValue('luas_lahan#'+i))}; result;",
+                     "componentVar":["luas_lahan"],
+                     "render":true,
+                     "renderType":1
+                  }
+               ]
+            ]
+         },
+         {
+            "label":"Bab I",
+            "dataKey":"xbab_1",
+            "description":"Bagian ke-1",
+            "type":1,
+            "components":[
+               [
+                  {
+                     "label":"Happiness Index",
+                     "dataKey":"happy",
+                     "type":18,
+                     "range":[
+                        {
+                           "min":0,
+                           "max":15,
+                           "step":1
+                        }
+                     ]
+                  },
+                  {
+                     "label":"Nama Lengkap",
+                     "dataKey":"nm_lengkap",
+                     "hint":"Nama pribadi di dalam KTP",
+                     "type":25
+                  },
+                  {
+                     "label":"Tanggal Lahir",
+                     "dataKey":"tgl_lahir",
+                     "type":11
+                  },    
+                  {
+                     "label":"Jenis Kelamin",
+                     "dataKey":"jenis_kelamin",
+                     "type":26,
+                     "options":[
+                        {
+                           "label":"Laki-Laki",
+                           "value":"L"
+                        },
+                        {
+                           "label":"Perempuan",
+                           "value":"P"
+                        },
+                        {
+                           "label":"Lainnya",
+                           "value":"X",
+                           "open":true
+                        }
+                     ]
+                  },
+                  {
+                     "label":"Penghasilan Per Bulan",
+                     "dataKey":"penghasilan",
+                     "currency":"IDR",
+                     "separatorFormat" : "en-US",
+                     "isDecimal" : true,
+                     "type":20
+                  },
+                  {
+                     "label":"NPWP",
+                     "dataKey":"npwp",
+                     "maskingFormat" : "aa-9999",
+                     "type":24
+                  },
+                  {
+                     "label":"Tanggal Lahir",
+                     "dataKey":"tgl_lahir",
+                     "type":11
+                  },
+                  {
+                     "label":"Tanggal dan Waktu Registrasi",
+                     "dataKey":"waktu_register",
+                     "type":12
+                  },
+                  {
+                     "label": "Aset Berharga",
+                     "dataKey": "aset",
+                     "type": 23,
+                     "typeOption":3,
+                     "sourceOption" : "hobi",
+                     "sourceSelect":[
+                        {
+                           "id": "4b330d3a-8fec-4777-ae2d-91fe957a4a53",
+                           "tableName": "hutan_lain",
+                           "value": "Kode",
+                           "desc": "Komoditas",
+                           "parentCondition": []  
+                        }
+                     ],
+                     "options": [
+                        {
+                           "label": "Tanah",
+                           "value": "1"
+                        },
+                        {
+                           "label": "Rumah",
+                           "value": "2"
+                        },
+                        {
+                           "label": "Perhiasan",
+                           "value": "3"
+                        },
+                        {
+                           "label": "Mobil",
+                           "value": "4"
+                        },
+                        {
+                           "label": "Motor",
+                           "value": "5"
+                        },
+                        {
+                           "label": "Kebun",
+                           "value": "6"
+                        }
+                     ]
+                  },
+                  {
+                     "label":"Num rows",
+                     "dataKey":"num_rows",
+                     "type":28
+                  },
+                  {
+                     "label":"Foto",
+                     "dataKey":"foto",
+                     "client":2,
+                     "type":32
+                  },
+                  {
+                     "label":"Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi Hobi ",
+                     "dataKey":"hobi",
+                     "type":29,
+                     "cols":3,
+                     "options":[
+                        {
+                           "label":"Tidur",
+                           "value":"1"
+                        },
+                        {
+                           "label":"Duduk",
+                           "value":"2"
+                        },
+                        {
+                           "label":"Lari",
+                           "value":"3"
+                        },
+                        {
+                           "label":"Mandi",
+                           "value":"4"
+                        },
+                        {
+                           "label":"Nonton",
+                           "value":"5"
+                        },
+                        {
+                           "label":"Coding",
+                           "value":"6"
+                        },
+                        {
+                           "label":"Cukur",
+                           "value":"7"
+                        },
+                        {
+                           "label":"Nyanyi",
+                           "value":"8"
+                        },
+                        {
+                           "label":"Nyuci",
+                           "value":"9"
+                        },
+                        {
+                           "label":"Nyapu",
+                           "value":"10"
+                        },
+                        {
+                           "label":"Jogging",
+                           "value":"11"
+                        },
+                        {
+                           "label":"Rehat",
+                           "value":"12"
+                        },
+                        {
+                           "label":"Lainnya",
+                           "value":"13",
+                           "open":true
+                        }
+                     ]
+                  },
+                  {
+                     "label":"Most Favourite:  ",
+                     "dataKey":"most_fav",
+                     "type":26,
+                     "sourceOption":"hobi",
+                     "typeOption":3
+                  },
+                  {
+                     "label":"Favoritku: F   avoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: Favoritku: ",
+                     "dataKey":"favoritku",
+                     "type":4,
+                     "expression":"getValue('hobi')",
+                     "componentVar":["hobi"],
+                     "render":true,
+                     "renderType":2
+                  },
+                  {
+                     "label": "Genre musik favorit",
+                     "dataKey": "genre_musik",
+                     "type":22,
+                     "typeOption":1,
+                     "answer":[
+                        {
+                           "label": "lastId#0",
+                           "value": "0"
+                        }
+                     ],
+                     "options": [
+                        {
+                           "label": "Pop",
+                           "value": "1"
+                        },
+                        {
+                           "label": "Jazz",
+                           "value": "2"
+                        },
+                        {
+                           "label": "Dangdut",
+                           "value": "3"
+                        },
+                        {
+                           "label": "Rock",
+                           "value": "4"
+                        }
+                     ]
+                  },
+                  {
+                     "label":"Nama ART",
+                     "dataKey":"nama_art",
+                     "type":21,
+                     "answer":[
+                        {
+                           "label": "lastId#0",
+                           "value": "0"
+                        }
+                     ]
+                  },
+                  {
+                     "label":"Roster 2",
+                     "dataKey":"roster2",
+                     "description":"Roster [2]",
+                     "type":2,
+                     "sourceQuestion":"hobi",
+                     "components":[
+                        [
+                           {
+                              "label":"602. Nama jenis ternak",
+                              "dataKey":"l2_r602",
+                              "type":22,
+                              "typeOption":1,
+                              "answer":[
+                                 {
+                                    "label": "lastId#0",
+                                    "value": "0"
+                                 }
+                              ],
+                              "options": [
+                                 { "label":"Kerbau Potong", "value":"4101" },
+                                 { "label":"Sapi Perah", "value":"4103" },
+                                 { "label":"Sapi Potong", "value":"4104" },
+                                 { "label":"Kerbau Perah", "value":"4105" },
+                                 { "label":"Kuda", "value":"4102" },
+                                 { "label":"Babi", "value":"4201" },
+                                 { "label":"Domba Potong", "value":"4202" },
+                                 { "label":"Kambing Potong", "value":"4203" },
+                                 { "label":"Kambing Perah", "value":"4204" },
+                                 { "label":"Domba Perah", "value":"4205" },
+                                 { "label":"Kelinci Potong", "value":"4406" },
+                                 { "label":"Rusa", "value":"4415" },
+                                 { "label":"Unta", "value":"4418" },
+                                 { "label":"Keledai", "value":"4419" },
+                                 { "label":"Ayam Kampung Biasa", "value":"4301" },
+                                 { "label":"Ayam Ras Pedaging", "value":"4302" },
+                                 { "label":"Ayam Ras Petelur", "value":"4303" },
+                                 { "label":"Itik Petelur", "value":"4304" },
+                                 { "label":"Itik Manila", "value":"4305" },
+                                 { "label":"Ayam Kampung Pedaging", "value":"4306" },
+                                 { "label":"Ayam Kampung Petelur", "value":"4307" },
+                                 { "label":"Itik Pedaging", "value":"4308" },
+                                 { "label":"Angsa", "value":"4401" },
+                                 { "label":"Merpati", "value":"4403" },
+                                 { "label":"Puyuh Petelur", "value":"4404" },
+                                 { "label":"Kalkun", "value":"4405" },
+                                 { "label":"Burung Unta", "value":"4408" },
+                                 { "label":"Puyuh Pedaging", "value":"4420" },
+                                 { "label":"Anjing", "value":"4407" },
+                                 { "label":"Cacing", "value":"4409" },
+                                 { "label":"Hamster", "value":"4410" },
+                                 { "label":"Jangkrik", "value":"4411" },
+                                 { "label":"Kucing", "value":"4412" },
+                                 { "label":"Lebah", "value":"4413" },
+                                 { "label":"Marmut", "value":"4414" },
+                                 { "label":"Ulat Sutera", "value":"4416" },
+                                 { "label":"Walet", "value":"4417" },
+                                 { "label":"Ayam Lokal Lainnya", "value":"4402" },
+                                 { "label":"Unggas Nonpangan", "value":"4498" },
+                                 { "label":"Lainnya", "value":"4499" }
+                              ]
+                           },
+                           {
+                              "label":"603. Kode Ternak",
+                              "dataKey":"l2_r603",
+                              "type":4,
+                              "expression":"let x = getValue('l2_r602#'+getRowIndex(0));if(x.length > 1) x[1].value;",
+                              "componentVar":["l2_r602"],
+                              "render":true,
+                              "renderType":1
+                           },
+                           {
+                              "label":"List tujuan",
+                              "dataKey":"tujuan_ternak",
+                              "type":4,
+                              "expression":"let tujuan = [{\"kode\":\"4101\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4101\",\"nilai\":\"2\",\"tujuan\":\"Penggemukan\"},{\"kode\":\"4101\",\"nilai\":\"3\",\"tujuan\":\"Pembibitan\"},{\"kode\":\"4101\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4103\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4103\",\"nilai\":\"2\",\"tujuan\":\"Penggemukan\"},{\"kode\":\"4103\",\"nilai\":\"3\",\"tujuan\":\"Pembibitan\"},{\"kode\":\"4103\",\"nilai\":\"4\",\"tujuan\":\"Pembesaran ternak betina (rearing)\"},{\"kode\":\"4103\",\"nilai\":\"5\",\"tujuan\":\"Produksi telur/susu/madu/kokon/liur\"},{\"kode\":\"4103\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4104\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4104\",\"nilai\":\"2\",\"tujuan\":\"Penggemukan\"},{\"kode\":\"4104\",\"nilai\":\"3\",\"tujuan\":\"Pembibitan\"},{\"kode\":\"4104\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4105\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4105\",\"nilai\":\"2\",\"tujuan\":\"Penggemukan\"},{\"kode\":\"4105\",\"nilai\":\"3\",\"tujuan\":\"Pembibitan\"},{\"kode\":\"4105\",\"nilai\":\"4\",\"tujuan\":\"Pembesaran ternak betina (rearing)\"},{\"kode\":\"4105\",\"nilai\":\"5\",\"tujuan\":\"Produksi telur/susu/madu/kokon/liur\"},{\"kode\":\"4105\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4102\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4102\",\"nilai\":\"2\",\"tujuan\":\"Penggemukan\"},{\"kode\":\"4102\",\"nilai\":\"3\",\"tujuan\":\"Pembibitan\"},{\"kode\":\"4102\",\"nilai\":\"5\",\"tujuan\":\"Produksi telur/susu/madu/kokon/liur\"},{\"kode\":\"4102\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4201\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4201\",\"nilai\":\"2\",\"tujuan\":\"Penggemukan\"},{\"kode\":\"4201\",\"nilai\":\"3\",\"tujuan\":\"Pembibitan\"},{\"kode\":\"4201\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4202\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4202\",\"nilai\":\"2\",\"tujuan\":\"Penggemukan\"},{\"kode\":\"4202\",\"nilai\":\"3\",\"tujuan\":\"Pembibitan\"},{\"kode\":\"4202\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4203\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4203\",\"nilai\":\"2\",\"tujuan\":\"Penggemukan\"},{\"kode\":\"4203\",\"nilai\":\"3\",\"tujuan\":\"Pembibitan\"},{\"kode\":\"4203\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4204\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4204\",\"nilai\":\"2\",\"tujuan\":\"Penggemukan\"},{\"kode\":\"4204\",\"nilai\":\"3\",\"tujuan\":\"Pembibitan\"},{\"kode\":\"4204\",\"nilai\":\"4\",\"tujuan\":\"Pembesaran ternak betina (rearing)\"},{\"kode\":\"4204\",\"nilai\":\"5\",\"tujuan\":\"Produksi telur/susu/madu/kokon/liur\"},{\"kode\":\"4204\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4205\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4205\",\"nilai\":\"2\",\"tujuan\":\"Penggemukan\"},{\"kode\":\"4205\",\"nilai\":\"3\",\"tujuan\":\"Pembibitan\"},{\"kode\":\"4205\",\"nilai\":\"4\",\"tujuan\":\"Pembesaran ternak betina (rearing)\"},{\"kode\":\"4205\",\"nilai\":\"5\",\"tujuan\":\"Produksi telur/susu/madu/kokon/liur\"},{\"kode\":\"4205\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4406\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4406\",\"nilai\":\"2\",\"tujuan\":\"Penggemukan\"},{\"kode\":\"4406\",\"nilai\":\"3\",\"tujuan\":\"Pembibitan\"},{\"kode\":\"4406\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4415\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4415\",\"nilai\":\"2\",\"tujuan\":\"Penggemukan\"},{\"kode\":\"4415\",\"nilai\":\"3\",\"tujuan\":\"Pembibitan\"},{\"kode\":\"4415\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4418\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4418\",\"nilai\":\"2\",\"tujuan\":\"Penggemukan\"},{\"kode\":\"4418\",\"nilai\":\"3\",\"tujuan\":\"Pembibitan\"},{\"kode\":\"4418\",\"nilai\":\"5\",\"tujuan\":\"Produksi telur/susu/madu/kokon/liur\"},{\"kode\":\"4418\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4419\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4419\",\"nilai\":\"2\",\"tujuan\":\"Penggemukan\"},{\"kode\":\"4419\",\"nilai\":\"3\",\"tujuan\":\"Pembibitan\"},{\"kode\":\"4419\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4301\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4301\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4302\",\"nilai\":\"2\",\"tujuan\":\"Penggemukan\"},{\"kode\":\"4302\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4303\",\"nilai\":\"5\",\"tujuan\":\"Produksi telur/susu/madu/kokon/liur\"},{\"kode\":\"4303\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4304\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4304\",\"nilai\":\"5\",\"tujuan\":\"Produksi telur/susu/madu/kokon/liur\"},{\"kode\":\"4304\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4305\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4305\",\"nilai\":\"5\",\"tujuan\":\"Produksi telur/susu/madu/kokon/liur\"},{\"kode\":\"4305\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4306\",\"nilai\":\"2\",\"tujuan\":\"Penggemukan\"},{\"kode\":\"4306\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4307\",\"nilai\":\"5\",\"tujuan\":\"Produksi telur/susu/madu/kokon/liur\"},{\"kode\":\"4307\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4308\",\"nilai\":\"2\",\"tujuan\":\"Penggemukan\"},{\"kode\":\"4308\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4401\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4401\",\"nilai\":\"5\",\"tujuan\":\"Produksi telur/susu/madu/kokon/liur\"},{\"kode\":\"4401\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4403\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4403\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4404\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4404\",\"nilai\":\"5\",\"tujuan\":\"Produksi telur/susu/madu/kokon/liur\"},{\"kode\":\"4404\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4405\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4405\",\"nilai\":\"5\",\"tujuan\":\"Produksi telur/susu/madu/kokon/liur\"},{\"kode\":\"4405\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4408\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4408\",\"nilai\":\"5\",\"tujuan\":\"Produksi telur/susu/madu/kokon/liur\"},{\"kode\":\"4408\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4420\",\"nilai\":\"2\",\"tujuan\":\"Penggemukan\"},{\"kode\":\"4420\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4407\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4407\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4409\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4409\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4410\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4410\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4411\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4411\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4412\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4412\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4413\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4413\",\"nilai\":\"5\",\"tujuan\":\"Produksi telur/susu/madu/kokon/liur\"},{\"kode\":\"4413\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4414\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4414\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4416\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4416\",\"nilai\":\"5\",\"tujuan\":\"Produksi telur/susu/madu/kokon/liur\"},{\"kode\":\"4416\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4417\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4417\",\"nilai\":\"5\",\"tujuan\":\"Produksi telur/susu/madu/kokon/liur\"},{\"kode\":\"4417\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4402\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4402\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4498\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4498\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"},{\"kode\":\"4499\",\"nilai\":\"1\",\"tujuan\":\"Pengembangbiakan\"},{\"kode\":\"4499\",\"nilai\":\"6\",\"tujuan\":\"Seluruhnya bukan untuk Usaha Peternakan (untuk pengangkutan, hobi, dll)\"}]; tujuan; ",
+                              "componentVar":[],
+                              "render":false,
+                              "renderType":2
+                           },
+                           {
+                              "label":"List tujuan",
+                              "dataKey":"filter_tujuan_ternak",
+                              "type":4,
+                              "expression":"let x=getValue('l2_r603#'+getRowIndex(0));let list_tujuan = getValue('tujuan_ternak'); var opsi =[]; var arr =[]; if (list_tujuan.length > 0) { opsi=list_tujuan.filter((a=>a.kode == String(x))); } if(opsi.length > 0) { for (var i = 0; i < opsi.length; i++) {arr.push({ 'label': String(opsi[i].nilai)+ '-' + String(opsi[i].tujuan ), 'value': String(opsi[i].nilai)}); } console.log(arr);arr;} ",
+                              "componentVar":["tujuan_ternak","l2_r603"],
+                              "render":false,
+                              "renderType":2
+                           },
+                           {
+                              "label":"618. Tujuan utama pemeliharaan ternak",
+                              "dataKey":"l2_r618",
+                              "type": 26,
+                              "sourceOption":"filter_tujuan_ternak@$ROW$",
+                              "typeOption":3
+                           },
+                           {
+                              "label":"Jenis Peliharaan $NAME$",
+                              "dataKey":"jenis_peliharaan",
+                              "type":25
+                           },
+                           {
+                              "label":"Totals Makan",
+                              "dataKey":"totals_makan",
+                              "type":4,
+                              "expression":"let result = 0; let valueParent = getValue('jumlah_peliharaan#'+getRowIndex(0)); for(let y=1; y<= valueParent; y++){ result += Number(getValue('banyak_makan#'+getRowIndex(1)+'#'+y));}; result;",
+                              "componentVar":["banyak_makan"],
+                              "render":true,
+                              "renderType":1
+                           },
+                           {
+                              "label":"Jumlah peliharaan",
+                              "dataKey":"jumlah_peliharaan",
+                              "type":28
+                           },
+                           {
+                              "label":"Roster 2.1",
+                              "dataKey":"roster2.1",
+                              "description":"Roster [2][1]",
+                              "type":2,
+                              "sourceQuestion":"jumlah_peliharaan",
+                              "components":[
+                                 [
+                                    {
+                                       "label":"Banyak makan",
+                                       "dataKey":"banyak_makan",
+                                       "type":28
+                                    },
+                                    {
+                                       "label":"Nama makan siang",
+                                       "dataKey":"nama_makan_siang",
+                                       "type":25,
+                                       "enableCondition": "getValue('jenis_peliharaan@$ROW1$') === 'Anjing'",
+                                       "componentEnable": ["jenis_peliharaan@$ROW1$"]
+                                    },
+                                    {
+                                       "label":"Nama makan malam",
+                                       "dataKey":"nama_makan_malam",
+                                       "type":25
+                                    },
+                                    {
+                                       "label":"Roster 2.1.1",
+                                       "dataKey":"roster2.1.1",
+                                       "description":"Roster [2][1][1]",
+                                       "type":2,
+                                       "sourceQuestion":"banyak_makan",
+                                       "components":[
+                                          [
+                                             {
+                                                "label":"Banyak minum",
+                                                "dataKey":"banyak_minum",
+                                                "type":28
+                                             },
+                                             {
+                                                "label":"Kekentalan minuman",
+                                                "dataKey":"kekentalan_minuman",
+                                                "type":25,
+                                                "enableCondition": "getValue('jenis_peliharaan@$ROW2$') === 'Anjing'",
+                                                "componentEnable": ["jenis_peliharaan@$ROW2$"]
+                                             },
+                                             {
+                                                "label":"nama minuman",
+                                                "dataKey":"nama_minuman",
+                                                "type":25
+                                             }
+                                          ]
+                                       ]
+                                    }
+                                 ]
+                              ]
+                           }
+                        ]
+                     ]
+                  },
+                  {
+                     "label":"Total Banyak Makan",
+                     "dataKey":"total_banyak_makan",
+                     "type":4,
+                     "expression":"let result = 0; let valueRoot = getValue('genre_musik'); for(let x in valueRoot){ let valueParent = getValue('jumlah_peliharaan#'+valueRoot[x]['value']); for(let y=1; y<= valueParent; y++){ result += Number(getValue('banyak_makan#'+valueRoot[x]['value']+'#'+y));}}; result;",
+                     "componentVar":["banyak_makan"],
+                     "render":true,
+                     "renderType":1
+                  }
+               ]
+            ]
+         },
+         {
+            "label":"Bab II",
+            "dataKey":"xbab_2",
+            "description":"Bagian ke-2",
+            "type":1,
+            "components":[
+               [
+                  {
+                     "label":"Frekuensi minum kopi",
+                     "dataKey":"frek_kopi",
+                     "type":28
+                  },
+                  {
+                     "label":"Frekuensi minum teh",
+                     "dataKey":"frek_teh",
+                     "type":28,
+                     "enableCondition": "getProp('clientMode') == 1",
+                     "componentEnable": ["frek_kopi"]
+                  },
+                  {
+                     "label":"Total_semua",
+                     "dataKey":"frek_total",
+                     "type":4,
+                     "expression":"parseInt(getValue('frek_kopi')+getValue('frek_teh'))",
+                     "componentVar":["frek_kopi","frek_teh"],
+                     "render":true,
+                     "renderType":1
+                  },
+                  {
+                     "label":"Total_kopi",
+                     "dataKey":"frek_total_kopi",
+                     "type":4,
+                     "expression":"let a =0 ; if(parseInt(getValue('frek_kopi')) > 0) a = getValue('frek_kopi'); a;",
+                     "componentVar":["frek_kopi"],
+                     "render":true,
+                     "renderType":1
+                  },
+                  {
+                     "label":"Pekerjaan",
+                     "dataKey":"pekerjaan",
+                     "type":25
+                  },
+                  {
+                     "label":"Confirm Pekerjaan",
+                     "dataKey":"confirm_pekerjaan",
+                     "type":25
+                  },
+                  {
+                     "label":"Deskripsi Pekerjaan",
+                     "dataKey":"deskripsi_pekerjaan",
+                     "type":30
+                  },
+                  {
+                     "label":"Waktu Kedatangan",
+                     "dataKey":"waktu_datang",
+                     "type":13
+                  },
+                  {
+                     "label":"Minggu Kedatangan",
+                     "dataKey":"minggu_datang",
+                     "type":15
+                  },
+                  {
+                     "label":"Bulan Kedatangan",
+                     "dataKey":"bulan_datang",
+                     "type":14
+                  },
+                  {
+                     "label":"Email",
+                     "dataKey":"email",
+                     "type":31
+                  },
+                  {
+                     "label":"Website",
+                     "dataKey":"web",
+                     "type":19
+                  },
+                  {
+                     "label":"Roster 3",
+                     "dataKey":"roster3",
+                     "description":"Roster [3]",
+                     "type":2,
+                     "sourceQuestion":"frek_kopi",
+                     "components":[
+                        [
+                           {
+                              "label":"HP $NAME$",
+                              "dataKey":"hp",
+                              "type":25
+                           },
+                           {
+                              "label":"Emails",
+                              "dataKey":"emails",
+                              "type":25
+                           },
+                           {
+                              "label":"Sosmed",
+                              "dataKey":"sosmed",
+                              "type":25
+                           },
+                           {
+                              "label":"Roster 3.1",
+                              "dataKey":"roster3.1",
+                              "description":"Roster [3][1]",
+                              "type":2,
+                              "sourceQuestion":"sosmed",
+                              "components":[
+                                 [
+                                    {
+                                       "label":"UserdataKey",
+                                       "dataKey":"userdataKey",
+                                       "type":25
+                                    },
+                                    {
+                                       "label":"Email terkait",
+                                       "dataKey":"email_terkait",
+                                       "type":25
+                                    }
+                                 ]
+                              ]
+                           }
+                        ]
+                     ]
+                  }
+               ]
+            ]
+         }
+      ]
+   ]
+}

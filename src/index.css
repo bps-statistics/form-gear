@@ -1,0 +1,148 @@
+@import url(../src/assets/font-montserrat/font-montserrat.css);
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+    
+
+.formgear-sidebar li ul{
+    display: none;
+}
+.formgear-sidebar .show{
+    display: block;
+}
+
+
+.formgear-select .solid-select-container {
+    position: relative;
+}
+.formgear-select .solid-select-control {    
+    --tw-border-opacity: 1;
+    border-color: rgb(209, 213, 219, var(--tw-border-opacity));
+    border-radius: 0.25rem;
+    border-width: 1px;
+    display: -ms-grid;
+    display: grid;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+    z-index: 0 !important;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+.formgear-select .solid-select-control[data-multiple="true"][data-has-value="true"] {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    -webkit-align-items: stretch;
+    align-items: stretch;
+    grid-gap: 0.25rem;
+    gap: 0.25rem;
+}
+.formgear-select .solid-select-control:focus-within {
+    border-color: #2563eb;
+    border-width: 2px;
+    outline-color: #2563eb;
+    outline: transparent;
+    outline-offset: none;
+}
+.formgear-select .solid-select-placeholder {
+    --tw-text-opacity: 1;
+    color: rgba(156, 163, 175, var(--tw-text-opacity));
+    grid-column-start: 1;
+    grid-row-start: 1;
+}
+.formgear-select .solid-select-single-value {
+    grid-column-start: 1;
+    grid-row-start: 1;
+}
+.formgear-select .solid-select-multi-value {
+    --tw-bg-opacity: 1;
+    background-color: rgba(243, 244, 246, var(--tw-bg-opacity));
+    border-radius: 0.25rem;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    font-size: 85%;
+    line-height: 1;
+    line-height: inherit;
+    padding-left: 4px;
+    z-index: 0 !important;
+    padding-right: 4px;
+}
+.formgear-select .solid-select-multi-value-remove {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+}
+.formgear-select .solid-select-multi-value-remove:hover {
+    text-shadow: 1px 1px 3px rgb(0 0 0 / 29%), 2px 4px 7px rgb(73 64 125 / 35%);
+}
+.formgear-select .solid-select-input {
+    background-color: transparent;
+    border-width: 0px;
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 0%;
+    -webkit-flex: 1 1 0%;
+    flex: 1 1 0%;
+    margin: 0px;
+    outline-offset: 0px;
+    padding: 0px;
+    grid-column-start: 1;
+    grid-row-start: 1;
+    font: inherit;
+}
+.formgear-select .solid-select-input:focus-within {
+    outline-color: white;
+    border-color: #ffffff;
+    border-width: 0px;
+}
+.formgear-select .solid-select-input:read-only {
+    cursor: default;
+}
+.formgear-select .solid-select-list {
+    background-color: inherit;
+    border-radius: 0.125rem;
+    margin-top: 0.25rem;
+    min-width: 100%;
+    padding: 0.5rem;
+    position: absolute;
+    --tw-shadow: 0 10px 15px -3px rgb(0 0 0/0.1),0 4px 6px -4px rgb(0 0 0/0.1);
+    --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color),0 4px 6px -4px var(--tw-shadow-color);
+    -webkit-box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow);
+    box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow);
+    white-space: nowrap;
+    z-index: 1 !important;
+}
+.formgear-select .solid-select-option:hover {
+    --tw-bg-opacity: 1;
+    background-color: rgba(229, 231, 235, var(--tw-bg-opacity));
+}
+.formgear-select .solid-select-option[data-focused="true"] {
+    --tw-bg-opacity: 1;
+    /* background-color: rgba(243, 244, 246, var(--tw-bg-opacity)); */
+}
+.formgear-select .solid-select-option {
+    cursor: default;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.formgear-select .blur {
+    --tw-blur: blur(8px);
+}

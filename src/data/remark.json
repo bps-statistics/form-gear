@@ -1,0 +1,30 @@
+{
+    "dataKey": "",
+    "notes": [
+        {
+            "dataKey": "nama_lengkap",
+            "comments": [
+                {
+                    "sender": "AdityaSetyadi",
+                    "datetime": "2022-03-17 01:09:54",
+                    "comment": "halo gan, namaku eno"
+                },
+                {
+                    "sender": "AdityaSetyadi",
+                    "datetime": "2022-03-18 01:10:40",
+                    "comment": "udah pusing"
+                }
+            ]
+        },
+        {
+            "dataKey": "luas_lahan#1",
+            "comments": [
+                {
+                    "sender": "AdityaSetyadi",
+                    "datetime": "2022-03-18 01:09:15",
+                    "comment": "gabisa dihitung, luasnya seluas samudra"
+                }
+            ]
+        }
+    ]
+}
