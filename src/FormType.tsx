@@ -25,6 +25,7 @@ import MaskingInput from "./components/MaskingInput"
 import VariableInput from "./components/VariableInput"
 import PhotoInput from "./components/PhotoInput"
 import GpsInput from "./components/GpsInput"
+import CsvInput from "./components/CsvInput"
 
 export enum ControlType {
   Section = 1,
@@ -53,7 +54,8 @@ export enum ControlType {
   TextAreaInput = 30,
   EmailInput = 31,
   PhotoInput = 32,
-  GpsInput = 33
+  GpsInput = 33,
+  CsvInput = 34
 }
 
 export type Option =  {
@@ -77,36 +79,37 @@ export type selectOption = {
 }
 
 export type ComponentType = {
-  dataKey?: string            //semua
-  label?: string              //semua
-  hint?: string               //semua
-  type?: ControlType | any    //semua
-  components?: ComponentType  //1, 2
-  rows?:number                //8
-  cols?:number                //4, 7
-  options?: Option[]          //4, 7, 22, 23
-  range?: Range[]             //18
-  description?: string        //1, 2
-  answer?: any                //semua, (22, 23 wajib seperti ini: [{"label": "lastId#0","value": "0"}] )
-  sourceQuestion?: string     //2
-  sourceOption?: string       //22, 23, 26, 27, 29 
-  typeOption?: number         //22, 23, 26, 27, 29  default=1 => (1=template, 2=api, 3=component, 4=android/offline)
-  currency?: string           //20 (IDR, USD)
-  separatorFormat?: string    //20 (id-ID)
-  isDecimal?: boolean         //20 (true false)
-  maskingFormat?: string        //24
-  expression?: string         //25 (bisa memanggil nilai dengan perintah: getValue('hobiku'))
-  componentVar?: string[]     //25 (array contoh: ["hobiku"])
-  render?: boolean            //25 (true false)
-  renderType?: number         //25 (0 untuk single value yang label aja, 1 untuk single value yg textbox dan readonly, 2 untuk array {"label":"labelname","value":valuenya})
+  dataKey?: string              //semua
+  label?: string                //semua
+  hint?: string                 //semua
+  disableInput?: boolean        //semua
+  type?: ControlType | any      //semua
+  components?: ComponentType    //1, 2
+  rows?: number                 //8
+  cols?: number                 //4, 7
+  options?: Option[]            //4, 7, 22, 23
+  range?: Range[]               //18
+  description?: string          //1, 2
+  answer?: any                  //semua, (22, 23 wajib seperti ini: [{"label": "lastId#0","value": "0"}] )
+  sourceQuestion?: string       //2
+  sourceOption?: string         //22, 23, 26, 27, 29 
+  typeOption?: number           //22, 23, 26, 27, 29  default=1 => (1=template, 2=api, 3=component, 4=android/offline)
+  currency?: string             //20 (IDR, USD)
+  separatorFormat?: string      //20 (id-ID)
+  isDecimal?: boolean           //20 (true false)
+  maskingFormat?: string        //24 
+  expression?: string           //25 (bisa memanggil nilai dengan perintah: getValue('hobiku'))
+  componentVar?: string[]       //25 (array contoh: ["hobiku"])
+  render?: boolean              //25 (true false)
+  renderType?: number           //25 (0 untuk single value yang label aja, 1 untuk single value yg textbox dan readonly, 2 untuk array {"label":"labelname","value":valuenya})
   sourceSelect?: selectOption[] //27
-  enable?: boolean            //semua
-  enableCondition?: string    //semua
-  componentEnable?: string[]  //semua
-  enableRemark?: boolean      //semua
-  client?: string             //32
-  titleModalDelete?: string   //21,22
-  contentModalDelete?: string //21,22
+  enable?: boolean              //semua
+  enableCondition?: string      //semua
+  componentEnable?: string[]    //semua
+  enableRemark?: boolean        //semua
+  client?: string               //32
+  titleModalDelete?: string     //21,22
+  contentModalDelete?: string   //21,22
 }
 
 export interface FormComponentBase extends Component<{
@@ -153,6 +156,6 @@ export const CONTROL_MAP = new Map<ControlType, FormComponentBase>([
   [ControlType.MaskingInput, MaskingInput],
   [ControlType.VariableInput, VariableInput],
   [ControlType.PhotoInput, PhotoInput],
-  [ControlType.GpsInput, GpsInput]
-
+  [ControlType.GpsInput, GpsInput],
+  [ControlType.CsvInput, CsvInput]
 ]);

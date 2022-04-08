@@ -7,8 +7,1186 @@
          "answer":true
       },
       {
-         "dataKey":"nama_lengkap",
-         "answer":"Agunga"
+         "dataKey":"csv_input",
+         "answer": [
+             {
+                 "kode": "1102",
+                 "deskripsi": "Padi ladang",
+                 "bentuk": "Gabah Kering Panen (GKP)",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1103",
+                 "deskripsi": "Padi sawah hibrida",
+                 "bentuk": "Gabah Kering Panen (GKP)",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1104",
+                 "deskripsi": "Padi sawah inbrida",
+                 "bentuk": "Gabah Kering Panen (GKP)",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1213",
+                 "deskripsi": "Jagung hibrida",
+                 "bentuk": "Pipilan Kering",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1214",
+                 "deskripsi": "Jagung komposit",
+                 "bentuk": "Pipilan Kering",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1215",
+                 "deskripsi": "Jagung lokal",
+                 "bentuk": "Pipilan Kering",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1202",
+                 "deskripsi": "Kedelai",
+                 "bentuk": "Biji Kering",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1203",
+                 "deskripsi": "Kacang tanah",
+                 "bentuk": "Biji Kering",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1204",
+                 "deskripsi": "Kacang hijau",
+                 "bentuk": "Biji Kering",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1205",
+                 "deskripsi": "Ubi kayu",
+                 "bentuk": "Umbi Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1206",
+                 "deskripsi": "Ubi jalar",
+                 "bentuk": "Umbi Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1207",
+                 "deskripsi": "Sorgum",
+                 "bentuk": "Biji",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1208",
+                 "deskripsi": "Gandum",
+                 "bentuk": "Biji ",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1209",
+                 "deskripsi": "Talas",
+                 "bentuk": "Umbi Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1210",
+                 "deskripsi": "Ganyong",
+                 "bentuk": "Umbi Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1211",
+                 "deskripsi": "Garut",
+                 "bentuk": "Umbi Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1212",
+                 "deskripsi": "Jagung manis",
+                 "bentuk": "Ontongan Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1216",
+                 "deskripsi": "Hotong",
+                 "bentuk": "Biji",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1217",
+                 "deskripsi": "Gembili",
+                 "bentuk": "Umbi Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1218",
+                 "deskripsi": "Kimpul",
+                 "bentuk": "Umbi Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1219",
+                 "deskripsi": "Iles-iles",
+                 "bentuk": "Umbi Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1220",
+                 "deskripsi": "Juwawut",
+                 "bentuk": "Biji ",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1221",
+                 "deskripsi": "Gadung",
+                 "bentuk": "Umbi Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1222",
+                 "deskripsi": "Suweg",
+                 "bentuk": "Umbi Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1223",
+                 "deskripsi": "Ubi saut",
+                 "bentuk": "Umbi Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1224",
+                 "deskripsi": "Kacang Babi",
+                 "bentuk": "Polong Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1225",
+                 "deskripsi": "Kacang Bogor",
+                 "bentuk": "Polong Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1226",
+                 "deskripsi": "Kacang Gude/Hiris",
+                 "bentuk": "Polong Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1227",
+                 "deskripsi": "Kacang Komak",
+                 "bentuk": "Polong Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1228",
+                 "deskripsi": "Kacang Koro Benguk",
+                 "bentuk": "Polong Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1229",
+                 "deskripsi": "Kacang Merah",
+                 "bentuk": "Polong Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1230",
+                 "deskripsi": "Kacang Nagara",
+                 "bentuk": "Polong Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1231",
+                 "deskripsi": "Kacang Rawai",
+                 "bentuk": "Polong Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1232",
+                 "deskripsi": "Kacang Tunggak",
+                 "bentuk": "Polong Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1233",
+                 "deskripsi": "Porang",
+                 "bentuk": "Umbi Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1234",
+                 "deskripsi": "Walur",
+                 "bentuk": "Umbi Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "1299",
+                 "deskripsi": "Palawija lainnya",
+                 "bentuk": "Polong Basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2201",
+                 "deskripsi": "Blewah",
+                 "bentuk": "Buah Segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2202",
+                 "deskripsi": "Melon lainnya",
+                 "bentuk": "Buah Segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2203",
+                 "deskripsi": "Rock Melon/Melon Berjaring",
+                 "bentuk": "Buah Segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2204",
+                 "deskripsi": "Golden Melon/Melon tidak Berjaring",
+                 "bentuk": "Buah Segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2205",
+                 "deskripsi": "Mentimun Suri",
+                 "bentuk": "Buah Segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2206",
+                 "deskripsi": "Semangka",
+                 "bentuk": "Buah Segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2207",
+                 "deskripsi": "Stroberi",
+                 "bentuk": "Buah Segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2299",
+                 "deskripsi": "Buah-buahan Semusim Lainnya",
+                 "bentuk": "Buah Segar",
+                 "satuan": "-"
+             },
+             {
+                 "kode": "2401",
+                 "deskripsi": "Asparagus",
+                 "bentuk": "Batang muda (rebung)",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2402",
+                 "deskripsi": "Bawang Bombay",
+                 "bentuk": "Umbi kering panen dengan daun",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2403",
+                 "deskripsi": "Bawang Daun",
+                 "bentuk": "Daun segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2404",
+                 "deskripsi": "Bawang Merah",
+                 "bentuk": "Cabut Basah/umbi basah dengan daun (konde basah)",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2405",
+                 "deskripsi": "Bawang Prei",
+                 "bentuk": "Daun segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2406",
+                 "deskripsi": "Bawang Putih",
+                 "bentuk": "Cabut Basah/umbi basah dengan daun (konde basah)",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2407",
+                 "deskripsi": "Bayam",
+                 "bentuk": "Sayuran segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2408",
+                 "deskripsi": "Brokoli",
+                 "bentuk": "Sayuran segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2409",
+                 "deskripsi": "Buncis",
+                 "bentuk": "Buah segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2410",
+                 "deskripsi": "Cabai Hijau",
+                 "bentuk": "Buah segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2411",
+                 "deskripsi": "Cabai Merah Besar",
+                 "bentuk": "Buah segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2412",
+                 "deskripsi": "Cabai Merah Keriting",
+                 "bentuk": "Buah segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2413",
+                 "deskripsi": "Cabai Rawit",
+                 "bentuk": "Buah segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2414",
+                 "deskripsi": "Jamur Kuping",
+                 "bentuk": "Tubuh buah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2415",
+                 "deskripsi": "Jamur Merang",
+                 "bentuk": "Tubuh buah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2416",
+                 "deskripsi": "Jamur Tiram",
+                 "bentuk": "Tubuh buah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2417",
+                 "deskripsi": "Kacang Merah",
+                 "bentuk": "Polong basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2418",
+                 "deskripsi": "Kacang Kapri",
+                 "bentuk": "Polong basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2419",
+                 "deskripsi": "Kacang Panjang",
+                 "bentuk": "Polong basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2420",
+                 "deskripsi": "Kailan",
+                 "bentuk": "Sayuran segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2421",
+                 "deskripsi": "Kangkung",
+                 "bentuk": "Sayuran Segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2422",
+                 "deskripsi": "Kembang Kol",
+                 "bentuk": "Sayuran Segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2423",
+                 "deskripsi": "Kentang sayur",
+                 "bentuk": "Umbi basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2424",
+                 "deskripsi": "Kentang industri",
+                 "bentuk": "Umbi basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2425",
+                 "deskripsi": "Kubis",
+                 "bentuk": "Daun krop",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2426",
+                 "deskripsi": "Labu Siam",
+                 "bentuk": "Buah segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2427",
+                 "deskripsi": "Lobak",
+                 "bentuk": "Umbi dengan daun",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2428",
+                 "deskripsi": "Ketimun",
+                 "bentuk": "Buah segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2429",
+                 "deskripsi": "Oyong/Gambas",
+                 "bentuk": "Buah segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2430",
+                 "deskripsi": "Pak Choi",
+                 "bentuk": "Sayuran segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2431",
+                 "deskripsi": "Paprika",
+                 "bentuk": "Buah segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2432",
+                 "deskripsi": "Paria/pare",
+                 "bentuk": "Buah segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2433",
+                 "deskripsi": "Petsai/Sawi Putih",
+                 "bentuk": "Sayuran segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2434",
+                 "deskripsi": "Sawi",
+                 "bentuk": "Sayuran segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2435",
+                 "deskripsi": "Seledri",
+                 "bentuk": "Sayuran segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2436",
+                 "deskripsi": "Slada",
+                 "bentuk": "Sayuran segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2437",
+                 "deskripsi": "Terung",
+                 "bentuk": "Buah segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2438",
+                 "deskripsi": "Tomat",
+                 "bentuk": "Buah segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2439",
+                 "deskripsi": "Wortel",
+                 "bentuk": "Buah segar",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2499",
+                 "deskripsi": "Sayuran Semusim Lainnya",
+                 "bentuk": "Sayuran segar",
+                 "satuan": "-"
+             },
+             {
+                 "kode": "2601",
+                 "deskripsi": "Artemisia",
+                 "bentuk": "Daun",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2602",
+                 "deskripsi": "Brotowali ",
+                 "bentuk": "Daun",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2603",
+                 "deskripsi": "Jahe Putih Besar (Jahe Gajah)",
+                 "bentuk": "Rimpang",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2604",
+                 "deskripsi": "Jahe Putih Kecil (Jahe Emprit)",
+                 "bentuk": "Rimpang",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2605",
+                 "deskripsi": "Jahe Merah",
+                 "bentuk": "Rimpang",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2606",
+                 "deskripsi": "Jamur Ling Zhi",
+                 "bentuk": "Tubuh buah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2607",
+                 "deskripsi": "Keji Beling",
+                 "bentuk": "Daun",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2608",
+                 "deskripsi": "Kemangi",
+                 "bentuk": "Daun",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2609",
+                 "deskripsi": "Kencur ",
+                 "bentuk": "Rimpang",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2610",
+                 "deskripsi": "Kepel",
+                 "bentuk": "Buah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2611",
+                 "deskripsi": "Kunyit ",
+                 "bentuk": "Rimpang",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2612",
+                 "deskripsi": "Kumis Kucing",
+                 "bentuk": "Daun",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2613",
+                 "deskripsi": "Lempuyang ",
+                 "bentuk": "Rimpang",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2614",
+                 "deskripsi": "Lengkuas ",
+                 "bentuk": "Rimpang",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2615",
+                 "deskripsi": "Lidah Buaya",
+                 "bentuk": "Daun",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2616",
+                 "deskripsi": "Pegagan ",
+                 "bentuk": "Daun",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2617",
+                 "deskripsi": "Pulepandak",
+                 "bentuk": "Daun",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2618",
+                 "deskripsi": "Purwoceng ",
+                 "bentuk": "Daun",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2619",
+                 "deskripsi": "Sambiloto ",
+                 "bentuk": "Daun",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2620",
+                 "deskripsi": "Selasih ",
+                 "bentuk": "Biji",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2621",
+                 "deskripsi": "Tapak dara",
+                 "bentuk": "Daun",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2622",
+                 "deskripsi": "Tapak liman",
+                 "bentuk": "Daun",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2623",
+                 "deskripsi": "Tempuyung",
+                 "bentuk": "Daun",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2624",
+                 "deskripsi": "Temu Giring ",
+                 "bentuk": "Rimpang",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2625",
+                 "deskripsi": "Temu Ireng (temu hitam)",
+                 "bentuk": "Rimpang",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2626",
+                 "deskripsi": "Temu Kunci ",
+                 "bentuk": "Rimpang",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2627",
+                 "deskripsi": "Temu Wiyang",
+                 "bentuk": "Rimpang",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2628",
+                 "deskripsi": "Temulawak",
+                 "bentuk": "Rimpang",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2629",
+                 "deskripsi": "Temumangga ",
+                 "bentuk": "Rimpang",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2630",
+                 "deskripsi": "Temuputih",
+                 "bentuk": "Rimpang",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2699",
+                 "deskripsi": "Tanaman Obat Semusim Lainnya",
+                 "bentuk": "Rimpang/Daun",
+                 "satuan": "-"
+             },
+             {
+                 "kode": "2801",
+                 "deskripsi": "Alamanda",
+                 "bentuk": "Pohon",
+                 "satuan": "Rumpun"
+             },
+             {
+                 "kode": "2802",
+                 "deskripsi": "Alpinia",
+                 "bentuk": "Bunga potong",
+                 "satuan": "Tangkai "
+             },
+             {
+                 "kode": "2802",
+                 "deskripsi": "Alpinia",
+                 "bentuk": " Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2803",
+                 "deskripsi": "Anggrek",
+                 "bentuk": "Bunga potong",
+                 "satuan": "Tangkai "
+             },
+             {
+                 "kode": "2803",
+                 "deskripsi": "Anggrek",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2804",
+                 "deskripsi": "Anyelir ",
+                 "bentuk": "Bunga potong",
+                 "satuan": "Tangkai "
+             },
+             {
+                 "kode": "2804",
+                 "deskripsi": "Anyelir ",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2805",
+                 "deskripsi": "Aglaoenema ",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2806",
+                 "deskripsi": "Bunga Matahari ",
+                 "bentuk": "Bunga potong",
+                 "satuan": "Tangkai "
+             },
+             {
+                 "kode": "2806",
+                 "deskripsi": "Bunga Matahari ",
+                 "bentuk": "pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2807",
+                 "deskripsi": "Catleya",
+                 "bentuk": "Bunga potong",
+                 "satuan": "Tangkai "
+             },
+             {
+                 "kode": "2807",
+                 "deskripsi": "Catleya",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2808",
+                 "deskripsi": "Celosia",
+                 "bentuk": "Pohon",
+                 "satuan": "Tangkai"
+             },
+             {
+                 "kode": "2809",
+                 "deskripsi": "Cocor Bebek",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2810",
+                 "deskripsi": "Cordylene ",
+                 "bentuk": "Daun Potong",
+                 "satuan": "Tangkai "
+             },
+             {
+                 "kode": "2810",
+                 "deskripsi": "Cordylene ",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2811",
+                 "deskripsi": "Drasena",
+                 "bentuk": "Daun Potong",
+                 "satuan": "Tangkai "
+             },
+             {
+                 "kode": "2811",
+                 "deskripsi": "Drasena",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2812",
+                 "deskripsi": "Fitonia ",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2813",
+                 "deskripsi": "Gladiol ",
+                 "bentuk": "Bunga potong",
+                 "satuan": "Tangkai "
+             },
+             {
+                 "kode": "2813",
+                 "deskripsi": "Gladiol ",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2814",
+                 "deskripsi": "Hebras ",
+                 "bentuk": "Bunga potong",
+                 "satuan": "Tangkai "
+             },
+             {
+                 "kode": "2814",
+                 "deskripsi": "Hebras ",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2815",
+                 "deskripsi": "Kalla Lili ",
+                 "bentuk": "Bunga potong",
+                 "satuan": "Tangkai "
+             },
+             {
+                 "kode": "2815",
+                 "deskripsi": "Kalla Lili ",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2816",
+                 "deskripsi": "Kamboja Jepang/Adenium",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2817",
+                 "deskripsi": "Kastuba ",
+                 "bentuk": "Pohon",
+                 "satuan": "Rumpun"
+             },
+             {
+                 "kode": "2818",
+                 "deskripsi": "Kecombrang",
+                 "bentuk": "Bunga Potong",
+                 "satuan": "Tangkai "
+             },
+             {
+                 "kode": "2818",
+                 "deskripsi": "Kecombrang",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2819",
+                 "deskripsi": "Krisan/Seruni",
+                 "bentuk": "Bunga Potong",
+                 "satuan": "Tangkai "
+             },
+             {
+                 "kode": "2819",
+                 "deskripsi": "Krisan/Seruni",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2820",
+                 "deskripsi": "Lantana ",
+                 "bentuk": "Pohon",
+                 "satuan": "Rumpun"
+             },
+             {
+                 "kode": "2821",
+                 "deskripsi": "Mawar",
+                 "bentuk": "Bunga Potong",
+                 "satuan": "Tangkai "
+             },
+             {
+                 "kode": "2821",
+                 "deskripsi": "Mawar",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2822",
+                 "deskripsi": "Melati ",
+                 "bentuk": "Bunga Tabur",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2822",
+                 "deskripsi": "Melati ",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2823",
+                 "deskripsi": "Melati Gambir Hutan ",
+                 "bentuk": "Bunga Tabur",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2823",
+                 "deskripsi": "Melati Gambir Hutan ",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2824",
+                 "deskripsi": "Melati Kosta ",
+                 "bentuk": "Bunga Tabur",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2824",
+                 "deskripsi": "Melati Kosta ",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2825",
+                 "deskripsi": "Monstra ",
+                 "bentuk": "Daun Potong",
+                 "satuan": "Tangkai"
+             },
+             {
+                 "kode": "2825",
+                 "deskripsi": "Monstra ",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2826",
+                 "deskripsi": "Nanas-nanasan/Bromelia",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2827",
+                 "deskripsi": "Palm Jepang",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2828",
+                 "deskripsi": "Palm Kuning",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2829",
+                 "deskripsi": "Palm Merah ",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2830",
+                 "deskripsi": "Palm Waregu ",
+                 "bentuk": "Rumpun",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2831",
+                 "deskripsi": "Peperonia",
+                 "bentuk": "Rumpun",
+                 "satuan": "Rumpun"
+             },
+             {
+                 "kode": "2832",
+                 "deskripsi": "Pisang-pisangan/Heliconia",
+                 "bentuk": "Bunga Potong",
+                 "satuan": "Tangkai"
+             },
+             {
+                 "kode": "2832",
+                 "deskripsi": "Pisang-pisangan/Heliconia",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2833",
+                 "deskripsi": "Pohon Dollar",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2834",
+                 "deskripsi": "Pakis-pakisan",
+                 "bentuk": "Bunga potong",
+                 "satuan": "Tangkai"
+             },
+             {
+                 "kode": "2834",
+                 "deskripsi": "Pakis-pakisan",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2835",
+                 "deskripsi": "Pedang-pedangan/Sansevieria",
+                 "bentuk": "Bunga potong",
+                 "satuan": "Tangkai"
+             },
+             {
+                 "kode": "2835",
+                 "deskripsi": "Pedang-pedangan/Sansevieria",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2836",
+                 "deskripsi": "Rose Bombay ",
+                 "bentuk": "Rumpun",
+                 "satuan": "Rumpun"
+             },
+             {
+                 "kode": "2837",
+                 "deskripsi": "Rumput Peking",
+                 "bentuk": "Rumpun",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "2838",
+                 "deskripsi": "Scindapsus ",
+                 "bentuk": "Rumpun",
+                 "satuan": "Rumpun"
+             },
+             {
+                 "kode": "2839",
+                 "deskripsi": "Sirih-sirihan",
+                 "bentuk": "Rumpun",
+                 "satuan": "Rumpun"
+             },
+             {
+                 "kode": "2840",
+                 "deskripsi": "Sedap Malam",
+                 "bentuk": "Bunga potong",
+                 "satuan": "Tangkai"
+             },
+             {
+                 "kode": "2840",
+                 "deskripsi": "Sedap Malam",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2841",
+                 "deskripsi": "Spathipyllum (Bunga Lili)",
+                 "bentuk": "Bunga potong",
+                 "satuan": "Tangkai"
+             },
+             {
+                 "kode": "2841",
+                 "deskripsi": "Spathipyllum (Bunga Lili)",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2842",
+                 "deskripsi": "Talas-talasan",
+                 "bentuk": "Rumpun",
+                 "satuan": "Rumpun"
+             },
+             {
+                 "kode": "2843",
+                 "deskripsi": "Vanda ",
+                 "bentuk": "Bunga ",
+                 "satuan": "Tangkai"
+             },
+             {
+                 "kode": "2843",
+                 "deskripsi": "Vanda ",
+                 "bentuk": "Pohon",
+                 "satuan": "Pohon"
+             },
+             {
+                 "kode": "2899",
+                 "deskripsi": "Tanaman Hias Semusim Lainnya",
+                 "bentuk": "Pohon",
+                 "satuan": "-"
+             },
+             {
+                 "kode": "3201",
+                 "deskripsi": "Abaca/Abaka/Manila",
+                 "bentuk": "Serat kering",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "3202",
+                 "deskripsi": "Akar wangi",
+                 "bentuk": "Akar kering",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "3203",
+                 "deskripsi": "Jute",
+                 "bentuk": "Serat kering",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "3204",
+                 "deskripsi": "Kapas",
+                 "bentuk": "Serat kapas",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "3205",
+                 "deskripsi": "Kenaf",
+                 "bentuk": "Serat kering",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "3206",
+                 "deskripsi": "Nilam",
+                 "bentuk": "Daun basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "3207",
+                 "deskripsi": "Rami/Haramay",
+                 "bentuk": "Serat kering",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "3208",
+                 "deskripsi": "Rosela",
+                 "bentuk": "Serat kering",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "3209",
+                 "deskripsi": "Sereh Wangi",
+                 "bentuk": "Daun basah",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "3210",
+                 "deskripsi": "Tebu",
+                 "bentuk": "Batang",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "3211",
+                 "deskripsi": "Tembakau",
+                 "bentuk": "Daun kering",
+                 "satuan": "Kg"
+             },
+             {
+                 "kode": "3299",
+                 "deskripsi": "Tanaman Perkebunan Semusim Lainnya",
+                 "bentuk": "Lainnya",
+                 "satuan": "-"
+             },
+             {
+                 "kode": ""
+             }
+         ]
+      },
+      {
+         "dataKey":"nm_lengkap",
+         "answer":"Agung"
       },
       {
          "dataKey":"alamat",
@@ -85,10 +1263,6 @@
       {
          "dataKey":"pekerjaan",
          "answer":"PNS"
-      },
-      {
-         "dataKey":"npwp",
-         "answer":"803424327665321"
       },
       {
          "dataKey":"hp",
