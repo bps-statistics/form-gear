@@ -2,6 +2,8 @@
   "name": "@bps/form-gear",
   "version": "0.1.0",
   "description": "FormGear is a framework engine for dynamic form creation and complex form processing and validation for data collection.",
+  "info": "It is easy to use and efficiently handle nested inquiries to capture everything down to the last detail. Unlike other similar framework, validation is handled in a FALSE condition in which each field is validated against a test equation. This leads to a more efficient and effective way to validate each component.",
+  "homepage": "https://solid-form-gear.vercel.app/",
   "files": [
     "dist"
   ],
@@ -19,7 +21,24 @@
     "form-builder",
     "survey-builder",
     "solid-js",
-    "data collection"
+    "data collection",
+    "solidhack", 
+    "best_ecosystem"
+  ],
+  "contributors": [
+    {
+      "name": "Ignatius Aditya Setyadi",
+      "email": "ignatius.aditya.setyadi@gmail.com",
+      "url": "https://www.linkedin.com/in/adityasetyadi/"
+    },
+    {
+      "name": "Ardian Saputra Hasibuan",
+      "email": "saputraardian703@gmail.com"
+    },
+    {
+      "name": "D. Agung Sungkono",
+      "email": "amb.d.agung@gmail.com"
+    }
   ],
   "scripts": {
     "dev": "vite --host",
