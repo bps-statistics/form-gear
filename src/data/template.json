@@ -14,6 +14,11 @@
             "components":[
                [  
                   {
+                     "label":"Csv",
+                     "dataKey":"csv_input",
+                     "type":34
+                  },
+                  {
                      "label":"Coba:",
                      "dataKey":"fav_coba",
                      "type":4,
@@ -140,6 +145,7 @@
                      "hint":"Nama sesoorang yang dilengkapi dengan semua identitas, seperti gelar (akademik, keagamaan) Nama sesoorang yang dilengkapi dengan semua identitas, seperti gelar (akademik, keagamaan) Nama sesoorang yang dilengkapi dengan semua identitas, seperti gelar (akademik, keagamaan)",
                      "answer":"Ignatius",
                      "enableRemark":true,
+                     "disableInput":true,
                      "type":25
                   },
                   {
