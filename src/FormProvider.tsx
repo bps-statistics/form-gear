@@ -7,11 +7,12 @@ type FormState = {
 }
 
 type FormConfig = {
-	username: string
-	clientMode: number
+	clientMode: number // 1 => CAWI ; 2 => CAPI
 	baseUrl: string
 	lookupKey: string
 	lookupValue : string
+	username: string
+	formMode: number // 1 => OPEN ; 2 => REJECTED ; 3 => SUBMITTED ; 4 => APPROVED ;
 }
 
 type ActiveComponent = {
@@ -37,11 +38,12 @@ export function FormProvider(props) {
 	const [form, setState] = createStore<FormState>({
         activeComponent: {dataKey: '', label: '', index: [], position: 0},
 		formConfig: {
-			username: props.config.username,
 			clientMode: props.config.clientMode, 
 			baseUrl: props.config.baseUrl,
 			lookupKey : props.config.lookupKey,
-			lookupValue : props.config.lookupValue
+			lookupValue : props.config.lookupValue,
+			username: props.config.username,
+			formMode: props.config.formMode
 		}
     })
 

@@ -3,6 +3,8 @@ import { FormComponentBase } from "../FormType"
 
 
 const ToggleInput: FormComponentBase = props => {
+    const config = props.config
+    const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
     const [val, setVal] = createSignal(props.value !== '' ? props.value : false);
 
     const [instruction, setInstruction] = createSignal(false);
@@ -73,6 +75,7 @@ const ToggleInput: FormComponentBase = props => {
             <button onClick={(e) =>  props.onValueChange(!val())}
                 classList={{'bg-blue-600': val() === true, 'bg-gray-200': val()=== false, }}
                 type="button"
+                disabled = { disableInput() }
                 class="relative inline-flex flex-shrink-0
                     h-7 w-12 border-2 border-transparent rounded-full
                     cursor-pointer shadow-sm transition-colors duration-200 ease-in-out

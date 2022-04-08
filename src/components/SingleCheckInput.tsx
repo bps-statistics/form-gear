@@ -2,6 +2,8 @@ import { createSignal, For, Match, Show, Switch } from "solid-js";
 import { FormComponentBase } from "../FormType"
 
 const SingleCheckInput: FormComponentBase = props => {
+    const config = props.config
+    const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
     
     const [instruction, setInstruction] = createSignal(false);
     const showInstruction = () => {
@@ -17,6 +19,7 @@ const SingleCheckInput: FormComponentBase = props => {
                     focus:outline-none transition duration-200 mt-1 align-top 
                     bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" 
                     type="checkbox" 
+                    disabled = { disableInput() }                    
                     checked={(props.value) ? props.value : false}
                     onChange={(e) => props.onValueChange(e.target.checked)} />
             </div>

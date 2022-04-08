@@ -2,12 +2,13 @@
 import { FormGear } from "./src/index"
 
 let config = {
-  clientMode: 1, // CAWI = 1, CAPI = 2
+  clientMode: 1, // 1 => CAWI ; 2 => CAPI ;
   token: `***REMOVED***`,
   baseUrl: `***REMOVED***`,
   lookupKey: `key%5B%5D`,
   lookupValue: `value%5B%5D`,
-  username: 'AdityaSetyadi'
+  username: 'AdityaSetyadi',
+  formMode: 1 // 1 => OPEN ; 2 => REJECTED ; 3 => SUBMITTED ; 4 => APPROVED ;
 }
 
 var cameraFunction = null;
