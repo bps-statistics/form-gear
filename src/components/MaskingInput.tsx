@@ -1,9 +1,12 @@
-import { createSignal, createEffect, For, Show } from "solid-js"
+import { createSignal, createEffect, For, Show, Switch, Match } from "solid-js"
 import { FormComponentBase } from "../FormType"
 import { createInputMask } from "@solid-primitives/input-mask"
 
 const MaskingInput: FormComponentBase = props => {
-  let classInput = 'w-full rounded font-light px-4 py-2.5 text-sm text-gray-700 border border-solid border-gray-300 bg-white bg-clip-padding transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none';
+  const config = props.config
+  const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
+
+  let classInput = 'w-full rounded font-light px-4 py-2.5 text-sm text-gray-700 bg-white bg-clip-padding transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400';
 
   const formatMask = createInputMask(props.component.maskingFormat);
   let ref
@@ -66,7 +69,14 @@ const MaskingInput: FormComponentBase = props => {
             'col-span-12': !(enableRemark()),
           }}  >
 
-          <input value={props.value} type="text" id={"inputMask" + props.component.dataKey} ref={inputMask.ref} onChange={(e) => handleOnChange(e.currentTarget.value)} onclick={formatMask} oninput={formatMask} onpaste={formatMask} class={classInput + props.classValidation} />
+          <input value={props.value} type="text" 
+              id={"inputMask" + props.component.dataKey} ref={inputMask.ref} 
+              class={ classInput } 
+              placeholder={props.component.maskingFormat.replace(/[a9*]/g, '#')}
+              disabled = { disableInput() }
+              onChange={(e) => handleOnChange(e.currentTarget.value)} 
+              onclick={formatMask} oninput={formatMask} onpaste={formatMask} 
+          />
 
           <Show when={props.validationMessage.length > 0}>
             <For each={props.validationMessage}>

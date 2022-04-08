@@ -3,6 +3,9 @@ import { FormComponentBase } from "../FormType"
 
 const RangeSliderInput: FormComponentBase = props => {
   
+  const config = props.config
+  const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
+  
   const [instruction, setInstruction] = createSignal(false);
   const showInstruction = () => {
     (instruction()) ? setInstruction(false) : setInstruction(true);
@@ -61,6 +64,7 @@ const RangeSliderInput: FormComponentBase = props => {
                       min={props.component.range[0].min}
                       max={props.component.range[0].max}
                       step={props.component.range[0].step}
+                      disabled = { disableInput() }
                       onChange={(e) => props.onValueChange(e.currentTarget.value)} />
             </div>
             <div class="col-span-1 text-center">{props.value || 0}</div>

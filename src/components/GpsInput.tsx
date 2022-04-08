@@ -11,6 +11,7 @@ const GpsInput: FormComponentBase = props => {
   })
 
   const config = props.config
+  const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
 
   createEffect(() => {
     setLabel(props.component.label)
@@ -142,12 +143,6 @@ const GpsInput: FormComponentBase = props => {
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                   </svg>
-                  <span class="absolute top-0 right-0 inline-flex items-center justify-center h-6 w-6 text-xs font-semibold text-white transform translate-x-1/2 -translate-y-1/4 bg-pink-600/80 rounded-full"
-                    classList={{
-                      'hidden': props.comments === 0
-                    }}>
-                    {props.comments}
-                  </span>
                 </button>
               </Match>
               <Match when={config.clientMode === 1}>
@@ -156,12 +151,6 @@ const GpsInput: FormComponentBase = props => {
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                   </svg>
-                  <span class="absolute top-0 right-0 inline-flex items-center justify-center h-6 w-6 text-xs font-semibold text-white transform translate-x-1/2 -translate-y-1/4 bg-pink-600/80 rounded-full"
-                    classList={{
-                      'hidden': props.comments === 0
-                    }}>
-                    {props.comments}
-                  </span>
                 </button>
               </Match>
             </Switch>
@@ -169,8 +158,9 @@ const GpsInput: FormComponentBase = props => {
 
           <Switch>
             <Match when={config.clientMode === 2} >
-              <button class="bg-white text-gray-500 p-2 rounded-full focus:outline-none h-10 w-10 hover:bg-teal-200 hover:text-teal-400 hover:border-teal-200 border-2 border-gray-300 "
-                onClick={() => clickMobileGps()}>
+              <button class="bg-white text-gray-500 p-2 rounded-full focus:outline-none h-10 w-10 hover:bg-teal-200 hover:text-teal-400 hover:border-teal-200 border-2 border-gray-300  disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
+               disabled = { disableInput() }
+               onClick={() => clickMobileGps()}>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -178,7 +168,8 @@ const GpsInput: FormComponentBase = props => {
               </button>
             </Match>
             <Match when={config.clientMode === 1}>
-              <button class="bg-white text-gray-500 p-2 rounded-full focus:outline-none h-10 w-10 hover:bg-teal-200 hover:text-teal-400 hover:border-teal-200 border-2 border-gray-300 "
+              <button class="bg-white text-gray-500 p-2 rounded-full focus:outline-none h-10 w-10 hover:bg-teal-200 hover:text-teal-400 hover:border-teal-200 border-2 border-gray-300  disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
+                disabled = { disableInput() }
                 onClick={() => clickGps()}>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />

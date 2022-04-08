@@ -2,12 +2,13 @@
 import { FormGear } from "./src/index"
 
 let config = {
-  clientMode: 1, // CAWI = 1, CAPI = 2
+  clientMode: 1, // 1 => CAWI ; 2 => CAPI ;
   token: `eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJpZFwiOlwiNTlGQjk2NjctRUQ3QS00QjA1LTlGNDUtODMyMjFBMzkxODFEXCIsXCJ1c2VybmFtZVwiOlwicGNscHVzYXRfMzMxM18xXCIsXCJmdWxsbmFtZVwiOlwicGNscHVzYXRfMzMxM18xXCIsXCJlbWFpbFwiOlwicGNscHVzYXRfMzMxM18xQHkuY29tXCIsXCJyb2xlSWRcIjpcIkVFMzFGN0M0LTVDNkEtNDMwQy1BRjEzLUJDRDRDNkQ5RTVCRVwiLFwicm9sZU5hbWVcIjpcIlBFVFVHQVNcIixcInByb3ZpbmNlSWRcIjpcIjZCQjEyODAyLTVDNUUtNEJGMS1BOTA2LUM1N0NCNEZDRTQwN1wiLFwicHJvdmluY2VOYW1lXCI6XCJKYXdhIFRlbmdhaFwiLFwicmVnZW5jeUlkXCI6XCJFRENFMDcwMi03QzIzLTQyQTMtQjgzOC1BNUVEMzQxRTlBNTJcIixcInJlZ2VuY3lOYW1lXCI6XCJLYXJhbmdhbnlhclwiLFwid29ya1VuaXRJZFwiOlwiQzM4QzU2NjctM0JCMC00NDNDLUE0MzUtMUVFQ0Q3QzZERkEyXCIsXCJ3b3JrVW5pdE5hbWVcIjpcIkJBREFOIFBVU0FUIFNUQVRJU1RJS1wifSIsImF1ZCI6Im5vbi1jYXdpIiwiZXhwIjoxNjUwMzc2MzM3LCJyb2wiOiJQRVRVR0FTIn0.JW2CzU5rLnqtksI2J7weMiSYmzzxO0XnP4vGm9xEZ-XYKhUo5JRyVdbXaeGptdciW6Sd9BbO14N_XBn-iUuemg`,
   baseUrl: `https://api-survey.bps.go.id/designer/api/lookup-data/json`,
   lookupKey: `key%5B%5D`,
   lookupValue: `value%5B%5D`,
-  username: 'AdityaSetyadi'
+  username: 'AdityaSetyadi',
+  formMode: 1 // 1 => OPEN ; 2 => REJECTED ; 3 => SUBMITTED ; 4 => APPROVED ;
 }
 
 var cameraFunction = null;

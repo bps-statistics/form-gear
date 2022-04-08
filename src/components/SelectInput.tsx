@@ -12,7 +12,8 @@ const SelectInput: FormComponentBase = props => {
     const [selectedOption, setSelectedOption] = createSignal('');
 
     const config = props.config
-
+    const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
+    
     type contentMeta = {
         name: string,
         type: string
@@ -269,10 +270,11 @@ const SelectInput: FormComponentBase = props => {
                             ' border rounded border-pink-600 dark:bg-pink-100 ' : props.classValidation === 2,
                             }}>
                             <Select
-                                class="formgear-select w-full rounded font-light text-sm text-gray-700 bg-white bg-clip-padding transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-0 border-transparent focus:outline-none"
+                                class="formgear-select w-full rounded font-light text-sm text-gray-700 bg-white bg-clip-padding transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-0 border-transparent focus:outline-none  disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
                                 {...createOptions(
                                     options() || [],
                                     { key: "label", filterable: true })}
+                                disabled = { disableInput() }
                                 onChange={(e) => handleOnChange(e ? e.value : '', e ? e.label : '')}
                                 initialValue={{ value: props.value ? props.value != '' ? props.value[0].value : '' : '', label: selectedOption }} />
                         </div>

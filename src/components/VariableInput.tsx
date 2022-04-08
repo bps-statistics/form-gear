@@ -2,7 +2,11 @@ import { For, Switch, Match, Show, createSignal, createEffect } from "solid-js";
 import { FormComponentBase } from "../FormType";
 
 const VariableInput: FormComponentBase = props => {
-  let classInput = 'w-full font-light px-4 py-2.5 text-sm text-gray-700 bg-gray-200 bg-clip-padding dark:bg-gray-300 border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none';
+  
+	const config = props.config
+	const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
+
+  let classInput = 'w-full font-light px-4 py-2.5 text-sm text-gray-700 bg-gray-200 bg-clip-padding dark:bg-gray-300 border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none  disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400';
   
   const [answer, setAnswer] = createSignal(props.value)
 

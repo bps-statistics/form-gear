@@ -3,7 +3,8 @@ import { FormComponentBase, Option } from "../FormType";
 import { reference, setReference } from '../stores/ReferenceStore';
 
 const RadioInput: FormComponentBase = props => {
-	// console.log('cek value : ', props.component.dataKey, props)
+	const config = props.config
+	const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
 
 	let settedValue = (props.value) ? props.value.length > 0 ? props.value[0].value : props.value : props.value	
 
@@ -84,7 +85,10 @@ const RadioInput: FormComponentBase = props => {
 										<div class="col-span-1">
 											<label class="cursor-pointer text-sm" for={props.component.dataKey + index()}>
 												<input type="radio" checked={settedValue === item.value} 
-													value={item.value} name={props.component.dataKey} id={props.component.dataKey + index()} onChange={e => handleOnChange(e.currentTarget.value, item.label)} />
+													class="disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
+													value={item.value} name={props.component.dataKey} id={props.component.dataKey + index()} 
+													disabled = { disableInput() }
+													onChange={e => handleOnChange(e.currentTarget.value, item.label)} />
 											</label>
 										</div>
 										<Switch>
@@ -94,7 +98,9 @@ const RadioInput: FormComponentBase = props => {
 														name={props.component.dataKey} id={props.component.dataKey}
 														class="w-full font-light px-4 py-2.5 text-sm text-gray-700 bg-white bg-clip-padding
 															border border-solid border-gray-300 rounded transition ease-in-out m-0
-															focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+															focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
+															disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
+														disabled = { disableInput() }
 														onChange={e => handleOnChange(item.value, e.currentTarget.value)}
 														/>
 												</div>

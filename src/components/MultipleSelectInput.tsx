@@ -11,6 +11,7 @@ const MultipleSelectInput: FormComponentBase = props => {
     const [options, setOptions] = createSignal<Option[]>([]);
 
     const config = props.config
+    const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
 
     let getOptions
     let optionsFetch
@@ -245,10 +246,11 @@ const MultipleSelectInput: FormComponentBase = props => {
                             ' border rounded border-pink-600 dark:bg-pink-100 ': props.classValidation === 2,
                         }}>
                         <Select multiple
-                            class="formgear-select w-full rounded font-light text-sm text-gray-700 bg-white bg-clip-padding transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-0 border-transparent focus:outline-none"
+                            class="formgear-select w-full rounded font-light text-sm text-gray-700 bg-white bg-clip-padding transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-0 border-transparent focus:outline-none  disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
                             {...createOptions(
                                 props.value == '' ? options : options().filter(item => !props.value.some(f => f.value == item.value)),
                                 { key: "label", filterable: true })}
+                            disabled = { disableInput() }
                             onChange={(e) => handleOnChange(e)}
                             initialValue={props.value}
                         />

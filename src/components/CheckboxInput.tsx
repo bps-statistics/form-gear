@@ -3,6 +3,8 @@ import { FormComponentBase, Option } from "../FormType"
 import { reference, setReference } from '../stores/ReferenceStore'
 
 const CheckboxInput: FormComponentBase = props => {
+    const config = props.config
+    const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
     let handleOnChange = (value: any, label: any, open: any) => {
         let updatedAnswer = JSON.parse(JSON.stringify(props.value))          
 
@@ -144,8 +146,10 @@ const CheckboxInput: FormComponentBase = props => {
                                                                 border-gray-300 rounded-sm bg-white 
                                                                 checked:bg-blue-600 checked:border-blue-600 
                                                                 focus:outline-none transition duration-200 mt-1 align-top 
-                                                                bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" 
+                                                                bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer
+                                                                disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400" 
                                                                 type="checkbox" 
+                                                                disabled = { disableInput() }
                                                                 onChange={e => handleOnChange(e.currentTarget.value, item.label, item.open)} value={item.value} 
                                                                 checked={ (item.value) ? tick(item.value) : false} id={"flexCheckDefault"+ index()}/>
                                                     </label>
