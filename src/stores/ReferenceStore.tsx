@@ -42,6 +42,7 @@ type Detail = {
     validationMessage?: string[]
     validations?: Validations[]
     componentValidation?: string[]
+    hasRemark?: boolean
 }
 
 export interface Reference {

@@ -43,7 +43,6 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
     // newComp.label = newComp.label;//tetap
     newComp.hint = newComp.hint !== undefined ? newComp.hint : false;
     newComp.description = newComp.description !== undefined ? newComp.description : '';
-    // newComp.type = newComp.type;//tetap
 
     let tmp_type = newComp.type;
     newComp.answer = (tmp_type === 21 || tmp_type === 22) ? [{"label":"lastId#0","value":0}] : newComp.answer ? newComp.answer : ''
@@ -197,13 +196,14 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
     
     // console.log('newComp',dataKey, nestedPosition, componentPosition);
     // console.log('newComp',newComp, componentPosition);
-
+    newComp.hasRemark = false;
     if ( newComp.enableRemark === undefined || (newComp.enableRemark !== undefined && newComp.enableRemark )){  
         let remarkPosition = remark.details.notes.findIndex(obj => obj.dataKey === newComp.dataKey);
         if(remarkPosition !== -1){
             let newNote = remark.details.notes[remarkPosition];
             let updatedNote = JSON.parse(JSON.stringify(note.details.notes));
             updatedNote.push(newNote);
+            newComp.hasRemark = true;
             setNote('details','notes',updatedNote);
         }
     }
