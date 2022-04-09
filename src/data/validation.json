@@ -4,121 +4,46 @@
     "version":"0.0.1",
     "testFunctions":[
         {
-            "dataKey":"usia",
-            "componentValidation":["usia"],
+            "dataKey":"hobbies",
+            "componentValidation":["hobbies"],
             "validations": [
                 {
-                    "test":"getValue('usia') >= 8 && getValue('usia') < 10",
-                    "message":"Usia minimal 10 tahun Usia minimal 10 tahun Usia minimal 10 tahun Usia minimal 10 tahun Usia minimal 10 tahun Usia minimal 10 tahun ",
-                    "type":1
-                },
-                {
-                    "test":"getValue('usia') < 8",
-                    "message":"Usia minimal 10 tahun",
-                    "type":2
-                }
-            ]
-        },
-        {
-            "dataKey":"nama_art",
-            "componentValidation":["nama_art"],
-            "validations": [
-                {
-                    "test":"getValue('nama_art').length < 3",
-                    "message":"Harus toggle",
-                    "type":2
-                }
-            ]
-        },
-        {
-            "dataKey":"asetku",
-            "componentValidation":["asetku"],
-            "validations": [
-                {
-                    "test":"getValue('asetku').length < 2",
-                    "message":"Minimal 2",
+                    "test":"getValue('hobbies').length == 0",
+                    "message":"Please choose at least one hobby",
                     "type":1
                 }
             ]
         },
         {
-            "dataKey":"happy",
-            "componentValidation":["happy"],
+            "dataKey":"address",
+            "componentValidation":["address"],
             "validations": [
                 {
-                    "test":"getValue('happy') < 8",
-                    "message":"Minimal 8",
+                    "test":"console.log(getValue('address'));getValue('address').length < 5",
+                    "message":"Minimum characters allowed is 5",
                     "type":2
                 }
             ]
         },
         {
-            "dataKey":"luas_rumah",
-            "componentValidation":["luas_rumah@$ROW$","luas_lahan@$ROW$"],
+            "dataKey":"frec_coffee",
+            "componentValidation":["frec_coffee@$ROW$"],
             "validations": [
                 {
-                    "test":"Number(getValue('luas_rumah@$ROW$')) < Number(getValue('luas_lahan@$ROW$'))",
-                    "message":"Luas rumah tidak bisa kurang dari luas lahan",
-                    "type":2
-                },
-                {
-                    "test":"Number(getValue('luas_rumah@$ROW$')) === 0",
-                    "message":"Luas rumah tidak bisa 0 m persegi",
+                    "test":"getValue('frec_coffee') == ''",
+                    "message":"Frecuency of drinking coffee can not be blank",
                     "type":2
                 }
             ]
         },
         {
-            "dataKey":"jenis_peliharaan",
-            "componentValidation":["jenis_peliharaan@$ROW$","jumlah_peliharaan@$ROW$"],
+            "dataKey":"social_media",
+            "componentValidation":["social_media@$ROW$"],
             "validations": [
                 {
-                    "test":"(getValue('jenis_peliharaan@$ROW$') !== '') && (Number(getValue('jumlah_peliharaan@$ROW$')) == 0)",
-                    "message":"Jika jenis peliharaan isi, jumlah harus > 0",
+                    "test":"getValue('social_media') == ''",
+                    "message":"social media can not be blank",
                     "type":2
-                }
-            ]
-        },
-        {
-            "dataKey":"nama_makan_malam",
-            "componentValidation":["banyak_makan@$ROW$","nama_makan_malam@$ROW$","jenis_peliharaan@$ROW1$"],
-            "validations": [
-                {
-                    "test":"(getValue('nama_makan_malam@$ROW$') !== '') && (Number(getValue('banyak_makan@$ROW$')) == 0)",
-                    "message":"Jika jenis nama makanan isi, jumlah harus > 0",
-                    "type":2
-                },
-                {
-                    "test":"(getValue('nama_makan_malam@$ROW$') !== '') && (getValue('jenis_peliharaan@$ROW1$')) !== 'Anjing'",
-                    "message":"Jika nama makanan isi, maka jenis peliharan harus Anjing",
-                    "type":2
-                }
-            ]
-        },
-        {
-            "dataKey":"nama_minuman",
-            "componentValidation":["banyak_minum@$ROW$","nama_minuman@$ROW$"],
-            "validations": [
-                {
-                    "test":"(getValue('nama_minuman@$ROW$') !== '') && (Number(getValue('banyak_minum@$ROW$')) == 0)",
-                    "message":"Jika nama minuman isi, jumlah harus > 0",
-                    "type":2
-                }
-            ]
-        },
-        {
-            "dataKey":"confirm_pekerjaan",
-            "componentValidation":["pekerjaan","confirm_pekerjaan"],
-            "validations": [
-                {
-                    "test":"getValue('confirm_pekerjaan') !== getValue('pekerjaan')",
-                    "message":"Konfirmasi pekerjaan harus sama dengan pekerjaan",
-                    "type":2
-                },
-                {
-                    "test":"getValue('confirm_pekerjaan').length < 4",
-                    "message":"Panjang konfirmasi harus minimal 4",
-                    "type":1
                 }
             ]
         }
