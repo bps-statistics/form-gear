@@ -97,7 +97,6 @@ const FormInput: FormComponentBase = props => {
   let handleValidation = createMemo(() => {
     const componentIndex = reference.details.findIndex(obj => obj.dataKey === props.component.dataKey);
     // console.log('valState:',props.component.dataKey, reference.details[componentIndex].validationState)
-    // return (reference.details[componentIndex]) ? cn[reference.details[componentIndex].validationState] : cn[0];    
     return (reference.details[componentIndex]) ? reference.details[componentIndex].validationState : 0;    
   })
     
@@ -128,7 +127,9 @@ const FormInput: FormComponentBase = props => {
         } else {
           updatedNote[noteIndex].comments.push(commentRemark[0]) 
         }
-      }    
+      }
+      let refPosition = reference.details.findIndex(obj => obj.dataKey === flagRemark());
+      setReference('details',refPosition,'hasRemark',true);
       setNote('details','notes', updatedNote);
       // console.log('remark', remark) 
       

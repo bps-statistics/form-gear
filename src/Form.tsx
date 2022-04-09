@@ -205,6 +205,18 @@ const Form: Component<{
             compVal = validation.details.testFunctions[valPosition].componentValidation;
           }
 
+          let hasRemark = false;
+          if ( element[i].enableRemark === undefined || (element[i].enableRemark !== undefined && element[i].enableRemark )){  
+            let remarkPosition = remark.details.notes.findIndex(obj => obj.dataKey === element[i].dataKey);
+            if(remarkPosition !== -1){
+              let newNote = remark.details.notes[remarkPosition];
+              let updatedNote = JSON.parse(JSON.stringify(note.details.notes));
+              updatedNote.push(newNote);
+              hasRemark = true;
+              setNote('details','notes',updatedNote);
+            }
+          }
+
           referenceList.push({         
               dataKey: element[i].dataKey,
               label: element[i].label,
@@ -238,18 +250,9 @@ const Form: Component<{
               validationState: element[i].validationState !== undefined ? element[i].validationState : 0,
               validationMessage: element[i].validationMessage !== undefined ? element[i].validationMessage : [],
               validations: vals,
-              componentValidation: compVal
+              componentValidation: compVal,
+              hasRemark: hasRemark
           })
-
-          if ( element[i].enableRemark === undefined || (element[i].enableRemark !== undefined && element[i].enableRemark )){  
-            let remarkPosition = remark.details.notes.findIndex(obj => obj.dataKey === element[i].dataKey);
-            if(remarkPosition !== -1){
-              let newNote = remark.details.notes[remarkPosition];
-              let updatedNote = JSON.parse(JSON.stringify(note.details.notes));
-              updatedNote.push(newNote);
-              setNote('details','notes',updatedNote);
-            }
-          }
 
           element[i].components && element[i].components.forEach((element, index) => loopTemplate(element,index, parent.concat(i,0), level+1, sideEnable))
         }
@@ -556,12 +559,19 @@ const Form: Component<{
       checkDocState();
       if(docState() === 'E') {
         toastInfo("Please make sure your submission is valid", 3000, "", "bg-pink-600/80");
-      } else if(docState() === 'W') {
-        toastInfo("The submission you are about to submit still contains a warning", 3000, "", "bg-orange-600/80");
-        setShowSubmit(true);
       } else {
-        setShowSubmit(true);
+        if(summary.blank === 0){
+          if(docState() === 'W') {
+            toastInfo("The submission you are about to submit still contains a warning", 3000, "", "bg-orange-600/80");
+            setShowSubmit(true);
+          } else {
+            setShowSubmit(true);
+          }
+        } else {
+          toastInfo("Please make sure your submission is fully filled", 3000, "", "bg-pink-600/80");
+        }
       }
+      
     }
     
     const submitData = (event: MouseEvent) => {
