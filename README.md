@@ -1,18 +1,53 @@
-# Form Gear
+<h1 align="center"> FormGear </h1>
 
 # About
 
 
+FormGear is a framework engine for form creation, processing, and validation. FormGear is designed to accommodate the requirement from Badan Pusat Statistik, Indonesia’s National Statistic Office, in its data collection process. This requirement calls for dynamic form creation, complex processing and validation, and ease of use in the data collection process.
 
-FormGear is a framework engine for dynamic form creation and complex form processing and validation for data collection. It is easy to use and efficiently handle nested inquiries to capture everything down to the last detail. Unlike other similar framework, validation is handled in a FALSE condition in which each field is validated against a test equation. This leads to a more efficient and effective way to validate each component.
+FormGear uses a defined JSON object template, thus is easy to build, use, and efficiently handle nested inquiries to capture everything down to the last detail. Unlike other similar framework, validation is handled in a FALSE condition in which each field is validated against a test equation. This leads to a more efficient and effective way of validating each component. 
+
+# Features
 
 
+- Easily create complex form with various form controls.
+- Divide form into several sections for ease during data collection.
+- Create nested form inquiry to accommodate recurring fields.
+- Add conditions to enable form control.
+- Validate answer given during data collection with your own test function.
+- Add remark to record additional information.
+- Add preset to provide information acquired prior to data collection.
 
 # Usage
 
+## Table of Content
+- [About](#about)
+- [Features](#features)
+- [Usage](#usage)
+    * [Online examples](#online-examples) 
+    * [Installation](#installation)
+    * [Template](#template)
+        + [Control Type](#control-type)
+        + [Component Type](#component-type)
+        + [Input for `ListSelectInputRepeat`, `MultipleSelectInput`, `RadioInput`, and `CheckboxInput`](#input-for-listselectinputrepeat-multipleselectinput-radioinput-and-checkboxinput)
+        + [Input for `RangeSliderInput`](#input-for-rangesliderinput)
+        + [Input for `sourceSelect`](#input-for-sourceselect)
+    * [Preset](#preset)
+    * [Response](#response)
+    * [Validation](#validation)
+    * [Remark](#remark)
+- [License](#license)
+- [Our Team](#our-team)
 
+
+## Online examples
+---   
+
+- [Fill a form](https://solid-form-gear.vercel.app/), or
+- [Build one yourself](https://codesandbox.io/s/solid-form-gear-vvj0wt).
 
 ## Installation
+---
 
 FormGear can be installed via package manager like `npm` or `yarn`, or it can be used directly via CDN.
 
@@ -107,15 +142,16 @@ function initForm(template, preset, response, validation, remark){
    let form = FormGear(template, preset, response, validation, remark, config, uploadHandler, GpsHandler, onlineSearch, setResponseMobile, setSubmitMobile, openMap);
    
    return form;
+   
 }
 
 ```
 
-# Template
+## Template
 
+---
 
-
-FormGear use defined template which is based on JSON Object. 
+FormGear use defined template which is based on JSON Object. This allows for dynamic form creation, letting you to easily build your form with various form controls simply by expanding the JSON object. This also allows FormGear to create nest other form control in other form control, making it easy for you to create recurring questions based on the nested form control. Below is the structure and example of the JSON object that FormGear uses as its form template.
 
 ```
 template.json
@@ -164,116 +200,343 @@ template.json
 
 ```
 
+```json
+[
+    {
+        "label":"Hobbies",
+        "dataKey":"hobbies",
+        "type":29,
+        "cols":3,
+        "options":[
+            {
+                "label":"Sleeping",
+                "value":"1"
+            },
+            {
+                "label":"Play Games",
+                "value":"2"
+            },
+            {
+                "label":"Watching Movie",
+                "value":"3"
+            },
+            {
+                "label":"Cooking",
+                "value":"4"
+            },
+            {
+                "label":"Working",
+                "value":"5"
+            },
+            {
+                "label":"Travelling",
+                "value":"6"
+            },
+            {
+                "label":"Other",
+                "value":"13",
+                "open":true
+            }
+        ]
+    },
+    {
+        "label": "Provinsi",
+        "dataKey": "l2_r322_prov_1",
+        "typeOption" : 2,
+        "type": 27,
+        "enableCondition":"Number(getValue('l2_lokasi_lahan@$ROW$')) > 0",
+        "componentEnable":["l2_lokasi_lahan@$ROW$"],
+        "sourceSelect":[{
+            "id": "f796a32a-36df-4554-bb79-bf8065e28c52",
+            "tableName": "kode_kab_ppkk",
+            "value": "kode_prov",
+            "desc": "nama_prov",
+            "parentCondition": [
+            
+            ]  
+        }]
+    },
+    {
+        "label":"Healthy neighborhood rating",
+        "dataKey":"rating",
+        "type":26,
+        "cols":5,
+        "options":[
+            {
+                "label":"",
+                "value":"1"
+            },
+            {
+                "label":"",
+                "value":"2"
+            },
+            {
+                "label":"",
+                "value":"3"
+            },
+            {
+                "label":"",
+                "value":"4"
+            },
+            {
+                "label":"",
+                "value":"5"
+            }
+        ]
+    },
+    {
+        "label":"Happiness Index",
+        "dataKey":"happy",
+        "type":18,
+        "range":[
+        {
+            "min":0,
+            "max":100,
+            "step":5
+        }
+        ]
+    },
+    {
+        "label":"Chld nested",
+        "dataKey":"childnested",
+        "description":"ChildNested",
+        "type":2,
+        "sourceQuestion":"hobbies",
+        "components":[
+            [
+                {
+                    "label":"name--- $NAME$",
+                    "dataKey":"name_",
+                    "type":4,
+                    "expression":"let nm = ''; let list = getValue('hobbies'); if(list !== undefined && list.length > 0) { let rowIndex = getRowIndex(0); let filter = list.filter(obj => obj.value == rowIndex); nm=filter[0].label }; nm;",
+                    "componentVar":["most_fav"],
+                    "render":true,
+                    "renderType":1
+                }
+            ]
+        ]
+    }
+]
+```
+
 ### Control Type
 
 ---
 
+FormGear allows you to work with a lot of possible HTML input types. To add a control type, you can simply add the code as a value of the `type` component as a JSON object and add other corresponding components:
+
+```json
+{
+   "description":"PENCACAHAN UNIT USAHA PERTANIAN – PERUSAHAAN PERTANIAN BERBADAN HUKUM",
+   "dataKey":"ST2023-L2_Usaha",
+   "title":"Survey Pertanian 2023 Gladi Kotor",
+   "acronym":"ST2023-L2.USAHA",
+   "version":"0.0.1",
+   "components":[
+								{
+                     "label":"Nama Lengkap disertai Gelar",
+                     "dataKey":"nama_lengkap",
+                     "hint":"Nama seseorang yang dilengkapi dengan semua identitas, seperti gelar (akademik, keagamaan) Nama sesoorang yang dilengkapi dengan semua identitas, seperti gelar (akademik, keagamaan) Nama sesoorang yang dilengkapi dengan semua identitas, seperti gelar (akademik, keagamaan)",
+                     "answer":"Ignatius",
+                     "enableRemark":true,
+                     "type":25
+                  }
+									]
+}
+
+```
+
+FormGear uses numbers as code to define each control type. Below is a table of control types and their corresponding code and description.
+
 | Control Type | Code | Description |
 | --- | --- | --- |
-| Section | 1 | Adds section to form. |
-| NestedInput | 2 | Adds nested input field to existing field. |
-| InnerHTML | 3 | Adds text written in HTML format. |
-| VariableInput | 4 | Variable input. |
-| DateInput | 11 | Date input. |
-| DateTimeLocalInput | 12 | Date and time input field with no time zone. |
-| TimeInput | 13 | Time input field. |
-| MonthInput | 14 | Month input field. |
-| WeekInput | 15 | Week input field. |
-| SingleCheckInput | 16 | Checkbox input field, lets user choose only one option out of limited choices. |
-| ToggleInput | 17 | Toggle input. |
-| RangeSliderInput | 18 | Range slider input, lets user to select a value or range of value from a specified min and max. |
-| UrlInput | 19 | URL input field. |
-| CurrencyInput | 20 | Currency input field, limited to IDR and USD. |
-| ListTextInputRepeat | 21 | Text input field, creating a list by letting user add more written input as needed. |
-| ListSelectInputRepeat | 22 | Dropdown input field, creating a list by letting user add more choices as needed. |
-| MultipleSelectInput | 23 | Drop-down input, lets user to choose one or more options of limited choices. |
-| MaskingInput | 24 | Number input with certain formatting, such as phone number and taxpayer identification number. |
-| TextInput | 25 | Single-line input field. |
-| RadioInput | 26 | Radio button, lets user choose one options of limited choices. |
-| SelectInput | 27 | Drop-down input. |
-| NumberInput | 28 | Numeric input field. |
-| CheckboxInput | 29 | Checkbox input field, lets user choose one or more options of limited choices. |
-| TextAreaInput | 30 | Adjustable text area input field. |
-| EmailInput | 31 | Email address input field. |
-| PhotoInput | 32 | Photo input, lets user add picture with .jpg, .jpeg, .png, and .gif format. |
-| GpsInput | 33 | GPS input. |
-
-### Option
-
----
-
-Define option properties for `ListSelectInputRepeat`, `MultipleSelectInput`, `RadioInput`, and `CheckboxInput` input.
-
-- `label`: label of an option that will show up in the form.
-- `value`: value of an option that will be recorded.
-- `open`: define whether or not an option is open-ended. The value recorded will be
-
-### Range
-
----
-
-Define properties for `RangeSliderInput` input.  
-
-- `min`: minimum of a range.
-- `max`: maximum of a range.
-- `step`: added value for each step.
-
-### Select Option
-
----
-
-Define properties for `sourceSelect` input.
-
-- `id`: identifier of the lookup table that will be used.
-- `tableName`: the name of the lookup table that will be used.
-- `value`: the column name in the lookup table that will be recorded as the option’s value.
-- `desc`: the column name in the lookup table that will be shown as the option’s label.
-- `parentCondition`: an array consisting of `key` and `value`. `key` refers to the parent lookup table’s `value`, while `value` refers to the parent lookup table’s `desc`.
+| `Section` | 1 | Adds section to form. |
+| `NestedInput` | 2 | Adds nested input field to existing field. |
+| `InnerHTML` | 3 | Adds text written in HTML format. |
+| `VariableInput` | 4 | Variable input. |
+| `DateInput` | 11 | Date input. |
+| `DateTimeLocalInput` | 12 | Date and time input field with no time zone. |
+| `TimeInput` | 13 | Time input field. |
+| `MonthInput` | 14 | Month input field. |
+| `WeekInput` | 15 | Week input field. |
+| `SingleCheckInput` | 16 | Checkbox input field, lets user choose only one option out of limited choices. |
+| `ToggleInput` | 17 | Toggle input. |
+| `RangeSliderInput` | 18 | Range slider input, lets user to select a value or range of value from a specified min and max. |
+| `UrlInput` | 19 | URL input field. |
+| `CurrencyInput` | 20 | Currency input field, limited to IDR and USD. |
+| `ListTextInputRepeat` | 21 | Text input field, creating a list by letting user add more written input as needed. |
+| `ListSelectInputRepeat` | 22 | Dropdown input field, creating a list by letting user add more choices as needed. |
+| `MultipleSelectInput` | 23 | Drop-down input, lets user to choose one or more options of limited choices. |
+| `MaskingInput` | 24 | Number input with certain formatting, such as phone number and taxpayer identification number. |
+| `TextInput` | 25 | Single-line input field. |
+| `RadioInput` | 26 | Radio button, lets user choose one options of limited choices. |
+| `SelectInput` | 27 | Drop-down input. |
+| `NumberInput`| 28 | Numeric input field. |
+| `CheckboxInput` | 29 | Checkbox input field, lets user choose one or more options of limited choices. |
+| `TextAreaInput` | 30 | Adjustable text area input field. |
+| `EmailInput` | 31 | Email address input field. |
+| `PhotoInput` | 32 | Photo input, lets user add picture with .`jpg`, `.jpeg`, `.png`, and `.gif` format. |
+| `GpsInput` | 33 | GPS input. |
+| `CsvInput` | 34 | CSV input, lets user upload `.csv` file to be stored as `.json` format in the Response. The `.csv` file can later be downloaded again in the same format. |
 
 ### Component Type
 
 ---
 
-| Component Type | Corresponding ControlType  | Input Type | Description | Notes |
+To customize each form control further, you can use components . Below are the components, the corresponding `ControlType` in which the component can be used, the input or value type of each component, and the description.
+
+| Component Type | Corresponding `ControlType`  | Input Type | Description | Notes |
 | --- | --- | --- | --- | --- |
-| dataKey | All | string | Component identifier. |  |
-| label | All | string | Component label that will show up in the form. |  |
-| hint | All | string | Provide hint on how to fill the corresponding field. |  |
-| type | All | ControlType | any | Define the ControlType of a field. |  |
-| components | 1, 2 | ComponentType | Store components inside a Section or NestedInput. |  |
-| rows | 30 | number | Define the number of rows needed in TextAreaInput. |  |
-| cols | 26, 29 | number | Define the number of columns the options in RadioInput and CheckboxInput will be divided to. |  |
-| options | 22, 23, 26, 29 | Option[] | Define options for ListSelectInputRepeat, MultipleSelectInput, RadioInput, and CheckboxInput.  |  |
-| range | 18 | Range[] | Define the min, max, and value of each step for a RangeSliderInput. |  |
-| description | 1, 2 | string | Adds description for a Section or NestedInput. |  |
-| answer | All | any | Storing answer collected on data collection. | ListSelectInputRepeat  and MultipleSelectInput must add: [{"label": "lastId#0","value": "0"}] |
-| sourceQuestion | 2 | string | Define the source question for a NestedInput field. |  |
-| sourceOption | 22, 23, 26, 27, 29 | string | Source of the options used in the field. |  |
-| typeOption | 22, 23, 26, 27, 29 | number | Type of the options used in the field. | 1: Its component.
-2: A lookup table.
-3: Other component. |
-| currency | 20 | string | Define the currency that will be used in a CurrencyInput field, limited to IDR and USD. |  |
-| separatorFormat | 20 | string | Define the separator that will be used in a CurrencyInput field. |  |
-| isDecimal | 20 | boolean | Define whether or not a CurrencyInput field allow decimal. |  |
-| maskingFormat | 24 | string | Define the type of maskingInput used. |  |
-| expression | 4 | string | A variable expression. | getValue function can be used to get the value of other field. |
-| componentVar | 4 | string[] | Define the component(s) used in VariableInput. |  |
-| render | 4 | boolean | Define whether or not the variable will be rendered. |  |
-| renderType | 4 | number | Variable output type. | 1: single output
-2: array |
-| enable | All | boolean | Define whether or not a component have a condition(s) that need satisfied before it can be filled. |  |
-| enableCondition | All | string | An expression to define a condition enabled for the field to be filled. | getProp function can be used to get the client mode.
-getValue function can be used to get the value of other field. |
-| componentEnable | All | string[] | A list of component(s) used in a condition expression. |  |
-| enableRemark | All | boolean | Define whether or not a component allows a remark. |  |
-| titleModalDelete | 21, 22 | string | Title of the warning that will show up when user tries to delete an item in ListTextInputRepeat or ListSelectInputRepeat. |  |
-| contentModalDelete | 21, 22 | string | Content of the warning that will show up when user tries to delete an item in ListTextInputRepeat or ListSelectInputRepeat. |  |
+| `dataKey` | All | `string` | Component identifier. |  |
+| `label` | All | `string` | Component label that will show up in the form. |  |
+| `hint` | All | `string` | Provide hint on how to fill the corresponding field. |  |
+| `type` | All | `ControlType` | any | Define the ControlType of a field. |  |
+| `components` | 1, 2 | `ComponentType` | Store components inside a Section or NestedInput. |  |
+| `rows` | 30 | `number` | Define the number of rows needed in TextAreaInput. |  |
+| `cols` | 26, 29 | `number` | Define the number of columns the options in RadioInput and CheckboxInput will be divided to. |  |
+| `options` | 22, 23, 26, 29 | `Option[]` | Define options for ListSelectInputRepeat, MultipleSelectInput, RadioInput, and CheckboxInput.  |  |
+| `range` | 18 | `Range[]` | Define the min, max, and value of each step for a RangeSliderInput. |  |
+| `description` | 1, 2 | `string` | Adds description for a `Section` or `NestedInput`. |  |
+| `answer` | All | any | Storing answer collected on data collection. | `ListSelectInputRepeat`  and `MultipleSelectInput` must add: `[{"label": "lastId#0","value": "0"}]` |
+| `sourceQuestion` | 2 | `string` | Define the source question for a `NestedInput` field. |  |
+| `sourceOption` | 22, 23, 26, 27, 29 | `string` | Source of the options used in the field. |  |
+| `typeOption` | 22, 23, 26, 27, 29 | `number` | Type of the options used in the field. | 1: Its component, 2: A lookup table, 3: Other component. |
+| `currency` | 20 | `string` | Define the currency that will be used in a `CurrencyInput` field, limited to IDR and USD. |  |
+| `separatorFormat` | 20 | string | Define the separator that will be used in a CurrencyInput field. |  |
+| `isDecimal` | 20 | `boolean` | Define whether or not a `CurrencyInput` field allows decimal. |  |
+| `maskingFormat` | 24 | `string` | Define the format of `maskingInput` used. | 9 for numbers, a for letters, and * for alphanumeric format. e.g. : `'maskingFormat' : '9999-aa99'`  |
+| `expression` | 4 | `string` | A variable expression. | `getValue` function can be used to get the value of other field. |
+| `componentVar` | 4 | `string[]` | Define the component(s) used in `VariableInput`. |  |
+| `render` | 4 | `boolean` | Define whether or not the variable will be rendered. |  |
+| `renderType` | 4 | `number` | Variable output type. | 1: single output, 2: array output |
+| `enable` | All | `boolean` | Define whether or not a component have a condition(s) that need to be fulfilled before it can be filled. |  |
+| `enableCondition` | All | `string` | An expression to define a condition enabled for the field to be filled. | `getProp` function can be used to get the client mode, `getValue` function can be used to get the value of other field. |
+| `componentEnable` | All | `string[]` | A list of component(s) used in a condition expression. |  |
+| `enableRemark` | All | `boolean` | Define whether or not a component allows a remark. |  |
+| `titleModalDelete` | 21, 22 | `string` | Title of the warning that will show up when user tries to delete an item in `ListTextInputRepeat` or `ListSelectInputRepeat`. |  |
+| `contentModalDelete` | 21, 22 | `string` | Content of the warning that will show up when user tries to delete an item in `ListTextInputRepeat` or `ListSelectInputRepeat`. |  |
+
+### Input for `ListSelectInputRepeat`, `MultipleSelectInput`, `RadioInput`, and `CheckboxInput`
+
+---
+
+`Option[]` defines option components for `ListSelectInputRepeat`, `MultipleSelectInput`, `RadioInput`, and `CheckboxInput` input.
+
+- `label`: label of an option that will show up in the form.
+- `value`: value of an option that will be recorded.
+- `open`: define whether or not an option is open-ended. The value recorded will be both the `value` of an option and the `label` entered on data collection.
+
+```json
+[
+    {
+        "label":"Hobbies",
+        "dataKey":"hobbies",
+        "type":29,
+        "cols":3,
+        "options":[
+            {
+                "label":"Sleeping",
+                "value":"1"
+            },
+            {
+                "label":"Play Games",
+                "value":"2"
+            },
+            {
+                "label":"Watching Movie",
+                "value":"3"
+            },
+            {
+                "label":"Cooking",
+                "value":"4"
+            },
+            {
+                "label":"Working",
+                "value":"5"
+            },
+            {
+                "label":"Travelling",
+                "value":"6"
+            },
+            {
+                "label":"Other",
+                "value":"13",
+                "open":true
+            }
+        ]
+    }
+]
+```
+
+### Input for `RangeSliderInput`
+
+---
+
+`Range[]` defines components of `RangeSliderInput` input.  
+
+- `min`: minimum of a range.
+- `max`: maximum of a range.
+- `step`: added value for each step.
+
+```json
+[
+	{
+        "label":"Happiness Index",
+        "dataKey":"happy",
+        "type":18,
+        "range":[
+            {
+                "min":0,
+                "max":100,
+                "step":5
+            }
+        ]
+    }
+]
+```
+
+### Input for `sourceSelect`
+
+---
+
+`sourceOption` defines components of `sourceSelect` input.
+
+- `id`: unique identifier of the lookup table that will be used.
+- `tableName`: the name of the lookup table that will be used.
+- `value`: the column name in the lookup table that will be recorded as the option’s value.
+- `desc`: the column name in the lookup table that will be shown as the option’s label.
+- `parentCondition`: an array consisting of `key` and `value`. `key` refers to the parent lookup table’s `value`, while `value` refers to the parent lookup table’s `desc`.
+
+```json
+[
+	{
+        "label":"Child nested",
+        "dataKey":"childnested",
+        "description":"ChildNested",
+        "type":2,
+        "sourceQuestion":"hobbies",
+        "components":[
+            [
+                {
+                    "label":"name--- $NAME$",
+                    "dataKey":"name_",
+                    "type":4,
+                    "expression":"let nm = ''; let list = getValue('hobbies'); if(list !== undefined && list.length > 0) { let rowIndex = getRowIndex(0); let filter = list.filter(obj => obj.value == rowIndex); nm=filter[0].label }; nm;",
+                    "componentVar":["most_fav"],
+                    "render":true,
+                    "renderType":1
+                }
+            ]
+        ]
+    }
+]
+```
 
 ## Preset
 
+---
 
-
-Preset is used to provide prefilled data given prior to data collection.  This prefilled data usually obtained from previous data collection or a listing conducted before the actual data collection. Preset consists of`dataKey` of the corresponding field and the prefilled`answer` to that field.
+Preset is used to provide prefilled data given prior to data collection.  This prefilled data usually obtained from previous data collection or a listing conducted before the actual data collection. Preset consists of `dataKey` of the corresponding field and the prefilled `answer` to that field.
 
 ```
 preset.json
@@ -303,16 +566,16 @@ preset.json
 }
 ```
 
-# Response
+## Response
 
+---
 
-
-Response is used to store any response given during data collection. Response consists of`dataKey` of the corresponding field and the `answer` collected from that field. `answer` from a field that has both `label` and `value` will record both. `answer` will only be collected if the value entered to the corresponding field satisfied both the condition enabled and validation test function.
+Response is initially empty, and is used to store any response given later during data collection. Response consists of `dataKey` of the corresponding field and the `answer` collected from that field. `answer` from a field that has both `label` and `value` will record both. `answer` will only be collected if the value entered to the corresponding field satisfied both the condition enabled and validation test function. Below is the structure and example of the response JSON object:
 
 ```
 response.json
 │
-│		description
+│	description
 │   dataKey
 │   templateVersion
 │   validationVersion
@@ -379,11 +642,11 @@ response.json
 
 ```
 
-# Validation
+## Validation
 
+---
 
-
-Validation is used to validate the answer given during data collection against a test function. The validation is handled in a FALSE condition, meaning the test function is a condition where the answer of a question field would be false. 
+Validation is used to validate the answer given during data collection against a test function. Unlike other similar framework, validation is handled in a FALSE condition, meaning the test function is a condition where the value entered to a form control would be false. Validation has several components you can add:
 
 - `dataKey`: component identifier.
 - `validations`: store validation for each `dataKey`.
@@ -391,6 +654,8 @@ Validation is used to validate the answer given during data collection against a
 - `test`: the test function. A `getValue` function can be used to get the value of other field.
 - `message`: the warning message that will show up when the value entered did not fulfill the test function.
 - `type`: define whether the validation will be just a warning or an error.
+
+Below are the structure and example of the validation JSON object:
 
 ```
 validation.json
@@ -429,7 +694,7 @@ validation.json
             "validations": [
                 {
                     "test":"getValue('usia') >= 8 && getValue('usia') < 10",
-                    "message":"Usia minimal 10 tahun Usia minimal 10 tahun Usia minimal 10 tahun Usia minimal 10 tahun Usia minimal 10 tahun Usia minimal 10 tahun ",
+                    "message":"Usia minimal 10 tahun",
                     "type":1
                 },
                 {
@@ -443,9 +708,11 @@ validation.json
 }
 ```
 
-# Remark
+## Remark
 
+---
 
+Remark is initially empty and used to store notes on each field collected later during data collection. This note can be used to provide additional information of a field and bypass validation if the data found during data collection doesn’t satisfy the test function. Below is the structure and example of the remark JSON object:
 
 ```
 remark.json
@@ -504,7 +771,12 @@ remark.json
 
 # License
 
+FormGear is licensed under [MIT License](https://github.com/AdityaSetyadi/form-gear/blob/main/LICENSE).
 
 
 # Our Team
 
+
+- [Ignatius Aditya Setyadi](https://github.com/AdityaSetyadi)
+- [Ardian Saputra Hasibuan](https://github.com/ardian28)
+- [D. Agung Sungkono](https://github.com/das-agung)
