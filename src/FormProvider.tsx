@@ -43,7 +43,7 @@ export function FormProvider(props) {
 			lookupKey : props.config.lookupKey,
 			lookupValue : props.config.lookupValue,
 			username: props.config.username,
-			formMode: props.config.formMode
+			formMode: (props.config.formMode !== undefined) ? props.config.formMode : 1
 		}
     })
 
