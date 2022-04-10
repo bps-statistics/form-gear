@@ -6,8 +6,8 @@
 FormGear is a framework engine for dynamic form creation and complex form processing and validation for data collection. It is designed to work across multiple data collection platforms such as CAPI, CAWI, and PAPI.
 </p>
 <p>
-<video align="center" loop autoplay src="src/assets/FormGear-video.mp4" width="100%"></video>
 
+<p align="center"><img src="src/assets/FormGear-video.gif" width="100%"></p>
 <br/>
 
 # About
