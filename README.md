@@ -1,9 +1,19 @@
-<h1 align="center"> FormGear </h1>
+
+<p align="center"><img src="src/assets/FormGear.png" width="20%"></p>
+<p align="center" style="margin-top:-5%"><img src="src/assets/FormGear-caption.png" width="25%"></p>
+
+<p align="center">
+FormGear is a framework engine for dynamic form creation and complex form processing and validation for data collection. It is designed to work across multiple data collection platforms such as CAPI, CAWI, and PAPI.
+</p>
+<p>
+
+<br/>
 
 # About
 
 
-FormGear is a framework engine for form creation, processing, and validation. FormGear is designed to accommodate the requirement from Badan Pusat Statistik, Indonesia’s National Statistic Office, in its data collection process. This requirement calls for dynamic form creation, complex processing and validation, and ease of use in the data collection process.
+FormGear is a framework engine for form creation, processing, and validation.
+FormGear is designed to support official statistics data collection in BPS - Statistics Indonesia, Indonesia's National Statistics Office. It was done by a team under the direction of BPS. This requirement calls for dynamic form creation, complex processing and validation, and ease of use in the data collection process.
 
 FormGear uses a defined JSON object template, thus is easy to build, use, and efficiently handle nested inquiries to capture everything down to the last detail. Unlike other similar framework, validation is handled in a FALSE condition in which each field is validated against a test equation. This leads to a more efficient and effective way of validating each component. 
 
@@ -41,14 +51,10 @@ FormGear uses a defined JSON object template, thus is easy to build, use, and ef
 
 
 ## Online examples
----   
-
 - [Fill a form](https://solid-form-gear.vercel.app/), or
 - [Build one yourself](https://codesandbox.io/s/solid-form-gear-vvj0wt).
 
 ## Installation
----
-
 FormGear can be installed via package manager like `npm` or `yarn`, or it can be used directly via CDN.
 
 ```bash
@@ -77,7 +83,8 @@ function initForm(template, preset, response, validation, remark){
       baseUrl: `***REMOVED***`,
       lookupKey: `key%5B%5D`,
       lookupValue: `value%5B%5D`,
-      username: 'AdityaSetyadi'
+      username: 'AdityaSetyadi',
+      formMode: 1 // 1 => OPEN ; 2 => REJECTED ; 3 => SUBMITTED ; 4 => APPROVED ;
    }
    
    let uploadHandler = function (setter) {
@@ -148,8 +155,6 @@ function initForm(template, preset, response, validation, remark){
 ```
 
 ## Template
-
----
 
 FormGear use defined template which is based on JSON Object. This allows for dynamic form creation, letting you to easily build your form with various form controls simply by expanding the JSON object. This also allows FormGear to create nest other form control in other form control, making it easy for you to create recurring questions based on the nested form control. Below is the structure and example of the JSON object that FormGear uses as its form template.
 
@@ -333,15 +338,15 @@ FormGear allows you to work with a lot of possible HTML input types. To add a co
    "acronym":"ST2023-L2.USAHA",
    "version":"0.0.1",
    "components":[
-								{
-                     "label":"Nama Lengkap disertai Gelar",
-                     "dataKey":"nama_lengkap",
-                     "hint":"Nama seseorang yang dilengkapi dengan semua identitas, seperti gelar (akademik, keagamaan) Nama sesoorang yang dilengkapi dengan semua identitas, seperti gelar (akademik, keagamaan) Nama sesoorang yang dilengkapi dengan semua identitas, seperti gelar (akademik, keagamaan)",
-                     "answer":"Ignatius",
-                     "enableRemark":true,
-                     "type":25
-                  }
-									]
+				    {
+                        "label":"Nama Lengkap disertai Gelar",
+                        "dataKey":"nama_lengkap",
+                        "hint":"Nama seseorang yang dilengkapi dengan semua identitas, seperti gelar (akademik, keagamaan) Nama sesoorang yang dilengkapi dengan semua identitas, seperti gelar (akademik, keagamaan) Nama sesoorang yang dilengkapi dengan semua identitas, seperti gelar (akademik, keagamaan)",
+                        "answer":"Ignatius",
+                        "enableRemark":true,
+                        "type":25
+                    }
+				]
 }
 
 ```
