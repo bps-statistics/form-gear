@@ -668,15 +668,17 @@ export const runValidation = (dataKey:string, updatedRef:any, activeComponentPos
     
     updatedRef.validationMessage = [];
     updatedRef.validationState = 0;
-    let biggest = 0;
-    for(let i in updatedRef.validations){
-        let result = eval(updatedRef.validations[i].test);
-        if(result){
-            updatedRef.validationMessage.push(updatedRef.validations[i].message);
-            biggest = (biggest < updatedRef.validations[i].type) ? updatedRef.validations[i].type : biggest;
+    if(!updatedRef.hasRemark){
+        let biggest = 0;
+        for(let i in updatedRef.validations){
+            let result = eval(updatedRef.validations[i].test);
+            if(result){
+                updatedRef.validationMessage.push(updatedRef.validations[i].message);
+                biggest = (biggest < updatedRef.validations[i].type) ? updatedRef.validations[i].type : biggest;
+            }
         }
+        updatedRef.validationState = biggest;
     }
-    updatedRef.validationState = biggest;
     
     saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null);
 }
@@ -840,7 +842,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
             
             if(hasComponentUsing.length > 0) {//berarti dataKey ini digunakan sebagai sumber Nested minimal di 1 component
                 // console.log('dataKey', dataKey, answer);
-                console.time('buat roster');
+                console.time('Nested creation time ');
                 hasComponentUsing.forEach(element => {
                     
                     if(typeof answer === 'number' || typeof answer === 'string'){
@@ -893,7 +895,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                         }
                     }
                 });
-                console.timeEnd('buat roster');
+                console.timeEnd('Nested creation time ');
             }
         }
     } else if(attributeParam === 'validate'){
