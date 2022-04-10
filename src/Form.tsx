@@ -159,11 +159,11 @@ const Form: Component<{
       // console.log(element, index, parent, level);
         let el_len = element.length
         for (let i = 0; i < el_len; i++) {
-          let answer = '';
+          let answer = element[i].answer;
           
-          const presetIndex = props.preset.details.predata.findIndex(obj => obj.dataKey === element[i].dataKey);
-          answer = (presetIndex !== -1 && props.preset.details.predata[presetIndex] !== undefined ) ? props.preset.details.predata[presetIndex].answer :
-            (element[i].answer !== '') ? element[i].answer : answer;
+          // const presetIndex = props.preset.details.predata.findIndex(obj => obj.dataKey === element[i].dataKey);
+          // answer = (presetIndex !== -1 && props.preset.details.predata[presetIndex] !== undefined ) ? props.preset.details.predata[presetIndex].answer :
+          //   (element[i].answer !== '') ? element[i].answer : answer;
           
           let el_type = element[i].type
           if((el_type == 21 || el_type == 22)){
@@ -291,6 +291,18 @@ const Form: Component<{
     // console.timeEnd('tmpVarComp ')
 
     // console.time('response ');
+    props.preset.details.predata.forEach((element, index) => {
+      let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
+      if(refPosition !== -1){
+        let sidePosition = sidebar.details.findIndex(obj => {
+          const cekInsideIndex = obj.components[0].findIndex(objChild => objChild.dataKey === element.dataKey);
+          return (cekInsideIndex == -1) ? 0: index;
+        });
+        let answer = (typeof element.answer === 'object') ? JSON.parse(JSON.stringify(element.answer)) : element.answer;
+        saveAnswer(element.dataKey, 'answer', answer, sidePosition, {'clientMode': getProp('clientMode'),'baseUrl': getProp('baseUrl')});
+      }
+    })
+
     props.response.details.answers.forEach((element, index) => {
       let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
       if(refPosition !== -1){
@@ -302,6 +314,7 @@ const Form: Component<{
         saveAnswer(element.dataKey, 'answer', answer, sidePosition, {'clientMode': getProp('clientMode'),'baseUrl': getProp('baseUrl')});
       }
     })
+    
     // console.timeEnd('response ');
     // console.log('note', note);
     // console.log('res',response);
