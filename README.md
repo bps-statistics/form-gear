@@ -1,4 +1,3 @@
-
 <p align="center"><img src="src/assets/FormGear.png" width="20%"></p>
 <p align="center" style="margin-top:-5%"><img src="src/assets/FormGear-caption.png" width="20%"></p>
 
@@ -7,8 +6,6 @@ FormGear is a framework engine for dynamic form creation and complex form proces
 </p>
 <p>
 
-<p align="center"><img src="src/assets/FormGear-video.gif" width="100%"></p>
-<br/>
 
 # About
 
@@ -17,6 +14,9 @@ FormGear is a framework engine for form creation, processing, and validation.
 FormGear is designed to support official statistics data collection in BPS - Statistics Indonesia, Indonesia's National Statistics Office. It was done by a team under the direction of BPS. This requirement calls for dynamic form creation, complex processing and validation, and ease of use in the data collection process.
 
 FormGear uses a defined JSON object template, thus is easy to build, use, and efficiently handle nested inquiries to capture everything down to the last detail. Unlike other similar framework, validation is handled in a FALSE condition in which each field is validated against a test equation. This leads to a more efficient and effective way of validating each component. 
+
+<p align="center"><img src="src/assets/FormGear-video.gif" width="100%" style="border-radius: 0.75rem"></p>
+
 
 # Features
 
