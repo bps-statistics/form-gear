@@ -130,6 +130,8 @@ const FormInput: FormComponentBase = props => {
       }
       let refPosition = reference.details.findIndex(obj => obj.dataKey === flagRemark());
       setReference('details',refPosition,'hasRemark',true);
+      setReference('details',refPosition,'validationState',0);
+      setReference('details',refPosition,'validationMessage',[]);
       setNote('details','notes', updatedNote);
       // console.log('remark', remark) 
       
