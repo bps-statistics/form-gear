@@ -15,7 +15,7 @@ FormGear is designed to support official statistics data collection in BPS - Sta
 
 FormGear uses a defined JSON object template, thus is easy to build, use, and efficiently handle nested inquiries to capture everything down to the last detail. Unlike other similar framework, validation is handled in a FALSE condition in which each field is validated against a test equation. This leads to a more efficient and effective way of validating each component. 
 
-<p align="center"><img src="src/assets/FormGear-video.gif" width="100%" style="border-radius: 0.75rem"></p>
+<p align="center"><img src="src/assets/FormGear-demo.gif" width="100%" style="border-radius: 0.75rem"></p>
 
 
 # Features
