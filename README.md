@@ -1,6 +1,6 @@
 
 <p align="center"><img src="src/assets/FormGear.png" width="20%"></p>
-<p align="center" style="margin-top:-5%"><img src="src/assets/FormGear-caption.png" width="25%"></p>
+<p align="center" style="margin-top:-5%"><img src="src/assets/FormGear-caption.png" width="20%"></p>
 
 <p align="center">
 FormGear is a framework engine for dynamic form creation and complex form processing and validation for data collection. It is designed to work across multiple data collection platforms such as CAPI, CAWI, and PAPI.
@@ -162,9 +162,9 @@ FormGear use defined template which is based on JSON Object. This allows for dyn
 template.json
 │   description
 │   dataKey
-│		title
-│		acronym
-│
+│   title
+│   acronym
+│   ...
 └───components
 │   │   section
 │   └───components
@@ -485,11 +485,11 @@ To customize each form control further, you can use components . Below are the c
 
 ```json
 [
-	{
-        "label":"Happiness Index",
-        "dataKey":"happy",
-        "type":18,
-        "range":[
+   {
+       "label":"Happiness Index",
+       "dataKey":"happy",
+       "type":18,
+       "range":[
             {
                 "min":0,
                 "max":100,
@@ -514,7 +514,7 @@ To customize each form control further, you can use components . Below are the c
 
 ```json
 [
-	{
+    {
         "label":"Child nested",
         "dataKey":"childnested",
         "description":"ChildNested",
@@ -538,9 +538,6 @@ To customize each form control further, you can use components . Below are the c
 ```
 
 ## Preset
-
----
-
 Preset is used to provide prefilled data given prior to data collection.  This prefilled data usually obtained from previous data collection or a listing conducted before the actual data collection. Preset consists of `dataKey` of the corresponding field and the prefilled `answer` to that field.
 
 ```
@@ -572,15 +569,12 @@ preset.json
 ```
 
 ## Response
-
----
-
 Response is initially empty, and is used to store any response given later during data collection. Response consists of `dataKey` of the corresponding field and the `answer` collected from that field. `answer` from a field that has both `label` and `value` will record both. `answer` will only be collected if the value entered to the corresponding field satisfied both the condition enabled and validation test function. Below is the structure and example of the response JSON object:
 
 ```
 response.json
 │
-│	description
+│   description
 │   dataKey
 │   templateVersion
 │   validationVersion
@@ -589,14 +583,14 @@ response.json
 │   createdAt
 │   lastUpdated
 └───answers
-│   │
-│   └───
-│       │   dataKey
-│       │   answer
-│   │
-│   └───
-│       │   dataKey
-│       │   answer
+│   	   │
+│   	   └───
+│       	│   dataKey
+│       	│   answer	
+│   	   │
+│   	   └───
+│       	│   dataKey
+│       	│   answer
 │
 
 ```
@@ -648,9 +642,6 @@ response.json
 ```
 
 ## Validation
-
----
-
 Validation is used to validate the answer given during data collection against a test function. Unlike other similar framework, validation is handled in a FALSE condition, meaning the test function is a condition where the value entered to a form control would be false. Validation has several components you can add:
 
 - `dataKey`: component identifier.
@@ -666,24 +657,24 @@ Below are the structure and example of the validation JSON object:
 validation.json
 │
 └───description
-│		dataKey
-│		version
-│		testFunctions
+│   dataKey
+│   version
+│   testFunctions
 │   │
 │   └───
 │       │   dataKey
 │       │   componentValidation
 │       │   validations
-│				   │
-│				   └───
-│				       │   test
-│				       │   message
-│				       │   type
-│				   │
-│				   └───
-│				       │   test
-│				       │   message
-│				       │   type
+│			│
+│			└───
+│			    │   test
+│			    │   message
+│			    │   type	
+│			│
+│			└───
+│			    │   test
+│			    │   message
+│			    │   type
 │
 ```
 
@@ -709,35 +700,32 @@ validation.json
                 }
             ]
         }
-		]
+    ]
 }
 ```
 
 ## Remark
-
----
-
 Remark is initially empty and used to store notes on each field collected later during data collection. This note can be used to provide additional information of a field and bypass validation if the data found during data collection doesn’t satisfy the test function. Below is the structure and example of the remark JSON object:
 
 ```
 remark.json
 │
 └───dataKey
-|		notes
+|   notes
 │   │
 │   └───
 │       │   dataKey
 │       │   comments
-│				   │
-│				   └───
-│				       │   sender
-│				       │   dateTime
-│				       │   comment
-│				   │
-│				   └───
-│				       │   sender
-│				       │   dateTime
-│				       │   comment
+│		    │
+│		    └───
+│		        │   sender
+│		        │   dateTime
+│		        │   comment	
+│		    │
+│		    └───
+│		        │   sender
+│		        │   dateTime
+│		        │   comment
 │
 ```
 
