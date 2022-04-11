@@ -606,33 +606,33 @@ response.json
          "answer":true
       },
       {
-         "dataKey":"nm_lengkap",
+         "dataKey":"full_name",
          "answer":"Agung"
       },
       {
-         "dataKey":"anggota",
+         "dataKey":"members",
          "answer": {
             "value" : "3",
             "label" : "Clementine Bauch"
          }
       },
       {
-         "dataKey":"alamat",
+         "dataKey":"address",
          "answer":"Jalan Otista"
       },
       {
-         "dataKey":"penggunaan_lahan",
+         "dataKey":"field_usage",
          "answer":[
             {
                "label": "lastId#1",
                "value": "0"
             },
             {
-               "label": "Sawah",
+               "label": "Farm",
                "value": "1"
             },
             {
-               "label": "Padang Rumput Permanen",
+               "label": "Meadows",
                "value": "3"
             }
          ]
@@ -686,17 +686,17 @@ validation.json
     "version":"0.0.1",
     "testFunctions":[
         {
-            "dataKey":"usia",
-            "componentValidation":["usia"],
+            "dataKey":"age",
+            "componentValidation":["age"],
             "validations": [
                 {
-                    "test":"getValue('usia') >= 8 && getValue('usia') < 10",
-                    "message":"Usia minimal 10 tahun",
+                    "test":"getValue('age') >= 8 && getValue('age') < 10",
+                    "message":"Min.10 y.o.",
                     "type":1
                 },
                 {
-                    "test":"getValue('usia') < 8",
-                    "message":"Usia minimal 10 tahun",
+                    "test":"getValue('age') < 8",
+                    "message":"Min.8 y.o.",
                     "type":2
                 }
             ]
@@ -735,7 +735,7 @@ remark.json
     "dataKey": "",
     "notes": [
         {
-            "dataKey": "nama_lengkap",
+            "dataKey": "full_name",
             "comments": [
                 {
                     "sender": "AdityaSetyadi",
@@ -750,7 +750,7 @@ remark.json
             ]
         },
         {
-            "dataKey": "luas_lahan#1",
+            "dataKey": "land_area#1",
             "comments": [
                 {
                     "sender": "AdityaSetyadi",
