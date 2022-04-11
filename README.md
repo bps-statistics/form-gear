@@ -246,12 +246,12 @@ template.json
         ]
     },
     {
-        "label": "Provinsi",
+        "label": "Province",
         "dataKey": "l2_r322_prov_1",
         "typeOption" : 2,
         "type": 27,
-        "enableCondition":"Number(getValue('l2_lokasi_lahan@$ROW$')) > 0",
-        "componentEnable":["l2_lokasi_lahan@$ROW$"],
+        "enableCondition":"Number(getValue('l2_land_location@$ROW$')) > 0",
+        "componentEnable":["l2_land_location@$ROW$"],
         "sourceSelect":[{
             "id": "f796a32a-36df-4554-bb79-bf8065e28c52",
             "tableName": "kode_kab_ppkk",
@@ -315,7 +315,7 @@ template.json
                     "dataKey":"name_",
                     "type":4,
                     "expression":"let nm = ''; let list = getValue('hobbies'); if(list !== undefined && list.length > 0) { let rowIndex = getRowIndex(0); let filter = list.filter(obj => obj.value == rowIndex); nm=filter[0].label }; nm;",
-                    "componentVar":["most_fav"],
+                    "componentVar":["hobbies"],
                     "render":true,
                     "renderType":1
                 }
@@ -333,21 +333,21 @@ FormGear allows you to work with a lot of possible HTML input types. To add a co
 
 ```json
 {
-   "description":"PENCACAHAN UNIT USAHA PERTANIAN – PERUSAHAAN PERTANIAN BERBADAN HUKUM",
-   "dataKey":"ST2023-L2_Usaha",
-   "title":"Survey Pertanian 2023 Gladi Kotor",
-   "acronym":"ST2023-L2.USAHA",
+   "description":"Interviewing family characteristics individually",
+   "dataKey":"family-characteristics-2022",
+   "title":"Family Characteristics",
+   "acronym":"FC-22.Individu",
    "version":"0.0.1",
    "components":[
 				    {
-                        "label":"Nama Lengkap disertai Gelar",
-                        "dataKey":"nama_lengkap",
-                        "hint":"Nama seseorang yang dilengkapi dengan semua identitas, seperti gelar (akademik, keagamaan) Nama sesoorang yang dilengkapi dengan semua identitas, seperti gelar (akademik, keagamaan) Nama sesoorang yang dilengkapi dengan semua identitas, seperti gelar (akademik, keagamaan)",
+                        "label":"Full Name",
+                        "dataKey":"full_name",
+                        "hint":"Full name including his degree, position, etc",
                         "answer":"Ignatius",
                         "enableRemark":true,
                         "type":25
                     }
-				]
+	]
 }
 
 ```
