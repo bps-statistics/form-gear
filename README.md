@@ -48,6 +48,8 @@ FormGear uses a defined JSON object template, thus is easy to build, use, and ef
     * [Response](#response)
     * [Validation](#validation)
     * [Remark](#remark)
+- [Contributing](#contributing)
+    * [Further development ideas](#further-development-ideas) 
 - [License](#license)
 - [Our Team](#our-team)
 
@@ -59,15 +61,15 @@ FormGear uses a defined JSON object template, thus is easy to build, use, and ef
 ## Develop on JS Framework examples:
 - [SolidJS](https://www.solidjs.com/)
     * Demo : https://solid-form-gear.vercel.app/
-    * Example : https://codesandbox.io/s/solid-form-gear-vvj0wt
+    * Code Example : https://codesandbox.io/s/solid-form-gear-vvj0wt
     * Repo : https://github.com/AdityaSetyadi/solid-form-gear
 - [Angular](https://angular.io/)
     * Demo : https://angular-form-gear.vercel.app/
-    * Example : https://codesandbox.io/s/angular-form-gear-diy9p0
+    * Code Example : https://codesandbox.io/s/angular-form-gear-diy9p0
     * Repo : https://github.com/AdityaSetyadi/angular-form-gear
 - [Vue.js](https://vuejs.org/)
     * Demo : https://vue-form-gear.vercel.app/
-    * Example : https://codesandbox.io/s/vue-form-gear-sfilvp
+    * Code Example : https://codesandbox.io/s/vue-form-gear-sfilvp
     * Repo : https://github.com/AdityaSetyadi/vue-form-gear
     
 
@@ -779,13 +781,19 @@ remark.json
 }
 ```
 
+# Contributing
+
+Your assistance is greatly appreciated if you want to contribute and make it better.
+### Further development ideas:
+- FormGear templates design platform
+- FormGear validation creator platform
+
 # License
 
 FormGear is licensed under [MIT License](https://github.com/AdityaSetyadi/form-gear/blob/main/LICENSE).
 
 
 # Our Team
-
 
 - [Ignatius Aditya Setyadi](https://github.com/AdityaSetyadi)
 - [Ardian Saputra Hasibuan](https://github.com/ardian28)
