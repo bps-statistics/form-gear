@@ -1,32 +1,38 @@
 // import handler  from "./src/FormGear"
 import { FormGear } from "./src/index"
 
+//variable config
 let config = {
   clientMode: 1, // 1 => CAWI ; 2 => CAPI ;
-  token: `***REMOVED***`,
-  baseUrl: `***REMOVED***`,
-  lookupKey: `key%5B%5D`,
-  lookupValue: `value%5B%5D`,
-  username: 'AdityaSetyadi',
+  //both token and baseUrl are used for data lookup from the api (for selectInput, multiselect Input, and listSelectInput)
+  token: ``, //for authentication such as bearer token 
+  baseUrl: `https://jsonplaceholder.typicode.com/users/`, // endpoint to fetch
+  lookupKey: `key%5B%5D`, //optional 
+  lookupValue: `value%5B%5D`, //optional
+  username: 'AdityaSetyadi', //
   formMode: 1 // 1 => OPEN ; 2 => REJECTED ; 3 => SUBMITTED ; 4 => APPROVED ;
 }
 
+//some variables initiation
 var cameraFunction = null;
 var cameraGPSFunction = null;
 var respons = null;
 var remarks = null;
 
+//JSON Object defined template
 let template = await fetch("../src/data/template.json").then((res) => res.json()) || []
 let preset = await fetch("../src/data/preset.json").then((res) => res.json()) || []
 let response = await fetch("../src/data/response.json").then((res) => res.json()) || []
 let validation = await fetch("../src/data/validation.json").then((res) => res.json()) || []
 let remark = await fetch("../src/data/remark.json").then((res) => res.json()) || []
 
+//function to open camera on mobile  CAPI
 function openCamera() {
   // window.MyHandler.action("CAMERA", "", "", "");
   console.log('open camera');
 }
 
+//function to open gps on mobile
 function openCameraGPS(needPhoto) {
   var isNeedPhoto = false
   if (needPhoto !== null && needPhoto !== undefined)
@@ -40,6 +46,7 @@ function openCameraGPS(needPhoto) {
   // window.MyHandler.action("CAMERA_GPS", "", isNeedPhoto.toString(), "");
 }
 
+//function to receive results from mobile CAPI
 function result(action, result, customData) {
   // if (action == "GET_LOC") {
   //   resultGps(result);
@@ -60,6 +67,8 @@ function result(action, result, customData) {
   // }
 }
 
+
+//send camera result to form-gear from mobile CAPI
 function resultCamera(result) {
   console.log('camera_result : ' + result);
   if (cameraFunction != null) {
@@ -70,6 +79,7 @@ function resultCamera(result) {
   }
 }
 
+//send gps result to form-gear from mobile CAPI
 function resultCameraGPS(result) {
   console.log('gps-results: ' + result);
   const obj = JSON.parse(result);
@@ -77,12 +87,14 @@ function resultCameraGPS(result) {
   cameraGPSFunction(obj, remark);
 }
 
+//function to trigger open camera on Mobile CAPI
 let uploadHandler = function (setter) {
   console.log('camera handler', setter);
   cameraFunction = setter;
   openCamera();
 }
 
+//function to trigger open gps on Mobile GPS
 let GpsHandler = function (setter, isPhoto) {
   console.log('camera handler', setter);
   isPhoto = true,
@@ -90,17 +102,18 @@ let GpsHandler = function (setter, isPhoto) {
   openCameraGPS(isPhoto);
 }
 
+//you can set  authentication for api lookup here, such as bearer token
 const setBearer = () => {
   return ({
     method: 'GET',
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "Bearer " + config.token
+      // "Authorization": "Bearer " + config.token
     }
   })
 }
 
-// pencarian online
+//online lookup
 let onlineSearch = async (url) =>
 (await fetch(url, setBearer())
   .catch((error: any) => {
@@ -110,18 +123,19 @@ let onlineSearch = async (url) =>
       message: '500'
     }
   }).then((res: any) => {
-    if (res.status === 200) {
-      let temp = res.json();
-      return temp;
-    } else {
-      return {
-        success: false,
-        data: {},
-        message: res.status
+    /*the return format must in object of 
+      {
+        success: false, => true or false
+        data: {}, --> the data property must in format array of object [{value: {value}, label : {label}}, ...]
+        message: status (200, 400 ,500 , etc )
       }
-    }
-  }).then((res: any) => {
-    return res;
+    }*/
+  return {
+    success: true,
+    data: [{}],
+    message: 200
+  }
+
   }));
 
 let setResponseMobile = function (res, rem) {
