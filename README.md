@@ -36,6 +36,7 @@ FormGear uses a defined JSON object template, thus is easy to build, use, and ef
 - [Features](#features)
 - [Usage](#usage)
     * [Online examples](#online-examples) 
+    * [Develop on JS Framework examples](#develop-on-js-framework-examples) 
     * [Installation](#installation)
     * [Template](#template)
         + [Control Type](#control-type)
@@ -54,6 +55,21 @@ FormGear uses a defined JSON object template, thus is easy to build, use, and ef
 ## Online examples
 - [Fill a form](https://solid-form-gear.vercel.app/), or
 - [Build one yourself](https://codesandbox.io/s/solid-form-gear-vvj0wt).
+
+## Develop on JS Framework examples:
+- [SolidJS](https://www.solidjs.com/)
+    * Demo : https://solid-form-gear.vercel.app/
+    * Example : https://codesandbox.io/s/solid-form-gear-vvj0wt
+    * Repo : https://github.com/AdityaSetyadi/solid-form-gear
+- [Angular](https://angular.io/)
+    * Demo : https://angular-form-gear.vercel.app/
+    * Example : https://codesandbox.io/s/angular-form-gear-diy9p0
+    * Repo : https://github.com/AdityaSetyadi/angular-form-gear
+- [Vue.js](https://vuejs.org/)
+    * Demo : https://vue-form-gear.vercel.app/
+    * Example : https://codesandbox.io/s/vue-form-gear-sfilvp
+    * Repo : https://github.com/AdityaSetyadi/vue-form-gear
+    
 
 ## Installation
 FormGear can be installed via package manager like `npm` or `yarn`, or it can be used directly via CDN.
@@ -339,7 +355,7 @@ FormGear allows you to work with a lot of possible HTML input types. To add a co
    "acronym":"FC-22.Individu",
    "version":"0.0.1",
    "components":[
-				    {
+		    {
                         "label":"Full Name",
                         "dataKey":"full_name",
                         "hint":"Full name including his degree, position, etc",
@@ -347,7 +363,7 @@ FormGear allows you to work with a lot of possible HTML input types. To add a co
                         "enableRemark":true,
                         "type":25
                     }
-	]
+		]
 }
 
 ```
