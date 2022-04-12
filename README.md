@@ -96,8 +96,8 @@ function initForm(template, preset, response, validation, remark){
         
    let config = {
       clientMode: 1, // CAWI = 1, CAPI = 2
-      token: `***REMOVED***`,
-      baseUrl: `***REMOVED***`,
+      token: ``,
+      baseUrl: ``,
       lookupKey: `key%5B%5D`,
       lookupValue: `value%5B%5D`,
       username: 'AdityaSetyadi',
