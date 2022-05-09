@@ -64,7 +64,7 @@ export type Option =  {
   open: boolean
 }
 
-export type Range =  {
+export type RangeInput =  {
   min: number
   max: number
   step?: number
@@ -78,6 +78,11 @@ export type selectOption = {
   parentCondition: []
 }
 
+export type LengthInput = {
+  maxlength?: number
+  minlength?: number
+}
+
 export type ComponentType = {
   dataKey?: string              //semua
   label?: string                //semua
@@ -88,7 +93,7 @@ export type ComponentType = {
   rows?: number                 //8
   cols?: number                 //4, 7
   options?: Option[]            //4, 7, 22, 23
-  range?: Range[]               //18
+  rangeInput?: RangeInput[]     //18
   description?: string          //1, 2
   answer?: any                  //semua, (22, 23 wajib seperti ini: [{"label": "lastId#0","value": "0"}] )
   sourceQuestion?: string       //2
@@ -110,6 +115,7 @@ export type ComponentType = {
   client?: string               //32
   titleModalDelete?: string     //21,22
   contentModalDelete?: string   //21,22
+  lengthInput?: LengthInput[]             //special for input attribute
 }
 
 export interface FormComponentBase extends Component<{

@@ -133,7 +133,14 @@ const Form: Component<{
               validationState : e.validationState,
               validationMessage : e.validationMessage,
               validations: vals,
-              componentValidation: compVal
+              componentValidation: compVal,
+              rangeInput: e.rangeInput !== undefined ? e.rangeInput : undefined,
+              lengthInput: e.lengthInput !== undefined ? e.lengthInput : undefined,
+              principal: e.principal !== undefined ? e.principal : undefined,
+              columnName: e.columnName !== undefined ? e.columnName : undefined,
+              titleModalConfirmation : e.titleModalConfirmation,
+              contentModalConfirmation : e.contentModalConfirmation,
+              required: e.required
             })
             nestMasterComp ? nestMasterComp.push(nestEachComp[0]) : nestMasterComp.splice(nestMasterComp.length, 0, nestEachComp[0])
            
@@ -161,10 +168,6 @@ const Form: Component<{
         for (let i = 0; i < el_len; i++) {
           let answer = element[i].answer;
           
-          // const presetIndex = props.preset.details.predata.findIndex(obj => obj.dataKey === element[i].dataKey);
-          // answer = (presetIndex !== -1 && props.preset.details.predata[presetIndex] !== undefined ) ? props.preset.details.predata[presetIndex].answer :
-          //   (element[i].answer !== '') ? element[i].answer : answer;
-          
           let el_type = element[i].type
           if((el_type == 21 || el_type == 22)){
             answer = JSON.parse(JSON.stringify(answer));
@@ -180,7 +183,6 @@ const Form: Component<{
             components = (element[i].components) ? element[i].components : undefined;
           }
           
-          // const comp_str = generateComponentString([...parent,i]);
           if(el_type == 1 || (el_type == 2 && components.length > 1)){
               sideEnable = (element[i].enableCondition === undefined) ? true : eval(element[i].enableCondition);
               sidebarList.push({
@@ -251,7 +253,14 @@ const Form: Component<{
               validationMessage: element[i].validationMessage !== undefined ? element[i].validationMessage : [],
               validations: vals,
               componentValidation: compVal,
-              hasRemark: hasRemark
+              hasRemark: hasRemark,
+              rangeInput: (element[i].rangeInput !== undefined && element[i].rangeInput[0] !== undefined) ? element[i].rangeInput : undefined,
+              lengthInput: (element[i].lengthInput !== undefined && element[i].lengthInput[0] !== undefined) ? element[i].lengthInput : undefined,
+              principal: element[i].principal !== undefined ? element[i].principal : undefined,
+              columnName: element[i].columnName !== undefined ? element[i].columnName : undefined,
+              titleModalConfirmation: element[i].titleModalConfirmation !== undefined ? element[i].titleModalConfirmation : undefined,
+              contentModalConfirmation: element[i].contentModalConfirmation !== undefined ? element[i].contentModalConfirmation : undefined,
+              required: element[i].required !== undefined ? element[i].required : undefined,
           })
 
           element[i].components && element[i].components.forEach((element, index) => loopTemplate(element,index, parent.concat(i,0), level+1, sideEnable))
@@ -263,9 +272,10 @@ const Form: Component<{
     setSidebar('details', sidebarList);
     
     // console.timeEnd('loopTemplate ');
-    // console.log(sidebar);
+    // console.log('sidebarrr' , sidebar);
     // console.time('tmpVarComp ');
-    tmpVarComp.forEach((element, index) => {//belum jalan, malah looping forever
+    tmpVarComp.forEach((element, index) => {
+      // console.log('cek', tmpVarComp);
       let sidePosition = sidebar.details.findIndex((obj, index) => {
         const cekInsideIndex = obj.components[0].findIndex((objChild, index) => {
           objChild.dataKey === element.dataKey;
@@ -314,7 +324,7 @@ const Form: Component<{
         saveAnswer(element.dataKey, 'answer', answer, sidePosition, {'clientMode': getProp('clientMode'),'baseUrl': getProp('baseUrl')});
       }
     })
-    
+
     // console.timeEnd('response ');
     // console.log('note', note);
     // console.log('res',response);
@@ -363,9 +373,11 @@ const Form: Component<{
                                           && element.level > 1 )
                                     }).length,
         error: reference.details.filter( (element) => { 
-                                      return ( element.type > 4 ) 
-                                          && ( element.enable ) 
-                                          && ( element.validationState == 2 )
+                                      // if( element.type > 4 && ( element.enable ) && element.validationState == 2 ){
+                                      //   let splitDataKey = element.dataKey.split('#');
+                                      //   return (splitDataKey[1] !== undefined && element.level > 0) ? true : false
+                                      // }
+                                      return ( element.type > 4 && ( element.enable ) && element.validationState == 2 )
                                     }).length,
         remark: note.details.notes.length
       });
@@ -986,7 +998,6 @@ const Form: Component<{
                           </button>
                         </Match>
                       </Switch>
-                      
                     </div>
                     
                     <div  class="  justify-end items-center pr-8 transition"

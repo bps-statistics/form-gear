@@ -61,9 +61,9 @@ const RangeSliderInput: FormComponentBase = props => {
                         ease-in-out
                         m-0
                         focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                      min={props.component.range[0].min}
-                      max={props.component.range[0].max}
-                      step={props.component.range[0].step}
+                      min={props.component.rangeInput[0].min}
+                      max={props.component.rangeInput[0].max}
+                      step={props.component.rangeInput[0].step}
                       disabled = { disableInput() }
                       onChange={(e) => props.onValueChange(e.currentTarget.value)} />
             </div>

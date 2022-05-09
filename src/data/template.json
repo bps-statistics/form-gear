@@ -102,7 +102,7 @@
                      "label":"Happiness Index",
                      "dataKey":"happy",
                      "type":18,
-                     "range":[
+                     "rangeInput":[
                         {
                            "min":0,
                            "max":100,

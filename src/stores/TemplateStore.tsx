@@ -1,35 +1,37 @@
 import { createStore } from "solid-js/store";
 import { Validations } from "./ReferenceStore";
+import { LengthInput } from "../FormType";
 
 export type Component = {
-    label: string;
-    dataKey: string;
-    type: string;
-    currency?: string;
-    source?: string;
-    path?: string;
-    parent?: string;
-    separatorFormat?: string;
-    isDecimal?: boolean;
-    maskingFormat?: string;
+    label: string
+    dataKey: string
+    type: string
+    currency?: string
+    source?: string
+    path?: string
+    parent?: string
+    separatorFormat?: string
+    isDecimal?: boolean
+    maskingFormat?: string
     client?: string
     validationState?: number //0 valid 1 warning 2 invalid
     validationMessage?: string[]
     validations?: Validations[]
     componentValidation?: string[]
+    lengthInput?: LengthInput[]
 }
 
 export type Detail = {
-    description: string;
-    dataKey: string;
-    acronym: string;
-    title: string;
-    version: string;
-    components: Component[][];
+    description: string
+    dataKey: string
+    acronym: string
+    title: string
+    version: string
+    components: Component[][],
 }
   
 export interface Questionnaire{
-    status: number,
+    status: number
     details: Detail
 }
 

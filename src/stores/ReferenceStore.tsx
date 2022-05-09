@@ -1,11 +1,11 @@
 import { createStore } from "solid-js/store";
 import { Component } from "./TemplateStore";
+import { LengthInput } from "../FormType";
 
 export type Validations = {
     test: string
     message: string
-    type: number //1 1 warning 2 invalid
-    // component: string[]
+    type: number //1 warning 2 invalid
 }
 
 type Detail = {
@@ -43,6 +43,13 @@ type Detail = {
     validations?: Validations[]
     componentValidation?: string[]
     hasRemark?: boolean
+    lengthInput?: LengthInput[]
+    principal?: number //start with 1
+    columnName?: string
+    titleModalConfirmation: string
+    contentModalConfirmation: string
+    required: boolean
+    rangeInput: any
 }
 
 export interface Reference {
