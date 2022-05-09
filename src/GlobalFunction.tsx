@@ -48,20 +48,15 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
     newComp.answer = (tmp_type === 21 || tmp_type === 22) ? [{"label":"lastId#0","value":0}] : newComp.answer ? newComp.answer : ''
     newComp.sourceSelect = newComp.sourceSelect !== undefined ? newComp.sourceSelect : [];
     if(newComp.sourceSelect.length > 0){
-        newComp.sourceSelect[0].parentCondition.map((item, index) => {
-            let editedParentCondition = item.value.split('@');
-            if(editedParentCondition[editedParentCondition.length-1] === '$ROW$' || editedParentCondition[editedParentCondition.length-1] === '$ROW1$' || editedParentCondition[editedParentCondition.length-1] === '$ROW2$'){
-               item.value = editedParentCondition[0] + '#' + nestedPosition + '@' + editedParentCondition[1];
-            }
+        if(newComp.sourceSelect[0].parentCondition.length > 0){
+            newComp.sourceSelect[0].parentCondition.map((item, index) => {
+                let editedParentCondition = item.value.split('@');
+                if(editedParentCondition[editedParentCondition.length-1] === '$ROW$' || editedParentCondition[editedParentCondition.length-1] === '$ROW1$' || editedParentCondition[editedParentCondition.length-1] === '$ROW2$'){
+                    item.value = editedParentCondition[0] + '#' + nestedPosition + '@' + editedParentCondition[1];
+                }
 
-        })
-
-        // if(newComp.sourceSelect[0].parentCondition.length > 0){
-        //     let editedParentCondition = newComp.sourceSelect[0].parentCondition[0].value.split('@');
-        //     if(editedParentCondition[editedParentCondition.length-1] === '$ROW$' || editedParentCondition[editedParentCondition.length-1] === '$ROW1$' || editedParentCondition[editedParentCondition.length-1] === '$ROW2$'){
-        //         newComp.sourceSelect[0].parentCondition[0].value = editedParentCondition[0] + '#' + nestedPosition + '@' + editedParentCondition[1];
-        //     }
-        // }
+            })
+        }
     }
     //index
     if(parentIndex.length == 0){
