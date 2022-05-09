@@ -13,6 +13,7 @@ import { sidebar, setSidebar } from './stores/SidebarStore';
 import { remark, setRemark, Remark} from './stores/RemarkStore';
 import { note, setNote} from './stores/NoteStore';
 import { principal, setPrincipal} from './stores/PrincipalStore';
+import { locale, setLocale} from './stores/LocaleStore';
 
 import { saveAnswer } from "./GlobalFunction";
 import { toastInfo } from "./FormInput";
@@ -60,26 +61,24 @@ const Form: Component<{
     const [config, setConfig] = createSignal(getConfig());
     
     let timeStart = new Date();
-    
-    // const generateComponentString = (index) => {
-    //   // let comp_str = `template.details`;      
-    //   // for (var i = 0; i < index.length; i += 2) {
-    //   //   comp_str += `.components[${index[i]}][${index[i+1]}]`
-    //   // }
-    //   let comp_str = ``;      
-    //   for (var i = 0; i < index.length; i += 2) {
-    //     comp_str += ` 'components', [${index[i]},${index[i+1]}],`
-    //   }
-    //   comp_str = comp_str.slice(0, -1)
-    //   return comp_str;
-    // }
 
     const tmpVarComp = [];
     const referenceList = [];
     const sidebarList = [];
     
+    if(props.template.details.language !== undefined && props.template.details.language.length > 0){
+      // console.log('cektemplate', props.template.details.language, props.template.details.language.length);
+      const keys = Object.keys(locale.details.language[0]);
+      const updatedLocale = JSON.parse(JSON.stringify(locale.details.language[0]));
+      keys.forEach(k => {
+        if(props.template.details.language[0].hasOwnProperty(k)){
+          updatedLocale[k] = props.template.details.language[0][k]
+        }
+      })
+      setLocale('details','language',[updatedLocale])
+    }
+    
     // console.time('loopTemplate ');
-
     // const [nestComp, setNestComp] = createSignal([]);
     const nestComp = [];
     const loopValidation = (element, index, parent, level) => {
@@ -1172,7 +1171,7 @@ const Form: Component<{
                               'hidden': onMobile() === true,
                             }}
                           />
-                        <div class="text-xs font-extralight text-gray-400 ">FormGear renders in : &#177; {timeDiff+20} ms</div>
+                        <div class="text-xs font-extralight text-gray-400 ">FormGear 0.1.1 renders in : &#177; {timeDiff+20} ms</div>
                       </div>
                       <div class="ml-auto sm:flex items-center p-2 ">
                         <button onClick={toggleSwitch} type="button" 

@@ -1,9 +1,10 @@
 import { FormComponentBase } from "../FormType"
 import { For, Switch, createResource, Match, Show, createMemo, createSignal, createEffect } from 'solid-js'
-import { reference, setReference } from '../stores/ReferenceStore';
-import { Select, createOptions } from "@thisbeyond/solid-select";
-import "@thisbeyond/solid-select/style.css";
+import { reference, setReference } from '../stores/ReferenceStore'
+import { Select, createOptions } from "@thisbeyond/solid-select"
+import "@thisbeyond/solid-select/style.css"
 import Toastify from 'toastify-js'
+import { locale, setLocale} from '../stores/LocaleStore'
 
 const ListSelectInputRepeat: FormComponentBase = props => {
 	const [flag, setFlag] = createSignal(0); //untuk flag open textinput
@@ -40,14 +41,14 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 
 	}
 
-	const toastFail = (text: string) => {
+	const toastInfo = (text:string, color:string) => {
 		Toastify({
 			text: (text == '') ? "" : text,
 			duration: 3000,
-			gravity: "top",
-			position: "right",
-			stopOnFocus: true,
-			className: "bg-pink-700/80",
+			gravity: "top", 
+			position: "right", 
+			stopOnFocus: true, 
+			className: (color == '') ? "bg-blue-600/80" : color,
 			style: {
 				background: "rgba(8, 145, 178, 0.7)",
 				width: "400px"
@@ -77,12 +78,10 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 					}
 
 					return options
-
 				})
 			} catch (e) {
-				// toastInfo(`Failed to fetch data from the source. TypeOption : ${props.component.typeOption}. Error Message : ${e.Message}`)
 				setisError(true)
-				toastFail(`Failed to fetch data from the source.`)
+				toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
 			}
 
 			break
@@ -97,6 +96,8 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 
 				params = props.component.sourceSelect
 				url = `${config.baseUrl}/${params[0].id}`
+				// url = `${config.baseUrl}/${params[0].id}/filter?version=${params[0].version}`
+
 
 				if (params[0].parentCondition.length > 0) {
 					urlHead = url
@@ -125,12 +126,15 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 				getOptions = createMemo(() => {
 					if (fetched()) {
 						if (!fetched().success) {
-							// toastInfo(`Failed to fetch data from the source. [${fetched().message}]`)
 							setisError(true)
-							toastFail(`Failed to fetch data from the source.`)
+							toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
 						} else {
 							let cekValue = fetched().data.metadata.findIndex(item => item.name == params[0].value)
 							let cekLabel = fetched().data.metadata.findIndex(item => item.name == params[0].desc)
+
+							// let cekValue = params[0].value
+							// let cekLabel = params[0].desc
+
 							fetched().data.data.map((item, value) => {
 								arr.push(
 									{
@@ -160,9 +164,8 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 					}
 				})
 			} catch (e) {
-				// toastInfo(`Failed to fetch data from the source. TypeOption : ${props.component.typeOption}. Error Message : ${e.Message}`)
 				setisError(true)
-				toastFail(`Failed to fetch data from the source.`)
+				toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
 			}
 
 			break;
@@ -202,9 +205,8 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 
 				})
 			} catch (e) {
-				// toastInfo(`Failed to fetch data from the source. TypeOption : ${props.component.typeOption}. Error Message : ${e.Message}`)
 				setisError(true)
-				toastFail(`Failed to fetch data from the source.`)
+				toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
 			}
 
 			break
@@ -241,9 +243,8 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 
 				})
 			} catch (e) {
-				// toastInfo(`Failed to fetch data from the source. TypeOption : ${props.component.typeOption}. Error Message : ${e.Message}`)
 				setisError(true)
-				toastFail(`Failed to fetch data from the source.`)
+				toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
 			}
 
 			break;
@@ -256,7 +257,7 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 			setFlag(1);//plus / edit
 			setEdited(0);
 		} else {
-			toastInfo("Only 1 component is allowed to edit");
+			toastInfo(locale.details.language[0].componentNotAllowed, '');
 		}
 	}
 
@@ -265,7 +266,7 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 			setFlag(1);//plus / edit
 			setEdited(id);
 		} else {
-			toastInfo("Only 1 component is allowed to edit");
+			toastInfo(locale.details.language[0].componentNotAllowed, '');
 		}
 	}
 
@@ -281,14 +282,14 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 			setEdited(id);
 			modalDelete();
 		} else if (flag() === 1) {//tidak bisa buka modal karena isian lain terbuka
-			toastInfo("Only 1 component is allowed to edit");
+			toastInfo(locale.details.language[0].componentNotAllowed, '');
 		} else if (flag() === 2) {
 			let updatedAnswer = JSON.parse(JSON.stringify(localAnswer()));
 			let answerIndex = updatedAnswer.findIndex((item) => item.value == id);
 			updatedAnswer.splice(answerIndex, 1);
 
 			props.onValueChange(updatedAnswer);
-			toastInfo("The component was successfully deleted!");
+			toastInfo(locale.details.language[0].componentDeleted, '');
 			setFlag(0);
 			setEdited(0);
 		}
@@ -313,21 +314,20 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 			props.onValueChange(updatedAnswer);
 
 			if (edited() === 0) {
-				toastInfo("The component was successfully added!");
+				toastInfo(locale.details.language[0].componentAdded, '');
 			} else {
-				toastInfo("The component was successfully edited!");
+				toastInfo(locale.details.language[0].componentEdited, '');
 			}
 			setFlag(0);
 			setEdited(0);
 		} else {
 			if (edited() === 0) {
-				toastInfo("The component can not be empty");
+				toastInfo(locale.details.language[0].componentEmpty, '');
 			} else {
 				setFlag(0);
 				setEdited(0);
 			}
 		}
-
 	}
 
 	let handleOnChange = (value: any) => {
@@ -339,21 +339,6 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 		let contentModal = document.querySelector("#contentModalDelete");
 		titleModal.innerHTML = props.component.titleModalDelete !== undefined ? props.component.titleModalDelete : 'Confirm Delete?';
 		contentModal.innerHTML = props.component.contentModalDelete !== undefined ? props.component.contentModalDelete : 'Deletion will also delete related components, including child components from this parent.';
-	}
-
-	const toastInfo = (text: string) => {
-		Toastify({
-			text: (text == '') ? "The component was successfully deleted!" : text,
-			duration: 3000,
-			gravity: "top",
-			position: "right",
-			stopOnFocus: true,
-			className: "bg-blue-600/80",
-			style: {
-				background: "rgba(8, 145, 178, 0.7)",
-				width: "400px"
-			}
-		}).showToast();
 	}
 
 	const [instruction, setInstruction] = createSignal(false);

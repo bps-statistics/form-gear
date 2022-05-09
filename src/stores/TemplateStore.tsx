@@ -1,6 +1,7 @@
 import { createStore } from "solid-js/store";
 import { Validations } from "./ReferenceStore";
 import { LengthInput } from "../FormType";
+import { Language } from "./LocaleStore";
 
 export type Component = {
     label: string
@@ -20,6 +21,9 @@ export type Component = {
     componentValidation?: string[]
     lengthInput?: LengthInput[]
     principal?: number //start with 1
+    columnName?: string
+    titleModalConfirmation: string
+    contentModalConfirmation: string
 }
 
 export type Detail = {
@@ -29,6 +33,7 @@ export type Detail = {
     title: string
     version: string
     components: Component[][],
+    language?: Language[]
 }
   
 export interface Questionnaire{

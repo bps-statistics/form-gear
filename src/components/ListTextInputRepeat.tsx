@@ -1,6 +1,7 @@
 import { FormComponentBase } from "../FormType"
 import { For, Switch, Match, Show, createMemo, createSignal } from 'solid-js'
 import Toastify from 'toastify-js'
+import { locale, setLocale} from '../stores/LocaleStore'
 
 const ListTextInputRepeat: FormComponentBase = props => {
 	const [flag, setFlag] = createSignal(0); //untuk flag open textinput
@@ -21,7 +22,7 @@ const ListTextInputRepeat: FormComponentBase = props => {
 			setFlag(1);//plus / edit
 			setEdited(0);
 		} else {
-			toastInfo("Only 1 component is allowed to edit");
+			toastInfo(locale.details.language[0].componentNotAllowed);
 		}
 	}
 
@@ -30,7 +31,7 @@ const ListTextInputRepeat: FormComponentBase = props => {
 			setFlag(1);//plus / edit
 			setEdited(id);
 		} else {
-			toastInfo("Only 1 component is allowed to edit");
+			toastInfo(locale.details.language[0].componentNotAllowed);
 		}
 	}
 	
@@ -53,7 +54,7 @@ const ListTextInputRepeat: FormComponentBase = props => {
 			updatedAnswer.splice(answerIndex,1);
 			
 			props.onValueChange(updatedAnswer);
-			toastInfo("The component was successfully deleted!");
+			toastInfo(locale.details.language[0].componentDeleted);
 			setFlag(0);
 			setEdited(0);
 		}
@@ -83,18 +84,18 @@ const ListTextInputRepeat: FormComponentBase = props => {
 				
 				props.onValueChange(updatedAnswer);
 				if(edited() === 0){
-					toastInfo("The component was successfully added!");
+					toastInfo(locale.details.language[0].componentAdded);
 				} else {
-					toastInfo("The component was successfully edited!");
+					toastInfo(locale.details.language[0].componentEdited);
 				}
 				setFlag(0);
 				setEdited(0);
 			} else {
-				toastInfo("This component has already being selected");
+				toastInfo(locale.details.language[0].componentSelected);
 			}
 		} else {
 			if(edited() === 0){
-				toastInfo("The component can not be empty");
+				toastInfo(locale.details.language[0].componentEmpty);
 			} else {
 				setFlag(0);
 				setEdited(0);
@@ -115,7 +116,7 @@ const ListTextInputRepeat: FormComponentBase = props => {
 
 	const toastInfo = (text:string) => {
 		Toastify({
-			text: (text == '') ? "The component was successfully deleted!" : text,
+			text: (text == '') ? locale.details.language[0].componentDeleted : text,
 			duration: 3000,
 			gravity: "top", 
 			position: "right", 

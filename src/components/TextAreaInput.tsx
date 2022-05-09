@@ -43,7 +43,8 @@ const TextAreaInput: FormComponentBase = props => {
               'col-span-11 lg:-mr-4' : enableRemark(),
               'col-span-12' : !(enableRemark()),
              }}  >
-          <textarea value={props.value} 
+          <Show when={props.component.lengthInput === undefined}>
+            <textarea value={props.value} 
                 rows={props.component.rows || 2}
                 class={ classInput }
                 classList={{
@@ -56,6 +57,24 @@ const TextAreaInput: FormComponentBase = props => {
                   props.onValueChange(e.currentTarget.value)
                 }}
           />
+          </Show>
+          <Show when={props.component.lengthInput !== undefined && props.component.lengthInput.length > 0}>
+            <textarea value={props.value} 
+                rows={props.component.rows || 2}
+                class={ classInput }
+                classList={{
+                  ' border border-solid border-gray-300 ' : props.classValidation === 0,
+                  ' border-orange-500 dark:bg-orange-100 ' : props.classValidation === 1,
+                  ' border-pink-600 dark:bg-pink-100 ' : props.classValidation === 2,
+                }}
+                disabled = { disableInput() }
+                onChange={(e) => {
+                  props.onValueChange(e.currentTarget.value)
+                }}
+                maxlength = {props.component.lengthInput[0].maxlength !== undefined ? props.component.lengthInput[0].maxlength : ''}
+                minlength = {props.component.lengthInput[0].minlength !== undefined ? props.component.lengthInput[0].minlength : ''}
+            />
+          </Show>
           <Show when={props.validationMessage.length > 0}>
             <For each={props.validationMessage}>
               {(item:any) => (

@@ -4,7 +4,7 @@ import { reference } from '../stores/ReferenceStore'
 import { Select, createOptions } from "@thisbeyond/solid-select"
 import "@thisbeyond/solid-select/style.css"
 import Toastify from 'toastify-js'
-
+import { locale, setLocale} from '../stores/LocaleStore'
 
 const MultipleSelectInput: FormComponentBase = props => {
 
@@ -35,20 +35,20 @@ const MultipleSelectInput: FormComponentBase = props => {
 
     }
 
-    const toastFail = (text: string) => {
-        Toastify({
-            text: (text == '') ? "" : text,
-            duration: 3000,
-            gravity: "top",
-            position: "right",
-            stopOnFocus: true,
-            className: "bg-pink-700/80",
-            style: {
-                background: "rgba(8, 145, 178, 0.7)",
-                width: "400px"
-            }
-        }).showToast();
-    }
+    const toastInfo = (text:string, color:string) => {
+		Toastify({
+			text: (text == '') ? "" : text,
+			duration: 3000,
+			gravity: "top", 
+			position: "right", 
+			stopOnFocus: true, 
+			className: (color == '') ? "bg-blue-600/80" : color,
+			style: {
+				background: "rgba(8, 145, 178, 0.7)",
+				width: "400px"
+			}
+		}).showToast();
+	}
 
     switch (props.component.typeOption) {
         case 1: {
@@ -60,8 +60,7 @@ const MultipleSelectInput: FormComponentBase = props => {
                 })
 
             } catch (e) {
-                // toastInfo(`Failed to fetch data from the source. TypeOption : ${props.component.typeOption}. Error Message : ${e.Message}`)
-                toastFail(`Failed to fetch data from the source.`)
+                toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
             }
 
             break
@@ -75,7 +74,8 @@ const MultipleSelectInput: FormComponentBase = props => {
                 let urlParams
 
                 params = props.component.sourceSelect
-                url = `${config.baseUrl}/${params[0].id}`
+				url = `${config.baseUrl}/${params[0].id}`
+				// url = `${config.baseUrl}/${params[0].id}/filter?version=${params[0].version}`
 
                 if (params[0].parentCondition.length > 0) {
                     urlHead = url
@@ -96,6 +96,7 @@ const MultipleSelectInput: FormComponentBase = props => {
                     }).join('&')
 
                     url = `${urlHead}?${urlParams}`
+                    // url = `${urlHead}&${urlParams}`
                 }
 
                 const [fetched] = createResource<optionSelect>(url, props.MobileOnlineSearch);
@@ -103,13 +104,15 @@ const MultipleSelectInput: FormComponentBase = props => {
                 createEffect(() => {
                     if (fetched()) {
                         if (!fetched().success) {
-                            // toastInfo(`Failed to fetch data from the source. [${fetched().message}]`)
-                            toastFail(`Failed to fetch data from the source.`)
+                            toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
                         } else {
                             let arr = []
 
                             let cekValue = fetched().data.metadata.findIndex(item => item.name == params[0].value)
                             let cekLabel = fetched().data.metadata.findIndex(item => item.name == params[0].desc)
+
+                            // let cekValue = params[0].value
+							// let cekLabel = params[0].desc
 
                             fetched().data.data.map((item, value) => {
                                 arr.push(
@@ -126,8 +129,7 @@ const MultipleSelectInput: FormComponentBase = props => {
 
                 })
             } catch (e) {
-                // toastInfo(`Failed to fetch data from the source. TypeOption : ${props.component.typeOption}. Error Message : ${e.Message}`)
-                toastFail(`Failed to fetch data from the source.`)
+                toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
             }
             break;
         }
@@ -151,8 +153,7 @@ const MultipleSelectInput: FormComponentBase = props => {
                     setOptions(optionsFetch)
                 })
             } catch (e) {
-                // toastInfo(`Failed to fetch data from the source. TypeOption : ${props.component.typeOption}. Error Message : ${e.Message}`)
-                toastFail(`Failed to fetch data from the source.`)
+                toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
             }
 
             break
@@ -172,8 +173,7 @@ const MultipleSelectInput: FormComponentBase = props => {
                     setOptions(optionsFetch)
                 })
             } catch (e) {
-                // toastInfo(`Failed to fetch data from the source. TypeOption : ${props.component.typeOption}. Error Message : ${e.Message}`)
-                toastFail(`Failed to fetch data from the source.`)
+                toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
             }
             break;
         }
@@ -219,6 +219,9 @@ const MultipleSelectInput: FormComponentBase = props => {
             <div class="font-light text-sm space-y-2 py-2.5 px-2">
                 <div class="inline-flex space-x-2">
                     <div innerHTML={props.component.label} />
+                    <Show when={props.component.required}>
+                        <span class="text-pink-600">*</span>
+                    </Show>
                     <Show when={props.component.hint}>
                         <button class="bg-transparent text-gray-300 rounded-full focus:outline-none h-4 w-4 hover:bg-gray-400 hover:text-white flex justify-center items-center"
                             onClick={showInstruction}>

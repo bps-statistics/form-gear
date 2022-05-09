@@ -8,6 +8,7 @@ import { response, setResponse} from './stores/ResponseStore';
 import { remark, setRemark} from './stores/RemarkStore';
 import { note, setNote} from './stores/NoteStore';
 import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
+import { locale, setLocale} from './stores/LocaleStore';
 
 import dayjs from 'dayjs';
 import Toastify from 'toastify-js'
@@ -25,7 +26,7 @@ export const getEnable = (dataKey: string) => {
 }
 export const toastInfo = (text:string, duration:number, position:string, bgColor:string) => {
   Toastify({
-    text: (text == '') ? "The component was successfully deleted!" : text,
+    text: (text == '') ? locale.details.language[0].componentDeleted : text,
     duration: (duration >= 0) ? duration : 500,
     gravity: "top", 
     position: (position == '') ? "right" : position, 
@@ -88,7 +89,7 @@ const FormInput: FormComponentBase = props => {
   }
   
   const onValueChange = (value: any) => {
-    toastInfo("Related components is rendering, please wait.", 500, "", "bg-orange-600/80");
+    toastInfo(locale.details.language[0].componentRendered, 500, "", "bg-orange-600/80");
     setTimeout(() => saveAnswer(props.component.dataKey, 'answer', value, form.activeComponent.position, {'clientMode': form.formConfig.clientMode,'baseUrl': form.formConfig.baseUrl}), 500);      
   }
 
@@ -138,9 +139,9 @@ const FormInput: FormComponentBase = props => {
       setTmpComment('');
       setFlagRemark('');
 
-      toastInfo("The remark was successfully added!", 500, "",  "bg-teal-600/80");
+      toastInfo(locale.details.language[0].remarkAdded, 500, "",  "bg-teal-600/80");
     }else{
-      toastInfo("The remark can not be empty!", 500, "", "bg-red-700/80");
+      toastInfo(locale.details.language[0].remarkEmpty, 500, "", "bg-red-700/80");
     }
   }
 

@@ -1,6 +1,7 @@
-import { createEffect, createSignal, Switch, Match, Show, For } from "solid-js";
-import { FormComponentBase } from "../FormType";
+import { createEffect, createSignal, Switch, Match, Show, For } from "solid-js"
+import { FormComponentBase } from "../FormType"
 import Toastify from 'toastify-js'
+import { locale, setLocale} from '../stores/LocaleStore'
 
 const GpsInput: FormComponentBase = props => {
   const [label, setLabel] = createSignal('');
@@ -19,7 +20,6 @@ const GpsInput: FormComponentBase = props => {
     if (props.value[0]) {
       let coord = props.value[0].value
       let imgSrc = `https://maps.google.com/maps?q=${coord.latitude},${coord.longitude}` + `&output=embed`;
-      // console.log('koordinat : ', coord)
       setLocation(imgSrc)
       setLatlong({
         latitude: coord.latitude,
@@ -42,7 +42,7 @@ const GpsInput: FormComponentBase = props => {
       setLocation(source)
     }
 
-    toastInfo("Location successfully acquired!")
+    toastInfo(locale.details.language[0].locationAcquired)
     updatedAnswer.push({ value: { 'latitude': event.coordinat.latitude, 'longitude': event.coordinat.longitude }, label: source })
 
     props.onValueChange(updatedAnswer)
@@ -69,7 +69,7 @@ const GpsInput: FormComponentBase = props => {
         setLocation(source)
 
         updatedAnswer.push({ value: { 'latitude': pos.coords.latitude, 'longitude': pos.coords.longitude }, label: source })
-        toastInfo("Location successfully acquired!")
+        toastInfo(locale.details.language[0].locationAcquired)
 
         props.onValueChange(updatedAnswer)
 

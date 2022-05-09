@@ -1,9 +1,11 @@
-import { createEffect, createSignal, createResource, Show, Switch, Match, For } from "solid-js";
+import { createEffect, createSignal, createResource, Show, Switch, Match, For } from "solid-js"
 import { FormComponentBase } from "../FormType"
-import { Select, createOptions } from "@thisbeyond/solid-select";
-import { reference, setReference } from '../stores/ReferenceStore';
+import { Select, createOptions } from "@thisbeyond/solid-select"
+import { reference, setReference } from '../stores/ReferenceStore'
+import "@thisbeyond/solid-select/style.css"
 import Toastify from 'toastify-js'
-import "@thisbeyond/solid-select/style.css";
+import { locale, setLocale} from '../stores/LocaleStore'
+
 
 const SelectInput: FormComponentBase = props => {
     const [label, setLabel] = createSignal('');
@@ -70,8 +72,7 @@ const SelectInput: FormComponentBase = props => {
                 })
 
             } catch (e) {
-                // toastInfo(`Failed to fetch data from the source. TypeOption : ${props.component.typeOption}. Error Message : ${e.Message}`)
-                toastInfo(`Failed to fetch data from the source.`)
+                toastInfo(locale.details.language[0].fetchFailed)
             }
 
             break;
@@ -83,9 +84,12 @@ const SelectInput: FormComponentBase = props => {
                 let params
                 let urlHead
                 let urlParams
+
                 if (!isPublic) {
                     params = props.component.sourceSelect
                     url = `${config.baseUrl}/${params[0].id}`
+                    // url = `${config.baseUrl}/${params[0].id}/filter?version=${params[0].version}`
+
 
                     if (params[0].parentCondition.length > 0) {
                         urlHead = url
@@ -109,12 +113,12 @@ const SelectInput: FormComponentBase = props => {
 
                         url = `${urlHead}?${urlParams}`
                     }
-
                 } else {
                     url = `${config.baseUrl}`
                 }
+                console.log('urlny ', url)
 
-                const [fetched] = createResource<optionSelect>(url, props.MobileOnlineSearch);
+                const [fetched] = createResource<optionSelect>(url,  props.MobileOnlineSearch);
                 // console.log('propsss', props);
                 let checker = props.value ? props.value != '' ? props.value[0].value : '' : ''
 
@@ -123,24 +127,41 @@ const SelectInput: FormComponentBase = props => {
 
                     if (fetched()) {
                         if (!fetched().success) {
-                            // toastInfo(`Failed to fetch data from the source. [${fetched().message}]`)
-                            toastInfo(`Failed to fetch data from the source.`)
+                            toastInfo(locale.details.language[0].fetchFailed)
                         } else {
-                            let arr = []
+                            let arr
 
-                            let cekValue = fetched().data.metadata.findIndex(item => item.name == params[0].value)
-                            let cekLabel = fetched().data.metadata.findIndex(item => item.name == params[0].desc)
+                            if (!isPublic) {
+                                arr = []
+                                let cekValue = fetched().data.metadata.findIndex(item => item.name == params[0].value)
+                                let cekLabel = fetched().data.metadata.findIndex(item => item.name == params[0].desc)
 
-                            fetched().data.data.map((item, value) => {
-                                arr.push(
-                                    {
-                                        value: item[cekValue],
-                                        label: item[cekLabel],
-                                    }
-                                )
-                            })
+                                // let cekValue = params[0].value
+                                // let cekLabel = params[0].desc
+
+                                fetched().data.data.map((item, value) => {
+                                    arr.push(
+                                        {
+                                            value: item[cekValue],
+                                            label: item[cekLabel],
+                                        }
+                                    )
+                                })
+
+                                // fetched().data.map((item, value) => {
+                                //     arr.push(
+                                //         {
+                                //             value: item[cekValue],
+                                //             label: item[cekLabel],
+                                //         }
+                                //     )
+                                // })
+                            } else {
+                                arr = fetched().data
+                            }
 
                             let ans = arr.find(obj => obj.value == checker) && checker != '' ? arr.find(obj => obj.value == checker).label : ''
+
                             setOptions(arr)
                             setSelectedOption(ans)
                             setLoading(true)
@@ -151,8 +172,7 @@ const SelectInput: FormComponentBase = props => {
 
 
             } catch (e) {
-                // toastInfo(`Failed to fetch data from the source. TypeOption : ${props.component.typeOption}. Error Message : ${e.Message}`)
-                toastInfo(`Failed to fetch data from the source.`)
+                toastInfo(locale.details.language[0].fetchFailed)
             }
 
             break;
@@ -189,8 +209,7 @@ const SelectInput: FormComponentBase = props => {
                 })
 
             } catch (e) {
-                // toastInfo(`Failed to fetch data from the source. TypeOption : ${props.component.typeOption}. Error Message : ${e.Message}`)                
-                toastInfo(`Failed to fetch data from the source.`)
+                toastInfo(locale.details.language[0].fetchFailed)
             }
 
             break;
@@ -223,8 +242,7 @@ const SelectInput: FormComponentBase = props => {
 
                 })
             } catch (e) {
-                // toastInfo(`Failed to fetch data from the source.. Error Message : ${e.Message}`)
-                toastInfo(`Failed to fetch data from the source.`)
+                toastInfo(locale.details.language[0].fetchFailed)
             }
 
             break;

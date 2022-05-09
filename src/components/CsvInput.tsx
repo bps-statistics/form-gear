@@ -1,7 +1,8 @@
-import { createEffect, createSignal, Switch, Match, Show, For } from "solid-js";
-import { FormComponentBase } from "../FormType";
+import { createEffect, createSignal, Switch, Match, Show, For } from "solid-js"
+import { FormComponentBase } from "../FormType"
 import Toastify from 'toastify-js'
 import Papa from 'papaparse'
+import { locale, setLocale} from '../stores/LocaleStore'
 
 const CsvInput: FormComponentBase = props => {    
     const [thead, setTHead] = createSignal([]);
@@ -35,7 +36,7 @@ const CsvInput: FormComponentBase = props => {
         let doc = data.target.files[0];
         let ext = doc.name.split('.').pop().toLowerCase()
         if (!allowedExtension.includes(ext)) {
-            toastInfo('Please submit the appropriate format!','bg-pink-600/70')
+            toastInfo(locale.details.language[0].fileInvalidFormat,'bg-pink-600/70')
         } else {
             reader.readAsDataURL(doc)
 
@@ -45,9 +46,6 @@ const CsvInput: FormComponentBase = props => {
                     download: true,
                     delimiter: "",	// auto-detect
                     complete: function(results) {
-
-                        // console.log(results)
-
                         let keys = results.data[0];
                         let rows = [...[results.data[1]],results.data[2],results.data[3],results.data[4],results.data[5]];
                         let jsonCsv = results.data.slice(1).map((item) => {
@@ -65,13 +63,11 @@ const CsvInput: FormComponentBase = props => {
                         setTbody(rows)    
 
                         props.onValueChange(jsonCsv)
-                        toastInfo('File uploaded successfully!','')
+                        toastInfo(locale.details.language[0].fileUploaded,'')
         
                     }
                 });
             
-
-
             }
         }
         }

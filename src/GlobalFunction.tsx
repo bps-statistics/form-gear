@@ -7,6 +7,7 @@ import { response, setResponse, Response } from './stores/ResponseStore';
 import { remark, setRemark, Remark} from './stores/RemarkStore';
 import { note, setNote} from './stores/NoteStore';
 import { createSignal } from 'solid-js';
+import { locale, setLocale} from './stores/LocaleStore';
 
 export const getValue = (dataKey: string) => {
     let tmpDataKey = dataKey.split('@');

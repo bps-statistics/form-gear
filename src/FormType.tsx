@@ -120,6 +120,9 @@ export type ComponentType = {
   contentModalDelete?: string   //21,22
   lengthInput?: LengthInput[]             //special for input attribute
   principal: number             //start with 1
+  columnName: string
+  titleModalConfirmation: string
+  contentModalConfirmation: string
   required: boolean
 }
 

@@ -12,7 +12,7 @@ import { remark, setRemark, Remark } from './stores/RemarkStore';
 
 export function FormGear(templateFetch, presetFetch, responseFetch, validationFetch, remarkFetch, config, uploadHandler, GpsHandler, onlineSearch, setResponseMobile, setSubmitMobile, openMap) {
 
-  console.log('form-gear@0.1.0');
+  console.log('form-gear@0.1.1');
   console.time('FormGear renders successfully in ');
 
     setTemplate({details: templateFetch});
