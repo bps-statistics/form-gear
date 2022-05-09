@@ -72,7 +72,7 @@ const MaskingInput: FormComponentBase = props => {
           <input value={props.value} type="text" 
               id={"inputMask" + props.component.dataKey} ref={inputMask.ref} 
               class={ classInput } 
-              placeholder={props.component.maskingFormat.replace(/[a9*]/g, '#')}
+              placeholder={props.component.maskingFormat.replace(/[a]/g, '__').replace(/[9]/g, '#')}
               disabled = { disableInput() }
               onChange={(e) => handleOnChange(e.currentTarget.value)} 
               onclick={formatMask} oninput={formatMask} onpaste={formatMask} 
