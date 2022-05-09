@@ -118,6 +118,9 @@ const GpsInput: FormComponentBase = props => {
         <div class="font-light text-sm space-y-2 py-2.5 px-2 col-span-11">
           <div class="inline-flex space-x-2">
             <div innerHTML={props.component.label} />
+            <Show when={props.component.required}>
+              <span class="text-pink-600">*</span>
+            </Show>
             <Show when={props.component.hint}>
               <button class="bg-transparent text-gray-300 rounded-full focus:outline-none h-4 w-4 hover:bg-gray-400 hover:text-white flex justify-center items-center"
                 onClick={showInstruction}>

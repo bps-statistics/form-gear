@@ -251,6 +251,9 @@ const SelectInput: FormComponentBase = props => {
         <div class="grid md:grid-cols-3 border-b border-gray-300/[.50] dark:border-gray-200/[.10] p-2">
             <div class="font-light text-sm space-x-2 py-2.5 px-2">
                 <div innerHTML={label()} />
+                <Show when={props.component.required}>
+                    <span class="text-pink-600">*</span>
+                </Show>
             </div>
             <div class="font-light text-sm space-x-2 py-2.5 px-2 md:col-span-2 grid grid-cols-12">
                 <Show when={isLoading()} fallback={

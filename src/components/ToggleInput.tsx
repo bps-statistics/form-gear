@@ -22,7 +22,10 @@ const ToggleInput: FormComponentBase = props => {
                     ' border-b border-pink-600 pb-3 ' : props.classValidation === 2,
                 }}>        
                 <div class="inline-flex space-x-2"> 
-                    <div innerHTML={props.component.label} />          
+                    <div innerHTML={props.component.label} />
+                    <Show when={props.component.required}>
+                        <span class="text-pink-600">*</span>
+                    </Show>
                     <Show when={props.component.hint}>
                     <button class="bg-transparent text-gray-300 rounded-full focus:outline-none h-4 w-4 hover:bg-gray-400 hover:text-white flex justify-center items-center"
                         onClick={showInstruction}>

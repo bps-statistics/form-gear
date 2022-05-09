@@ -120,6 +120,7 @@ export type ComponentType = {
   contentModalDelete?: string   //21,22
   lengthInput?: LengthInput[]             //special for input attribute
   principal: number             //start with 1
+  required: boolean
 }
 
 export interface FormComponentBase extends Component<{

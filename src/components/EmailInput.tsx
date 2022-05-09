@@ -18,7 +18,10 @@ const EmailInput: FormComponentBase = props => {
 		<div class="md:grid md:grid-cols-3 border-b border-gray-300/[.40] dark:border-gray-200/[.10] p-2">
       <div class="font-light text-sm space-y-2 py-2.5 px-2">        
         <div class="inline-flex space-x-2"> 
-          <div innerHTML={props.component.label} />          
+          <div innerHTML={props.component.label} />
+          <Show when={props.component.required}>
+            <span class="text-pink-600">*</span>
+          </Show>
           <Show when={props.component.hint}>
             <button class="bg-transparent text-gray-300 rounded-full focus:outline-none h-4 w-4 hover:bg-gray-400 hover:text-white flex justify-center items-center"
               onClick={showInstruction}>
