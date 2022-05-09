@@ -935,7 +935,7 @@ const Form: Component<{
             <div class="mobile-component-div flex-grow overflow-y-auto h-full flex flex-col bg-white dark:bg-gray-900 z-0" onScroll={checkScrollTopMobile}>
               
               <div class="relative min-h-screen md:flex   ">
-                <div class="absolute pt-1 z-20 h-8 w-36 left-0 -ml-8 top-5 bg-sky-400/70 -rotate-45 text-white font-semibold text-center"  >&#946;eta</div>
+                <div class="absolute pt-1 z-20 h-8 w-36 left-0 -ml-8 top-5 bg-sky-400/70 -rotate-45 text-white font-semibold text-center"  >&#946;eta 🔰</div>
 
                 <div class="bg-gray-50 dark:bg-gray-900 w-72 flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-full overflow-y-auto p-5 space-y-4
                 sidebar-span absolute inset-y-0 left-0 transform -translate-x-full transition-transform duration-500 ease-in-out md:relative md:translate-x-0 z-10">
@@ -1171,7 +1171,7 @@ const Form: Component<{
                               'hidden': onMobile() === true,
                             }}
                           />
-                        <div class="text-xs font-extralight text-gray-400 ">FormGear 0.1.1 renders in : &#177; {timeDiff+20} ms</div>
+                        <div class="text-xs font-extralight text-gray-400 ">FormGear-0.1.1 🚀: &#177; {timeDiff+20} ms</div>
                       </div>
                       <div class="ml-auto sm:flex items-center p-2 ">
                         <button onClick={toggleSwitch} type="button" 
