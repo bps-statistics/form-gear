@@ -10,10 +10,11 @@ const SelectInput: FormComponentBase = props => {
     const [isLoading, setLoading] = createSignal(false);
     const [options, setOptions] = createSignal([]);
     const [selectedOption, setSelectedOption] = createSignal('');
+    const isPublic = false;
 
     const config = props.config
-    const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
-    
+    const [disableInput] = createSignal((config.formMode > 2) ? true : props.component.disableInput)
+
     type contentMeta = {
         name: string,
         type: string
@@ -82,31 +83,35 @@ const SelectInput: FormComponentBase = props => {
                 let params
                 let urlHead
                 let urlParams
+                if (!isPublic) {
+                    params = props.component.sourceSelect
+                    url = `${config.baseUrl}/${params[0].id}`
 
-                params = props.component.sourceSelect
-                url = `${config.baseUrl}/${params[0].id}`
+                    if (params[0].parentCondition.length > 0) {
+                        urlHead = url
 
-                if (params[0].parentCondition.length > 0) {
-                    urlHead = url
+                        urlParams = params[0].parentCondition.map((item, index) => {
+                            let newParams = item.value.split('@');
 
-                    urlParams = params[0].parentCondition.map((item, index) => {
-                        let newParams = item.value.split('@');
+                            let tobeLookup = reference.details.find(obj => obj.dataKey == newParams[0])
+                            if (tobeLookup.answer) {
+                                if (tobeLookup.answer.length > 0) {
+                                    let parentValue = tobeLookup.answer[tobeLookup.answer.length - 1].value
+                                    url = `${config.lookupKey}=${item.key}&${config.lookupValue}=${parentValue}`
+                                }
 
-                        let tobeLookup = reference.details.find(obj => obj.dataKey == newParams[0])
-                        if (tobeLookup.answer) {
-                            if (tobeLookup.answer.length > 0) {
-                                let parentValue = tobeLookup.answer[tobeLookup.answer.length - 1].value
-                                url = `${config.lookupKey}=${item.key}&${config.lookupValue}=${parentValue}`
+                            } else {
+                                url = `${config.lookupKey}=${item.key}&${config.lookupValue}=''`
                             }
 
-                        } else {
-                            url = `${config.lookupKey}=${item.key}&${config.lookupValue}=''`
-                        }
+                            return url
+                        }).join('&')
 
-                        return url
-                    }).join('&')
+                        url = `${urlHead}?${urlParams}`
+                    }
 
-                    url = `${urlHead}?${urlParams}`
+                } else {
+                    url = `${config.baseUrl}`
                 }
 
                 const [fetched] = createResource<optionSelect>(url, props.MobileOnlineSearch);
@@ -264,52 +269,52 @@ const SelectInput: FormComponentBase = props => {
                             'col-span-11 lg:-mr-4': enableRemark(),
                             'col-span-12': !(enableRemark()),
                         }}>
-                        <div 
+                        <div
                             classList={{
-                            ' border rounded border-orange-500 dark:bg-orange-100 ' : props.classValidation === 1,
-                            ' border rounded border-pink-600 dark:bg-pink-100 ' : props.classValidation === 2,
+                                ' border rounded border-orange-500 dark:bg-orange-100 ': props.classValidation === 1,
+                                ' border rounded border-pink-600 dark:bg-pink-100 ': props.classValidation === 2,
                             }}>
                             <Select
                                 class="formgear-select w-full rounded font-light text-sm text-gray-700 bg-white bg-clip-padding transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-0 border-transparent focus:outline-none  disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
                                 {...createOptions(
                                     options() || [],
                                     { key: "label", filterable: true })}
-                                disabled = { disableInput() }
+                                disabled={disableInput()}
                                 onChange={(e) => handleOnChange(e ? e.value : '', e ? e.label : '')}
                                 initialValue={{ value: props.value ? props.value != '' ? props.value[0].value : '' : '', label: selectedOption }} />
                         </div>
-                    <Show when={props.validationMessage.length > 0}>
-                        <For each={props.validationMessage}>
-                        {(item:any) => (
-                            <div 
-                            class="text-xs font-light mt-1"> 
-                            <div class="grid grid-cols-12"                  
-                                classList={{
-                                ' text-orange-500 dark:text-orange-200 ' : props.classValidation === 1,
-                                ' text-pink-600 dark:text-pink-200 ' : props.classValidation === 2,
-                                }} >
-                                <Switch>
-                                <Match when={props.classValidation === 1}>
-                                    <div class="col-span-1 flex justify-center items-start">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                    </svg>
+                        <Show when={props.validationMessage.length > 0}>
+                            <For each={props.validationMessage}>
+                                {(item: any) => (
+                                    <div
+                                        class="text-xs font-light mt-1">
+                                        <div class="grid grid-cols-12"
+                                            classList={{
+                                                ' text-orange-500 dark:text-orange-200 ': props.classValidation === 1,
+                                                ' text-pink-600 dark:text-pink-200 ': props.classValidation === 2,
+                                            }} >
+                                            <Switch>
+                                                <Match when={props.classValidation === 1}>
+                                                    <div class="col-span-1 flex justify-center items-start">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                                        </svg>
+                                                    </div>
+                                                </Match>
+                                                <Match when={props.classValidation === 2}>
+                                                    <div class="col-span-1 flex justify-center items-start">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                        </svg>
+                                                    </div>
+                                                </Match>
+                                            </Switch>
+                                            <div class="col-span-11 text-justify mr-1" innerHTML={item} />
+                                        </div>
                                     </div>
-                                </Match>
-                                <Match when={props.classValidation === 2}>
-                                    <div class="col-span-1 flex justify-center items-start">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    </div>
-                                </Match>
-                                </Switch>
-                                <div class="col-span-11 text-justify mr-1" innerHTML={item}/>
-                            </div>
-                            </div>
-                        )}
-                        </For>
-                    </Show>
+                                )}
+                            </For>
+                        </Show>
                     </div>
 
                     <Show when={enableRemark()}>
