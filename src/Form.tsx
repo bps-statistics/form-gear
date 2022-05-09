@@ -591,8 +591,21 @@ const Form: Component<{
 
     const [showSubmit, setShowSubmit] = createSignal(false)
     const [captcha, setCaptcha] = createSignal('')    
-    const [tmpCaptcha, setTmpCaptcha] = createSignal('')    
-    const [docState, setDocState] = createSignal('E');
+    const [tmpCaptcha, setTmpCaptcha] = createSignal('')
+    const [docState, setDocState] = createSignal('E')
+
+    const [showError, setShowError] = createSignal(false)
+    
+    const [listError, setListError] = createSignal([])
+    const [listErrorPage, setListErrorPage] = createSignal([])
+    const [currentErrorPage, setCurrentErrorPage] = createSignal(1)
+    const [maxErrorPage, setMaxErrorPage] = createSignal(1)
+
+    const [listWarning, setListWarning] = createSignal([])
+    const [listWarningPage, setListWarningPage] = createSignal([])
+    const [currentWarningPage, setCurrentWarningPage] = createSignal(1)
+    const [maxWarningPage, setMaxWarningPage] = createSignal(1)
+
 
     function checkDocState() {
       (summary.error > 0) ? setDocState('E') : (reference.details.filter(element => Number(element.validationState) === 1).length > 0) ? setDocState('W') : setDocState('C');
@@ -609,38 +622,97 @@ const Form: Component<{
           captchaStr[q] = Math.floor(Math.random() * 10 + 0);
         }
       }
-      // console.log(captchaStr);
       setCaptcha(captchaStr.join(""));
       // activeCaptcha.innerHTML = `${theCaptcha}`;
+    }
+
+    const showListError = (event: MouseEvent) => {
+      let filteredError = [];
+      let filteredWarning = [];
+      reference.details.forEach((element,i) =>{
+          if (element.type > 4 && ( element.enable ) && element.validationState == 2) filteredError.push({label:element.label,message:element.validationMessage})
+          if (element.type > 4 && ( element.enable ) && element.validationState == 1) filteredWarning.push({label:element.label,message:element.validationMessage})
+      });
+
+      setListError(JSON.parse(JSON.stringify(filteredError)))
+      setListWarning(JSON.parse(JSON.stringify(filteredWarning)))
+
+      showListPage(listError().length, 3, 1, listError(), 2)
+      showListPage(listWarning().length, 3, 1, listWarning(), 1)
+
+      setShowError(true);
+    }
+
+    const showListPage = (total, shown, current, list, errorType) => {
+        let maxPages = Math.ceil(total/shown)
+        let minSlicePages = shown * current - shown
+        let maxSlicePages = shown * current
+
+        let listPage =  list.slice(minSlicePages, maxSlicePages)
+
+        if(errorType == 2) {
+          setCurrentErrorPage(current)
+          setMaxErrorPage(maxPages)
+          setListErrorPage(JSON.parse(JSON.stringify(listPage)))
+        }else{
+          setCurrentWarningPage(current)
+          setMaxWarningPage(maxPages)
+          setListWarningPage(JSON.parse(JSON.stringify(listPage)))
+        }
     }
 
     const confirmSubmit = (event: MouseEvent) => {
       createCaptcha();
       checkDocState();
       if(docState() === 'E') {
-        toastInfo("Please make sure your submission is valid", 3000, "", "bg-pink-600/80");
+        toastInfo(locale.details.language[0].submitInvalid, 3000, "", "bg-pink-600/80");
       } else {
-        if(summary.blank === 0){
+        reference.details.forEach((obj, ind) => {
+          let updatedRef = JSON.parse(JSON.stringify(obj));
+          let run = 0
+          
+          if((updatedRef.enable) && updatedRef.required !== undefined && (updatedRef.required)){
+            let editedDataKey = updatedRef.dataKey.split('@');
+            let newEdited = editedDataKey[0].split('#');
+            if(updatedRef.level < 2 || updatedRef.level > 1 && newEdited[1] !== undefined){
+              let typeAnswer = typeof updatedRef.answer
+              if(updatedRef.answer === undefined || 
+                      (updatedRef.answer !== undefined && typeAnswer === 'string' && updatedRef.answer === '')  || 
+                      (updatedRef.answer !== undefined && typeAnswer === 'number' && updatedRef.answer == 0) || 
+                      (updatedRef.answer !== undefined && typeAnswer === 'object' && Number(updatedRef.type) == 21 && updatedRef.answer.length < 2) || 
+                      (updatedRef.answer !== undefined && typeAnswer === 'object' && Number(updatedRef.type) == 22 && updatedRef.answer.length < 2) || 
+                      (updatedRef.answer !== undefined && typeAnswer === 'object' && updatedRef.type > 22 && updatedRef.answer.length == 0) || 
+                      typeAnswer === 'object' && !isNaN(updatedRef.answer) || 
+                      typeAnswer === 'number' && isNaN(updatedRef.answer) || 
+                      JSON.stringify(updatedRef.answer) === '[]'){
+                  updatedRef.validationMessage.push(locale.details.language[0].validationRequired);
+                  updatedRef.validationState = 2;
+              }
+              setReference('details',ind, updatedRef);
+            }
+          }
+        });
+        
+        if(summary.error === 0){
           if(docState() === 'W') {
-            toastInfo("The submission you are about to submit still contains a warning", 3000, "", "bg-orange-600/80");
+            toastInfo(locale.details.language[0].submitWarning, 3000, "", "bg-orange-600/80");
             setShowSubmit(true);
           } else {
             setShowSubmit(true);
           }
         } else {
-          toastInfo("Please make sure your submission is fully filled", 3000, "", "bg-pink-600/80");
+          toastInfo(locale.details.language[0].submitEmpty, 3000, "", "bg-pink-600/80");
         }
       }
-      
     }
     
     const submitData = (event: MouseEvent) => {
       if(tmpCaptcha().length !== 0 && (tmpCaptcha() === captcha())){
         writeSubmitResponse();
         setShowSubmit(false)
-        toastInfo("The data is now being submited. Thank you!", 3000, "", "bg-teal-600/80");
+        toastInfo(locale.details.language[0].verificationSubmitted, 3000, "", "bg-teal-600/80");
       }else{
-        toastInfo("Please provide verification correctly!", 3000, "", "bg-pink-600/80");
+        toastInfo(locale.details.language[0].verificationInvalid, 3000, "", "bg-pink-600/80");
       }
     }
 
@@ -706,6 +778,157 @@ const Form: Component<{
             </div>
           </div>
         </Show>
+
+        <Show when={ showError() }>
+          <div class="modal-remark fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+              <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+              
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                <div class="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full">
+                
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6">
+                  <div class="sm:flex sm:items-start">
+                    <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-200 sm:mx-0 sm:h-10 sm:w-10 text-red-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                      <h3 class="text-lg leading-6 font-medium text-gray-900" id="titleModalError">List Error</h3>
+                      <div class="relative overflow-auto">
+                        <div class="shadow-sm overflow-hidden my-6">
+                          <table class="border-collapse table-fixed w-full text-sm">
+                            <thead class="text-sm font-semibold text-gray-600 bg-gray-50">
+                              <tr>
+                                <th class="p-2 whitespace-nowrap font-semibold text-left w-1/12">No</th>
+                                <th class="p-2 whitespace-nowrap font-semibold text-left w-1/4">Field</th>
+                                <th class="p-2 whitespace-nowrap font-semibold text-left w-2/3">Error Messages</th>
+                              </tr>
+                            </thead>
+                            <tbody class="text-sm divide-y divide-gray-100 ">
+                                <For each={listErrorPage()}>
+                                    { (item, index) => (
+                                      <tr class="text-gray-600">
+                                        <td class="border-b border-slate-100 p-2 align-top">
+                                          <div class="text-left text-sm font-light">&nbsp;&nbsp;{Number(index())+1+(currentErrorPage()*3-3)}</div>
+                                        </td>
+                                        <td class="border-b border-slate-100 p-2 align-top">
+                                          <div class="text-left text-sm font-light" innerHTML={item['label']} />
+                                        </td>
+                                        <td class="border-b border-slate-100 align-top pb-2">
+                                          <For each={item['message']}>
+                                            {(item_msg, index_msg) => (
+                                                <div class="grid grid-cols-12 text-sm font-light mt-1">
+                                                  <div class="col-span-1 flex justify-center items-start">-</div>
+                                                  <div class="col-span-11 text-justify mr-1">{item_msg}</div>
+                                                </div>
+                                            )}
+                                          </For>
+                                        </td>
+                                      </tr>
+                                    )}
+                                </For>
+                            </tbody>
+                          </table>                        
+                        </div>
+                        <div class="flex justify-start items-center text-center font-light px-3 pb-3">
+                          <button type="button" class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
+                                  font-light text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm" 
+                                onClick = {e => showListPage(listError().length, 3, currentErrorPage()-1, listError(), 2)}
+                                disabled = { (currentErrorPage() == 1) ? true : false }
+                                >Prev</button>
+
+                          <div class="text-center px-4 text-xs">{currentErrorPage}</div>
+
+                          <button type="button" class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
+                                  font-light text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm" 
+                                onClick={e => showListPage(listError().length, 3, currentErrorPage()+1, listError(), 2)}
+                                disabled = { (currentErrorPage() == maxErrorPage()) ? true : false }
+                                >Next</button>
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+                  
+                  <Show when={listWarning().length > 0}>
+                    <div class="sm:flex sm:items-start mt-6">
+                      <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-yellow-200 sm:mx-0 sm:h-10 sm:w-10 text-yellow-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                      </div>
+                      <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900" id="titleModalError">List Warning</h3>
+                        <div class="relative overflow-auto">
+                          <div class="shadow-sm overflow-hidden my-6">                            
+                            <table class="border-collapse table-fixed w-full text-sm">
+                              <thead class="text-sm font-semibold text-gray-600 bg-gray-50">
+                                <tr>
+                                  <th class="p-2 whitespace-nowrap font-semibold text-left w-1/12">No</th>
+                                  <th class="p-2 whitespace-nowrap font-semibold text-left w-1/4">Field</th>
+                                  <th class="p-2 whitespace-nowrap font-semibold text-left w-2/3">Warning Messages</th>
+                                </tr>
+                              </thead>
+                              <tbody class="text-sm divide-y divide-gray-100 ">
+                                  <For each={listWarningPage()}>
+                                      { (item, index) => (
+                                        <tr class="text-gray-600">
+                                          <td class="border-b border-slate-100 p-2 align-top">
+                                            <div class="text-left text-sm font-light">&nbsp;&nbsp;{Number(index())+1+(currentWarningPage()*3-3)}</div>
+                                          </td>
+                                          <td class="border-b border-slate-100 p-2 align-top">
+                                            <div class="text-left text-sm font-light" innerHTML={item['label']} />
+                                          </td>
+                                          <td class="border-b border-slate-100 align-top pb-2">
+                                            <For each={item['message']}>
+                                              {(item_msg, index_msg) => (
+                                                  <div class="grid grid-cols-12 text-sm font-light mt-1">
+                                                    <div class="col-span-1 flex justify-center items-start">-</div>
+                                                    <div class="col-span-11 text-justify mr-1">{item_msg}</div>
+                                                  </div>
+                                              )}
+                                            </For>
+                                          </td>
+                                        </tr>
+                                      )}
+                                  </For>
+                              </tbody>
+                            </table>    
+                          </div>
+                          <div class="flex justify-start items-center text-center font-light px-3 pb-3">
+                            <button type="button" class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
+                                    font-light text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm" 
+                                  onClick={e => showListPage(listWarning().length, 3, currentWarningPage()-1, listWarning(), 1)}
+                                  disabled = { (currentWarningPage() == 1) ? true : false }
+                                  >Prev</button>
+
+                            <div class="text-center px-4 text-xs">{currentWarningPage}</div>
+
+                            <button type="button" class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
+                                    font-light text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm" 
+                                  onClick={e => showListPage(listWarning().length, 3, currentWarningPage()+1, listWarning(), 1)}
+                                  disabled = { (currentWarningPage() == maxWarningPage()) ? true : false }
+                                  >Next</button>
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </Show>
+                </div>
+                
+                <div class="bg-white px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                  <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
+                          font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" 
+                        onClick={e => setShowError(false)}>Close</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </Show>
         
 
         <div class="md:max-w-6xl mx-auto md:px-8 md:py-8">
@@ -725,7 +948,7 @@ const Form: Component<{
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                    </button>  
+                    </button>
                   </div>
                   
                   <div class="overflow-y-auto h-3/6">    
@@ -907,25 +1130,30 @@ const Form: Component<{
                       <div class="max-w-5xl grid grid-cols-2 gap-2">
                         <div class="h-20 text-5xl text-center sm:flex flex-col flex-coltext-white font-medium xs:h-auto xs:square xl:border-b ">
                             {summary.answer}
-                            <div class="font-light text-xs">Answer</div>
+                            <div class="font-light text-xs">{locale.details.language[0].summaryAnswer}</div>
                         </div>
                         <div class="h-20 text-5xl text-center sm:flex flex-col flex-coltext-white font-medium xs:h-auto xs:square xl:border-b ">
                             {summary.blank}
-                            <div class="font-light text-xs">Blank</div>
+                            <div class="font-light text-xs">{locale.details.language[0].summaryBlank}</div>
                         </div>
                         <div class="h-20 text-5xl text-center sm:flex flex-col flex-coltext-white font-medium xs:h-auto xs:square xl:border-b ">
                             {summary.error}
-                            <div class="font-light text-xs">Error</div>
+                            <div class="font-light text-xs">{locale.details.language[0].summaryError}</div>
                         </div>
                         <div class="h-20 text-5xl text-center sm:flex flex-col flex-coltext-white font-medium xs:h-auto xs:square xl:border-b ">
                             {summary.remark}
-                            <div class="font-light text-xs">Remark</div>
+                            <div class="font-light text-xs">{locale.details.language[0].summaryRemark}</div>
                         </div>
                       </div>
-                      <div>                  
-                        <button class="bg-teal-300 hover:bg-teal-200 text-teal-100 p-3 w-full rounded-md shadow font-medium" onClick={confirmSubmit}>
-                            Submit
-                        </button>
+                      <div>
+                        <Switch>
+                          <Match when={(summary.error == 0)}>
+                            <button class="bg-teal-300 hover:bg-teal-200 text-teal-100 p-3 w-full rounded-md shadow font-medium" onClick={confirmSubmit}>Submit</button>
+                          </Match>
+                          <Match when={(summary.error > 0)}>
+                            <button class="bg-red-500 hover:bg-red-400 text-teal-100 p-3 w-full rounded-md shadow font-medium" onClick={showListError}>List Error</button>
+                          </Match>
+                        </Switch>
                       </div>
                     </div>
                   </div>
@@ -990,7 +1218,7 @@ const Form: Component<{
                     GpsHandler = { props.GpsHandler }
                     onlineSearch = { props.onlineSearch }
                     openMap = { props.openMap }
-                    />
+                  />
 
                   <div  class="grid grid-cols-6 sticky w-full justify-end bottom-12 mt-10"
                       classList={{
@@ -1011,7 +1239,16 @@ const Form: Component<{
                       </button>
                       <div class="flex justify-center items-center text-center">{form.activeComponent.label}</div>
                       <Switch>
-                        <Match when={sidebar.details.filter((obj, i) => (obj.enable) && (i > form.activeComponent.position)).length === 0}>
+                        <Match when={sidebar.details.filter((obj, i) => (obj.enable) && (i > form.activeComponent.position)).length === 0 && summary.error > 0}>
+                          <button class="bg-red-200 text-red-500 sm:h-10 sm:w-10 rounded-full focus:outline-none h-5 w-5 flex justify-center items-center"
+                            onClick={showListError}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          </button>
+                        </Match>
+                        <Match when={sidebar.details.filter((obj, i) => (obj.enable) && (i > form.activeComponent.position)).length === 0 && summary.error == 0}>
                           <button class="bg-teal-200 text-teal-500 sm:h-10 sm:w-10 rounded-full focus:outline-none h-5 w-5 flex justify-center items-center"
                             onClick={confirmSubmit}
                           >
@@ -1077,7 +1314,16 @@ const Form: Component<{
                     </button>
                     <div class="flex justify-center items-center text-center text-xs">{form.activeComponent.label}</div>
                     <Switch>
-                      <Match when={sidebar.details.filter((obj, i) => (obj.enable) && (i > form.activeComponent.position)).length === 0}>
+                      <Match when={sidebar.details.filter((obj, i) => (obj.enable) && (i > form.activeComponent.position)).length === 0 && summary.error > 0}>
+                        <button class="bg-red-200 text-red-500 rounded-full focus:outline-none h-8 w-8 flex justify-center items-center"
+                          onClick={showListError}
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </button>
+                      </Match>
+                      <Match when={sidebar.details.filter((obj, i) => (obj.enable) && (i > form.activeComponent.position)).length === 0 && summary.error == 0}>
                         <button class="bg-teal-200 text-teal-500 h-8 w-8 rounded-full focus:outline-none flex justify-center items-center"
                           onClick={confirmSubmit}
                         >
