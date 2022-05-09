@@ -72,6 +72,7 @@ export type RangeInput =  {
 
 export type selectOption = {
   id: string,
+  version: string,
   tableName?: string,
   value: string,
   desc: string,
@@ -116,6 +117,7 @@ export type ComponentType = {
   titleModalDelete?: string     //21,22
   contentModalDelete?: string   //21,22
   lengthInput?: LengthInput[]             //special for input attribute
+  principal: number             //start with 1
 }
 
 export interface FormComponentBase extends Component<{

@@ -19,6 +19,7 @@ export type Component = {
     validations?: Validations[]
     componentValidation?: string[]
     lengthInput?: LengthInput[]
+    principal?: number //start with 1
 }
 
 export type Detail = {

@@ -12,6 +12,7 @@ import { nested, setNested } from './stores/NestedStore';
 import { sidebar, setSidebar } from './stores/SidebarStore';
 import { remark, setRemark, Remark} from './stores/RemarkStore';
 import { note, setNote} from './stores/NoteStore';
+import { principal, setPrincipal} from './stores/PrincipalStore';
 
 import { saveAnswer } from "./GlobalFunction";
 import { toastInfo } from "./FormInput";
@@ -410,6 +411,7 @@ const Form: Component<{
     
     const writeResponse = () => {
       const dataForm = [];
+      const dataPrincipal = [];
       reference.details.forEach((element) => {
         if(
           (element.type > 3)
@@ -422,17 +424,32 @@ const Form: Component<{
             dataKey: element.dataKey,
             answer: element.answer
           })
+          if(element.principal !== undefined){
+            dataPrincipal.push({
+              dataKey: element.dataKey,
+              answer: element.answer,
+              principal: element.principal,
+              columnName: element.columnName
+            })
+          }
         }
 
+        //setResponse
         setResponse('details', 'answers', dataForm)
         setResponse('details','templateVersion', template.details.version);
         setResponse('details','validationVersion', template.details.version);
         setResponse('details','docState', docState());
         let now = dayjs().format('YYYY-MM-DD HH:mm:ss');
         (response.details.createdAt === '') ? setResponse('details','createdAt', now) : setResponse('details','createdAt', '');
-        setResponse('details','createdBy', now);
+        setResponse('details','lastUpdated', now);
+        setResponse('details','editedBy', form.formConfig.username);
+        (response.details.createdBy === '') ? setResponse('details','createdBy', form.formConfig.username): setResponse('details','createdBy', '');
+        //setPrincipal
+        setPrincipal('details','principals', dataPrincipal)
+        setPrincipal('details','templateVersion', template.details.version);
+        setPrincipal('details','createdAt', now);
         setResponse('details','createdBy', form.formConfig.username);
-        (response.details.createdBy === '') ? setResponse('details','editedBy', form.formConfig.username): setResponse('details','editedBy', '');
+        //setRemark
         let copiedNote = JSON.parse(JSON.stringify(note.details.notes));
         setRemark('details','notes',copiedNote);
       })
@@ -440,9 +457,11 @@ const Form: Component<{
       props.setResponseMobile(response.details, remark.details);
       // console.log(response);
       // console.log(remark);
+      // console.log('principal',principal);
     }
 
     const writeSubmitResponse = () => {
+      const dataPrincipal = [];
       const dataForm = [];
       reference.details.forEach((element) => {
         if(
@@ -456,17 +475,32 @@ const Form: Component<{
             dataKey: element.dataKey,
             answer: element.answer
           })
+          if(element.principal !== undefined){
+            dataPrincipal.push({
+              dataKey: element.dataKey,
+              answer: element.answer,
+              principal: element.principal,
+              columnName: element.columnName
+            })
+          }
         }
 
+        //setResponse
         setResponse('details', 'answers', dataForm)
         setResponse('details','templateVersion', template.details.version);
         setResponse('details','validationVersion', template.details.version);
         setResponse('details','docState', docState());
         let now = dayjs().format('YYYY-MM-DD HH:mm:ss');
         (response.details.createdAt === '') ? setResponse('details','createdAt', now) : setResponse('details','createdAt', '');
-        setResponse('details','createdBy', now);
+        setResponse('details','lastUpdated', now);
+        setResponse('details','editedBy', form.formConfig.username);
+        (response.details.createdBy === '') ? setResponse('details','createdBy', form.formConfig.username): setResponse('details','createdBy', '');
+        //setPrincipal
+        setPrincipal('details','principals', dataPrincipal)
+        setPrincipal('details','templateVersion', template.details.version);
+        setPrincipal('details','createdAt', now);
         setResponse('details','createdBy', form.formConfig.username);
-        (response.details.createdBy === '') ? setResponse('details','editedBy', form.formConfig.username): setResponse('details','editedBy', '');
+        //setRemark
         let copiedNote = JSON.parse(JSON.stringify(note.details.notes));
         setRemark('details','notes',copiedNote);
       })
@@ -474,6 +508,7 @@ const Form: Component<{
       props.setSubmitMobile(response.details, remark.details);
       // console.log(response);
       // console.log(remark);
+      // console.log('submited principal',principal);
     }
 
 
