@@ -851,7 +851,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                     beforeAnswer = [];
                 }
                 if(typeof answer !== 'boolean') {
-                console.time('buat roster');
+                console.time('Nested 🚀');
                 hasComponentUsing.forEach(element => {
                     if(typeof answer === 'number' || typeof answer === 'string'){
                         beforeAnswer = (beforeAnswer === undefined) ? 0 : beforeAnswer;
@@ -904,7 +904,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                         }
                     }
                 });
-                console.timeEnd('buat roster');
+                console.timeEnd('Nested 🚀');
             }
             }
         }

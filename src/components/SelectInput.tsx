@@ -116,7 +116,7 @@ const SelectInput: FormComponentBase = props => {
                 } else {
                     url = `${config.baseUrl}`
                 }
-                console.log('urlny ', url)
+                console.log('Lookup URL ', url)
 
                 const [fetched] = createResource<optionSelect>(url,  props.MobileOnlineSearch);
                 // console.log('propsss', props);
