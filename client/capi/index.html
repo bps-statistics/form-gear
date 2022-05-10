@@ -120,6 +120,7 @@
   }
   var respons = null;
   var remarks = null;
+  var principals = null;
 
   const setBearer = () => {
     return ({
@@ -182,13 +183,18 @@ let onlineSearch = async (url) =>
         openCamera();
   }
 
-  let setResponseMobile = function (res, rem) {
+  
+  let setResponseMobile = function (res, rem, princ) {
     respons = res
     remarks = rem
+    principals = princ
+
     // window.Android.action("SAVE_DATA", "", JSON.stringify(respons), "");
-    console.log('respons aji ', JSON.stringify(respons))
+    console.log('respons', respons)
     console.log('remarks', remarks)
+    console.log('principal', principals)
   }
+
 
   let setSubmitMobile = function (res, rem) {
     respons = res

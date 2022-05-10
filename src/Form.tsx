@@ -453,7 +453,7 @@ const Form: Component<{
         setRemark('details','notes',copiedNote);
       })
 
-      props.setResponseMobile(response.details, remark.details);
+      props.setResponseMobile(response.details, remark.details, principal.details);
       // console.log(response);
       // console.log(remark);
       // console.log('principal',principal);

@@ -18,6 +18,7 @@ var cameraFunction = null;
 var cameraGPSFunction = null;
 var respons = null;
 var remarks = null;
+var principals = null;
 
 //JSON Object defined template
 let template = await fetch("../src/data/template.json").then((res) => res.json()) || []
@@ -138,12 +139,14 @@ let onlineSearch = async (url) =>
 
   }));
 
-let setResponseMobile = function (res, rem) {
+let setResponseMobile = function (res, rem, princ) {
   respons = res
   remarks = rem
+  principals = princ
 
   console.log('respons', respons)
   console.log('remarks', remarks)
+  console.log('principal', principals)
 }
 
 let setSubmitMobile = function (res, rem) {
