@@ -1006,6 +1006,7 @@ const Form: Component<{
                     config = { getConfig() } 
                     uploadHandler = { props.uploadHandler }
                     GpsHandler = { props.GpsHandler }
+                    offlineSearch = { props.offlineSearch }
                     onlineSearch = { props.onlineSearch }
                     openMap = { props.openMap }
                   />

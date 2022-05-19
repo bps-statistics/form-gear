@@ -10,6 +10,7 @@ const FormComponent: Component<{
   config : any
   uploadHandler : any
   GpsHandler : any
+  offlineSearch : any
   onlineSearch : any
   openMap : any
 }> = props => {
@@ -17,7 +18,7 @@ const FormComponent: Component<{
   return (
     <div class="flex-grow bg-white dark:bg-gray-900 overflow-y-auto">
       <div class="space-y-3 sm:p-7 p-3">
-        <For each={props.components} 
+        <For each={props.components}
           children={(component, index) => 
             FormInput({ 
                 onMobile: props.onMobile,
@@ -26,6 +27,7 @@ const FormComponent: Component<{
                 config: props.config, 
                 MobileUploadHandler: props.uploadHandler,
                 MobileGpsHandler: props.GpsHandler,
+                MobileOfflineSearch : props.offlineSearch,
                 MobileOnlineSearch : props.onlineSearch,
                 MobileOpenMap : props.openMap})} />
       </div>
