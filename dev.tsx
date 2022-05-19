@@ -19,8 +19,13 @@ var cameraGPSFunction = null;
 var respons = null;
 var remarks = null;
 var principals = null;
+var responseGear = null;
+var remarkGear = null;
+var principalGear = null;
+var referenceGear = null;
 
 //JSON Object defined template
+let reference = await fetch("../src/data/reference.json").then((res) => res.json()) || []
 let template = await fetch("../src/data/template.json").then((res) => res.json()) || []
 let preset = await fetch("../src/data/preset.json").then((res) => res.json()) || []
 let response = await fetch("../src/data/response.json").then((res) => res.json()) || []
@@ -30,7 +35,7 @@ let remark = await fetch("../src/data/remark.json").then((res) => res.json()) ||
 //function to open camera on mobile  CAPI
 function openCamera() {
   // window.MyHandler.action("CAMERA", "", "", "");
-  console.log('open camera');
+  // console.log('open camera');
 }
 
 //function to open gps on mobile
@@ -95,6 +100,30 @@ let uploadHandler = function (setter) {
   openCamera();
 }
 
+let offlineSearch = function (id, version, dataJson, setter) {
+  
+  let condition = JSON.stringify(dataJson)
+
+  console.log('kondisinnya : ' , condition);
+
+  $.ajax({
+      url: `http://localhost:9090/lookup?id=${id}&v=${version}&c=${condition}`,
+              type: "GET",
+              crossDomain: true,
+              dataType: "json",
+              data: null,
+          success: function(d) {
+              console.log(d.hasil)
+              setter(d)
+
+          },
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+
+          }
+      });
+
+}
+
 //function to trigger open gps on Mobile GPS
 let GpsHandler = function (setter, isPhoto) {
   console.log('camera handler', setter);
@@ -113,6 +142,11 @@ const setBearer = () => {
     }
   })
 }
+
+let mobileExit = (fun) => {
+  fun()
+}
+
 
 //online lookup
 let onlineSearch = async (url) =>
@@ -139,22 +173,32 @@ let onlineSearch = async (url) =>
 
   }));
 
-let setResponseMobile = function (res, rem, princ) {
-  respons = res
-  remarks = rem
-  principals = princ
+let setResponseMobile = function (res, rem, princ, ref) {
+  responseGear = res
+  remarkGear = rem
+  principalGear = princ
+  referenceGear = ref
 
-  console.log('respons', respons)
-  console.log('remarks', remarks)
-  console.log('principal', principals)
+  console.log('----------', new Date(), '----------');
+
+  console.log('response', responseGear)
+  console.log('remark', remarkGear)
+  console.log('principal', principalGear)
+  console.log('reference', referenceGear)
 }
 
-let setSubmitMobile = function (res, rem) {
-  respons = res
-  remarks = rem
+let setSubmitMobile = function (res, rem, princ, ref) {
+  responseGear = res
+  remarkGear = rem
+  principalGear = princ
+  referenceGear = ref
+  
+  console.log('----------', new Date(), '----------');
 
-  console.log('respons submit', respons)
-  console.log('remarks submit', remarks)
+  console.log('response', responseGear)
+  console.log('remark', remarkGear)
+  console.log('principal', principalGear)
+  console.log('reference', referenceGear)
 }
 
 let openMap = function (koordinat) {
@@ -164,4 +208,4 @@ let openMap = function (koordinat) {
 }
 
 
-FormGear(template, preset, response, validation, remark, config, uploadHandler, GpsHandler, onlineSearch, setResponseMobile, setSubmitMobile, openMap);
+FormGear(reference, template, preset, response, validation, remark, config, uploadHandler, GpsHandler, offlineSearch, onlineSearch, mobileExit, setResponseMobile, setSubmitMobile, openMap);

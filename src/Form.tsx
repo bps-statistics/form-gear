@@ -6,14 +6,13 @@ import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
 import { preset, setPreset, Preset } from './stores/PresetStore';
 import { response, setResponse, Response } from './stores/ResponseStore';
 import { validation, setValidation, Validation } from './stores/ValidationStore';
-import { summary, setSummary } from './stores/SummaryStore';
 import { reference, setReference } from './stores/ReferenceStore';
-import { nested, setNested } from './stores/NestedStore';
 import { sidebar, setSidebar } from './stores/SidebarStore';
 import { remark, setRemark, Remark} from './stores/RemarkStore';
 import { note, setNote} from './stores/NoteStore';
 import { principal, setPrincipal} from './stores/PrincipalStore';
 import { locale, setLocale} from './stores/LocaleStore';
+import { summary, setSummary } from './stores/SummaryStore';
 
 import { saveAnswer } from "./GlobalFunction";
 import { toastInfo } from "./FormInput";
@@ -39,6 +38,10 @@ export const getProp = (config: string) => {
 }
 
 const Form: Component<{
+    timeStart: any
+    runAll: number
+    tmpEnableComp: [] | any
+    tmpVarComp: [] | any
     template: Questionnaire | any
     preset: Preset | any
     response: Response | any
@@ -47,27 +50,39 @@ const Form: Component<{
     uploadHandler : any
     GpsHandler : any
     onlineSearch : any
+    mobileExit : any
     setResponseMobile : any
     setSubmitMobile : any
     openMap : any
   }> = props => {
     const getValue = (dataKey: string) => {
-      const componentIndex = referenceList.findIndex(obj => obj.dataKey === dataKey);
+      const componentIndex = reference.details.findIndex(obj => obj.dataKey === dataKey);
       let answer = '';
-      if(componentIndex !== -1 && (referenceList[componentIndex].answer) && (referenceList[componentIndex].enable)) answer = referenceList[componentIndex].answer;
+      if(componentIndex !== -1 && (reference.details[componentIndex].answer) && (reference.details[componentIndex].enable)) answer = reference.details[componentIndex].answer;
       return answer;
     }
     const [prop, setProp] = createSignal(getProp(''));
     const [config, setConfig] = createSignal(getConfig());
-    
-    let timeStart = new Date();
+    const [form, { setActiveComponent }] = useForm();
 
-    const tmpVarComp = [];
-    const referenceList = [];
-    const sidebarList = [];
+    const [showSubmit, setShowSubmit] = createSignal(false)
+    const [captcha, setCaptcha] = createSignal('')    
+    const [tmpCaptcha, setTmpCaptcha] = createSignal('')
+    const [docState, setDocState] = createSignal('E')
+
+    const [showError, setShowError] = createSignal(false)
+    
+    const [listError, setListError] = createSignal([])
+    const [listErrorPage, setListErrorPage] = createSignal([])
+    const [currentErrorPage, setCurrentErrorPage] = createSignal(1)
+    const [maxErrorPage, setMaxErrorPage] = createSignal(1)
+
+    const [listWarning, setListWarning] = createSignal([])
+    const [listWarningPage, setListWarningPage] = createSignal([])
+    const [currentWarningPage, setCurrentWarningPage] = createSignal(1)
+    const [maxWarningPage, setMaxWarningPage] = createSignal(1)
     
     if(props.template.details.language !== undefined && props.template.details.language.length > 0){
-      // console.log('cektemplate', props.template.details.language, props.template.details.language.length);
       const keys = Object.keys(locale.details.language[0]);
       const updatedLocale = JSON.parse(JSON.stringify(locale.details.language[0]));
       keys.forEach(k => {
@@ -76,276 +91,112 @@ const Form: Component<{
         }
       })
       setLocale('details','language',[updatedLocale])
-    }
-    
-    // console.time('loopTemplate ');
-    // const [nestComp, setNestComp] = createSignal([]);
-    const nestComp = [];
-    const loopValidation = (element, index, parent, level) => {
-      let el_len = element.length
-      for (let i = 0; i < el_len; i++) {
-
-        let el_type = element[i].type
-        if(el_type == 2){
-          // nestComp.push(element[i])
-          let nestMasterComp = []
-          element[i].components[0].forEach( (e) => {
-            let vals;
-            let compVal;
-            let valPosition = validation.details.testFunctions.findIndex(obj => obj.dataKey === e.dataKey);
-            if(valPosition !== -1) {
-              vals = validation.details.testFunctions[valPosition].validations;
-              compVal = validation.details.testFunctions[valPosition].componentValidation;
-            }
-            let nestEachComp = []
-            nestEachComp.push({                    
-              dataKey : e.dataKey,
-              label : e.label,
-              hint : e.hint,
-              description : e.description,
-              type : e.type,
-              answer : e.answer,
-              index : e.index,
-              level : e.level,
-              options : e.options,
-              typeOption : e.typeOption,
-              sourceSelect : e.sourceSelect,
-              components : e.components,
-              sourceQuestion : e.sourceQuestion,
-              currency : e.currency,
-              source : e.source,
-              urlPath : e.urlPath,
-              parent : e.parent,
-              separatorFormat : e.separatorFormat,
-              isDecimal : e.isDecimal,
-              maskingFormat : e.maskingFormat,
-              expression : e.expression,
-              componentVar : e.componentVar,
-              render : e.render,
-              renderType : e.renderType,
-              enable : e.enable,
-              enableCondition : e.enableCondition,
-              componentEnable : e.componentEnable,
-              enableRemark : e.enableRemark,
-              client : e.client,
-              titleModalDelete : e.titleModalDelete,
-              contentModalDelete : e.contentModalDelete,
-              validationState : e.validationState,
-              validationMessage : e.validationMessage,
-              validations: vals,
-              componentValidation: compVal,
-              rangeInput: e.rangeInput !== undefined ? e.rangeInput : undefined,
-              lengthInput: e.lengthInput !== undefined ? e.lengthInput : undefined,
-              principal: e.principal !== undefined ? e.principal : undefined,
-              columnName: e.columnName !== undefined ? e.columnName : undefined,
-              titleModalConfirmation : e.titleModalConfirmation,
-              contentModalConfirmation : e.contentModalConfirmation,
-              required: e.required
-            })
-            nestMasterComp ? nestMasterComp.push(nestEachComp[0]) : nestMasterComp.splice(nestMasterComp.length, 0, nestEachComp[0])
-           
-          });
-          nestComp.push({
-            dataKey: element[i].dataKey,
-            description: element[i].description,
-            label: element[i].label,
-            sourceQuestion: element[i].sourceQuestion,
-            type: el_type,
-            components: [nestMasterComp]
-          })
-        }
-
-        element[i].components && element[i].components.forEach((element, index) => loopValidation(element, index, parent.concat(i,0), level+1))
-      }
-    }
-    props.template.details.components.forEach((element, index) => loopValidation(element, index, [0], 0));
-    // setNestComp(tmpNestComp)
-    setNested('details',nestComp)
-
-    const loopTemplate = (element, index, parent, level, sideEnable) => {
-      // console.log(element, index, parent, level);
-        let el_len = element.length
-        for (let i = 0; i < el_len; i++) {
-          let answer = element[i].answer;
-          
-          let el_type = element[i].type
-          if((el_type == 21 || el_type == 22)){
-            answer = JSON.parse(JSON.stringify(answer));
-          } else if(el_type == 4){
-            (answer == undefined ) && tmpVarComp.push(JSON.parse(JSON.stringify(element[i]))) ;
-          }
-
-          let components
-          if(el_type == 2){
-            let nestPosition = nested.details.findIndex(obj => obj.dataKey === element[i].dataKey);
-            components = (nestPosition !== -1) ? nested.details[nestPosition].components : (element[i].components) ? element[i].components : undefined;
-          }else{
-            components = (element[i].components) ? element[i].components : undefined;
-          }
-          
-          if(el_type == 1 || (el_type == 2 && components.length > 1)){
-              sideEnable = (element[i].enableCondition === undefined) ? true : eval(element[i].enableCondition);
-              sidebarList.push({
-                  dataKey: element[i].dataKey,
-                  label: element[i].label,
-                  description: element[i].description,
-                  level: level,
-                  index: parent.concat(i),
-                  components: components,
-                  sourceQuestion: element[i].sourceQuestion !== undefined ? element[i].sourceQuestion : '',
-                  enable: (sideEnable === undefined) ? false : sideEnable,
-                  enableCondition: element[i].enableCondition !== undefined ? element[i].enableCondition : '',
-                  componentEnable: element[i].componentEnable !== undefined ? element[i].componentEnable : []
-              })
-          }
-
-          let vals;
-          let compVal;
-          let valPosition = validation.details.testFunctions.findIndex(obj => obj.dataKey === element[i].dataKey);
-          if(valPosition !== -1) {
-            vals = validation.details.testFunctions[valPosition].validations;
-            compVal = validation.details.testFunctions[valPosition].componentValidation;
-          }
-
-          let hasRemark = false;
-          if ( element[i].enableRemark === undefined || (element[i].enableRemark !== undefined && element[i].enableRemark )){  
-            let remarkPosition = remark.details.notes.findIndex(obj => obj.dataKey === element[i].dataKey);
-            if(remarkPosition !== -1){
-              let newNote = remark.details.notes[remarkPosition];
-              let updatedNote = JSON.parse(JSON.stringify(note.details.notes));
-              updatedNote.push(newNote);
-              hasRemark = true;
-              setNote('details','notes',updatedNote);
-            }
-          }
-
-          referenceList.push({         
-              dataKey: element[i].dataKey,
-              label: element[i].label,
-              hint: (element[i].hint) ? element[i].hint : '',
-              description: element[i].description !== undefined ? element[i].description : undefined,
-              type: element[i].type,
-              answer: answer,
-              index: parent.concat(i),
-              level: level,
-              options: (element[i].options) ? element[i].options : undefined,
-              components: components,
-              sourceQuestion: element[i].sourceQuestion !== undefined ? element[i].sourceQuestion : undefined,
-              currency: element[i].currency !== undefined ? element[i].currency : undefined,
-              source: element[i].source !== undefined ? element[i].source : undefined,
-              urlPath: element[i].path !== undefined ? element[i].path : undefined,
-              parent: element[i].parent !== undefined ? element[i].parent : undefined,
-              separatorFormat: element[i].separatorFormat !== undefined ? element[i].separatorFormat : undefined,
-              isDecimal: element[i].isDecimal !== undefined ? element[i].isDecimal : undefined,
-              maskingFormat: element[i].maskingFormat !== undefined ? element[i].maskingFormat : undefined,
-              expression: (element[i].expression) ? element[i].expression : undefined,
-              componentVar: (element[i].componentVar) ? element[i].componentVar : undefined,
-              render: (element[i].render) ? element[i].render : undefined,
-              renderType: (element[i].renderType) ? element[i].renderType : undefined,
-              enable: (sideEnable === false || sideEnable === undefined) ? false : (element[i].enableCondition === undefined) ? true : eval(element[i].enableCondition),
-              enableCondition: element[i].enableCondition !== undefined ? element[i].enableCondition : '',
-              componentEnable: element[i].componentEnable !== undefined ? element[i].componentEnable : [],
-              enableRemark: element[i].enableRemark !== undefined ? element[i].enableRemark : true,
-              client: element[i].client !== undefined ? element[i].client : undefined,
-              titleModalDelete: element[i].titleModalDelete !== undefined ? element[i].titleModalDelete : undefined,
-              contentModalDelete: element[i].contentModalDelete !== undefined ? element[i].contentModalDelete : undefined,
-              validationState: element[i].validationState !== undefined ? element[i].validationState : 0,
-              validationMessage: element[i].validationMessage !== undefined ? element[i].validationMessage : [],
-              validations: vals,
-              componentValidation: compVal,
-              hasRemark: hasRemark,
-              rangeInput: (element[i].rangeInput !== undefined && element[i].rangeInput[0] !== undefined) ? element[i].rangeInput : undefined,
-              lengthInput: (element[i].lengthInput !== undefined && element[i].lengthInput[0] !== undefined) ? element[i].lengthInput : undefined,
-              principal: element[i].principal !== undefined ? element[i].principal : undefined,
-              columnName: element[i].columnName !== undefined ? element[i].columnName : undefined,
-              titleModalConfirmation: element[i].titleModalConfirmation !== undefined ? element[i].titleModalConfirmation : undefined,
-              contentModalConfirmation: element[i].contentModalConfirmation !== undefined ? element[i].contentModalConfirmation : undefined,
-              required: element[i].required !== undefined ? element[i].required : undefined,
-          })
-
-          element[i].components && element[i].components.forEach((element, index) => loopTemplate(element,index, parent.concat(i,0), level+1, sideEnable))
-        }
-    }
-    props.template.details.components.forEach((element, index) => loopTemplate(element, index, [0], 0, ''));
-
-    setReference('details', referenceList);
-    setSidebar('details', sidebarList);
-    
-    // console.timeEnd('loopTemplate ');
-    // console.log('sidebarrr' , sidebar);
-    // console.time('tmpVarComp ');
-    tmpVarComp.forEach((element, index) => {
-      // console.log('cek', tmpVarComp);
-      let sidePosition = sidebar.details.findIndex((obj, index) => {
-        const cekInsideIndex = obj.components[0].findIndex((objChild, index) => {
-          objChild.dataKey === element.dataKey;
-          return index;
-        });
-        return (cekInsideIndex == -1) ? 0: index;
-        
-      });
-
-      const getRowIndex = (positionOffset:number) => {
-        let editedDataKey = element.dataKey.split('@');
-        let splitDataKey = editedDataKey[0].split('#');
-        let splLength = splitDataKey.length;
-        let reducer = positionOffset+1;
-        return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
-      }
-
-      const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-      
-      let answer = eval(element.expression);
-      saveAnswer(element.dataKey, 'answer', answer, sidePosition, {'clientMode': getProp('clientMode'),'baseUrl': getProp('baseUrl')});
-    })
-    // console.timeEnd('tmpVarComp ')
-
-    // console.time('response ');
-    props.preset.details.predata.forEach((element, index) => {
-      let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
-      if(refPosition !== -1){
-        let sidePosition = sidebar.details.findIndex(obj => {
-          const cekInsideIndex = obj.components[0].findIndex(objChild => objChild.dataKey === element.dataKey);
-          return (cekInsideIndex == -1) ? 0: index;
-        });
-        let answer = (typeof element.answer === 'object') ? JSON.parse(JSON.stringify(element.answer)) : element.answer;
-        saveAnswer(element.dataKey, 'answer', answer, sidePosition, {'clientMode': getProp('clientMode'),'baseUrl': getProp('baseUrl')});
-      }
-    })
-
-    props.response.details.answers.forEach((element, index) => {
-      let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
-      if(refPosition !== -1){
-        let sidePosition = sidebar.details.findIndex(obj => {
-          const cekInsideIndex = obj.components[0].findIndex(objChild => objChild.dataKey === element.dataKey);
-          return (cekInsideIndex == -1) ? 0: index;
-        });
-        let answer = (typeof element.answer === 'object') ? JSON.parse(JSON.stringify(element.answer)) : element.answer;
-        saveAnswer(element.dataKey, 'answer', answer, sidePosition, {'clientMode': getProp('clientMode'),'baseUrl': getProp('baseUrl')});
-      }
-    })
-
-    // console.timeEnd('response ');
-    // console.log('note', note);
-    // console.log('res',response);
-    // console.log('ref', reference);
-    // console.timeEnd('');
-
-    const [form, { setActiveComponent }] = useForm();
-    
-    setActiveComponent({
-      dataKey: sidebar.details[0].dataKey, 
-      label: sidebar.details[0].label, 
-      index: JSON.parse(JSON.stringify(sidebar.details[0].index)), 
-      position: 0
-    });
+    }    
+    const [components , setComponents] = createSignal([]);
 
     const getComponents = (dataKey: string) => {
       const componentIndex = sidebar.details.findIndex(obj => obj.dataKey === dataKey);
       const components = sidebar.details[componentIndex] !== undefined ? sidebar.details[componentIndex].components[0] : '';
       return components;
     }
-    const [components , setComponents] = createSignal(getComponents(sidebar.details[0].dataKey));
+    setActiveComponent({
+          dataKey: sidebar.details[0].dataKey, 
+          label: sidebar.details[0].label, 
+          index: JSON.parse(JSON.stringify(sidebar.details[0].index)), 
+          position: 0
+        });
+    setComponents(getComponents(sidebar.details[0].dataKey));
+
+    if(props.runAll == 0){
+      // console.time('tmpVarComp ')
+      props.tmpVarComp.forEach((element, index) => {
+        let sidePosition = sidebar.details.findIndex((obj, index) => {
+          const cekInsideIndex = obj.components[0].findIndex((objChild, index) => {
+            objChild.dataKey === element.dataKey;
+            return index;
+          });
+          return (cekInsideIndex == -1) ? 0: index;
+        });
+
+        const getRowIndex = (positionOffset:number) => {
+          let editedDataKey = element.dataKey.split('@');
+          let splitDataKey = editedDataKey[0].split('#');
+          let splLength = splitDataKey.length;
+          let reducer = positionOffset+1;
+          return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
+        }
+        const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
+        
+        let answer = eval(element.expression);
+        saveAnswer(element.dataKey, 'answer', answer, sidePosition, {'clientMode': getProp('clientMode'),'baseUrl': getProp('baseUrl')});
+      })
+      // console.timeEnd('tmpVarComp ')
+
+      // console.time('response ');
+      props.preset.details.predata.forEach((element, index) => {
+        let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
+        let run = 0;
+        if(refPosition !== -1){
+          if((config().initialMode == 1 && reference.details[refPosition].presetMaster !== undefined && (reference.details[refPosition].presetMaster)) || (config().initialMode == 2)){
+            let sidePosition = sidebar.details.findIndex(obj => {
+              const cekInsideIndex = obj.components[0].findIndex(objChild => objChild.dataKey === element.dataKey);
+              return (cekInsideIndex == -1) ? 0: index;
+            });
+            let answer = (typeof element.answer === 'object') ? JSON.parse(JSON.stringify(element.answer)) : element.answer;
+            saveAnswer(element.dataKey, 'answer', answer, sidePosition, {'clientMode': getProp('clientMode'),'baseUrl': getProp('baseUrl')});
+          }
+        }
+      })
+
+      props.response.details.answers.forEach((element, index) => {
+        let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
+        if(refPosition !== -1){
+          let sidePosition = sidebar.details.findIndex(obj => {
+            const cekInsideIndex = obj.components[0].findIndex(objChild => objChild.dataKey === element.dataKey);
+            return (cekInsideIndex == -1) ? 0: index;
+          });
+          let answer = (typeof element.answer === 'object') ? JSON.parse(JSON.stringify(element.answer)) : element.answer;
+          saveAnswer(element.dataKey, 'answer', answer, sidePosition, {'clientMode': getProp('clientMode'),'baseUrl': getProp('baseUrl')});
+        }
+      })
+
+      // console.time('tmpEnableComp ')
+      props.tmpEnableComp.forEach((element, index) => {
+        let sidePosition = sidebar.details.findIndex((obj, index) => {
+          const cekInsideIndex = obj.components[0].findIndex((objChild, index) => {
+            objChild.dataKey === element.dataKey;
+            return index;
+          });
+          return (cekInsideIndex == -1) ? 0: index;
+        });
+
+        const getRowIndex = (positionOffset:number) => {
+          let editedDataKey = element.dataKey.split('@');
+          let splitDataKey = editedDataKey[0].split('#');
+          let splLength = splitDataKey.length;
+          let reducer = positionOffset+1;
+          return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
+        }
+        const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
+        let evEnable = eval(element.enableCondition);
+        let enable = (evEnable === undefined) ? false : evEnable;
+        saveAnswer(element.dataKey, 'enable', enable, sidePosition, {'clientMode': getProp('clientMode'),'baseUrl': getProp('baseUrl')});
+      })
+      // console.timeEnd('tmpEnableComp ')
+    } else {
+      let hasRemarkComp = reference.details.filter(obj => obj.hasRemark = true);
+      hasRemarkComp.forEach(e => {
+        let remarkPosition = remark.details.notes.findIndex(obj => obj.dataKey === e.dataKey);
+        if(remarkPosition !== -1){
+          let newNote = remark.details.notes[remarkPosition];
+          let updatedNote = JSON.parse(JSON.stringify(note.details.notes));
+          updatedNote.push(newNote);
+          setNote('details','notes',updatedNote);
+        }
+      })
+    }
+    // console.timeEnd('response ');
+    // console.timeEnd('');
     
     const [onMobile , setOnMobile] = createSignal(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
     const checkOnMobile = () => {
@@ -372,11 +223,7 @@ const Form: Component<{
                                           && !( JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 
                                           && element.level > 1 )
                                     }).length,
-        error: reference.details.filter( (element) => { 
-                                      // if( element.type > 4 && ( element.enable ) && element.validationState == 2 ){
-                                      //   let splitDataKey = element.dataKey.split('#');
-                                      //   return (splitDataKey[1] !== undefined && element.level > 0) ? true : false
-                                      // }
+        error: reference.details.filter( (element) => {
                                       return ( element.type > 4 && ( element.enable ) && element.validationState == 2 )
                                     }).length,
         remark: note.details.notes.length
@@ -386,6 +233,7 @@ const Form: Component<{
       if(formProps.formConfig.clientMode != 2){
         window.addEventListener('resize', checkOnMobile);
       }
+
       document.getElementById("FormGear-loader").classList.add('hidden')
     })
     
@@ -407,113 +255,71 @@ const Form: Component<{
         var sidebar = document.querySelector(".sidebar-span");
         sidebar.classList.toggle("-translate-x-full");
     }
+
+    const setData = () => {
+      const dataForm = [];
+      const dataPrincipal = [];
+      reference.details.forEach((element) => {
+        if(
+          (element.type > 3)
+          && ( element.enable ) 
+          && ( element.answer !== undefined)
+          && ( element.answer !== '') 
+          && ( element.answer !== null)
+        ) {
+          dataForm.push({
+            dataKey: element.dataKey,
+            answer: element.answer
+          })
+          if(element.principal !== undefined){
+            dataPrincipal.push({
+              dataKey: element.dataKey,
+              answer: element.answer,
+              principal: element.principal,
+              columnName: element.columnName
+            })
+          }
+        }
+
+      })      
+
+      //setResponse
+      setResponse('details', 'answers', dataForm)
+      setResponse('details','templateVersion', template.details.version);
+      setResponse('details','validationVersion', validation.details.version);
+      setResponse('details','docState', docState());
+      let now = dayjs().format('YYYY-MM-DD HH:mm:ss');
+      (response.details.createdAt === '') ? setResponse('details','createdAt', now) : setResponse('details','createdAt', '');
+      setResponse('details','lastUpdated', now);
+      setResponse('details','editedBy', form.formConfig.username);
+      (response.details.createdBy === '') ? setResponse('details','createdBy', form.formConfig.username): setResponse('details','createdBy', '');
+      //setPrincipal
+      setPrincipal('details','principals', dataPrincipal)
+      setPrincipal('details','templateVersion', template.details.version);
+      setPrincipal('details','createdAt', now);
+      setResponse('details','createdBy', form.formConfig.username);
+      //setRemark
+      let copiedNote = JSON.parse(JSON.stringify(note.details.notes));
+      setRemark('details','notes',copiedNote);
+      //setReference
+      setReference('sidebar', sidebar.details)
+    }
     
     const writeResponse = () => {
-      const dataForm = [];
-      const dataPrincipal = [];
-      reference.details.forEach((element) => {
-        if(
-          (element.type > 3)
-          && ( element.enable ) 
-          && ( element.answer !== undefined)
-          && ( element.answer !== '') 
-          && ( element.answer !== null)
-        ) {
-          dataForm.push({
-            dataKey: element.dataKey,
-            answer: element.answer
-          })
-          if(element.principal !== undefined){
-            dataPrincipal.push({
-              dataKey: element.dataKey,
-              answer: element.answer,
-              principal: element.principal,
-              columnName: element.columnName
-            })
-          }
-        }
-
-        //setResponse
-        setResponse('details', 'answers', dataForm)
-        setResponse('details','templateVersion', template.details.version);
-        setResponse('details','validationVersion', template.details.version);
-        setResponse('details','docState', docState());
-        let now = dayjs().format('YYYY-MM-DD HH:mm:ss');
-        (response.details.createdAt === '') ? setResponse('details','createdAt', now) : setResponse('details','createdAt', '');
-        setResponse('details','lastUpdated', now);
-        setResponse('details','editedBy', form.formConfig.username);
-        (response.details.createdBy === '') ? setResponse('details','createdBy', form.formConfig.username): setResponse('details','createdBy', '');
-        //setPrincipal
-        setPrincipal('details','principals', dataPrincipal)
-        setPrincipal('details','templateVersion', template.details.version);
-        setPrincipal('details','createdAt', now);
-        setResponse('details','createdBy', form.formConfig.username);
-        //setRemark
-        let copiedNote = JSON.parse(JSON.stringify(note.details.notes));
-        setRemark('details','notes',copiedNote);
-      })
-
-      props.setResponseMobile(response.details, remark.details, principal.details);
-      // console.log(response);
-      // console.log(remark);
-      // console.log('principal',principal);
+      setData();
+      props.setResponseMobile( response.details, remark.details, principal.details, reference );
     }
+
+    props.mobileExit(writeResponse)
 
     const writeSubmitResponse = () => {
-      const dataPrincipal = [];
-      const dataForm = [];
-      reference.details.forEach((element) => {
-        if(
-          (element.type > 3)
-          && ( element.enable ) 
-          && ( element.answer !== undefined)
-          && ( element.answer !== '') 
-          && ( element.answer !== null)
-        ) {
-          dataForm.push({
-            dataKey: element.dataKey,
-            answer: element.answer
-          })
-          if(element.principal !== undefined){
-            dataPrincipal.push({
-              dataKey: element.dataKey,
-              answer: element.answer,
-              principal: element.principal,
-              columnName: element.columnName
-            })
-          }
-        }
-
-        //setResponse
-        setResponse('details', 'answers', dataForm)
-        setResponse('details','templateVersion', template.details.version);
-        setResponse('details','validationVersion', template.details.version);
-        setResponse('details','docState', docState());
-        let now = dayjs().format('YYYY-MM-DD HH:mm:ss');
-        (response.details.createdAt === '') ? setResponse('details','createdAt', now) : setResponse('details','createdAt', '');
-        setResponse('details','lastUpdated', now);
-        setResponse('details','editedBy', form.formConfig.username);
-        (response.details.createdBy === '') ? setResponse('details','createdBy', form.formConfig.username): setResponse('details','createdBy', '');
-        //setPrincipal
-        setPrincipal('details','principals', dataPrincipal)
-        setPrincipal('details','templateVersion', template.details.version);
-        setPrincipal('details','createdAt', now);
-        setResponse('details','createdBy', form.formConfig.username);
-        //setRemark
-        let copiedNote = JSON.parse(JSON.stringify(note.details.notes));
-        setRemark('details','notes',copiedNote);
-      })
-
-      props.setSubmitMobile(response.details, remark.details);
-      // console.log(response);
-      // console.log(remark);
-      // console.log('submited principal',principal);
+      setData();
+      props.setSubmitMobile( response.details, remark.details, principal.details, reference );
     }
 
-
     const previousPage = (event: MouseEvent) => {
-      if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && form.formConfig.clientMode === 2) {   
-        writeResponse();
+      writeResponse();
+      if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || form.formConfig.clientMode === 2) {   
         var component = document.querySelector(".mobile-component-div");
       }else{
         var component = document.querySelector(".component-div");
@@ -533,8 +339,8 @@ const Form: Component<{
     }    
 
     const nextPage = (event: MouseEvent) => {
-      if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && form.formConfig.clientMode === 2 ) {   
-        writeResponse();
+      writeResponse();
+      if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || form.formConfig.clientMode === 2 ) {   
         var component = document.querySelector(".mobile-component-div");
       }else{
         var component = document.querySelector(".component-div");
@@ -584,27 +390,6 @@ const Form: Component<{
       window.scrollTo({ top: 0, behavior: "smooth" });
       component.scrollTo({ top: 0, behavior: "smooth" });
     }
-    
-    let timeEnd = new Date();
-    let timeDiff =  timeEnd.getTime() - timeStart.getTime();
-
-    const [showSubmit, setShowSubmit] = createSignal(false)
-    const [captcha, setCaptcha] = createSignal('')    
-    const [tmpCaptcha, setTmpCaptcha] = createSignal('')
-    const [docState, setDocState] = createSignal('E')
-
-    const [showError, setShowError] = createSignal(false)
-    
-    const [listError, setListError] = createSignal([])
-    const [listErrorPage, setListErrorPage] = createSignal([])
-    const [currentErrorPage, setCurrentErrorPage] = createSignal(1)
-    const [maxErrorPage, setMaxErrorPage] = createSignal(1)
-
-    const [listWarning, setListWarning] = createSignal([])
-    const [listWarningPage, setListWarningPage] = createSignal([])
-    const [currentWarningPage, setCurrentWarningPage] = createSignal(1)
-    const [maxWarningPage, setMaxWarningPage] = createSignal(1)
-
 
     function checkDocState() {
       (summary.error > 0) ? setDocState('E') : (reference.details.filter(element => Number(element.validationState) === 1).length > 0) ? setDocState('W') : setDocState('C');
@@ -670,6 +455,8 @@ const Form: Component<{
           let updatedRef = JSON.parse(JSON.stringify(obj));
           let run = 0
           
+          // let notePosition = note.details.notes.findIndex(elNote => elNote.dataKey === obj.dataKey);
+
           if((updatedRef.enable) && updatedRef.required !== undefined && (updatedRef.required)){
             let editedDataKey = updatedRef.dataKey.split('@');
             let newEdited = editedDataKey[0].split('#');
@@ -715,9 +502,12 @@ const Form: Component<{
       }
     }
 
+    let timeEnd = new Date();
+    let timeDiff =  timeEnd.getTime() - props.timeStart.getTime();
+
     return (
       <div class="bg-gray-200 min-h-screen dark:bg-[#181f30] ">
-        
+
         <Show when={ showSubmit() }>
           <div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
             <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -1368,6 +1158,8 @@ const Form: Component<{
             </div>
           </div>
         </div>
+        
+
       </div>
     );
 }
