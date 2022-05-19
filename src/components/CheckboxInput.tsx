@@ -28,6 +28,11 @@ const CheckboxInput: FormComponentBase = props => {
         
         props.onValueChange(updatedAnswer);
     }
+
+    let handleLabelClick = (index: any) => {
+        let id  = "checkbox-"+props.component.dataKey+"-"+index
+        document.getElementById(id).click()
+    }
     
     let tick = (value:string) : boolean => {
         return (props.value) ? (props.value.some(d => d.value === value) ? true : false) : false;
@@ -118,7 +123,7 @@ const CheckboxInput: FormComponentBase = props => {
                                                             bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" 
                                                             type="checkbox" 
                                                             onChange={e => handleOnChange(e.currentTarget.value, item.label, item.open)} value={item.value} 
-                                                            checked={ (item.value) ? tick(item.value) : false} id={"flexCheckDefault"+ index()}/>
+                                                            checked={ (item.value) ? tick(item.value) : false} id={"checkbox-"+props.component.dataKey+"-"+index()}/>
                                                     </label>
                                                 </div>
                                                 <div class="col-span-11">
@@ -142,9 +147,9 @@ const CheckboxInput: FormComponentBase = props => {
                                             </div>
                                         </Match>
                                         <Match when={!(item.open) || !(tick(item.value)) }>
-                                            <div class="font-light text-sm space-x-2 py-2.5 px-4 grid grid-cols-12">
+                                            <div class="font-light text-sm space-x-2 py-2.5 px-4 grid grid-cols-12" onClick={e => handleLabelClick(index())}>
                                                 <div class="col-span-1">
-                                                    <label class="cursor-pointer text-sm" for={"radio" + index()}>
+                                                    <label class="cursor-pointer text-sm">
                                                         <input class="form-check-input appearance-none h-4 w-4 border 
                                                                 border-gray-300 rounded-sm bg-white 
                                                                 checked:bg-blue-600 checked:border-blue-600 
@@ -154,7 +159,7 @@ const CheckboxInput: FormComponentBase = props => {
                                                                 type="checkbox" 
                                                                 disabled = { disableInput() }
                                                                 onChange={e => handleOnChange(e.currentTarget.value, item.label, item.open)} value={item.value} 
-                                                                checked={ (item.value) ? tick(item.value) : false} id={"flexCheckDefault"+ index()}/>
+                                                                checked={ (item.value) ? tick(item.value) : false} id={"checkbox-"+props.component.dataKey+"-"+index()}/>
                                                     </label>
                                                 </div>
                                                 <div class="col-span-11" innerHTML={item.label}></div>

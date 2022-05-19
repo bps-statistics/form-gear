@@ -14,15 +14,20 @@ const RadioInput: FormComponentBase = props => {
         updatedAnswer.push({value: value, label: label})
 
 		props.onValueChange(updatedAnswer)
-	}	
+	}
+	
+	let handleLabelClick = (index: any) => {
+        let id  = "radio-"+props.component.dataKey+"-"+index
+		console.log('masuk')
+        document.getElementById(id).click()
+    }
 
 	let getOptions = createMemo(() => {
         if(props.component.sourceOption !== undefined && props.component.typeOption === 3){
 			let newSourceOption = props.component.sourceOption.split('@');
             const componentAnswerIndex = reference.details.findIndex(obj => obj.dataKey === newSourceOption[0]);
 			if( (reference.details[componentAnswerIndex].type === 21 || 22 || 23 || 26 || 27 || 29 )
-				|| (reference.details[componentAnswerIndex].type === 4 && reference.details[componentAnswerIndex].renderType === 2) ){				
-					// console.log('aaa', reference.details[componentAnswerIndex].answer)
+				|| (reference.details[componentAnswerIndex].type === 4 && reference.details[componentAnswerIndex].renderType === 2) ){
 					return reference.details[componentAnswerIndex].answer
 			}
         }
@@ -84,12 +89,12 @@ const RadioInput: FormComponentBase = props => {
 							>
 							<For each={options()}>
 								{(item, index) => (
-									<div class="font-light text-sm space-x-2 py-2.5 px-4 grid grid-cols-12">
+									<div class="font-light text-sm space-x-2 py-2.5 px-4 grid grid-cols-12" onClick={e => handleLabelClick(index())}>
 										<div class="col-span-1">
 											<label class="cursor-pointer text-sm" for={props.component.dataKey + index()}>
 												<input type="radio" checked={settedValue === item.value} 
 													class="disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
-													value={item.value} name={props.component.dataKey} id={props.component.dataKey + index()} 
+													value={item.value} name={props.component.dataKey} id={"radio-"+props.component.dataKey + "-" + index()} 
 													disabled = { disableInput() }
 													onChange={e => handleOnChange(e.currentTarget.value, item.label)} />
 											</label>
