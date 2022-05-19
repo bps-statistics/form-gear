@@ -42,6 +42,8 @@ export const toastInfo = (text:string, duration:number, position:string, bgColor
 
 const FormInput: FormComponentBase = props => {
   const [form, { setActiveComponent }] = useForm();
+  const { setLoader, removeLoader } = useLoaderDispatch();
+
   
   const [flagRemark, setFlagRemark] = createSignal(''); //dataKey Remark
   const [comments, setComments] = createSignal([]); //temp Comments
