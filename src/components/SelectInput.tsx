@@ -4,7 +4,7 @@ import { Select, createOptions } from "@thisbeyond/solid-select"
 import { reference, setReference } from '../stores/ReferenceStore'
 import "@thisbeyond/solid-select/style.css"
 import Toastify from 'toastify-js'
-import { locale, setLocale} from '../stores/LocaleStore'
+import { locale, setLocale } from '../stores/LocaleStore'
 
 
 const SelectInput: FormComponentBase = props => {
@@ -68,9 +68,7 @@ const SelectInput: FormComponentBase = props => {
                     let ans = options.filter(val => (val.value.includes(checker)))[0] && checker != '' ? options.filter(val => (val.value.includes(checker)))[0].label : ''
                     setSelectedOption(ans)
                     setLoading(true)
-
                 })
-
             } catch (e) {
                 toastInfo(locale.details.language[0].fetchFailed)
             }
@@ -80,97 +78,182 @@ const SelectInput: FormComponentBase = props => {
 
         case 2: {
             try {
-                let url
-                let params
-                let urlHead
-                let urlParams
+                if (config.lookupMode === 1) {
+                    let url
+                    let params
+                    let urlHead
+                    let urlParams
 
-                if (!isPublic) {
+                    if (!isPublic) {
+                        params = props.component.sourceSelect
+                        url = `${config.baseUrl}/${params[0].id}`
+                        // url = `${config.baseUrl}/${params[0].id}/filter?version=${params[0].version}`
+                        if (params[0].parentCondition.length > 0) {
+                            urlHead = url
+
+                            urlParams = params[0].parentCondition.map((item, index) => {
+                                let newParams = item.value.split('@');
+
+                                let tobeLookup = reference.details.find(obj => obj.dataKey == newParams[0])
+                                if (tobeLookup.answer) {
+                                    if (tobeLookup.answer.length > 0) {
+                                        let parentValue = tobeLookup.answer[tobeLookup.answer.length - 1].value
+                                        url = `${config.lookupKey}=${item.key}&${config.lookupValue}=${parentValue}`
+                                    }
+                                } else {
+                                    url = `${config.lookupKey}=${item.key}&${config.lookupValue}=''`
+                                }
+                                return url
+                            }).join('&')
+                            url = `${urlHead}?${urlParams}`
+                        }
+                    } else {
+                        url = `${config.baseUrl}`
+                    }
+                    // console.log('Lookup URL ', url)
+
+                    const [fetched] = createResource<optionSelect>(url, props.MobileOnlineSearch);
+                    let checker = props.value ? props.value != '' ? props.value[0].value : '' : ''
+
+                    createEffect(() => {
+                        setLabel(props.component.label)
+
+                        if (fetched()) {
+                            if (!fetched().success) {
+                                toastInfo(locale.details.language[0].fetchFailed)
+                            } else {
+                                let arr
+
+                                if (!isPublic) {
+                                    arr = []
+                                    let cekValue = fetched().data.metadata.findIndex(item => item.name == params[0].value)
+                                    let cekLabel = fetched().data.metadata.findIndex(item => item.name == params[0].desc)
+
+                                    // let cekValue = params[0].value
+                                    // let cekLabel = params[0].desc
+
+                                    fetched().data.data.map((item, value) => {
+                                        arr.push(
+                                            {
+                                                value: item[cekValue],
+                                                label: item[cekLabel],
+                                            }
+                                        )
+                                    })
+                                } else {
+                                    arr = fetched().data
+                                }
+
+                                let ans = arr.find(obj => obj.value == checker) && checker != '' ? arr.find(obj => obj.value == checker).label : ''
+
+                                setOptions(arr)
+                                setSelectedOption(ans)
+                                setLoading(true)
+                            }
+                        }
+
+                    })
+                } else if (config.lookupMode === 2) {
+                    let params
+                    let tempArr = []
+
                     params = props.component.sourceSelect
-                    url = `${config.baseUrl}/${params[0].id}`
-                    // url = `${config.baseUrl}/${params[0].id}/filter?version=${params[0].version}`
-
+                    let id = params[0].id
+                    let version = params[0].version
 
                     if (params[0].parentCondition.length > 0) {
-                        urlHead = url
-
-                        urlParams = params[0].parentCondition.map((item, index) => {
+                        params[0].parentCondition.map((item, index) => {
                             let newParams = item.value.split('@');
 
                             let tobeLookup = reference.details.find(obj => obj.dataKey == newParams[0])
                             if (tobeLookup.answer) {
                                 if (tobeLookup.answer.length > 0) {
-                                    let parentValue = tobeLookup.answer[tobeLookup.answer.length - 1].value
-                                    url = `${config.lookupKey}=${item.key}&${config.lookupValue}=${parentValue}`
+                                    let parentValue = tobeLookup.answer[tobeLookup.answer.length - 1].value.toString()
+                                    tempArr.push({ "key": item.key, "value": parentValue })
                                 }
-
-                            } else {
-                                url = `${config.lookupKey}=${item.key}&${config.lookupValue}=''`
                             }
-
-                            return url
-                        }).join('&')
-
-                        url = `${urlHead}?${urlParams}`
+                        })
                     }
-                } else {
-                    url = `${config.baseUrl}`
-                }
-                console.log('Lookup URL ', url)
+                    // console.log('id : ', id)
+                    // console.log('version : ', version)
+                    // console.log('kondisi : ', tempArr)
 
-                const [fetched] = createResource<optionSelect>(url,  props.MobileOnlineSearch);
-                // console.log('propsss', props);
-                let checker = props.value ? props.value != '' ? props.value[0].value : '' : ''
+                    let getResult = (result) => {
+                        let arr = []
 
-                createEffect(() => {
-                    setLabel(props.component.label)
+                        if (result.data.length > 0) {
+                            let cekValue = params[0].value
+                            let cekLabel = params[0].desc
+                            let checker = props.value ? props.value != '' ? props.value[0].value : '' : ''
 
-                    if (fetched()) {
-                        if (!fetched().success) {
-                            toastInfo(locale.details.language[0].fetchFailed)
-                        } else {
-                            let arr
-
-                            if (!isPublic) {
-                                arr = []
-                                let cekValue = fetched().data.metadata.findIndex(item => item.name == params[0].value)
-                                let cekLabel = fetched().data.metadata.findIndex(item => item.name == params[0].desc)
-
-                                // let cekValue = params[0].value
-                                // let cekLabel = params[0].desc
-
-                                fetched().data.data.map((item, value) => {
-                                    arr.push(
-                                        {
-                                            value: item[cekValue],
-                                            label: item[cekLabel],
-                                        }
-                                    )
-                                })
-
-                                // fetched().data.map((item, value) => {
-                                //     arr.push(
-                                //         {
-                                //             value: item[cekValue],
-                                //             label: item[cekLabel],
-                                //         }
-                                //     )
-                                // })
-                            } else {
-                                arr = fetched().data
-                            }
+                            result.data.map((item, value) => {
+                                arr.push(
+                                    {
+                                        value: item[cekValue],
+                                        label: item[cekLabel],
+                                    }
+                                )
+                            })
 
                             let ans = arr.find(obj => obj.value == checker) && checker != '' ? arr.find(obj => obj.value == checker).label : ''
-
+                            setLabel(props.component.label)
                             setOptions(arr)
                             setSelectedOption(ans)
                             setLoading(true)
                         }
                     }
 
-                })
+                    const fetched = props.MobileOfflineSearch(id, version, tempArr, getResult);
+                    // let checker = props.value ? props.value != '' ? props.value[0].value : '' : ''
 
+                    // createEffect(() => {
+                    //     setLabel(props.component.label)
 
+                    //     if (fetched()) {
+                    //         if (!fetched().success) {
+                    //             toastInfo(locale.details.language[0].fetchFailed)
+                    //         } else {
+                    //             let arr
+
+                    //             if (!isPublic) {
+                    //                 arr = []
+                    //                 let cekValue = fetched().data.metadata.findIndex(item => item.name == params[0].value)
+                    //                 let cekLabel = fetched().data.metadata.findIndex(item => item.name == params[0].desc)
+
+                    // let cekValue = params[0].value
+                    // let cekLabel = params[0].desc
+
+                    // fetched().data.data.map((item, value) => {
+                    //     arr.push(
+                    //         {
+                    //             value: item[cekValue],
+                    //             label: item[cekLabel],
+                    //         }
+                    //     )
+                    // })
+
+                    // fetched().data.map((item, value) => {
+                    //     arr.push(
+                    //         {
+                    //             value: item[cekValue],
+                    //             label: item[cekLabel],
+                    //         }
+                    //     )
+                    // })
+                    //         } else {
+                    //             arr = fetched().data
+                    //         }
+
+                    //         let ans = arr.find(obj => obj.value == checker) && checker != '' ? arr.find(obj => obj.value == checker).label : ''
+
+                    //         setOptions(arr)
+                    //         setSelectedOption(ans)
+                    //         setLoading(true)
+                    //     }
+                    // }
+
+                    // })
+                }
             } catch (e) {
                 toastInfo(locale.details.language[0].fetchFailed)
             }
@@ -182,6 +265,8 @@ const SelectInput: FormComponentBase = props => {
             try {
                 let optionsSource
                 let finalOptions
+                let checker = props.value ? props.value != '' ? props.value[0].value : '' : ''
+
                 if (props.component.sourceOption !== undefined && props.component.typeOption === 3) {
                     const componentAnswerIndex = reference.details.findIndex(obj => obj.dataKey === props.component.sourceOption);
 
@@ -189,7 +274,7 @@ const SelectInput: FormComponentBase = props => {
                         || (reference.details[componentAnswerIndex].type === 4 && reference.details[componentAnswerIndex].renderType === 2)) {
                         optionsSource = reference.details[componentAnswerIndex].answer
                         if (optionsSource != undefined) {
-                            finalOptions = optionsSource.map((item, value) => {
+                            finalOptions = optionsSource.filter((item, value) => item.value != 0).map((item, value) => {
                                 return {
                                     value: item.value,
                                     label: item.label,
@@ -201,10 +286,13 @@ const SelectInput: FormComponentBase = props => {
                         }
                     }
                 }
+                let ans = finalOptions.find(obj => obj.value == checker) && checker != '' ? finalOptions.find(obj => obj.value == checker).label : ''
+
                 createEffect(() => {
                     setLabel(props.component.label)
 
                     setOptions(finalOptions)
+                    setSelectedOption(ans)
                     setLoading(true)
                 })
 

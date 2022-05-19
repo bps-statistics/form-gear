@@ -49,6 +49,7 @@ const Form: Component<{
     remark: Remark | any
     uploadHandler : any
     GpsHandler : any
+    offlineSearch : any
     onlineSearch : any
     mobileExit : any
     setResponseMobile : any

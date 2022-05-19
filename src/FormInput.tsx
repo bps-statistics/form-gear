@@ -269,6 +269,7 @@ const FormInput: FormComponentBase = props => {
                   validationMessage: getValidationMessage(props.component.dataKey),
                   openRemark: openRemark,
                   MobileGpsHandler: props.MobileGpsHandler,
+                  MobileOfflineSearch: props.MobileOfflineSearch,
                   MobileOnlineSearch: props.MobileOnlineSearch,
                   MobileOpenMap: props.MobileOpenMap
                 })

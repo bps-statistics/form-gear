@@ -139,6 +139,7 @@ export interface FormComponentBase extends Component<{
   comments?: number
   MobileUploadHandler?: (value: any) => void
   MobileGpsHandler?: (value: any) => void
+  MobileOfflineSearch?: (id: any, version: any, conditions: any, setter: any) => void
   MobileOnlineSearch?: (value: any) => void
   MobileOpenMap?: (value: any) => void
   openRemark?: (dataKey: string) =>void

@@ -1,17 +1,17 @@
-import { createMemo, createSignal, createEffect, createResource, Show, For, Switch, Match } from "solid-js"
+import { createSignal, createEffect, createResource, Show, For, Switch, Match } from "solid-js"
 import { FormComponentBase, Option } from "../FormType"
 import { reference } from '../stores/ReferenceStore'
 import { Select, createOptions } from "@thisbeyond/solid-select"
 import "@thisbeyond/solid-select/style.css"
 import Toastify from 'toastify-js'
-import { locale, setLocale} from '../stores/LocaleStore'
+import { locale, setLocale } from '../stores/LocaleStore'
 
 const MultipleSelectInput: FormComponentBase = props => {
 
     const [options, setOptions] = createSignal<Option[]>([]);
 
     const config = props.config
-    const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
+    const [disableInput] = createSignal((config.formMode > 2) ? true : props.component.disableInput)
 
     let getOptions
     let optionsFetch
@@ -35,20 +35,20 @@ const MultipleSelectInput: FormComponentBase = props => {
 
     }
 
-    const toastInfo = (text:string, color:string) => {
-		Toastify({
-			text: (text == '') ? "" : text,
-			duration: 3000,
-			gravity: "top", 
-			position: "right", 
-			stopOnFocus: true, 
-			className: (color == '') ? "bg-blue-600/80" : color,
-			style: {
-				background: "rgba(8, 145, 178, 0.7)",
-				width: "400px"
-			}
-		}).showToast();
-	}
+    const toastInfo = (text: string, color: string) => {
+        Toastify({
+            text: (text == '') ? "" : text,
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            stopOnFocus: true,
+            className: (color == '') ? "bg-blue-600/80" : color,
+            style: {
+                background: "rgba(8, 145, 178, 0.7)",
+                width: "400px"
+            }
+        }).showToast();
+    }
 
     switch (props.component.typeOption) {
         case 1: {
@@ -68,66 +68,119 @@ const MultipleSelectInput: FormComponentBase = props => {
 
         case 2: {
             try {
-                let url
-                let params
-                let urlHead
-                let urlParams
+                if (config.lookupMode === 1) {
+                    let url
+                    let params
+                    let urlHead
+                    let urlParams
 
-                params = props.component.sourceSelect
-				url = `${config.baseUrl}/${params[0].id}`
-				// url = `${config.baseUrl}/${params[0].id}/filter?version=${params[0].version}`
+                    params = props.component.sourceSelect
+                    url = `${config.baseUrl}/${params[0].id}`
+                    // url = `${config.baseUrl}/${params[0].id}/filter?version=${params[0].version}`
 
-                if (params[0].parentCondition.length > 0) {
-                    urlHead = url
+                    if (params[0].parentCondition.length > 0) {
+                        urlHead = url
 
-                    urlParams = params[0].parentCondition.map((item, index) => {
-                        let newParams = item.value.split('@');
-                        let tobeLookup = reference.details.find(obj => obj.dataKey == newParams[0])
-                        if (tobeLookup.answer) {
-                            if (tobeLookup.answer.length > 0) {
-                                let parentValue = tobeLookup.answer[tobeLookup.answer.length - 1].value
-                                url = `${config.lookupKey}=${item.key}&${config.lookupValue}=${parentValue}`
+                        urlParams = params[0].parentCondition.map((item, index) => {
+                            let newParams = item.value.split('@');
+                            let tobeLookup = reference.details.find(obj => obj.dataKey == newParams[0])
+                            if (tobeLookup.answer) {
+                                if (tobeLookup.answer.length > 0) {
+                                    let parentValue = tobeLookup.answer[tobeLookup.answer.length - 1].value
+                                    url = `${config.lookupKey}=${item.key}&${config.lookupValue}=${parentValue}`
+                                }
+                            } else {
+                                url = `${config.lookupKey}=${item.key}&${config.lookupValue}=''`
                             }
-                        } else {
-                            url = `${config.lookupKey}=${item.key}&${config.lookupValue}=''`
+
+                            return url
+                        }).join('&')
+
+                        url = `${urlHead}?${urlParams}`
+                        // url = `${urlHead}&${urlParams}`
+                    }
+
+                    const [fetched] = createResource<optionSelect>(url, props.MobileOnlineSearch);
+
+                    createEffect(() => {
+                        if (fetched()) {
+                            if (!fetched().success) {
+                                toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
+                            } else {
+                                let arr = []
+
+                                let cekValue = fetched().data.metadata.findIndex(item => item.name == params[0].value)
+                                let cekLabel = fetched().data.metadata.findIndex(item => item.name == params[0].desc)
+
+                                // let cekValue = params[0].value
+                                // let cekLabel = params[0].desc
+
+                                fetched().data.data.map((item, value) => {
+                                    arr.push(
+                                        {
+                                            value: item[cekValue],
+                                            label: item[cekLabel],
+                                        }
+                                    )
+                                })
+
+                                setOptions(arr)
+                            }
                         }
 
-                        return url
-                    }).join('&')
+                    })
+                } else if (config.lookupMode === 2) {
+                    let params
+                    let tempArr = []
 
-                    url = `${urlHead}?${urlParams}`
-                    // url = `${urlHead}&${urlParams}`
-                }
+                    params = props.component.sourceSelect
+                    let id = params[0].id
+                    let version = params[0].version
 
-                const [fetched] = createResource<optionSelect>(url, props.MobileOnlineSearch);
+                    if (params[0].parentCondition.length > 0) {
+                        params[0].parentCondition.map((item, index) => {
+                            let newParams = item.value.split('@');
 
-                createEffect(() => {
-                    if (fetched()) {
-                        if (!fetched().success) {
+                            let tobeLookup = reference.details.find(obj => obj.dataKey == newParams[0])
+                            if (tobeLookup.answer) {
+                                if (tobeLookup.answer.length > 0) {
+                                    let parentValue = tobeLookup.answer[tobeLookup.answer.length - 1].value.toString()
+                                    tempArr.push({ "key": item.key, "value": parentValue })
+                                }
+                            }
+                        })
+                    }
+                    // console.log('id : ', id)
+                    // console.log('version : ', version)
+                    // console.log('kondisi : ', tempArr)
+
+                    let getResult = (result) => {
+                        if (!result.success) {
                             toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
                         } else {
                             let arr = []
 
-                            let cekValue = fetched().data.metadata.findIndex(item => item.name == params[0].value)
-                            let cekLabel = fetched().data.metadata.findIndex(item => item.name == params[0].desc)
+                            if (result.data.length > 0) {
+                                let cekValue = params[0].value
+                                let cekLabel = params[0].desc
 
-                            // let cekValue = params[0].value
-							// let cekLabel = params[0].desc
-
-                            fetched().data.data.map((item, value) => {
-                                arr.push(
-                                    {
-                                        value: item[cekValue],
-                                        label: item[cekLabel],
-                                    }
-                                )
-                            })
-
-                            setOptions(arr)
+                                result.data.map((item, value) => {
+                                    arr.push(
+                                        {
+                                            value: item[cekValue],
+                                            label: item[cekLabel],
+                                        }
+                                    )
+                                })
+                                setOptions(arr)
+                            }
                         }
                     }
 
-                })
+                    const fetched = props.MobileOfflineSearch(id, version, tempArr, getResult);
+
+                }
+
             } catch (e) {
                 toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
             }
@@ -253,7 +306,7 @@ const MultipleSelectInput: FormComponentBase = props => {
                             {...createOptions(
                                 props.value == '' ? options : options().filter(item => !props.value.some(f => f.value == item.value)),
                                 { key: "label", filterable: true })}
-                            disabled = { disableInput() }
+                            disabled={disableInput()}
                             onChange={(e) => handleOnChange(e)}
                             initialValue={props.value}
                         />

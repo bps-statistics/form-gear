@@ -4,7 +4,8 @@ import { reference, setReference } from '../stores/ReferenceStore'
 import { Select, createOptions } from "@thisbeyond/solid-select"
 import "@thisbeyond/solid-select/style.css"
 import Toastify from 'toastify-js'
-import { locale, setLocale} from '../stores/LocaleStore'
+import { locale, setLocale } from '../stores/LocaleStore'
+import LogoImg from "../assets/loading.png"
 
 const ListSelectInputRepeat: FormComponentBase = props => {
 	const [flag, setFlag] = createSignal(0); //untuk flag open textinput
@@ -14,7 +15,7 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 	const [isError, setisError] = createSignal(false);
 
 	const config = props.config
-	const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
+	const [disableInput] = createSignal((config.formMode > 2) ? true : props.component.disableInput)
 
 	let getLastId = createMemo(() => {
 		return 0;
@@ -41,13 +42,13 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 
 	}
 
-	const toastInfo = (text:string, color:string) => {
+	const toastInfo = (text: string, color: string) => {
 		Toastify({
 			text: (text == '') ? "" : text,
 			duration: 3000,
-			gravity: "top", 
-			position: "right", 
-			stopOnFocus: true, 
+			gravity: "top",
+			position: "right",
+			stopOnFocus: true,
 			className: (color == '') ? "bg-blue-600/80" : color,
 			style: {
 				background: "rgba(8, 145, 178, 0.7)",
@@ -89,80 +90,151 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 
 		case 2: {
 			try {
-				let url
-				let params
-				let urlHead
-				let urlParams
+				if (config.lookupMode === 1) {
+					let url
+					let params
+					let urlHead
+					let urlParams
 
-				params = props.component.sourceSelect
-				url = `${config.baseUrl}/${params[0].id}`
-				// url = `${config.baseUrl}/${params[0].id}/filter?version=${params[0].version}`
+					params = props.component.sourceSelect
+					url = `${config.baseUrl}/${params[0].id}`
+					// url = `${config.baseUrl}/${params[0].id}/filter?version=${params[0].version}`
 
 
-				if (params[0].parentCondition.length > 0) {
-					urlHead = url
+					if (params[0].parentCondition.length > 0) {
+						urlHead = url
 
-					urlParams = params[0].parentCondition.map((item, index) => {
-						let newParams = item.value.split('@');
-						let tobeLookup = reference.details.find(obj => obj.dataKey == newParams[0])
-						if (tobeLookup.answer) {
-							if (tobeLookup.answer.length > 0) {
-								let parentValue = tobeLookup.answer[tobeLookup.answer.length - 1].value
-								url = `${config.lookupKey}=${item.key}&${config.lookupValue}=${parentValue}`
+						urlParams = params[0].parentCondition.map((item, index) => {
+							let newParams = item.value.split('@');
+							let tobeLookup = reference.details.find(obj => obj.dataKey == newParams[0])
+							if (tobeLookup.answer) {
+								if (tobeLookup.answer.length > 0) {
+									let parentValue = tobeLookup.answer[tobeLookup.answer.length - 1].value
+									url = `${config.lookupKey}=${item.key}&${config.lookupValue}=${parentValue}`
+								}
+							} else {
+								url = `${config.lookupKey}=${item.key}&${config.lookupValue}=''`
 							}
-						} else {
-							url = `${config.lookupKey}=${item.key}&${config.lookupValue}=''`
-						}
 
-						return url
-					}).join('&')
+							return url
+						}).join('&')
 
-					url = `${urlHead}?${urlParams}`
-				}
+						url = `${urlHead}?${urlParams}`
+					}
 
-				const [fetched] = createResource<optionSelect>(url, props.MobileOnlineSearch);
-				let arr = []
+					const [fetched] = createResource<optionSelect>(url, props.MobileOnlineSearch);
+					let arr = []
 
-				getOptions = createMemo(() => {
-					if (fetched()) {
-						if (!fetched().success) {
-							setisError(true)
-							toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
-						} else {
-							let cekValue = fetched().data.metadata.findIndex(item => item.name == params[0].value)
-							let cekLabel = fetched().data.metadata.findIndex(item => item.name == params[0].desc)
+					getOptions = createMemo(() => {
+						if (fetched()) {
+							if (!fetched().success) {
+								setisError(true)
+								toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
+							} else {
+								let cekValue = fetched().data.metadata.findIndex(item => item.name == params[0].value)
+								let cekLabel = fetched().data.metadata.findIndex(item => item.name == params[0].desc)
 
-							// let cekValue = params[0].value
-							// let cekLabel = params[0].desc
+								// let cekValue = params[0].value
+								// let cekLabel = params[0].desc
 
-							fetched().data.data.map((item, value) => {
-								arr.push(
-									{
-										value: item[cekValue],
-										label: item[cekLabel],
+								fetched().data.data.map((item, value) => {
+									arr.push(
+										{
+											value: item[cekValue],
+											label: item[cekLabel],
+										}
+									)
+								})
+								options = arr
+
+								const localAnswerLength = localAnswer().length;
+
+								let j = 0;
+								if (localAnswer()[0] !== undefined) {
+									j = (localAnswer()[0].value == 0) ? 1 : 0;
+								}
+
+								for (j; j < localAnswerLength; j++) {
+									if (edited() === 0 || edited() !== Number(localAnswer()[j].value)) {
+										let optionsIndex = options.findIndex((item) => item.value == localAnswer()[j].value);
+										options.splice(optionsIndex, 1);
 									}
-								)
-							})
-							options = arr
+								}
 
-							const localAnswerLength = localAnswer().length;
-
-							let j = 0;
-							if (localAnswer()[0] !== undefined) {
-								j = (localAnswer()[0].value == 0) ? 1 : 0;
+								return options
 							}
+						}
+					})
+				} else if (config.lookupMode === 2) {
+                    let params
+                    let tempArr = []
 
-							for (j; j < localAnswerLength; j++) {
-								if (edited() === 0 || edited() !== Number(localAnswer()[j].value)) {
-									let optionsIndex = options.findIndex((item) => item.value == localAnswer()[j].value);
-									options.splice(optionsIndex, 1);
+                    params = props.component.sourceSelect
+                    let id = params[0].id
+                    let version = params[0].version
+
+                    if (params[0].parentCondition.length > 0) {
+                        params[0].parentCondition.map((item, index) => {
+                            let newParams = item.value.split('@');
+
+                            let tobeLookup = reference.details.find(obj => obj.dataKey == newParams[0])
+                            if (tobeLookup.answer) {
+                                if (tobeLookup.answer.length > 0) {
+                                    let parentValue = tobeLookup.answer[tobeLookup.answer.length - 1].value.toString()
+                                    tempArr.push({ "key": item.key, "value": parentValue })
+                                }
+							}
+                        })
+                    }
+                    // console.log('id : ', id)
+                    // console.log('version : ', version)
+                    // console.log('kondisi : ', tempArr)
+
+                    let getResult = (result) => {
+						getOptions = createMemo(() => {
+							if(!result.success){
+								setisError(true)
+								toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
+							} else {
+								let arr = []
+								if (result.data.length > 0) {
+									let cekValue = params[0].value
+									let cekLabel = params[0].desc
+		
+									result.data.map((item, value) => {
+										arr.push(
+											{
+												value: item[cekValue],
+												label: item[cekLabel],
+											}
+										)
+									})
+									options = arr;
+		
+									const localAnswerLength = localAnswer().length;
+	
+									let j = 0;
+									if (localAnswer()[0] !== undefined) {
+										j = (localAnswer()[0].value == 0) ? 1 : 0;
+									}
+	
+									for (j; j < localAnswerLength; j++) {
+										if (edited() === 0 || edited() !== Number(localAnswer()[j].value)) {
+											let optionsIndex = options.findIndex((item) => item.value == localAnswer()[j].value);
+											options.splice(optionsIndex, 1);
+										}
+									}
+	
+									return options
 								}
 							}
+						})
 
-							return options
-						}
-					}
-				})
+                    }
+
+                    const fetched = props.MobileOfflineSearch(id, version, tempArr, getResult);
+				}
+
 			} catch (e) {
 				setisError(true)
 				toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
@@ -406,9 +478,9 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 
 				<Show when={!isError()}>
 					<div class="font-light text-sm space-x-2 pt-2.5 px-2 flex justify-end">
-					<button class="bg-pink-600 text-white p-2 rounded-full focus:outline-none h-10 w-10 hover:bg-pink-500  disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400" 
-						disabled = { disableInput() }
-						onClick={e => handleOnPlus()}>
+						<button class="bg-pink-600 text-white p-2 rounded-full focus:outline-none h-10 w-10 hover:bg-pink-500  disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
+							disabled={disableInput()}
+							onClick={e => handleOnPlus()}>
 							<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 								<path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
 							</svg>
