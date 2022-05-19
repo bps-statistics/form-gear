@@ -415,8 +415,15 @@ const Form: Component<{
       let filteredError = [];
       let filteredWarning = [];
       reference.details.forEach((element,i) =>{
-          if (element.type > 4 && ( element.enable ) && element.validationState == 2) filteredError.push({label:element.label,message:element.validationMessage})
-          if (element.type > 4 && ( element.enable ) && element.validationState == 1) filteredWarning.push({label:element.label,message:element.validationMessage})
+        // let sidebarIndex = element.index.splice(-1)
+          if (element.type > 4 && ( element.enable ) && element.validationState == 2) {
+            let sidebarIndex = element.level > 1 ? element.index.slice(0,-1) : element.index.slice(0,-2)
+            filteredError.push({label:element.label,message:element.validationMessage,sideIndex:sidebarIndex,dataKey:element.dataKey})
+          }
+          if (element.type > 4 && ( element.enable ) && element.validationState == 1) {
+            let sidebarIndex = element.level > 1 ? element.index.slice(0,-1) : element.index.slice(0,-2)
+            filteredWarning.push({label:element.label,message:element.validationMessage,sideIndex:sidebarIndex,dataKey:element.dataKey})
+          }
       });
 
       setListError(JSON.parse(JSON.stringify(filteredError)))
@@ -444,6 +451,16 @@ const Form: Component<{
           setMaxWarningPage(maxPages)
           setListWarningPage(JSON.parse(JSON.stringify(listPage)))
         }
+    }
+
+    const lookInto = (e:MouseEvent, sidebarIndex, dataKey) => {
+      const sidebarIntoIndex = sidebar.details.findIndex(obj => obj.index.toString() === sidebarIndex.toString());
+      let sidebarInto = sidebar.details[sidebarIntoIndex]
+      setShowError(false);
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && sidebarCollapse(e); 
+      setActiveComponent({dataKey: sidebarInto.dataKey, label: sidebarInto.label, index: JSON.parse(JSON.stringify(sidebarInto.index)), position: sidebarIntoIndex});      
+      var component = document.getElementById(dataKey + "___scrollView");
+      component.scrollIntoView({ behavior: "smooth"});   
     }
 
     const confirmSubmit = (event: MouseEvent) => {
@@ -592,8 +609,9 @@ const Form: Component<{
                             <thead class="text-sm font-semibold text-gray-600 bg-gray-50">
                               <tr>
                                 <th class="p-2 whitespace-nowrap font-semibold text-left w-1/12">No</th>
-                                <th class="p-2 whitespace-nowrap font-semibold text-left w-1/4">Field</th>
-                                <th class="p-2 whitespace-nowrap font-semibold text-left w-2/3">Error Messages</th>
+                                <th class="p-2 whitespace-nowrap font-semibold text-left w-5/12">Field</th>
+                                <th class="p-2 whitespace-nowrap font-semibold text-left w-5/12">Error Messages</th>
+                                <th class="p-2 whitespace-nowrap font-semibold text-left w-1/12"></th>
                               </tr>
                             </thead>
                             <tbody class="text-sm divide-y divide-gray-100 ">
@@ -615,6 +633,14 @@ const Form: Component<{
                                                 </div>
                                             )}
                                           </For>
+                                        </td>
+                                        <td class="border-b border-slate-100 align-top p-2">
+                                          <button class="bg-transparent text-gray-500 rounded-full focus:outline-none h-5 w-5 hover:bg-gray-400 hover:text-white flex justify-center items-center"                                          
+                                            onClick={(e)=> {lookInto(e, item.sideIndex, item.dataKey)}}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" stroke-width="2">
+                                              <path fill-rule="evenodd" d="M6.672 1.911a1 1 0 10-1.932.518l.259.966a1 1 0 001.932-.518l-.26-.966zM2.429 4.74a1 1 0 10-.517 1.932l.966.259a1 1 0 00.517-1.932l-.966-.26zm8.814-.569a1 1 0 00-1.415-1.414l-.707.707a1 1 0 101.415 1.415l.707-.708zm-7.071 7.072l.707-.707A1 1 0 003.465 9.12l-.708.707a1 1 0 001.415 1.415zm3.2-5.171a1 1 0 00-1.3 1.3l4 10a1 1 0 001.823.075l1.38-2.759 3.018 3.02a1 1 0 001.414-1.415l-3.019-3.02 2.76-1.379a1 1 0 00-.076-1.822l-10-4z" clip-rule="evenodd" />
+                                            </svg>
+                                          </button>
                                         </td>
                                       </tr>
                                     )}
@@ -657,8 +683,9 @@ const Form: Component<{
                               <thead class="text-sm font-semibold text-gray-600 bg-gray-50">
                                 <tr>
                                   <th class="p-2 whitespace-nowrap font-semibold text-left w-1/12">No</th>
-                                  <th class="p-2 whitespace-nowrap font-semibold text-left w-1/4">Field</th>
-                                  <th class="p-2 whitespace-nowrap font-semibold text-left w-2/3">Warning Messages</th>
+                                  <th class="p-2 whitespace-nowrap font-semibold text-left w-5/12">Field</th>
+                                  <th class="p-2 whitespace-nowrap font-semibold text-left w-5/12">Warning Messages</th>
+                                  <th class="p-2 whitespace-nowrap font-semibold text-left w-1/12"></th>
                                 </tr>
                               </thead>
                               <tbody class="text-sm divide-y divide-gray-100 ">
@@ -680,6 +707,14 @@ const Form: Component<{
                                                   </div>
                                               )}
                                             </For>
+                                          </td>
+                                          <td class="border-b border-slate-100 align-top p-2">
+                                            <button class="bg-transparent text-gray-500 rounded-full focus:outline-none h-5 w-5 hover:bg-gray-400 hover:text-white flex justify-center items-center"                                          
+                                              onClick={(e)=> {lookInto(e, item.sideIndex, item.dataKey)}}>
+                                              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" stroke-width="2">
+                                                <path fill-rule="evenodd" d="M6.672 1.911a1 1 0 10-1.932.518l.259.966a1 1 0 001.932-.518l-.26-.966zM2.429 4.74a1 1 0 10-.517 1.932l.966.259a1 1 0 00.517-1.932l-.966-.26zm8.814-.569a1 1 0 00-1.415-1.414l-.707.707a1 1 0 101.415 1.415l.707-.708zm-7.071 7.072l.707-.707A1 1 0 003.465 9.12l-.708.707a1 1 0 001.415 1.415zm3.2-5.171a1 1 0 00-1.3 1.3l4 10a1 1 0 001.823.075l1.38-2.759 3.018 3.02a1 1 0 001.414-1.415l-3.019-3.02 2.76-1.379a1 1 0 00-.076-1.822l-10-4z" clip-rule="evenodd" />
+                                              </svg>
+                                            </button>
                                           </td>
                                         </tr>
                                       )}
@@ -718,8 +753,7 @@ const Form: Component<{
               </div>
             </div>
           </div>
-        </Show>
-        
+        </Show>        
 
         <div class="md:max-w-6xl mx-auto md:px-8 md:py-8">
           <div class="bg-gray-50 dark:bg-gray-900  dark:text-white text-gray-600 h-screen flex overflow-hidden text-sm font-montserrat rounded-lg shadow-xl dark:shadow-gray-800">
@@ -731,7 +765,8 @@ const Form: Component<{
                 <div class="bg-gray-50 dark:bg-gray-900 w-72 flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-full overflow-y-auto p-5 space-y-4
                 sidebar-span absolute inset-y-0 left-0 transform -translate-x-full transition-transform duration-500 ease-in-out md:relative md:translate-x-0 z-10">
                   <div class=" text-gray-400 tracking-wider flex justify-between "> 
-                    <div class="text-lg block p-4 text-gray-600 dark:text-white font-bold sm:text-xl" innerHTML={ props.template.details.acronym } />      
+                    <div class="text-lg block p-4 text-gray-600 dark:text-white font-bold sm:text-xl" innerHTML={ props.template.details.acronym 
+                      + '<div class="text-xs font-extralight text-gray-400 ">🚀0.1.2 📋'+ template.details.version + ' ✔️'+ validation.details.version + ' </div>  '} />                       
                     
                     <button type="button" 
                       class="md:hidden p-2 mobile-menu-button " onClick={sidebarCollapse}>
@@ -962,7 +997,7 @@ const Form: Component<{
                               'hidden': onMobile() === true,
                             }}
                           />
-                        <div class="text-xs font-extralight text-gray-400 ">FormGear-0.1.1 🚀: &#177; {timeDiff+20} ms</div>
+                        <div class="text-xs font-extralight text-gray-400 ">FormGear-0.1.2 🚀: &#177; {timeDiff+20} ms</div>
                       </div>
                       <div class="ml-auto sm:flex items-center p-2 ">
                         <button onClick={toggleSwitch} type="button" 
@@ -1146,7 +1181,7 @@ const Form: Component<{
                     </button>
                   </div>
                   <div  class="flex justify-end items-center col-start-6 pr-5 transition">
-                    <button class="scrolltotop-div bg-teal-500 text-white p-2 rounded-full focus:outline-none items-center h-10 w-10 hover:bg-teal-400"  
+                    <button class=" bg-teal-500 text-white p-2 rounded-full focus:outline-none items-center h-10 w-10 hover:bg-teal-400"  
                       onClick={writeResponse}>
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />

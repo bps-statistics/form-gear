@@ -250,6 +250,8 @@ const FormInput: FormComponentBase = props => {
 				</div>
 			</Show>
 
+      <div id={props.component.dataKey + '___scrollView'} />
+
       <Switch>
         <For each={Array.from(CONTROL_MAP.keys())}>
           {type =>
