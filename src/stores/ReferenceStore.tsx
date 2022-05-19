@@ -1,5 +1,6 @@
 import { createStore } from "solid-js/store";
 import { Component } from "./TemplateStore";
+import { Detail as SidebarDetail } from "./SidebarStore";
 import { LengthInput } from "../FormType";
 
 export type Validations = {
@@ -50,13 +51,18 @@ type Detail = {
     contentModalConfirmation: string
     required: boolean
     rangeInput: any
+    presetMaster?: boolean
+    sourceOption?: any
+    disableInitial?: boolean
 }
 
 export interface Reference {
     details: Detail[]
+    sidebar: SidebarDetail[]
 }
 
 export const [reference, setReference] = createStore<Reference>({
-    details: []
+    details: [],
+    sidebar: []
 });
 
