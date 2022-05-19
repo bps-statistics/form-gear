@@ -21,8 +21,6 @@ const PhotoInput: FormComponentBase = props => {
 
   })
 
-  // console.log('propsnya : ', props)
-
   let handleOnChange = (event) => {
     let updatedAnswer = JSON.parse(JSON.stringify(props.value))
     updatedAnswer = [];
@@ -34,12 +32,9 @@ const PhotoInput: FormComponentBase = props => {
 
 
     props.onValueChange(updatedAnswer)
-    // console.log('preview ', imgSrc)
   }
 
   let setValue = (data) => {
-    // console.log('hasilny adalah : ', data)
-
     handleOnChange(data)
   }
 
