@@ -51,7 +51,7 @@ export const [locale, setLocale] = createStore<Questionnaire>({
                 componentNotAllowed: "Only 1 component is allowed to edit",
                 componentRendered: "Related components is rendering, please wait.",
                 componentSelected: "This component has already being selected",
-                fetchFailed: "Failed to fetch data from the source.",
+                fetchFailed: "Failed to fetch the data.",
                 fileInvalidFormat: "Please submit the appropriate format!",
                 fileUploaded: "File uploaded successfully!",
                 locationAcquired: "Location successfully acquired!",
