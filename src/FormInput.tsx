@@ -9,6 +9,7 @@ import { remark, setRemark} from './stores/RemarkStore';
 import { note, setNote} from './stores/NoteStore';
 import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
 import { locale, setLocale} from './stores/LocaleStore';
+import { useLoaderDispatch } from "./loader/FormLoaderProvider"
 
 import dayjs from 'dayjs';
 import Toastify from 'toastify-js'
@@ -89,8 +90,10 @@ const FormInput: FormComponentBase = props => {
   }
   
   const onValueChange = (value: any) => {
-    toastInfo(locale.details.language[0].componentRendered, 500, "", "bg-orange-600/80");
-    setTimeout(() => saveAnswer(props.component.dataKey, 'answer', value, form.activeComponent.position, {'clientMode': form.formConfig.clientMode,'baseUrl': form.formConfig.baseUrl}), 500);      
+    setLoader({});
+    // toastInfo(locale.details.language[0].componentRendered, 500, "", "bg-orange-600/80");
+    // saveAnswer(props.component.dataKey, 'answer', value, form.activeComponent.position, {'clientMode': form.formConfig.clientMode,'baseUrl': form.formConfig.baseUrl});      
+    setTimeout(() => saveAnswer(props.component.dataKey, 'answer', value, form.activeComponent.position, {'clientMode': form.formConfig.clientMode,'baseUrl': form.formConfig.baseUrl}), 50);
   }
 
   const cn = [' border border-solid border-gray-300 ',' border-orange-500 border-4 ',' border-pink-600 border-4 ']

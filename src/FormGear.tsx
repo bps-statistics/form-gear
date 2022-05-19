@@ -4,6 +4,8 @@ import "./index.css";
 import Form from "./Form";
 import { FormProvider } from "./FormProvider";
 
+import Loader from "./loader/Loader"
+import FormLoaderProvider from "./loader/FormLoaderProvider"
 
 import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
 import { preset, setPreset, Preset } from './stores/PresetStore';
@@ -63,7 +65,10 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
       
       render(() => (
         <FormProvider config={config}>
+          <FormLoaderProvider>
             <Form timeStart={timeStart} runAll={runAll} tmpEnableComp={tmpEnableComp} tmpVarComp={tmpVarComp} template={template} preset={preset} response={response} validation={validation} remark={remark} uploadHandler={uploadHandler} GpsHandler={GpsHandler} offlineSearch={offlineSearch} onlineSearch={onlineSearch} mobileExit={mobileExit} setResponseMobile={setResponseMobile} setSubmitMobile={setSubmitMobile} openMap={openMap}/>
+            <Loader />
+          </FormLoaderProvider>
         </FormProvider>
       ), document.getElementById("FormGear-root") as HTMLElement);
     }else{
@@ -389,7 +394,10 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
 
           render(() => (
             <FormProvider config={config}>
+              <FormLoaderProvider>
                 <Form timeStart={timeStart} runAll={runAll} tmpEnableComp={tmpEnableComp} tmpVarComp={tmpVarComp} template={template} preset={preset} response={response} validation={validation} remark={remark} uploadHandler={uploadHandler} GpsHandler={GpsHandler} offlineSearch={offlineSearch} onlineSearch={onlineSearch} mobileExit={mobileExit} setResponseMobile={setResponseMobile} setSubmitMobile={setSubmitMobile} openMap={openMap}/>
+                <Loader />
+              </FormLoaderProvider>
             </FormProvider>
           ), document.getElementById("FormGear-root") as HTMLElement);
         } 
