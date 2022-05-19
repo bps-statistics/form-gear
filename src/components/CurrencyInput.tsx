@@ -1,5 +1,6 @@
 import { createSignal, For, Match, Show, Switch } from "solid-js"
 import { FormComponentBase } from "../FormType"
+import createDebounce from "@solid-primitives/debounce";
 
 const CurrencyInput: FormComponentBase = props => {
   const config = props.config
@@ -25,6 +26,12 @@ const CurrencyInput: FormComponentBase = props => {
     let result = props.component.separatorFormat === 'id-ID' ? modified.replace(',', '.') : modified;
     props.onValueChange(result);
   }
+
+  let handleOnKeyup = createDebounce((value: any) => {
+    let modified = modifier(value)
+    let result = props.component.separatorFormat === 'id-ID' ? modified.replace(',', '.') : modified;
+    props.onValueChange(result)
+  }, 1500)
 
   let modifier = (value: any) => {
     let firstRemoved
@@ -89,7 +96,7 @@ const CurrencyInput: FormComponentBase = props => {
                 disabled = { disableInput() }
                 id={"currencyInput"+ props.index}
                 onkeypress={e => checkFormat(e)}
-                onChange={e => handleOnChange(e.currentTarget.value)} 
+                onkeyup={e => handleOnKeyup(e.currentTarget.value)} 
                 max = {props.component.rangeInput ? props.component.rangeInput[0].max !== undefined ? props.component.rangeInput[0].max : '' : ''}
                 min = {props.component.rangeInput ? props.component.rangeInput[0].min !== undefined ? props.component.rangeInput[0].min : '' : ''}
           />
