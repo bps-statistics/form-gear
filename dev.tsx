@@ -10,15 +10,13 @@ let config = {
   lookupKey: `key%5B%5D`, //optional 
   lookupValue: `value%5B%5D`, //optional
   username: 'AdityaSetyadi', //
-  formMode: 1 // 1 => OPEN ; 2 => REJECTED ; 3 => SUBMITTED ; 4 => APPROVED ;
+  formMode: 1, // 1 => OPEN ; 2 => REJECTED ; 3 => SUBMITTED ; 4 => APPROVED ;
+  initialMode: 2 // 1=> INITIAL ; 2 => ASSIGN
 }
 
 //some variables initiation
 var cameraFunction = null;
 var cameraGPSFunction = null;
-var respons = null;
-var remarks = null;
-var principals = null;
 var responseGear = null;
 var remarkGear = null;
 var principalGear = null;

@@ -24,6 +24,8 @@ export type Component = {
     columnName?: string
     titleModalConfirmation: string
     contentModalConfirmation: string
+    presetMaster?: boolean
+    disableInitial?: boolean
 }
 
 export type Detail = {

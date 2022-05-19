@@ -3,7 +3,7 @@ import { createSignal, Show, For, Switch, Match } from 'solid-js'
 
 const TextInput: FormComponentBase = props => {
   const config = props.config
-  const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
+  const [disableInput] = createSignal((config.formMode > 2 && config.initialMode == 2) ? true : (config.initialMode == 1 && props.component.disableInitial !== undefined) ? props.component.disableInitial : props.component.disableInput)
 
   let classInput = 'w-full rounded font-light px-4 py-2.5 text-sm text-gray-700 bg-white bg-clip-padding transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400';
   

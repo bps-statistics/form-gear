@@ -13,6 +13,7 @@ type FormConfig = {
 	lookupValue : string
 	username: string
 	formMode: number // 1 => OPEN ; 2 => REJECTED ; 3 => SUBMITTED ; 4 => APPROVED ;
+	initialMode: number // 1=> INITIAL ; 2 => ASSIGN
 	lookupMode: number
 }
 
@@ -44,7 +45,8 @@ export function FormProvider(props) {
 			lookupKey : props.config.lookupKey,
 			lookupValue : props.config.lookupValue,
 			username: props.config.username,
-			formMode: (props.config.formMode !== undefined) ? props.config.formMode : 1
+			formMode: (props.config.formMode !== undefined) ? props.config.formMode : 1,
+			initialMode: props.config.initialMode,
 			lookupMode: props.config.lookupMode
 		}
     })
