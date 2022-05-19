@@ -1,7 +1,7 @@
 import { createStore } from "solid-js/store";
 import { Component } from "./TemplateStore";
 
-type Detail = {
+export type Detail = {
     dataKey: string
     label: string
     description: string
@@ -14,7 +14,7 @@ type Detail = {
     componentEnable: string[]
 }
 
-interface Sidebar {
+export interface Sidebar {
     details: Detail[]
 }
 
