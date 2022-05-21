@@ -4,8 +4,10 @@ import Toastify from 'toastify-js'
 import dayjs from "dayjs";
 
 const NowInput: FormComponentBase = props => {
+  const config = props.config
   const [showModal, setShowModal] = createSignal(0);
-  
+  const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
+
   const [instruction, setInstruction] = createSignal(false);
   const showInstruction = () => {
     (instruction()) ? setInstruction(false) : setInstruction(true);
@@ -94,7 +96,7 @@ const NowInput: FormComponentBase = props => {
 
         <div class="font-light text-sm space-x-2 py-2.5 px-2 space-y-4 flex justify-end items-end -mt-2">
           <button class="bg-white text-gray-500 p-2 rounded-full focus:outline-none h-10 w-10 hover:bg-teal-200 hover:text-teal-400 hover:border-teal-200 border-2 border-gray-300  disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
-            onClick={() => handleOnClick()}>
+            onClick={() => handleOnClick()} disabled = { disableInput() }>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
