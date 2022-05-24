@@ -5,44 +5,76 @@
 > May 24, 2022
 
 ### Optimized Performance
-- Multi thread initial loop
-- Optimize FormGear with reference utilization
-- Offline Lookup is used to retrieve data from local device	
-  Specify the lookupMode property to 2 in dev.tsx
+- Multi-thread on initial loop. 
+	
+	FormGear integrates a collection of JSON templates into a single source of truth called `reference`. As seen in the picture below:
+	
+	<p align="center"> <img src="src/assets/FormGear-flow.jpg"></p>
+
+	Recursive looping is required for the `reference` construction process to ensure that the looping procedure is completed down to the smallest nested root. This procedure takes a long time, thus we use a multi-thread looping process between sections, which is bridged with numerous process timeouts to prevent each process from executing at the same time. 
+	
+	Although Javascript is known for running its processes sequentially and in single threads, multi-threaded process tuning can be stated to be successful in practice. As a result, the initial rendering process is reduced by up to 25 % faster.
+
+- Optimize FormGear with `reference` utilization.
+
+	The multi-thread tuning process is proven to reduce the looping process in the beginning but is not fast enough for the data collection needs.
+	FormGear, as is well known, exploits reference as the single source of truth, thus all it needs to do in the process is communicate with it to render, enable, validate, or save the answer for each component.
+
+	Previously, reference was considered to be quite large, thus all that was required for the output of data collection results was the `principal`, `response`, and `remark`. However, for optimal process optimization, the initial loop process, which used multi threads at the beginning, can now be avoided by simply reusing the stored `reference`. This method, however, is confined to the same version of `template` and `response`, and if the template version is updated, the reference generation process must be recreated from the beginning.
+
+- Offline Lookup is used to retrieve data from mobile device. 
+
+	The process of rendering options for select inputs can now be optimized with the lookup process for data on CAPI (proven on Android).
+
+	It can be set on client mode config with `lookupMode` set to 1 for online, or 2 for offline
+
 	```json
-	lookupMode : 2
+	"lookupMode" : 2
 	```
-  Here is the function to fetch Data from local device
-  	```json
+	Here is the function to fetch Data from local device
+  	```tsx
 	let offlineSearch = function (id, version, dataJson, setter) 
 	```
-  - `id` : Lookup id to fetch
-  - `version` : Specify the lookup data version to fetch, it depends on your local endpoint
-  - `dataJson` : Parameters to filter the data
-  - `setter` : This parameter is used to pass the data retrieved from the local device
+	- `id` => lookup id to fetch
+	- `version` => lookup data version to fetch, it depends on local endpoint
+	- `dataJson` => params to filter the data
+	- `setter` => params to be used to pass the data retrieved from the local endpoint
 
 
 ### Added
-- FormLoader with spinner and backdrop blur
-- LookInto on List Error
-- Initial Mode is used to mark that the questionnaire is new form (1 for initial form and 2 for assign form)
-- Add attribute to indicate whether a component can be filled or not when InitialMode is 1
+- FormLoader with spinner and backdrop blur has been added for better experience while waiting for the component to complete the action of render, enable, validate, or save the answer for each component.
+- LookInto on List Error has been added for better experience to jump into component which still has the invalid answer.
+- `InitialMode` has been added to be used to indicate whether the data collection process is in initial mode (=> 1) or assign mode (=> 2). On CAPI (proven on Android), this mode can be used to trigger initial data collection just simply use neighbor `preset` to get the initial data required.
+	```tsx
+	initialMode : 1
+	```
+- In conjunction with `initialMode`, the `presetMaster` and `disableInitial` attributes have been added to the type options for templates. 
+	
+	When `initialMode` is set to 1, FormGear will search from the given neighbor `preset` pass from CAPI where the component with `presetMaster` attribute will show the initial data required for initial data collection. 
+
 	```json
-	"disableInitial":false
+	"presetMaster" : true
+	```
+
+	On the other hand, `disableInitial` will be used as a disabled input flag when `initialMode` is set to 1, which actually overrides the `disableInput` flag if the same component contains these two types of options.
+
+	```json
+	"disableInitial" : false
 	```
 
 
 ### Changed
-- Debounce on CurrencyInput to wait input finish
-- Clickable label di radio dan checkbox
+- Debounce on `CurrencyInput` to wait user input finish
+- Clickable label on `RadioInput` and `CheckboxInput`
 - Submit principals on mobile
-- When data on change, then check validation rangeInput and validations with related component
-- When data will be submitted, then check required
+- When the data on a component changes, the following rangeInput validation and with related components are triggered for checking.
+- On submit, it will be triggered to check the required components before being allowed to continue to submit the data.
 
 ### Fixed
-- Fix on enable section bug
-- Auto change dan re-render components with sourceOption
-- to validate component with return type is array, better to check it is undefined or not with this code:
+- Fix on enable section bug.
+- When modifying or deleting a nested component, the associated components are also checked including their child components for adjustments as well.
+- Fix bug on the process of rendering options from other component, it is now being set to auto change and re-render the component when the `sourceOption` component answer are triggered change.
+- In validate or enable, to validate component with the array return type, it is better to check whether it is undefined or not with the following sample code:
 	```json
 	"test":"let values = getValue('hobbies'); if(values[0] !== undefined) values[0].value == 1",
 	```
