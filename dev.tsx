@@ -9,6 +9,7 @@ let config = {
   baseUrl: `https://jsonplaceholder.typicode.com/users/`, // endpoint to fetch
   lookupKey: `key%5B%5D`, //optional 
   lookupValue: `value%5B%5D`, //optional
+  lookupMode : 1, // 1 => ONLINE ; 2 => OFFLINE
   username: 'AdityaSetyadi', //
   formMode: 1, // 1 => OPEN ; 2 => REJECTED ; 3 => SUBMITTED ; 4 => APPROVED ;
   initialMode: 2 // 1=> INITIAL ; 2 => ASSIGN
@@ -102,23 +103,22 @@ let offlineSearch = function (id, version, dataJson, setter) {
   
   let condition = JSON.stringify(dataJson)
 
-  console.log('kondisinnya : ' , condition);
-
+  //here we use jquery to retrieve data from the local device
   $.ajax({
-      url: `http://localhost:9090/lookup?id=${id}&v=${version}&c=${condition}`,
-              type: "GET",
-              crossDomain: true,
-              dataType: "json",
-              data: null,
-          success: function(d) {
-              console.log(d.hasil)
-              setter(d)
+    url: `http://localhost:9090/lookup?id=${id}&v=${version}&c=${condition}`,//specify localhost endpoint to fetch
+    type: "GET",
+    crossDomain: true,
+    dataType: "json",
+    data: null,
+    success: function(d) {
+        console.log(d.hasil)
+        setter(d)
 
-          },
-          error: function(XMLHttpRequest, textStatus, errorThrown) {
+        },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
 
-          }
-      });
+    }
+});
 
 }
 
@@ -141,8 +141,9 @@ const setBearer = () => {
   })
 }
 
+//custom function to trigger setResponsMobile to run from outside form-gear, you can custom the function name 
 let mobileExit = (fun) => {
-  fun()
+  // fun()
 }
 
 
@@ -171,6 +172,7 @@ let onlineSearch = async (url) =>
 
   }));
 
+//function to get response, remark, principal and reference
 let setResponseMobile = function (res, rem, princ, ref) {
   responseGear = res
   remarkGear = rem
@@ -199,10 +201,10 @@ let setSubmitMobile = function (res, rem, princ, ref) {
   console.log('reference', referenceGear)
 }
 
+//function to open map on google map either in capi or cawi
 let openMap = function (koordinat) {
   koordinat = koordinat
 
-  console.log('hasilny adalah : ', koordinat)
 }
 
 
