@@ -300,7 +300,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                 tmpEnableComp.push(JSON.parse(JSON.stringify(element[j])));
                 hasSideEnable  =true;
               }
-              let sideEnable = true;
+              
               sideList[j][0] = {
                   dataKey: element[j].dataKey,
                   label: element[j].label,
@@ -309,7 +309,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                   index: [0, j],
                   components: element[j].components,
                   sourceQuestion: element[j].sourceQuestion !== undefined ? element[j].sourceQuestion : '',
-                  enable: (sideEnable === undefined) ? false : sideEnable,
+                  enable: !hasSideEnable,
                   enableCondition: element[j].enableCondition !== undefined ? element[j].enableCondition : '',
                   componentEnable: element[j].componentEnable !== undefined ? element[j].componentEnable : []
               }
