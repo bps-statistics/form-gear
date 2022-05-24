@@ -7,7 +7,20 @@
 ### Optimized Performance
 - Multi thread initial loop
 - Optimize FormGear with reference utilization
-- Offline Lookup
+- Offline Lookup is used to retrieve data from local device	
+  Specify the lookupMode property to 2 in dev.tsx
+	```json
+	lookupMode : 2
+	```
+  Here is the function to fetch Data from local device
+  	```json
+	let offlineSearch = function (id, version, dataJson, setter) 
+	```
+  - `id` : Lookup id to fetch
+  - `version` : Specify the lookup data version to fetch, it depends on your local endpoint
+  - `dataJson` : Parameters to filter the data
+  - `setter` : This parameter is used to pass the data retrieved from the local device
+
 
 ### Added
 - FormLoader with spinner and backdrop blur
