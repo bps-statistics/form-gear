@@ -67,9 +67,9 @@ const PhotoInput: FormComponentBase = props => {
 
           let urlImg = URL.createObjectURL(doc)
 
-          updatedAnswer.push({ value: urlImg, label: filename })
+          // updatedAnswer.push({ value: urlImg, label: filename })
+          updatedAnswer.push({ value: e.target.result, label: filename, type: data.target.files[0].type })
 
-          // console.log('hasilny adalah : ', updatedAnswer)
           props.onValueChange(updatedAnswer)
           toastInfo('Image uploaded successfully!','')
         }
