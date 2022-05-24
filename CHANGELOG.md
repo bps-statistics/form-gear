@@ -12,18 +12,27 @@
 ### Added
 - FormLoader with spinner and backdrop blur
 - LookInto on List Error
-- Initial Mode
+- Initial Mode is used to mark that the questionnaire is new form (1 for initial form and 2 for assign form)
+- Add attribute to indicate whether a component can be filled or not when InitialMode is 1
+	```json
+	"disableInitial":false
+	```
+
 
 ### Changed
 - Debounce on CurrencyInput to wait input finish
 - Clickable label di radio dan checkbox
 - Submit principals on mobile
+- When data on change, then check validation rangeInput and validations with related component
+- When data will be submitted, then check required
 
 ### Fixed
 - Fix on enable section bug
-- Clickable label di radio dan checkbox
-- Submit principals on mobile
-
+- Auto change dan re-render components with sourceOption
+- to validate component with return type is array, better to check it is undefined or not with this code:
+	```json
+	"test":"let values = getValue('hobbies'); if(values[0] !== undefined) values[0].value == 1",
+	```
 
 
 ## FormGear | Ver. 0.1.1
@@ -53,9 +62,10 @@
 			}
 		]
 	```
-- Add PrincipalStore to save notable responses. Principal markers can be added to certain components selected in the JSON template in numeric types, and starting with 1 denotes the most important principal.
+- Add PrincipalStore to save notable responses. Principal markers can be added to certain components selected in the JSON template in numeric types, and starting with 1 denotes the most important principal. Furhtermore, label can be added using `columnName` attribute.
 	```json
-	"principal":1
+	"principal":1,
+	"columnName":"Table header"
 	```
 - Add ListError Modal to provide the list of error component during data collection.
 - Add NowInput to get the current time post trigger button click: Type #35.
