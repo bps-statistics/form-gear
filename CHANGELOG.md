@@ -1,5 +1,31 @@
 # Changelog
 
+## FormGear | Ver. 0.1.2
+
+> May 24, 2022
+
+### Optimized Performance
+- Multi thread initial loop
+- Optimize FormGear with reference utilization
+- Offline Lookup
+
+### Added
+- FormLoader with spinner and backdrop blur
+- LookInto on List Error
+- Initial Mode
+
+### Changed
+- Debounce on CurrencyInput to wait input finish
+- Clickable label di radio dan checkbox
+- Submit principals on mobile
+
+### Fixed
+- Fix on enable section bug
+- Clickable label di radio dan checkbox
+- Submit principals on mobile
+
+
+
 ## FormGear | Ver. 0.1.1
 
 > May 10, 2022
