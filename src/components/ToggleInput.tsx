@@ -4,7 +4,7 @@ import { FormComponentBase } from "../FormType"
 
 const ToggleInput: FormComponentBase = props => {
     const config = props.config
-    const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
+    const [disableInput] = createSignal((config.formMode > 1 ) ? true : props.component.disableInput)
     const [val, setVal] = createSignal(props.value !== '' ? props.value : false);
 
     const [instruction, setInstruction] = createSignal(false);

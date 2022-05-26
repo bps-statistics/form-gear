@@ -1,5 +1,15 @@
 # Changelog
 
+## FormGear | Ver. 0.1.3
+
+> May 27, 2022
+
+### Changed
+- Update range value for formMode (has impact for disable input and / or remark)
+
+
+---
+
 ## FormGear | Ver. 0.1.2
 
 > May 24, 2022

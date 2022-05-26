@@ -3,7 +3,7 @@ import { FormComponentBase } from "../FormType"
 
 const SingleCheckInput: FormComponentBase = props => {
     const config = props.config
-    const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
+    const [disableInput] = createSignal((config.formMode > 1 ) ? true : props.component.disableInput)
     
     const [instruction, setInstruction] = createSignal(false);
     const showInstruction = () => {

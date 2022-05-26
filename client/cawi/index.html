@@ -8,47 +8,60 @@
 
   <title>FormGear</title>
 
-  <link rel="stylesheet" href="https://unpkg.com/form-gear/dist/style.css">
-  <!-- <link rel="stylesheet" href="./data/style.css"> -->
+  <!-- <link rel="stylesheet" href="https://unpkg.com/form-gear/dist/style.css"> -->
+  <link rel="stylesheet" href="./data/style.css">
 </head>
 
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
 
-  <div id="FormGear-loader" class="bg-gray-200  dark:bg-[#181f30] ">
+  <div id="FormGear-loader" class="bg-gray-200  dark:bg-[#181f30]">
 
     <div class=" md:max-w-6xl mx-auto md:px-8 md:py-8">
       <div
         class="bg-gray-50 dark:bg-gray-900 dark:text-white text-gray-600 flex overflow-hidden text-sm font-montserrat rounded-lg shadow-xl dark:shadow-gray-800">
+        
+        
         <div class=" flex-grow flex flex-col bg-white dark:bg-gray-900 z-0">
 
           <div class="relative  md:flex   ">
 
+            
+            <div class="block">
+              <div class=" backdrop-blur-sm col-span-12 overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none flex justify-center items-center">
+                <svg class="w-20 h-20 animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 94.53 98.372"><circle cx="23.536" cy="16.331" r="8.646" style="fill:#0a77e8"/><circle cx="8.646" cy="36.698" r="8.646" style="fill:#0f9af0"/><circle cx="8.646" cy="61.867" r="8.646" style="fill:#0f9af0"/><circle cx="23.536" cy="82.233" r="8.646" style="fill:#13bdf7"/><circle cx="47.361" cy="89.726" r="8.646" style="fill:#13bdf7"/><circle cx="71.282" cy="82.233" r="8.646" style="fill:#18e0ff"/><circle cx="85.884" cy="61.867" r="8.646" style="fill:#65eaff"/><circle cx="85.884" cy="36.698" r="8.646" style="fill:#b2f5ff"/><circle cx="47.361" cy="8.646" r="8.646" style="fill:#1d4970"/></svg>
+                <!-- <img src="./src/assets/loading.png" alt="Loading..." class="w-20 h-20 animate-spin" loading="lazy" />    -->
+              </div>
+              <!-- <div class="col-span-12 overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none flex justify-center items-center text-center font-extralight text-xs">
+                Mohon menunggu,<br> data sedang dalam proses
+              </div> -->
+            </div>
+
             <div
               class="bg-gray-50 dark:bg-gray-900 w-72 flex-shrink-0  dark:border-gray-800 h-full  p-5 space-y-4
-            absolute inset-y-0 left-0 transform -translate-x-full transition-transform duration-500 ease-in-out md:relative md:translate-x-0 z-10">
+              absolute inset-y-0 left-0 transform -translate-x-full transition-transform duration-500 ease-in-out md:relative md:translate-x-0 z-10">
 
               <div class="animate-pulse flex space-x-4">
                 <div class="flex-1 space-y-3 py-1">
                   <div class="w-full  shadow-2xl rounded-lg">
 
-                    <div class="h-32 bg-gray-100 rounded-tr-lg rounded-tl-lg animate-pulse"></div>
+                    <div class="h-32 bg-gray-200 rounded-tr-lg rounded-tl-lg animate-pulse"></div>
 
                     <div class="p-5">
-                      <div class="h-20 px-2 rounded-lg bg-gray-100 animate-pulse mb-4"></div>
-                      <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-10 mb-4"></div>
-                      <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
-                      <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
+                      <div class="h-20 px-2 rounded-lg bg-gray-200 animate-pulse mb-4"></div>
+                      <div class="h-6 rounded-lg bg-gray-200 animate-pulse mt-10 mb-4"></div>
+                      <div class="h-6 rounded-lg bg-gray-200 animate-pulse mt-4 mb-4"></div>
+                      <div class="h-6 rounded-lg bg-gray-200 animate-pulse mt-4 mb-4"></div>
 
-                      <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-10 mb-4"></div>
-                      <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
-                      <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
+                      <div class="h-6 rounded-lg bg-gray-200 animate-pulse mt-10 mb-4"></div>
+                      <div class="h-6 rounded-lg bg-gray-200 animate-pulse mt-4 mb-4"></div>
+                      <div class="h-6 rounded-lg bg-gray-200 animate-pulse mt-4 mb-4"></div>
 
-                      <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-10 mb-4"></div>
-                      <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
-                      <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
+                      <div class="h-6 rounded-lg bg-gray-200 animate-pulse mt-10 mb-4"></div>
+                      <div class="h-6 rounded-lg bg-gray-200 animate-pulse mt-4 mb-4"></div>
+                      <div class="h-6 rounded-lg bg-gray-200 animate-pulse mt-4 mb-4"></div>
 
-                      <div class="h-20 px-2 rounded-lg bg-gray-100 animate-pulse mt-10 mb-4"></div>
+                      <div class="h-20 px-2 rounded-lg bg-gray-200 animate-pulse mt-10 mb-4"></div>
                     </div>
 
                   </div>
@@ -58,7 +71,7 @@
             </div>
 
             <div class="flex-grow bg-white dark:bg-gray-900 transition duration-500 ease-in-out z-10 p-5 space-y-4
-            ">
+              ">
 
               <div class="flex-grow bg-white dark:bg-gray-900 ">
                 <div class=" w-full mx-auto">
@@ -66,27 +79,27 @@
                     <div class="flex-1 space-y-3 py-1">
                       <div
                         class="min-h-screen flex items-start justify-start bg-gradient-to-br from-gray-200 to-gray-400">
-
+            
                         <div class="w-full bg-white  shadow-2xl rounded-lg">
 
-                          <div class="h-32 bg-gray-100 rounded-tr-lg rounded-tl-lg animate-pulse"></div>
+                          <div class="h-32 bg-gray-200 rounded-tr-lg rounded-tl-lg animate-pulse"></div>
 
                           <div class="p-5">
-                            <div class="h-20 px-2 rounded-lg bg-gray-100 animate-pulse mb-4"></div>
-                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-10 mb-4"></div>
-                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
-                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
+                            <div class="h-20 px-2 rounded-lg bg-gray-200 animate-pulse mb-4"></div>
+                            <div class="h-6 rounded-lg bg-gray-200 animate-pulse mt-10 mb-4"></div>
+                            <div class="h-6 rounded-lg bg-gray-200 animate-pulse mt-4 mb-4"></div>
+                            <div class="h-6 rounded-lg bg-gray-200 animate-pulse mt-4 mb-4"></div>
 
-                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-10 mb-4"></div>
-                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
-                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
+                            <div class="h-6 rounded-lg bg-gray-200 animate-pulse mt-10 mb-4"></div>
+                            <div class="h-6 rounded-lg bg-gray-200 animate-pulse mt-4 mb-4"></div>
+                            <div class="h-6 rounded-lg bg-gray-200 animate-pulse mt-4 mb-4"></div>
 
-                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-10 mb-4"></div>
-                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
-                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
+                            <div class="h-6 rounded-lg bg-gray-200 animate-pulse mt-10 mb-4"></div>
+                            <div class="h-6 rounded-lg bg-gray-200 animate-pulse mt-4 mb-4"></div>
+                            <div class="h-6 rounded-lg bg-gray-200 animate-pulse mt-4 mb-4"></div>
 
-                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-10 mb-4"></div>
-                            <div class="h-6 rounded-lg bg-gray-100 animate-pulse mt-4 mb-4"></div>
+                            <div class="h-6 rounded-lg bg-gray-200 animate-pulse mt-10 mb-4"></div>
+                            <div class="h-6 rounded-lg bg-gray-200 animate-pulse mt-4 mb-4"></div>
                           </div>
 
                         </div>
@@ -114,42 +127,46 @@
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script type="module">
-      import { FormGear } from 'https://unpkg.com/form-gear/dist/form-gear.es.js'
-      // import { FormGear } from './data/form-gear.es.js'
+      // import { FormGear } from 'https://unpkg.com/form-gear/dist/form-gear.es.js'
+      import { FormGear } from './data/form-gear.es.js'
       let config = {
-        clientMode : 1, // CAWI = 1, CAPI = 2
-        token : ``,
-        baseUrl : ``,
-        lookupKey : `key%5B%5D`,
-        lookupValue : `value%5B%5D`,
-        username : 'AdityaSetyadi',
-        formMode: 1 // 1 => OPEN ; 2 => REJECTED ; 3 => SUBMITTED ; 4 => APPROVED 
+        clientMode: 1, // 1 => CAWI ; 2 => CAPI ;
+        token: `eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJpZFwiOlwiQjhERkI2ODUtRTg1NS00NDczLTg0MDItNzlGQzhEQzM4OUMyXCIsXCJ1c2VybmFtZVwiOlwiYXJkaWFuLnNhcHV0cmFcIixcImZ1bGxuYW1lXCI6XCJBcmRpYW4gU2FwdXRyYSBIYXNpYnVhblwiLFwiZW1haWxcIjpcImFyZGlhbi5zYXB1dHJhQGJwcy5nby5pZFwiLFwicm9sZUlkXCI6XCI1MkMzNEQ3My1FRENBLTQ3QjAtODA5Ni0zQ0QwQTE2RUEyMzZcIixcInJvbGVOYW1lXCI6XCJBRE1JTiBSSVwiLFwicHJvdmluY2VJZFwiOm51bGwsXCJwcm92aW5jZU5hbWVcIjpudWxsLFwicmVnZW5jeUlkXCI6bnVsbCxcInJlZ2VuY3lOYW1lXCI6bnVsbCxcIndvcmtVbml0SWRcIjpcIkMzOEM1NjY3LTNCQjAtNDQzQy1BNDM1LTFFRUNEN0M2REZBMlwiLFwid29ya1VuaXROYW1lXCI6XCJCQURBTiBQVVNBVCBTVEFUSVNUSUtcIn0iLCJhdWQiOiJub24tY2F3aSIsImV4cCI6MTY1NTUwODUyMSwicm9sIjoiQURNSU4gUkkifQ.sX88qUPlcAV2oKPhE_bAgBM7Xa3Dwc0Md3gTwSdrg_Ir_9RsL0G1stBa9kkGoOc54r5Rd6amx9VtUFlj8XlDhg`,
+        // baseUrl: `https://api-survey.bps.go.id/designer/api/lookup-data/json`,
+        baseUrl : `https://fasih-survey-dev.bps.go.id/lookup/api/v1/collections`,
+        lookupKey: `keys`,
+        lookupValue: `values`,
+        // lookupKey : `key%5B%5D`,
+        // lookupValue : `value%5B%5D`,
+        lookupMode : 1, // 1 => ONLINE ; 2 => OFFLINE
+        username: 'adty',
+        formMode: 1, // 1 => OPEN ; 2 => REVIEW ; 3 => CLOSE ;
+        initialMode: 2 // 1=> INITIAL ; 2 => ASSIGN
       }
 
       var cameraFunction = null;
       var cameraGPSFunction = null;
-      var respons = null;
-      var remarks = null;
+      var responseGear = null;
+      var remarkGear = null;
+      var principalGear = null;
+      var referenceGear = null;
 
-      const setBearer = () => {
-        return ({
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + config.token
-            }
-        })
-    }
+      function openCamera() {
+          // window.MyHandler.action("CAMERA", "", "", "");
+          // console.log('open camera');
+      }
 
-    // pencarian online
-    let onlineSearch = async (url) =>
-    (await fetch(url, setBearer())
-      .then((res) => {
-        let temp = res.json();
-        return temp;
-      }).then((res) => {
-        return res;
-      }));
+      function openCameraGPS(needPhoto) {
+        var isNeedPhoto = false
+        if (needPhoto !== null && needPhoto !== undefined)
+          isNeedPhoto = needPhoto
+        console.log("new-capi: open-camera-gps " + isNeedPhoto.toString())
+        let result = '{"coordinat":{"long":106.8924928,"lat":-6.2488576},"remark":"Akurasi dalam rentang yang tepat","accuracy":17.884000778198242}'
+
+        resultCameraGPS(result);
+
+        // window.MyHandler.action("CAMERA_GPS", "", isNeedPhoto.toString(), "");
+      }
 
       function result(action, result, customData) {
         if (action == "GET_LOC") {
@@ -172,7 +189,7 @@
       }
 
       function resultCamera(result) {
-        console.log('camera_result : ' + result);
+        // console.log('camera_result : ' + result);
         if (cameraFunction != null) {
           console.log('camera_result_funcion : not null');
           cameraFunction(result);
@@ -182,30 +199,48 @@
       }
 
       function resultCameraGPS(result) {
-        console.log('gps-results: ' + result);
+        // console.log('gps-results: ' + result);
         const obj = JSON.parse(result);
         var remark = obj.remark;
         cameraGPSFunction(obj, remark);
       }
 
-      function openCamera() {
-          window.MyHandler.action("CAMERA", "", "", "");
-          console.log('open camera');
-      }
-
-      function openCameraGPS(needPhoto) {
-        var isNeedPhoto = false
-        if (needPhoto !== null && needPhoto !== undefined)
-          isNeedPhoto = needPhoto
-        console.log("new-capi: open-camera-gps " + isNeedPhoto.toString())
-
-        window.MyHandler.action("CAMERA_GPS", "", isNeedPhoto.toString(), "");
-      }
-
       let uploadHandler = function(setValue) {
-          console.log('camera handler', setValue  );
+          // console.log('camera handler', setValue  );
           cameraFunction = setValue;
           openCamera();
+      }
+
+      let offlineSearch = function (id, version, dataJson, setter) {
+        console.log("coba lookup");
+        // let id = '1174c3bf-9ffa-4a43-9649-75f4cf3b706b';
+        // let version = 'v1';
+        // const dataJson = [
+        //                   {"key" : "kdprov",
+        //                   "value" : "11"},
+        //                   {"key" : "kdprov",
+        //                   "value" : "12"}
+                          
+        let condition = JSON.stringify(dataJson)
+
+        console.log('kondisinnya : ' , condition);
+
+        $.ajax({
+            url: `http://localhost:9090/lookup?id=${id}&v=${version}&c=${condition}`,
+                    type: "GET",
+                    crossDomain: true,
+                    dataType: "json",
+                    data: null,
+                success: function(d) {
+                    console.log(d.hasil)
+                    setter(d)
+
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+
+                }
+            });
+
       }
 
       let GpsHandler = function(setter, isPhoto) {
@@ -215,21 +250,87 @@
           openCameraGPS(isPhoto);
       }
 
-      let setResponseMobile = function(res, rem) {
-        respons = res
-        remarks = rem
+      const setBearer = () => {
+        return ({
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + config.token
+            }
+        })
+      }
 
-        console.log('respons', respons)
-        console.log('remarks', remarks)
+    let getResponseCawi = (fun) => {
+      // fun()
+    }
+
+    // pencarian online
+    let onlineSearch = async (url) =>
+      (await fetch(url, setBearer())
+        .catch((error) => {
+          return {
+            success: false,
+            data: {},
+            message: '500'
+          }
+        }).then((res) => {
+          /*the return format must in object of 
+            {
+              success: false,
+              data: {}, --> the data property must in format array of object [{key: {key}, value : {value}}, ...]
+              message: status (200, 400 ,500 , etc )
+            }
+          }*/
+          if (res.status === 200) {
+            let temp = res.json();
+            return temp;
+          } else {
+            return {
+              success: false,
+              data: {},
+              message: res.status
+            }
+          }
+          }).then((res) => {
+          return res;
+      }));
+
+      let setResponseMobile = function (res, rem, princ, ref) {
+        responseGear = res
+        remarkGear = rem
+        principalGear = princ
+        referenceGear = ref
+
+        console.log('----------', new Date(), '----------');
+
+        console.log('response', responseGear)
+        console.log('remark', remarkGear)
+        console.log('principal', principalGear)
+        console.log('reference', referenceGear)
+      }
+
+      let setSubmitMobile = function (res, rem, princ, ref) {
+        responseGear = res
+        remarkGear = rem
+        principalGear = princ
+        referenceGear = ref
+        
+        console.log('----------', new Date(), '----------');
+
+        console.log('response', responseGear)
+        console.log('remark', remarkGear)
+        console.log('principal', principalGear)
+        console.log('reference', referenceGear)
       }
 
       let openMap = function(koordinat) {
         koordinat = koordinat
 
-        console.log('hasilny adalah : ', koordinat)
+        // console.log('hasilny adalah : ', koordinat)
       }
 
       const data = Promise.all([
+                      fetch("./data/reference.json").then((res) => res.json()) || [],
                       fetch("./data/template.json").then((res) => res.json()) || [],
                       fetch("./data/preset.json").then((res) => res.json()) || [],
                       fetch("./data/response.json").then((res) => res.json()) || [],
@@ -237,11 +338,11 @@
                       fetch("./data/remark.json").then((res) => res.json()) || []
                     ]);
 
-      data.then(([template, preset, response, validation, remark]) => initForm(template, preset, response, validation, remark));
+      data.then(([reference, template, preset, response, validation, remark]) => initForm(reference, template, preset, response, validation, remark));
 
-      function initForm(template, preset, response, validation, remark){
+      function initForm(reference, template, preset, response, validation, remark){
 
-        let form = new FormGear(template, preset, response, validation, remark, config, uploadHandler, GpsHandler, onlineSearch, setResponseMobile, openMap);
+        let form = new FormGear(reference, template, preset, response, validation, remark, config, uploadHandler, GpsHandler, offlineSearch, onlineSearch, getResponseCawi, setResponseMobile, setSubmitMobile, openMap);
 
         return form;
       }

@@ -3,7 +3,7 @@ import { FormComponentBase } from "../FormType"
 
 const EmailInput: FormComponentBase = props => {
   const config = props.config
-  const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
+  const [disableInput] = createSignal((config.formMode > 1 ) ? true : props.component.disableInput)
 
   let classInput = 'w-full rounded font-light px-4 py-2.5 text-sm text-gray-700 bg-white bg-clip-padding transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400';
   
@@ -12,7 +12,7 @@ const EmailInput: FormComponentBase = props => {
     (instruction()) ? setInstruction(false) : setInstruction(true);
   }
 
-  const [enableRemark] = createSignal(props.component.enableRemark !== undefined ? props.component.enableRemark : true );
+  const [enableRemark] = createSignal(config.formMode > 2 ? false : props.component.enableRemark !== undefined ? props.component.enableRemark : true );
 
   return (
 		<div class="md:grid md:grid-cols-3 border-b border-gray-300/[.40] dark:border-gray-200/[.10] p-2">

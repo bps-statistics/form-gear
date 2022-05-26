@@ -4,14 +4,14 @@ import { FormComponentBase } from "../FormType"
 const RangeSliderInput: FormComponentBase = props => {
   
   const config = props.config
-  const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
+  const [disableInput] = createSignal((config.formMode > 1 ) ? true : props.component.disableInput)
   
   const [instruction, setInstruction] = createSignal(false);
   const showInstruction = () => {
     (instruction()) ? setInstruction(false) : setInstruction(true);
   }
 
-  const [enableRemark] = createSignal(props.component.enableRemark !== undefined ? props.component.enableRemark : true );
+  const [enableRemark] = createSignal(config.formMode > 2 ? false : props.component.enableRemark !== undefined ? props.component.enableRemark : true );
   
   return (
 		<div class="md:grid md:grid-cols-3 border-b border-gray-300/[.40] dark:border-gray-200/[.10] p-2">

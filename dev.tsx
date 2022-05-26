@@ -11,7 +11,7 @@ let config = {
   lookupValue: `value%5B%5D`, //optional
   lookupMode : 1, // 1 => ONLINE ; 2 => OFFLINE
   username: 'AdityaSetyadi', //
-  formMode: 1, // 1 => OPEN ; 2 => REJECTED ; 3 => SUBMITTED ; 4 => APPROVED ;
+  formMode: 1, // 1 => OPEN ; 2 => REVIEW ; 3 => CLOSE ;
   initialMode: 2 // 1=> INITIAL ; 2 => ASSIGN
 }
 
@@ -204,7 +204,6 @@ let setSubmitMobile = function (res, rem, princ, ref) {
 //function to open map on google map either in capi or cawi
 let openMap = function (koordinat) {
   koordinat = koordinat
-
 }
 
 

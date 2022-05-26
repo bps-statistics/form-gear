@@ -6,14 +6,14 @@ import dayjs from "dayjs";
 const NowInput: FormComponentBase = props => {
   const config = props.config
   const [showModal, setShowModal] = createSignal(0);
-  const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
+  const [disableInput] = createSignal((config.formMode > 1 ) ? true : props.component.disableInput)
 
   const [instruction, setInstruction] = createSignal(false);
   const showInstruction = () => {
     (instruction()) ? setInstruction(false) : setInstruction(true);
   }
 
-  const [enableRemark] = createSignal(props.component.enableRemark !== undefined ? props.component.enableRemark : true);
+  const [enableRemark] = createSignal(config.formMode > 2 ? false : props.component.enableRemark !== undefined ? props.component.enableRemark : true);
 
   const handleOnClick = () => {
     setShowModal(1);

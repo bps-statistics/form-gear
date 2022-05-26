@@ -12,7 +12,7 @@ type FormConfig = {
 	lookupKey: string
 	lookupValue : string
 	username: string
-	formMode: number // 1 => OPEN ; 2 => REJECTED ; 3 => SUBMITTED ; 4 => APPROVED ;
+	formMode: number // 1 => OPEN ; 2 => REVIEW ; 3 => CLOSE ;
 	initialMode: number // 1=> INITIAL ; 2 => ASSIGN
 	lookupMode: number
 }

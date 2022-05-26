@@ -8,7 +8,7 @@ const PhotoInput: FormComponentBase = props => {
   let reader = new FileReader();
 
   const config = props.config
-  const [disableInput] = createSignal((config.formMode > 2 ) ? true : props.component.disableInput)
+  const [disableInput] = createSignal((config.formMode > 1 ) ? true : props.component.disableInput)
 
   createEffect(() => {
     setLabel(props.component.label)
@@ -28,7 +28,7 @@ const PhotoInput: FormComponentBase = props => {
 
     let imgSrc = "file://" + event
 
-    updatedAnswer.push({ value: imgSrc, label: event })
+    updatedAnswer.push({ value: event, label: event })
 
 
     props.onValueChange(updatedAnswer)
@@ -70,6 +70,7 @@ const PhotoInput: FormComponentBase = props => {
           // updatedAnswer.push({ value: urlImg, label: filename })
           updatedAnswer.push({ value: e.target.result, label: filename, type: data.target.files[0].type })
 
+          // console.log('hasilny adalah : ', updatedAnswer)
           props.onValueChange(updatedAnswer)
           toastInfo('Image uploaded successfully!','')
         }
@@ -98,7 +99,7 @@ const PhotoInput: FormComponentBase = props => {
     (instruction()) ? setInstruction(false) : setInstruction(true);
   }
 
-	const [enableRemark] = createSignal(props.component.enableRemark !== undefined ? props.component.enableRemark : true );
+	const [enableRemark] = createSignal(config.formMode > 2 ? false : props.component.enableRemark !== undefined ? props.component.enableRemark : true );
 
   return (
     <div>

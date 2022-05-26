@@ -12,7 +12,7 @@ const ListTextInputRepeat: FormComponentBase = props => {
 	const [tmpInput, setTmpInput] = createSignal('');
 
 	const config = props.config
-	const [disableInput] = createSignal((config.formMode > 2) ? true : props.component.disableInput)
+	const [disableInput] = createSignal((config.formMode > 1) ? true : props.component.disableInput)
 
 	let getLastId = createMemo(() => {
 		const lastId = props.value[0].label.split("#");

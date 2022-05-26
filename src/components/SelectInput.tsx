@@ -15,22 +15,16 @@ const SelectInput: FormComponentBase = props => {
     const isPublic = false;
 
     const config = props.config
-    const [disableInput] = createSignal((config.formMode > 2) ? true : props.component.disableInput)
+    const [disableInput] = createSignal((config.formMode > 1) ? true : props.component.disableInput)
 
     type contentMeta = {
         name: string,
         type: string
     }
 
-    type contentData = {
-        data: [],
-        metadata: contentMeta[],
-        tableName: String,
-    }
-
     type optionSelect = {
         success: boolean,
-        data: contentData,
+        data: [],
         message: string,
 
     }
@@ -86,8 +80,8 @@ const SelectInput: FormComponentBase = props => {
 
                     if (!isPublic) {
                         params = props.component.sourceSelect
-                        url = `${config.baseUrl}/${params[0].id}`
-                        // url = `${config.baseUrl}/${params[0].id}/filter?version=${params[0].version}`
+                        // url = `${config.baseUrl}/${params[0].id}`
+                        url = `${config.baseUrl}/${params[0].id}/filter?version=${params[0].version}`
                         if (params[0].parentCondition.length > 0) {
                             urlHead = url
 
@@ -105,7 +99,9 @@ const SelectInput: FormComponentBase = props => {
                                 }
                                 return url
                             }).join('&')
-                            url = `${urlHead}?${urlParams}`
+                            // url = `${urlHead}?${urlParams}`
+                            url = `${urlHead}&${urlParams}`
+
                         }
                     } else {
                         url = `${config.baseUrl}`
@@ -126,13 +122,23 @@ const SelectInput: FormComponentBase = props => {
 
                                 if (!isPublic) {
                                     arr = []
-                                    let cekValue = fetched().data.metadata.findIndex(item => item.name == params[0].value)
-                                    let cekLabel = fetched().data.metadata.findIndex(item => item.name == params[0].desc)
+                                    // let cekValue = fetched().data.metadata.findIndex(item => item.name == params[0].value)
+                                    // let cekLabel = fetched().data.metadata.findIndex(item => item.name == params[0].desc)
 
-                                    // let cekValue = params[0].value
-                                    // let cekLabel = params[0].desc
+                                    let cekValue = params[0].value
+                                    let cekLabel = params[0].desc
 
-                                    fetched().data.data.map((item, value) => {
+                                    // fetched().data.data.map((item, value) => {
+                                    //     arr.push(
+                                    //         {
+                                    //             value: item[cekValue],
+                                    //             label: item[cekLabel],
+                                    //         }
+                                    //     )
+                                    // })
+
+
+                                    fetched().data.map((item, value) => {
                                         arr.push(
                                             {
                                                 value: item[cekValue],
@@ -351,7 +357,7 @@ const SelectInput: FormComponentBase = props => {
     }
     // console.log('valueny sekarang : ', props)
 
-    const [enableRemark] = createSignal(props.component.enableRemark !== undefined ? props.component.enableRemark : true);
+    const [enableRemark] = createSignal(config.formMode > 2 ? false : props.component.enableRemark !== undefined ? props.component.enableRemark : true);
 
     return (
         <div class="grid md:grid-cols-3 border-b border-gray-300/[.50] dark:border-gray-200/[.10] p-2">

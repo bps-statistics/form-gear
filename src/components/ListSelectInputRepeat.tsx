@@ -15,7 +15,7 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 	const [isError, setisError] = createSignal(false);
 
 	const config = props.config
-	const [disableInput] = createSignal((config.formMode > 2) ? true : props.component.disableInput)
+	const [disableInput] = createSignal((config.formMode > 1) ? true : props.component.disableInput)
 
 	let getLastId = createMemo(() => {
 		return 0;
@@ -29,15 +29,15 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 		type: string
 	}
 
-	type contentData = {
-		data: [],
-		metadata: contentMeta[],
-		tableName: String,
-	}
+	// type contentData = {
+	// 	data: [],
+	// 	metadata: contentMeta[],
+	// 	tableName: String,
+	// }
 
 	type optionSelect = {
 		success: boolean,
-		data: contentData,
+		data: [],
 		message: string,
 
 	}
@@ -97,8 +97,8 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 					let urlParams
 
 					params = props.component.sourceSelect
-					url = `${config.baseUrl}/${params[0].id}`
-					// url = `${config.baseUrl}/${params[0].id}/filter?version=${params[0].version}`
+					// url = `${config.baseUrl}/${params[0].id}`
+					url = `${config.baseUrl}/${params[0].id}/filter?version=${params[0].version}`
 
 
 					if (params[0].parentCondition.length > 0) {
@@ -119,7 +119,9 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 							return url
 						}).join('&')
 
-						url = `${urlHead}?${urlParams}`
+						// url = `${urlHead}?${urlParams}`
+						url = `${urlHead}&${urlParams}`
+
 					}
 
 					const [fetched] = createResource<optionSelect>(url, props.MobileOnlineSearch);
@@ -131,13 +133,13 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 								setisError(true)
 								toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
 							} else {
-								let cekValue = fetched().data.metadata.findIndex(item => item.name == params[0].value)
-								let cekLabel = fetched().data.metadata.findIndex(item => item.name == params[0].desc)
+								// let cekValue = fetched().data.metadata.findIndex(item => item.name == params[0].value)
+								// let cekLabel = fetched().data.metadata.findIndex(item => item.name == params[0].desc)
 
-								// let cekValue = params[0].value
-								// let cekLabel = params[0].desc
+								let cekValue = params[0].value
+								let cekLabel = params[0].desc
 
-								fetched().data.data.map((item, value) => {
+								fetched().data.map((item, value) => {
 									arr.push(
 										{
 											value: item[cekValue],
