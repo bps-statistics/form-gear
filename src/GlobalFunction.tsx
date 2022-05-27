@@ -884,7 +884,12 @@ export function reference_index_lookup(datakey){
             }
         }
     }else{
-        return -1
+        load_reference_map()
+        if(datakey in referenceMap){
+            return referenceMap[datakey];
+        }else{
+            return -1
+        }
     }
 }
 
