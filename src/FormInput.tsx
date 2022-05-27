@@ -14,10 +14,11 @@ import { useLoaderDispatch } from "./loader/FormLoaderProvider"
 import dayjs from 'dayjs';
 import Toastify from 'toastify-js'
 
-import { getValue, saveAnswer } from './GlobalFunction'
+import { getValue, saveAnswer, reference_index_lookup} from './GlobalFunction'
 
 export const getEnable = (dataKey: string) => {
-  const componentIndex = reference.details.findIndex(obj => obj.dataKey === dataKey);
+  // const componentIndex = reference.details.findIndex(obj => obj.dataKey === dataKey);
+  const componentIndex = reference_index_lookup(dataKey);
   let enable = true;
   if(componentIndex !== -1){
     enable = reference.details[componentIndex].enable;
@@ -101,13 +102,15 @@ const FormInput: FormComponentBase = props => {
   const cn = [' border border-solid border-gray-300 ',' border-orange-500 border-4 ',' border-pink-600 border-4 ']
 
   let handleValidation = createMemo(() => {
-    const componentIndex = reference.details.findIndex(obj => obj.dataKey === props.component.dataKey);
+    // const componentIndex = reference.details.findIndex(obj => obj.dataKey === props.component.dataKey);
+    const componentIndex = reference_index_lookup(props.component.dataKey);
     // console.log('valState:',props.component.dataKey, reference.details[componentIndex].validationState)
     return (reference.details[componentIndex]) ? reference.details[componentIndex].validationState : 0;    
   })
     
   const getValidationMessage = (dataKey: string) => {
-    const componentIndex = reference.details.findIndex(obj => obj.dataKey === props.component.dataKey);
+    // const componentIndex = reference.details.findIndex(obj => obj.dataKey === props.component.dataKey);
+    const componentIndex = reference_index_lookup(props.component.dataKey);
     return (reference.details[componentIndex]) ? reference.details[componentIndex].validationMessage : [];
   }
 
@@ -134,7 +137,8 @@ const FormInput: FormComponentBase = props => {
           updatedNote[noteIndex].comments.push(commentRemark[0]) 
         }
       }
-      let refPosition = reference.details.findIndex(obj => obj.dataKey === flagRemark());
+      // let refPosition = reference.details.findIndex(obj => obj.dataKey === flagRemark());
+      let refPosition = reference_index_lookup(flagRemark());
       setReference('details',refPosition,'hasRemark',true);
       setReference('details',refPosition,'validationState',0);
       setReference('details',refPosition,'validationMessage',[]);

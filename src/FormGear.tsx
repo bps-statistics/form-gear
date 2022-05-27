@@ -15,10 +15,13 @@ import { remark, setRemark, Remark } from './stores/RemarkStore';
 import { note, setNote } from './stores/NoteStore';
 
 import { reference, setReference } from './stores/ReferenceStore';
+import { referenceMap, setReferenceMap} from './stores/ReferenceStore';
 import { nested, setNested } from './stores/NestedStore';
 import { sidebar, setSidebar } from './stores/SidebarStore';
 
 import { createSignal } from "solid-js";
+
+import { load_reference_map } from "./GlobalFunction";
 
 import semverCompare from "semver-compare";
 import { toastInfo } from "./FormInput";
@@ -59,6 +62,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
     let runAll = 0;
     if( versionState == 0 && referenceLen > 0 && sidebarLen >0 ){
       console.log('Reuse reference 🚀')
+      load_reference_map(referenceFetch)
       setReference(referenceFetch)
       setSidebar('details',referenceFetch.sidebar)
       runAll = 1;
@@ -389,6 +393,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
             }
           }
           
+          load_reference_map(referenceList)
           setReference('details', referenceList)
           setSidebar('details', sidebarList)
 

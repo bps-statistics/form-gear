@@ -1,4 +1,5 @@
 import { reference, setReference} from './stores/ReferenceStore';
+import { referenceMap, setReferenceMap} from './stores/ReferenceStore';
 // import { nested, setNested} from './stores/NestedStore';
 import { validation, setValidation} from './stores/ValidationStore';
 import { sidebar, setSidebar} from './stores/SidebarStore';
@@ -30,14 +31,18 @@ export const getValue = (dataKey: string) => {
             break;
         }
     }
-    const componentIndex = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    // const componentIndex = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    // console.log(referenceMap)
+    // console.log(dataKey)
+    const componentIndex = reference_index_lookup(dataKey)
     let answer = (componentIndex !== -1 && (reference.details[componentIndex].answer) && (reference.details[componentIndex].enable)) ? reference.details[componentIndex].answer : ''
     return answer;
 }
 
 export const createComponent = (dataKey: string, nestedPosition: number, componentPosition: number, sidebarPosition: number, components: any, parentIndex: number[], parentName: string) => {
     let dataKeySplit = dataKey.split('#');
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKeySplit[0]);
+    // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKeySplit[0]);
+    const refPosition = reference_index_lookup(dataKeySplit[0])
     
     let newComp = JSON.parse(JSON.stringify(components));
     newComp.dataKey = newComp.dataKey+'#'+nestedPosition;
@@ -193,7 +198,8 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
 }
 
 export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey);
     let defaultRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
     
     let components = [];
@@ -208,7 +214,10 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
         let newComp = createComponent(defaultRef.components[0][index].dataKey, (Number(answer.value)), Number(index), sidebarPosition, defaultRef.components[0][index], [], answer.label);
         components.push(newComp);
         //insert into reference
-        if(reference.details.findIndex(obj => obj.dataKey === newComp.dataKey) === -1){
+
+        // reference.details.findIndex(obj => obj.dataKey === newComp.dataKey)
+
+        if(reference_index_lookup(newComp.dataKey) === -1){
             let updatedRef = JSON.parse(JSON.stringify(reference.details));
             let newIndexLength = newComp.index.length;
             for(let looping = newIndexLength; looping > 1; looping--){
@@ -227,6 +236,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
                 }
                 if(!loopingState) break;
             }
+            load_reference_map(updatedRef)
             setReference('details',updatedRef);
 
             let answer = [];
@@ -288,7 +298,8 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
 }
 
 export const deleteSidebarArray = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey)
     let updatedRef = JSON.parse(JSON.stringify(reference.details));
     let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
 
@@ -313,11 +324,13 @@ export const deleteSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
     }
     
     setReference('details',updatedRef);
+    load_reference_map()
     setSidebar('details',updatedSidebar);
 }
 
 export const changeSidebarArray = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey)
     let now = [];
     let nestedPositionNow = -1;
     
@@ -380,7 +393,8 @@ export const changeSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
 }
 
 export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey)
     let defaultRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
     let components = [];
     let now = (Number(beforeAnswer)+1);
@@ -393,7 +407,8 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
         defaultRef.components[0][c].componentValidation = (valPosition !== -1) ? validation.details.testFunctions[valPosition].componentValidation : [];
         
         let checkedDataKey = defaultRef.components[0][c].dataKey+'#'+now.toString();
-        if(reference.details.findIndex(obj => obj.dataKey === checkedDataKey) === -1){
+        // reference.details.findIndex(obj => obj.dataKey === checkedDataKey)
+        if(reference_index_lookup(checkedDataKey) === -1){
             let newComp = createComponent(defaultRef.components[0][c].dataKey, now, Number(c), sidebarPosition, defaultRef.components[0][c], [], now.toString());
             components.push(newComp);
             //insert ke reference
@@ -415,6 +430,7 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                 }
                 if(!loopingState) break;
             }
+            load_reference_map(updatedRef)
             setReference('details',updatedRef);
 
             let answer = 0;
@@ -479,7 +495,8 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
 }
 
 export const deleteSidebarNumber = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey)
     let updatedRef = JSON.parse(JSON.stringify(reference.details));
     let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
 
@@ -503,6 +520,7 @@ export const deleteSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
         }
     }
     
+    load_reference_map(updatedRef)
     setReference('details',updatedRef);
     setSidebar('details',updatedSidebar);
     let now = beforeAnswer-1;
@@ -519,7 +537,8 @@ export const runVariableComponent = (dataKey: string, activeComponentPosition: n
         return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
     }
     const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey)
     if(refPosition !== -1){
         let updatedRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
         let answerVariable = eval(updatedRef.expression);
@@ -600,7 +619,10 @@ export const runValidation = (dataKey:string, updatedRef:any, activeComponentPos
 }
 
 export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, activeComponentPosition: number, prop:any | null) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    console.log(dataKey)
+    console.log(referenceMap)
+    const refPosition = reference_index_lookup(dataKey)
     if(attributeParam === 'answer' || attributeParam === 'enable'){
         
         let beforeAnswer = (typeof answer === 'number' || typeof answer === 'string') ? 0 : [];
@@ -847,4 +869,362 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
     } else if(attributeParam === 'validate'){
         setReference('details', refPosition, answer);
     }
+}
+
+export function reference_index_lookup(datakey){
+    if(datakey in referenceMap){
+        if(referenceMap[datakey].dataKey === datakey){
+            return referenceMap[datakey];
+        }else{
+            load_reference_map()
+            if(datakey in referenceMap){
+                return referenceMap[datakey];
+            }else{
+                return -1
+            }
+        }
+    }else{
+        return -1
+    }
+}
+
+export function load_reference_map(reference_local = null){
+    if(reference_local === null){
+        let reference_map_lokal = {}
+        for (let index = 0; index < reference.details.length; index ++){
+        reference_map_lokal[reference.details[index].dataKey] = index;
+        }
+        setReferenceMap(reference_map_lokal)
+    }else{
+        let reference_map_lokal = {}
+        for (let index = 0; index < reference_local.length; index ++){
+        reference_map_lokal[reference_local[index].dataKey] = index;
+        }
+        setReferenceMap(reference_map_lokal)
+    }
+    
+}
+
+export const loadAnswer = (config: any, preset_lokal: Preset | any, response_lokal: Response | any) => {
+
+    const insertSidebarArray_whenload = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
+        // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+        const refPosition = reference_index_lookup(dataKey)
+        let defaultRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
+        
+        let components = [];
+        defaultRef.components[0].forEach( (element, index) => {
+            let tmpDataKey = defaultRef.components[0][index].dataKey.split('@');
+            let newDataKey = tmpDataKey[0].split('#');
+            let valPosition = validation.details.testFunctions.findIndex(obj => obj.dataKey === newDataKey[0]);
+            
+            defaultRef.components[0][index].validations = (valPosition !== -1) ? validation.details.testFunctions[valPosition].validations : [];
+            defaultRef.components[0][index].componentValidation = (valPosition !== -1) ? validation.details.testFunctions[valPosition].componentValidation : [];
+            
+            let newComp = createComponent(defaultRef.components[0][index].dataKey, (Number(answer.value)), Number(index), sidebarPosition, defaultRef.components[0][index], [], answer.label);
+            components.push(newComp);
+            //insert into reference
+            // reference.details.findIndex(obj => obj.dataKey === newComp.dataKey)
+            if(reference_index_lookup(newComp.dataKey) === -1){
+                let updatedRef = JSON.parse(JSON.stringify(reference.details));
+                let newIndexLength = newComp.index.length;
+                for(let looping = newIndexLength; looping > 1; looping--){
+                    let loopingState = true;
+                    let myIndex = JSON.parse(JSON.stringify(newComp.index))
+                    myIndex.length = looping;
+                    let refLength = reference.details.length;
+                    for(let y = refLength-1; y >= 0; y--){
+                        let refIndexToBeFound = JSON.parse(JSON.stringify(reference.details[y].index));
+                        refIndexToBeFound.length = looping;
+                        if(JSON.stringify(refIndexToBeFound) === JSON.stringify(myIndex)){
+                            updatedRef.splice(y+1, 0, newComp);
+                            loopingState = false;
+                            break;
+                        }
+                    }
+                    if(!loopingState) break;
+                }
+
+                load_reference_map(updatedRef)
+                setReference('details',updatedRef);
+    
+                let answer = [];
+                answer = (newComp.answer) ? newComp.answer : answer;
+                
+                const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
+                answer = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig().initialMode == 2) || (getConfig().initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : answer;
+                
+                let answerIndex = response.details.answers.findIndex(obj => obj.dataKey === newComp.dataKey);
+                answer = (answerIndex !== -1 && response.details.answers[presetIndex] !== undefined) ? response.details.answers[presetIndex].answer : answer;
+                
+                const getRowIndex = (positionOffset:number) => {
+                    let editedDataKey = newComp.dataKey.split('@');
+                    let splitDataKey = editedDataKey[0].split('#');
+                    let splLength = splitDataKey.length;
+                    let reducer = positionOffset+1;
+                    return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
+                }
+                const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
+                if(Number(newComp.type) === 4) answer = eval(newComp.expression);
+                saveAnswer_whenload(newComp.dataKey, 'answer', answer, sidebarPosition, null);
+            }
+        })
+        
+        let newSide = {
+            dataKey: dataKey + '#' + answer.value,
+            label: defaultRef.label,
+            description: answer.label,
+            level: defaultRef.level,
+            index: [...defaultRef.index, Number(answer.value)],
+            components: [components],
+            sourceQuestion: defaultRef.sourceQuestion !== undefined ? defaultRef.sourceQuestion : '',
+            enable: defaultRef.enable !== undefined ? defaultRef.enable : true,
+            enableCondition: (defaultRef.enableCondition === undefined) ? true : eval(defaultRef.enableCondition),
+            componentEnable: defaultRef.componentEnable !== undefined ? defaultRef.componentEnable : []
+    
+        }
+        let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
+        if(sidebar.details.findIndex(obj => obj.dataKey === newSide.dataKey) === -1){
+            let newSideLength = newSide.index.length;
+            for(let looping = newSideLength; looping > 1; looping--){
+                let loopingState = true;
+                let myIndex = JSON.parse(JSON.stringify(newSide.index))
+                myIndex.length = looping;
+                let sideLength = sidebar.details.length;
+                for(let y = sideLength-1; y >= sidebarPosition; y--){
+                    let sidebarIndexToBeFound = JSON.parse(JSON.stringify(sidebar.details[y].index));
+                    sidebarIndexToBeFound.length = looping;
+                    if(JSON.stringify(sidebarIndexToBeFound) === JSON.stringify(myIndex)){
+                        updatedSidebar.splice(y+1, 0, newSide);
+                        loopingState = false;
+                        break;
+                    }
+                }
+                if(!loopingState) break;
+            }
+        }
+        setSidebar('details',updatedSidebar);
+    }
+
+    const insertSidebarNumber_whenload = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
+        // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+        const refPosition = reference_index_lookup(dataKey)
+        let defaultRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
+        let components = [];
+        let now = (Number(beforeAnswer)+1);
+        for(let c in defaultRef.components[0]){
+            let tmpDataKey = defaultRef.components[0][c].dataKey.split('@');
+            let newDataKey = tmpDataKey[0].split('#');
+            let valPosition = validation.details.testFunctions.findIndex(obj => obj.dataKey === newDataKey[0]);
+            
+            defaultRef.components[0][c].validations = (valPosition !== -1) ? validation.details.testFunctions[valPosition].validations : [];
+            defaultRef.components[0][c].componentValidation = (valPosition !== -1) ? validation.details.testFunctions[valPosition].componentValidation : [];
+            
+            let checkedDataKey = defaultRef.components[0][c].dataKey+'#'+now.toString();
+            // (reference.details.findIndex(obj => obj.dataKey === checkedDataKey)
+            if(reference_index_lookup(checkedDataKey) === -1){
+                let newComp = createComponent(defaultRef.components[0][c].dataKey, now, Number(c), sidebarPosition, defaultRef.components[0][c], [], now.toString());
+                components.push(newComp);
+                //insert ke reference
+                let updatedRef = JSON.parse(JSON.stringify(reference.details));
+                let newIndexLength = newComp.index.length;
+                for(let looping = newIndexLength; looping > 1; looping--){
+                    let loopingState = true;
+                    let myIndex = JSON.parse(JSON.stringify(newComp.index))
+                    myIndex.length = looping;
+                    let refLength = reference.details.length;
+                    for(let y = refLength-1; y >= refPosition; y--){
+                        let refIndexToBeFound = JSON.parse(JSON.stringify(reference.details[y].index));
+                        refIndexToBeFound.length = looping;
+                        if(JSON.stringify(refIndexToBeFound) === JSON.stringify(myIndex)){
+                            updatedRef.splice(y+1, 0, newComp);
+                            loopingState = false;
+                            break;
+                        }
+                    }
+                    if(!loopingState) break;
+                }
+
+                load_reference_map(updatedRef)
+                setReference('details',updatedRef);
+    
+                let answer = 0;
+                answer = (newComp.answer) ? newComp.answer : answer;
+                
+                const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
+                answer = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined) ? preset.details.predata[presetIndex].answer : answer;
+                
+                let answerIndex = response.details.answers.findIndex(obj => obj.dataKey === newComp.dataKey);
+                answer = (answerIndex !== -1 && response.details.answers[presetIndex] !== undefined) ? response.details.answers[presetIndex].answer : answer;
+                const getRowIndex = (positionOffset:number) => {
+                    let editedDataKey = newComp.dataKey.split('@');
+                    let splitDataKey = editedDataKey[0].split('#');
+                    let splLength = splitDataKey.length;
+                    let reducer = positionOffset+1;
+                    return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
+                }
+                const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
+                if(Number(newComp.type) === 4) answer = eval(newComp.expression);
+                saveAnswer_whenload(newComp.dataKey, 'answer', answer, sidebarPosition, null);
+            } else {
+                break;
+            }
+        }
+    
+        if(components.length > 0){
+            let newSide = {
+                dataKey: dataKey + '#' + now,
+                label: defaultRef.label,
+                description: '<i>___________ # ' + now + '</i>',
+                level: defaultRef.level,
+                index: [...defaultRef.index,now],
+                components: [components],
+                sourceQuestion: defaultRef.sourceQuestion !== undefined ? defaultRef.sourceQuestion + '#' + (Number(beforeAnswer)+1) : '',
+                enable: defaultRef.enable !== undefined ? defaultRef.enable : true,
+                enableCondition: (defaultRef.enableCondition === undefined) ? true : eval(defaultRef.enableCondition),
+                componentEnable: defaultRef.componentEnable !== undefined ? defaultRef.componentEnable : []
+            }
+            let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
+            if(sidebar.details.findIndex(obj => obj.dataKey === newSide.dataKey) === -1){
+                let newSideLength = newSide.index.length
+                for(let looping = newSideLength; looping > 1; looping--){
+                    let loopingState = true;
+                    let myIndex = JSON.parse(JSON.stringify(newSide.index))
+                    myIndex.length = looping;
+                    let sideLength = sidebar.details.length
+                    for(let y = sideLength-1; y >= sidebarPosition; y--){
+                        let sidebarIndexToBeFound = JSON.parse(JSON.stringify(sidebar.details[y].index));
+                        sidebarIndexToBeFound.length = looping;
+                        if(JSON.stringify(sidebarIndexToBeFound) === JSON.stringify(myIndex)){
+                            updatedSidebar.splice(y+1, 0, newSide);
+                            loopingState = false;
+                            break;
+                        }
+                    }
+                    if(!loopingState) break;
+                }
+            }
+            setSidebar('details',updatedSidebar);
+        }
+        if(now < answer) insertSidebarNumber(dataKey, answer, now, sidebarPosition);    
+    }
+
+    const runVariableComponent_whenload = (dataKey: string, activeComponentPosition: number) => {
+        const getRowIndex = (positionOffset:number) => {
+            let editedDataKey = dataKey.split('@');
+            let splitDataKey = editedDataKey[0].split('#');
+            let splLength = splitDataKey.length;
+            let reducer = positionOffset+1;
+            return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
+        }
+        const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
+        // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+        const refPosition = reference_index_lookup(dataKey)
+        if(refPosition !== -1){
+            let updatedRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
+            let answerVariable = eval(updatedRef.expression);
+            saveAnswer_whenload(dataKey, 'answer', answerVariable, activeComponentPosition, null);
+        }
+    }
+
+    const saveAnswer_whenload = (dataKey: string, attributeParam: any, answer: any, activeComponentPosition: number, prop:any | null) => {
+        // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+        const refPosition = reference_index_lookup(dataKey)
+
+        if(attributeParam === 'answer' || attributeParam === 'enable'){
+            
+            let beforeAnswer = (typeof answer === 'number' || typeof answer === 'string') ? 0 : [];
+            beforeAnswer = (reference.details[refPosition]) ? reference.details[refPosition].answer : beforeAnswer;
+            setReference('details', refPosition, attributeParam, answer);
+            //validate for its own dataKey 
+
+            if(true) {
+                const hasComponentUsing = JSON.parse(JSON.stringify(reference.details.filter(obj => (obj.type === 2 && obj.sourceQuestion == dataKey))));
+                
+                if(hasComponentUsing.length > 0) {//this dataKey is used as a source in Nested at minimum 1 component
+                    if(reference.details[refPosition].type === 4) {
+                    //     answer = JSON.parse(JSON.stringify(reference.details[refPosition].answer));
+                        beforeAnswer = [];
+                    }
+                    if(typeof answer !== 'boolean') {
+                    console.time('Nested 🚀');
+                    hasComponentUsing.forEach(element => {
+                        if(typeof answer === 'number' || typeof answer === 'string'){
+                            insertSidebarNumber_whenload(element.dataKey, answer, 0, activeComponentPosition);
+                        } else if(typeof answer === 'object'){
+                            answer = JSON.parse(JSON.stringify(answer));
+                            if(answer.length > 0){
+                                let tmp_index = answer.findIndex(obj => Number(obj.value) === 0);
+                                if(tmp_index !== -1){
+                                    let tmp_label = answer[tmp_index].label.split('#');
+                                    if(tmp_label[1]) answer.splice(tmp_index, 1);
+                                }
+                            }
+                            let answerLength = answer.length;
+                            if(answerLength > 0){
+                                answer.forEach(componentAnswer => {
+                                    let checked = element.dataKey+'#'+Number(componentAnswer.value);
+                                    if(sidebar.details.findIndex(obj => obj.dataKey === checked) === -1){
+                                        insertSidebarArray_whenload(element.dataKey, componentAnswer, [], activeComponentPosition);
+                                    }
+                                });
+                            } 
+                        }
+                    });
+                    console.timeEnd('Nested 🚀');
+                }
+                }
+            }
+        } else if(attributeParam === 'validate'){
+            setReference('details', refPosition, answer);
+        }
+    }
+    preset_lokal.preset.details.predata.forEach((element, index) => {
+        // let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
+        let refPosition = reference_index_lookup(element.dataKey)
+        let run = 0;
+        if(refPosition !== -1){
+          if((config.initialMode == 1 && reference.details[refPosition].presetMaster !== undefined && (reference.details[refPosition].presetMaster)) || (config().initialMode == 2)){
+            let sidePosition = sidebar.details.findIndex(obj => {
+              const cekInsideIndex = obj.components[0].findIndex(objChild => objChild.dataKey === element.dataKey);
+              return (cekInsideIndex == -1) ? 0: index;
+            });
+            let answer = (typeof element.answer === 'object') ? JSON.parse(JSON.stringify(element.answer)) : element.answer;
+            saveAnswer_whenload(element.dataKey, 'answer', answer, sidePosition, {'clientMode': config.clientMode,'baseUrl': config.baseUrl});
+          }
+        }
+      })
+
+    response_lokal.response.details.answers.forEach((element, index) => {
+        // let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
+        let refPosition = reference_index_lookup(element.dataKey)
+        if(refPosition !== -1){
+          let sidePosition = sidebar.details.findIndex(obj => {
+            const cekInsideIndex = obj.components[0].findIndex(objChild => objChild.dataKey === element.dataKey);
+            return (cekInsideIndex == -1) ? 0: index;
+          });
+          let answer = (typeof element.answer === 'object') ? JSON.parse(JSON.stringify(element.answer)) : element.answer;
+          saveAnswer_whenload(element.dataKey, 'answer', answer, sidePosition, {'clientMode': config.clientMode,'baseUrl': config.baseUrl});
+        }
+      })
+
+    load_reference_map()
+    
+    for (let index = 0; index < reference.details.length; index ++){
+        let element_ref = reference.details[index]
+        let enable_befor = element_ref.enable;
+
+        if (element_ref.enableCondition !== undefined){
+            let enable = eval(element_ref.enableCondition);
+            setReference('details', index, 'enable', enable);
+        }
+    }
+
+    reference.details.forEach(element_ref => {
+        let enable = eval(element_ref.enableCondition);
+        setReference('details', refPosition, attributeParam, answer);
+    });
+
+    
+      
 }

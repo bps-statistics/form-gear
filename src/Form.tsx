@@ -14,7 +14,7 @@ import { principal, setPrincipal} from './stores/PrincipalStore';
 import { locale, setLocale} from './stores/LocaleStore';
 import { summary, setSummary } from './stores/SummaryStore';
 
-import { saveAnswer } from "./GlobalFunction";
+import { saveAnswer, reference_index_lookup, load_reference_map } from "./GlobalFunction";
 import { toastInfo } from "./FormInput";
 
 import dayjs from 'dayjs';
@@ -57,7 +57,8 @@ const Form: Component<{
     openMap : any
   }> = props => {
     const getValue = (dataKey: string) => {
-      const componentIndex = reference.details.findIndex(obj => obj.dataKey === dataKey);
+      // const componentIndex = reference.details.findIndex(obj => obj.dataKey === dataKey);
+      const componentIndex = reference_index_lookup(dataKey)
       let answer = '';
       if(componentIndex !== -1 && (reference.details[componentIndex].answer) && (reference.details[componentIndex].enable)) answer = reference.details[componentIndex].answer;
       return answer;
@@ -135,7 +136,8 @@ const Form: Component<{
 
       // console.time('response ');
       props.preset.details.predata.forEach((element, index) => {
-        let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
+        // let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
+        let refPosition = reference_index_lookup(element.dataKey)
         let run = 0;
         if(refPosition !== -1){
           if((config().initialMode == 1 && reference.details[refPosition].presetMaster !== undefined && (reference.details[refPosition].presetMaster)) || (config().initialMode == 2)){
@@ -150,7 +152,8 @@ const Form: Component<{
       })
 
       props.response.details.answers.forEach((element, index) => {
-        let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
+        // let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
+        let refPosition = reference_index_lookup(element.dataKey)
         if(refPosition !== -1){
           let sidePosition = sidebar.details.findIndex(obj => {
             const cekInsideIndex = obj.components[0].findIndex(objChild => objChild.dataKey === element.dataKey);
@@ -198,6 +201,7 @@ const Form: Component<{
     }
     // console.timeEnd('response ');
     // console.timeEnd('');
+    load_reference_map()
     
     const [onMobile , setOnMobile] = createSignal(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
     const checkOnMobile = () => {
@@ -469,6 +473,7 @@ const Form: Component<{
       if(docState() === 'E') {
         toastInfo(locale.details.language[0].submitInvalid, 3000, "", "bg-pink-600/80");
       } else {
+        let reference_local = [];
         reference.details.forEach((obj, ind) => {
           let updatedRef = JSON.parse(JSON.stringify(obj));
           let run = 0
@@ -492,10 +497,13 @@ const Form: Component<{
                   updatedRef.validationMessage.push(locale.details.language[0].validationRequired);
                   updatedRef.validationState = 2;
               }
-              setReference('details',ind, updatedRef);
+              reference_local[ind] = updatedRef
             }
           }
         });
+
+        load_reference_map(reference_local)
+        setReference('details', reference_local)
         
         if(summary.error === 0){
           if(docState() === 'W') {

@@ -5,6 +5,7 @@ import { reference, setReference } from '../stores/ReferenceStore'
 import "@thisbeyond/solid-select/style.css"
 import Toastify from 'toastify-js'
 import { locale, setLocale } from '../stores/LocaleStore'
+import { reference_index_lookup} from './../GlobalFunction'
 
 
 const SelectInput: FormComponentBase = props => {
@@ -274,7 +275,8 @@ const SelectInput: FormComponentBase = props => {
                 let checker = props.value ? props.value != '' ? props.value[0].value : '' : ''
 
                 if (props.component.sourceOption !== undefined && props.component.typeOption === 3) {
-                    const componentAnswerIndex = reference.details.findIndex(obj => obj.dataKey === props.component.sourceOption);
+                    // const componentAnswerIndex = reference.details.findIndex(obj => obj.dataKey === props.component.sourceOption);
+                    const componentAnswerIndex = reference_index_lookup( props.component.sourceOption);
 
                     if ((reference.details[componentAnswerIndex].type === 21 || 22 || 23 || 26 || 27 || 29)
                         || (reference.details[componentAnswerIndex].type === 4 && reference.details[componentAnswerIndex].renderType === 2)) {

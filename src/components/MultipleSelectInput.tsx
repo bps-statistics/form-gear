@@ -5,6 +5,7 @@ import { Select, createOptions } from "@thisbeyond/solid-select"
 import "@thisbeyond/solid-select/style.css"
 import Toastify from 'toastify-js'
 import { locale, setLocale } from '../stores/LocaleStore'
+import { reference_index_lookup} from './../GlobalFunction'
 
 const MultipleSelectInput: FormComponentBase = props => {
 
@@ -191,7 +192,8 @@ const MultipleSelectInput: FormComponentBase = props => {
             try {
                 optionsFetch = props.component.sourceOption !== undefined ? [] : JSON.parse(JSON.stringify(props.component.options));
                 if (props.component.sourceOption !== undefined) {
-                    const componentAnswerIndex = reference.details.findIndex(obj => obj.dataKey === props.component.sourceOption);
+                    // const componentAnswerIndex = reference.details.findIndex(obj => obj.dataKey === props.component.sourceOption);
+                    const componentAnswerIndex = reference_index_lookup(props.component.sourceOption);
                     if ((reference.details[componentAnswerIndex].type === 21 || 22 || 23 || 26 || 27 || 29)
                         || (reference.details[componentAnswerIndex].type === 4 && reference.details[componentAnswerIndex].renderType === 2)) {
                         if (reference.details[componentAnswerIndex].answer) {

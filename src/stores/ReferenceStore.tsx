@@ -66,3 +66,4 @@ export const [reference, setReference] = createStore<Reference>({
     sidebar: []
 });
 
+export const [referenceMap, setReferenceMap] = createStore({})
