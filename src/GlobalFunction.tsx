@@ -11,6 +11,9 @@ import { createSignal } from 'solid-js';
 import { locale, setLocale} from './stores/LocaleStore';
 import { getConfig } from './Form';
 
+export const default_value_enable = true
+export const default_validation_enable = true
+
 export const getValue = (dataKey: string) => {
     let tmpDataKey = dataKey.split('@');
     let splitDataKey = tmpDataKey[0].split('#');
@@ -38,6 +41,15 @@ export const getValue = (dataKey: string) => {
 }
 
 export const createComponent = (dataKey: string, nestedPosition: number, componentPosition: number, sidebarPosition: number, components: any, parentIndex: number[], parentName: string) => {
+    const eval_enable = (eval_text) => {
+        try{
+            return eval(eval_text)
+        }catch(e){
+            console.log(e)
+            return default_value_enable
+        }
+    }
+
     let dataKeySplit = dataKey.split('#');
     // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKeySplit[0]);
     const refPosition = reference_index_lookup(dataKeySplit[0])
@@ -198,6 +210,15 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
 
 export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
     // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const eval_enable = (eval_text) => {
+        try{
+            return eval(eval_text)
+        }catch(e){
+            console.log(e)
+            return default_value_enable
+        }
+    }
+    
     const refPosition = reference_index_lookup(dataKey);
     let defaultRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
     
@@ -261,6 +282,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
                     answer = answer_local
                 };
             }catch(e){
+                console.log(newComp.dataKey)
                 console.log(e)
             }
             saveAnswer(newComp.dataKey, 'answer', answer, sidebarPosition, null);
@@ -399,6 +421,15 @@ export const changeSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
 }
 
 export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
+    const eval_enable = (eval_text) => {
+        try{
+            return eval(eval_text)
+        }catch(e){
+            console.log(e)
+            return default_value_enable
+        }
+    }
+
     // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
     const refPosition = reference_index_lookup(dataKey)
     let defaultRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
@@ -462,6 +493,7 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                     answer = answer_local
                 };
             }catch(e){
+                console.log(newComp.dataKey)
                 console.log(e)
             }
             saveAnswer(newComp.dataKey, 'answer', answer, sidebarPosition, null);
@@ -562,6 +594,7 @@ export const runVariableComponent = (dataKey: string, activeComponentPosition: n
             saveAnswer(dataKey, 'answer', answerVariable, activeComponentPosition, null);
         }catch(e){
             console.log(dataKey)
+            console.log(updatedRef.expression)
             console.log(e)
         }
         
@@ -569,6 +602,15 @@ export const runVariableComponent = (dataKey: string, activeComponentPosition: n
 }
 
 export const runEnabling = (dataKey: string, activeComponentPosition: number, prop:any | null, enableCondition:string) => {
+    const eval_enable = (eval_text) => {
+        try{
+            return eval(eval_text)
+        }catch(e){
+            console.log(e)
+            return default_value_enable
+        }
+    }
+
     const getProp = (config: string) => {
         switch(config) {
             case 'clientMode': {
@@ -593,7 +635,7 @@ export const runEnabling = (dataKey: string, activeComponentPosition: number, pr
     saveAnswer(dataKey, 'enable', enable, activeComponentPosition, null);
 }
 
-export const runValidation = (dataKey:string, updatedRef:any, activeComponentPosition: number) => {
+export const runValidation = (dataKey:string, updatedRef:any, activeComponentPosition: number) => {    
     const getRowIndex = (positionOffset:number) => {
         let editedDataKey = dataKey.split('@');
         let splitDataKey = editedDataKey[0].split('#');
@@ -609,7 +651,14 @@ export const runValidation = (dataKey:string, updatedRef:any, activeComponentPos
         let biggest = 0;
         for(let i in updatedRef.validations){
             // let result = eval(updatedRef.validations[i].test);
-            let result = eval_validation(updatedRef.validations[i].test);
+            let result = default_validation_enable;
+            try{
+                result = eval(updatedRef.validations[i].test)
+            }catch(e){
+                // console.log(dataKey)
+                // console.log(updatedRef.validations[i].test)
+                // console.log(e)
+            }
             if(result){
                 updatedRef.validationMessage.push(updatedRef.validations[i].message);
                 biggest = (biggest < updatedRef.validations[i].type) ? updatedRef.validations[i].type : biggest;
@@ -643,6 +692,15 @@ export const runValidation = (dataKey:string, updatedRef:any, activeComponentPos
 }
 
 export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, activeComponentPosition: number, prop:any | null) => {
+    const eval_enable = (eval_text) => {
+        try{
+            return eval(eval_text)
+        }catch(e){
+            console.log(e)
+            return default_value_enable
+        }
+    }
+
     const refPosition = reference_index_lookup(dataKey)
     if(attributeParam === 'answer' || attributeParam === 'enable'){
         
@@ -940,25 +998,16 @@ export function load_reference_map(reference_local = null){
     }
 }
 
-export function eval_enable(eval_text, default_value = true){
-    try{
-        return eval(eval_text)
-    }catch(e){
-        console.log(e)
-        return default_value
-    }
-}
-
-export function eval_validation(eval_text, default_value = true){
-    try{
-        return eval(eval_text)
-    }catch(e){
-        console.log(e)
-        return default_value
-    }
-}
-
 export const loadAnswer = (config: any, preset_lokal: Preset | any, response_lokal: Response | any) => {
+
+    const eval_enable = (eval_text) => {
+        try{
+            return eval(eval_text)
+        }catch(e){
+            console.log(e)
+            return default_value_enable
+        }
+    }
 
     const insertSidebarArray_whenload = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
         // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
