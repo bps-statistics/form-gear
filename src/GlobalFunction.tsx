@@ -31,9 +31,7 @@ export const getValue = (dataKey: string) => {
             break;
         }
     }
-    // const componentIndex = reference.details.findIndex(obj => obj.dataKey === dataKey);
-    // console.log(referenceMap)
-    // console.log(dataKey)
+
     const componentIndex = reference_index_lookup(dataKey)
     let answer = (componentIndex !== -1 && (reference.details[componentIndex].answer) && (reference.details[componentIndex].enable)) ? reference.details[componentIndex].answer : ''
     return answer;
@@ -236,7 +234,6 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
                 }
                 if(!loopingState) break;
             }
-            load_reference_map(updatedRef)
             setReference('details',updatedRef);
 
             let answer = [];
@@ -324,7 +321,6 @@ export const deleteSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
     }
     
     setReference('details',updatedRef);
-    load_reference_map()
     setSidebar('details',updatedSidebar);
 }
 
@@ -430,7 +426,7 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                 }
                 if(!loopingState) break;
             }
-            load_reference_map(updatedRef)
+            
             setReference('details',updatedRef);
 
             let answer = 0;
@@ -520,7 +516,6 @@ export const deleteSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
         }
     }
     
-    load_reference_map(updatedRef)
     setReference('details',updatedRef);
     setSidebar('details',updatedSidebar);
     let now = beforeAnswer-1;
@@ -619,9 +614,6 @@ export const runValidation = (dataKey:string, updatedRef:any, activeComponentPos
 }
 
 export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, activeComponentPosition: number, prop:any | null) => {
-    // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
-    console.log(dataKey)
-    console.log(referenceMap)
     const refPosition = reference_index_lookup(dataKey)
     if(attributeParam === 'answer' || attributeParam === 'enable'){
         
@@ -819,6 +811,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                             :
                             deleteSidebarNumber(element.dataKey, answer, beforeAnswer, activeComponentPosition)
                             ;
+                            load_reference_map()
                     } else if(typeof answer === 'object'){
                         beforeAnswer = (beforeAnswer === undefined) ? [] : beforeAnswer;
                         answer = JSON.parse(JSON.stringify(answer));
@@ -860,6 +853,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                         } else if(answerLength === beforeAnswerLength){
                             answerLength > 0 && changeSidebarArray(element.dataKey, answer, beforeAnswer, activeComponentPosition);
                         }
+                        load_reference_map()
                     }
                 });
                 console.timeEnd('Nested 🚀');
@@ -873,7 +867,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
 
 export function reference_index_lookup(datakey){
     if(datakey in referenceMap){
-        if(referenceMap[datakey].dataKey === datakey){
+        if(reference.details[referenceMap[datakey]].dataKey === datakey){
             return referenceMap[datakey];
         }else{
             load_reference_map()
@@ -884,7 +878,12 @@ export function reference_index_lookup(datakey){
             }
         }
     }else{
-        return -1
+        load_reference_map()
+        if(datakey in referenceMap){
+            return referenceMap[datakey];
+        }else{
+            return -1
+        }
     }
 }
 
@@ -945,7 +944,6 @@ export const loadAnswer = (config: any, preset_lokal: Preset | any, response_lok
                     if(!loopingState) break;
                 }
 
-                load_reference_map(updatedRef)
                 setReference('details',updatedRef);
     
                 let answer = [];
@@ -1045,7 +1043,6 @@ export const loadAnswer = (config: any, preset_lokal: Preset | any, response_lok
                     if(!loopingState) break;
                 }
 
-                load_reference_map(updatedRef)
                 setReference('details',updatedRef);
     
                 let answer = 0;
