@@ -154,7 +154,8 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
     } else {
         newComp.enableCondition = undefined
     }
-    newComp.enable = (newComp.enableCondition === undefined || newComp.enableCondition === '') ? true : eval(newComp.enableCondition);
+    // newComp.enable = (newComp.enableCondition === undefined || newComp.enableCondition === '') ? true : eval(newComp.enableCondition);
+    newComp.enable = (newComp.enableCondition === undefined || newComp.enableCondition === '') ? true : eval_enable(newComp.enableCondition);
     //
     newComp.enableRemark = newComp.enableRemark !== undefined ? newComp.enableRemark : true;
     newComp.client = newComp.client !== undefined ? newComp.client : true;
@@ -253,7 +254,15 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
                 return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
             }
             const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-            if(Number(newComp.type) === 4) answer = eval(newComp.expression);
+            // if(Number(newComp.type) === 4) answer = eval(newComp.expression);
+            try{
+                if(Number(newComp.type) === 4) {
+                    let answer_local = eval(newComp.expression)
+                    answer = answer_local
+                };
+            }catch(e){
+                console.log(e)
+            }
             saveAnswer(newComp.dataKey, 'answer', answer, sidebarPosition, null);
         }
     })
@@ -267,7 +276,8 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
         components: [components],
         sourceQuestion: defaultRef.sourceQuestion !== undefined ? defaultRef.sourceQuestion : '',
         enable: defaultRef.enable !== undefined ? defaultRef.enable : true,
-        enableCondition: (defaultRef.enableCondition === undefined) ? true : eval(defaultRef.enableCondition),
+        // enableCondition: (defaultRef.enableCondition === undefined) ? true : eval(defaultRef.enableCondition),
+        enableCondition: (defaultRef.enableCondition === undefined) ? true : eval_enable(defaultRef.enableCondition),
         componentEnable: defaultRef.componentEnable !== undefined ? defaultRef.componentEnable : []
 
     }
@@ -445,7 +455,15 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                 return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
             }
             const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-            if(Number(newComp.type) === 4) answer = eval(newComp.expression);
+            // if(Number(newComp.type) === 4) answer = eval(newComp.expression);
+            try{
+                if(Number(newComp.type) === 4) {
+                    let answer_local = eval(newComp.expression)
+                    answer = answer_local
+                };
+            }catch(e){
+                console.log(e)
+            }
             saveAnswer(newComp.dataKey, 'answer', answer, sidebarPosition, null);
         } else {
             break;
@@ -462,7 +480,8 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
             components: [components],
             sourceQuestion: defaultRef.sourceQuestion !== undefined ? defaultRef.sourceQuestion + '#' + (Number(beforeAnswer)+1) : '',
             enable: defaultRef.enable !== undefined ? defaultRef.enable : true,
-            enableCondition: (defaultRef.enableCondition === undefined) ? true : eval(defaultRef.enableCondition),
+            // enableCondition: (defaultRef.enableCondition === undefined) ? true : eval(defaultRef.enableCondition),
+            enableCondition: (defaultRef.enableCondition === undefined) ? true : eval_enable(defaultRef.enableCondition),
             componentEnable: defaultRef.componentEnable !== undefined ? defaultRef.componentEnable : []
         }
         let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
@@ -536,8 +555,16 @@ export const runVariableComponent = (dataKey: string, activeComponentPosition: n
     const refPosition = reference_index_lookup(dataKey)
     if(refPosition !== -1){
         let updatedRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
-        let answerVariable = eval(updatedRef.expression);
-        saveAnswer(dataKey, 'answer', answerVariable, activeComponentPosition, null);
+        // let answerVariable = eval(updatedRef.expression);
+        // saveAnswer(dataKey, 'answer', answerVariable, activeComponentPosition, null);
+        try{
+            let answerVariable = eval(updatedRef.expression);
+            saveAnswer(dataKey, 'answer', answerVariable, activeComponentPosition, null);
+        }catch(e){
+            console.log(dataKey)
+            console.log(e)
+        }
+        
     }
 }
 
@@ -561,7 +588,8 @@ export const runEnabling = (dataKey: string, activeComponentPosition: number, pr
     }
     const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
 
-    let enable = eval(enableCondition);
+    // let enable = eval(enableCondition);
+    let enable = eval_enable(enableCondition);
     saveAnswer(dataKey, 'enable', enable, activeComponentPosition, null);
 }
 
@@ -580,7 +608,8 @@ export const runValidation = (dataKey:string, updatedRef:any, activeComponentPos
     if(!updatedRef.hasRemark){
         let biggest = 0;
         for(let i in updatedRef.validations){
-            let result = eval(updatedRef.validations[i].test);
+            // let result = eval(updatedRef.validations[i].test);
+            let result = eval_validation(updatedRef.validations[i].test);
             if(result){
                 updatedRef.validationMessage.push(updatedRef.validations[i].message);
                 biggest = (biggest < updatedRef.validations[i].type) ? updatedRef.validations[i].type : biggest;
@@ -660,7 +689,8 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
             if(hasSideCompEnable.length > 0) {//at least there is minimal 1 enable in this datakey
                 hasSideCompEnable.forEach(sidebarEnable => {
                     let sidePosition = sidebar.details.findIndex(objSide => objSide.dataKey === sidebarEnable.dataKey);
-                    let enableSide = eval(sidebarEnable.enableCondition);
+                    // let enableSide = eval(sidebarEnable.enableCondition);
+                    let enableSide = eval_enable(sidebarEnable.enableCondition);
                     setSidebar('details',sidePosition,'enable',enableSide);
                     let updatedRef = JSON.parse(JSON.stringify(reference.details));
                     let tmpVarComp = [];
@@ -678,8 +708,15 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                     });
                     if(tmpVarComp.length > 0) {
                         tmpVarComp.forEach((e,i) => {
-                            let evVal = eval(e.expression);
-                            saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
+                            // let evVal = eval(e.expression);
+                            // saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
+                            try{
+                                let evVal = eval(e.expression);
+                                saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
+                            }catch(e){
+                                console.log(e.dataKey)
+                                console.log(e)
+                            }
                         })
                     }
                 })
@@ -901,7 +938,24 @@ export function load_reference_map(reference_local = null){
         }
         setReferenceMap(reference_map_lokal)
     }
-    
+}
+
+export function eval_enable(eval_text, default_value = true){
+    try{
+        return eval(eval_text)
+    }catch(e){
+        console.log(e)
+        return default_value
+    }
+}
+
+export function eval_validation(eval_text, default_value = true){
+    try{
+        return eval(eval_text)
+    }catch(e){
+        console.log(e)
+        return default_value
+    }
 }
 
 export const loadAnswer = (config: any, preset_lokal: Preset | any, response_lokal: Response | any) => {
@@ -963,7 +1017,15 @@ export const loadAnswer = (config: any, preset_lokal: Preset | any, response_lok
                     return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
                 }
                 const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-                if(Number(newComp.type) === 4) answer = eval(newComp.expression);
+                // if(Number(newComp.type) === 4) answer = eval(newComp.expression);
+                try{
+                    if(Number(newComp.type) === 4) {
+                        let answer_local = eval(newComp.expression)
+                        answer = answer_local
+                    };
+                }catch(e){
+                    console.log(e)
+                }
                 saveAnswer_whenload(newComp.dataKey, 'answer', answer, sidebarPosition, null);
             }
         })
@@ -977,7 +1039,8 @@ export const loadAnswer = (config: any, preset_lokal: Preset | any, response_lok
             components: [components],
             sourceQuestion: defaultRef.sourceQuestion !== undefined ? defaultRef.sourceQuestion : '',
             enable: defaultRef.enable !== undefined ? defaultRef.enable : true,
-            enableCondition: (defaultRef.enableCondition === undefined) ? true : eval(defaultRef.enableCondition),
+            // enableCondition: (defaultRef.enableCondition === undefined) ? true : eval(defaultRef.enableCondition),
+            enableCondition: (defaultRef.enableCondition === undefined) ? true : eval_enable(defaultRef.enableCondition),
             componentEnable: defaultRef.componentEnable !== undefined ? defaultRef.componentEnable : []
     
         }
@@ -1061,7 +1124,15 @@ export const loadAnswer = (config: any, preset_lokal: Preset | any, response_lok
                     return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
                 }
                 const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-                if(Number(newComp.type) === 4) answer = eval(newComp.expression);
+                // if(Number(newComp.type) === 4) answer = eval(newComp.expression);
+                try{
+                    if(Number(newComp.type) === 4) {
+                        let answer_local = eval(newComp.expression)
+                        answer = answer_local
+                    };
+                }catch(e){
+                    console.log(e)
+                }
                 saveAnswer_whenload(newComp.dataKey, 'answer', answer, sidebarPosition, null);
             } else {
                 break;
@@ -1078,7 +1149,8 @@ export const loadAnswer = (config: any, preset_lokal: Preset | any, response_lok
                 components: [components],
                 sourceQuestion: defaultRef.sourceQuestion !== undefined ? defaultRef.sourceQuestion + '#' + (Number(beforeAnswer)+1) : '',
                 enable: defaultRef.enable !== undefined ? defaultRef.enable : true,
-                enableCondition: (defaultRef.enableCondition === undefined) ? true : eval(defaultRef.enableCondition),
+                // enableCondition: (defaultRef.enableCondition === undefined) ? true : eval(defaultRef.enableCondition),
+                enableCondition: (defaultRef.enableCondition === undefined) ? true : eval_enable(defaultRef.enableCondition),
                 componentEnable: defaultRef.componentEnable !== undefined ? defaultRef.componentEnable : []
             }
             let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
@@ -1119,8 +1191,14 @@ export const loadAnswer = (config: any, preset_lokal: Preset | any, response_lok
         const refPosition = reference_index_lookup(dataKey)
         if(refPosition !== -1){
             let updatedRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
-            let answerVariable = eval(updatedRef.expression);
-            saveAnswer_whenload(dataKey, 'answer', answerVariable, activeComponentPosition, null);
+            // let answerVariable = eval(updatedRef.expression);
+            // saveAnswer_whenload(dataKey, 'answer', answerVariable, activeComponentPosition, null);
+            try{
+                let answerVariable = eval(updatedRef.expression);
+                saveAnswer_whenload(dataKey, 'answer', answerVariable, activeComponentPosition, null);
+            }catch(e){
+                console.log(e)
+            }
         }
     }
 
@@ -1212,13 +1290,15 @@ export const loadAnswer = (config: any, preset_lokal: Preset | any, response_lok
         let enable_befor = element_ref.enable;
 
         if (element_ref.enableCondition !== undefined){
-            let enable = eval(element_ref.enableCondition);
+            // let enable = eval(element_ref.enableCondition);
+            let enable = eval_enable(element_ref.enableCondition);
             setReference('details', index, 'enable', enable);
         }
     }
 
     reference.details.forEach(element_ref => {
-        let enable = eval(element_ref.enableCondition);
+        // let enable = eval(element_ref.enableCondition);
+        let enable = eval_enable(element_ref.enableCondition);
         setReference('details', refPosition, attributeParam, answer);
     });
 
