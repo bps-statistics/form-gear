@@ -52,7 +52,7 @@ const NestedInput: FormComponentBase = props => {
 					<div class="font-light text-sm  pb-2.5 px-2 col-start-2 col-end-12 space-y-4 transition-all delay-100">
 						<For each={sourceAnswer()}>
 							{(item:any, index) => (
-							<div class="grid grid-cols-12" onClick={e => handleLabelClick(index())}>
+							<div class="grid grid-cols-12" onClick={e => handleOnClick(item.value)}>
 								<div class="col-span-10 mr-2">
 									<Switch>											
 										<Match when={(reference.details[componentAnswerIndex()].type === 28  || (reference.details[componentAnswerIndex()].type === 4 && reference.details[componentAnswerIndex()].renderType === 1) || reference.details[componentAnswerIndex()].type === 25)}>
