@@ -178,6 +178,8 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
     newComp.validationMessage = [];
     newComp.componentValidation = newComp.componentValidation !== undefined ? newComp.componentValidation : [];
     
+    newComp.cols = newComp.cols !== undefined ? newComp.cols : undefined;
+    newComp.rows = newComp.rows !== undefined ? newComp.rows : undefined;
     newComp.rangeInput = newComp.rangeInput !== undefined ? newComp.rangeInput : undefined
     newComp.lengthInput = newComp.lengthInput !== undefined ? newComp.lengthInput : undefined
     newComp.principal = newComp.principal !== undefined ? newComp.principal : undefined
