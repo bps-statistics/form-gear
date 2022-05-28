@@ -6,6 +6,7 @@
 
 ### Changed
 - Update range value for formMode (has impact for disable input and / or remark)
+- Update label view on SelectInput inline with required and hint
 
 
 ---

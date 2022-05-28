@@ -36,6 +36,11 @@ const NestedInput: FormComponentBase = props => {
 		return answer;
 	})
 
+	let handleLabelClick = (index: any) => {
+        let id  = `nestedButton-${props.component.dataKey}-${index}`
+        document.getElementById(id).click()
+    }
+
     let handleOnClick = (value: string) => {
 		props.onUserClick(props.component.dataKey+'#'+value);
 	}
@@ -50,7 +55,7 @@ const NestedInput: FormComponentBase = props => {
 					<div class="font-light text-sm  pb-2.5 px-2 col-start-2 col-end-12 space-y-4 transition-all delay-100">
 						<For each={sourceAnswer()}>
 							{(item:any, index) => (
-							<div class="grid grid-cols-12">
+							<div class="grid grid-cols-12" onClick={e => handleLabelClick(index())}>
 								<div class="col-span-10 mr-2">
 									<Switch>											
 										<Match when={(reference.details[componentAnswerIndex()].type === 28  || (reference.details[componentAnswerIndex()].type === 4 && reference.details[componentAnswerIndex()].renderType === 1) || reference.details[componentAnswerIndex()].type === 25)}>
@@ -95,7 +100,7 @@ const NestedInput: FormComponentBase = props => {
 								</div>
 								<div class="col-span-2 -ml-12 space-x-1 flex justify-evenly -z-0">
 									<button class="bg-blue-800 hover:bg-blue-700 text-white text-justify justify-center text-xs w-full py-2 rounded-tl-none rounded-full focus:outline-none group inline-flex items-center" 
-										onClick={e => handleOnClick(item.value)}>
+										onClick={e => handleOnClick(item.value)} id={`nestedButton-${props.component.dataKey}-${index()}`}>
 										&nbsp;&nbsp;ENTRY
 										<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-5" viewBox="0 0 20 20" fill="currentColor">
 											<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />

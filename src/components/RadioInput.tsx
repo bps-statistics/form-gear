@@ -18,7 +18,7 @@ const RadioInput: FormComponentBase = props => {
 	}
 	
 	let handleLabelClick = (index: any) => {
-        let id  = "radio-"+props.component.dataKey+"-"+index
+        let id  = `radio-${props.component.dataKey}-${index}`
         document.getElementById(id).click()
     }
 
