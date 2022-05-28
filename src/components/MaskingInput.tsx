@@ -20,13 +20,13 @@ const MaskingInput: FormComponentBase = props => {
 
 
   let handleOnChange = (value: any) => {
-    let format = props.component.maskingFormat;
-    let separator = Array.from(new Set(format.replace(/[a9*]/g, ''))).join('');
+    // let format = props.component.maskingFormat;
+    // let separator = Array.from(new Set(format.replace(/[a9*]/g, ''))).join('');
 
-    let finalValue = value.replace(new RegExp("[" + separator + "]", "g"), '')
+    // let finalValue = value.replace(new RegExp("[" + separator + "]", "g"), '')
+    // props.onValueChange(finalValue)
 
-    props.onValueChange(finalValue)
-
+    props.onValueChange(value)
   }
 
   createEffect(() => {
