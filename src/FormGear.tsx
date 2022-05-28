@@ -60,7 +60,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
     // If the semver string b is greater than a, return -1. 
     // If a equals b, return 0;
     let runAll = 0;
-    if( false ){
+    if( versionState == 0 && referenceLen > 0 && sidebarLen >0 ){
       console.log('Reuse reference 🚀')
       load_reference_map(referenceFetch)
       setReference(referenceFetch)
