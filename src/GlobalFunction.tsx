@@ -276,14 +276,13 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
             }
             const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
             // if(Number(newComp.type) === 4) answer = eval(newComp.expression);
-            try{
-                if(Number(newComp.type) === 4) {
+            if(Number(newComp.type) === 4) {
+                try{
                     let answer_local = eval(newComp.expression)
                     answer = answer_local
-                };
-            }catch(e){
-                console.log(newComp.dataKey)
-                console.log(e)
+                }catch(e){
+                    answer = undefined
+                }
             }
             saveAnswer(newComp.dataKey, 'answer', answer, sidebarPosition, null);
         }
@@ -487,14 +486,13 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
             }
             const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
             // if(Number(newComp.type) === 4) answer = eval(newComp.expression);
-            try{
-                if(Number(newComp.type) === 4) {
+            if(Number(newComp.type) === 4) {
+                try{
                     let answer_local = eval(newComp.expression)
                     answer = answer_local
-                };
-            }catch(e){
-                console.log(newComp.dataKey)
-                console.log(e)
+                }catch(e){
+                    answer = undefined
+                }
             }
             saveAnswer(newComp.dataKey, 'answer', answer, sidebarPosition, null);
         } else {
@@ -593,9 +591,10 @@ export const runVariableComponent = (dataKey: string, activeComponentPosition: n
             let answerVariable = eval(updatedRef.expression);
             saveAnswer(dataKey, 'answer', answerVariable, activeComponentPosition, null);
         }catch(e){
-            console.log(dataKey)
-            console.log(updatedRef.expression)
-            console.log(e)
+            saveAnswer(dataKey, 'answer', undefined, activeComponentPosition, null);
+            // console.log(dataKey)
+            // console.log(updatedRef.expression)
+            // console.log(e)
         }
         
     }
@@ -772,8 +771,9 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                                 let evVal = eval(e.expression);
                                 saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
                             }catch(e){
-                                console.log(e.dataKey)
-                                console.log(e)
+                                saveAnswer(e.dataKey, 'answer', undefined, tmpIndex[i], null);
+                                // console.log(e.dataKey)
+                                // console.log(e)
                             }
                         })
                     }
@@ -1067,13 +1067,14 @@ export const loadAnswer = (config: any, preset_lokal: Preset | any, response_lok
                 }
                 const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
                 // if(Number(newComp.type) === 4) answer = eval(newComp.expression);
-                try{
-                    if(Number(newComp.type) === 4) {
+                if(Number(newComp.type) === 4) {
+                    try{
                         let answer_local = eval(newComp.expression)
                         answer = answer_local
-                    };
-                }catch(e){
-                    console.log(e)
+                    }catch(e){
+                        answer = undefined
+                        // console.log(e)
+                    }
                 }
                 saveAnswer_whenload(newComp.dataKey, 'answer', answer, sidebarPosition, null);
             }
@@ -1174,13 +1175,14 @@ export const loadAnswer = (config: any, preset_lokal: Preset | any, response_lok
                 }
                 const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
                 // if(Number(newComp.type) === 4) answer = eval(newComp.expression);
-                try{
-                    if(Number(newComp.type) === 4) {
+                if(Number(newComp.type) === 4) {
+                    try{
                         let answer_local = eval(newComp.expression)
                         answer = answer_local
-                    };
-                }catch(e){
-                    console.log(e)
+                    }catch(e){
+                        answer = undefined
+                        // console.log(e)
+                    }
                 }
                 saveAnswer_whenload(newComp.dataKey, 'answer', answer, sidebarPosition, null);
             } else {
@@ -1246,7 +1248,8 @@ export const loadAnswer = (config: any, preset_lokal: Preset | any, response_lok
                 let answerVariable = eval(updatedRef.expression);
                 saveAnswer_whenload(dataKey, 'answer', answerVariable, activeComponentPosition, null);
             }catch(e){
-                console.log(e)
+                saveAnswer_whenload(dataKey, 'answer', undefined, activeComponentPosition, null);
+                // console.log(e)
             }
         }
     }
