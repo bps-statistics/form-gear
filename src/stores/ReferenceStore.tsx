@@ -20,6 +20,8 @@ type Detail = {
     level: number
     options?: []
     components?: Component,
+    rows?: number,                 
+    cols?: number,
     sourceQuestion?: string,
     currency?: string,
     source?: string,
