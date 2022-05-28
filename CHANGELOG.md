@@ -7,6 +7,22 @@
 ### Changed
 - Update range value for formMode (has impact for disable input and / or remark)
 - Update label view on SelectInput inline with required and hint
+- Update Clickable label on nested input button to enter the nested section
+
+### Added
+- Cols and rows property has been added. Both are used to specify columns and rows in a grid layout.
+	```json
+		"label":"Address",
+		"dataKey":"address",
+		"type":30,
+		"rows":3
+	```
+	```json
+		"label":"Healthy neighborhood rating",
+		"dataKey":"rating",
+		"type":26,
+		"cols":5,
+	```
 
 
 ---
@@ -72,7 +88,6 @@
 	```json
 	"disableInitial" : false
 	```
-
 
 ### Changed
 - Debounce on `CurrencyInput` to wait user input finish
