@@ -133,7 +133,6 @@ const Form: Component<{
         saveAnswer(element.dataKey, 'answer', answer, sidePosition, {'clientMode': getProp('clientMode'),'baseUrl': getProp('baseUrl')});
       })
       // console.timeEnd('tmpVarComp ')
-
       // console.time('response ');
       props.preset.details.predata.forEach((element, index) => {
         // let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);

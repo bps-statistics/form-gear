@@ -56,6 +56,8 @@ type Detail = {
     presetMaster?: boolean
     sourceOption?: any
     disableInitial?: boolean
+    parent_ref?: []
+    parent_enable?: boolean
 }
 
 export interface Reference {

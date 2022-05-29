@@ -187,6 +187,20 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
     newComp.titleModalConfirmation = newComp.titleModalConfirmation !== undefined ? newComp.titleModalConfirmation : undefined
     newComp.contentModalConfirmation = newComp.contentModalConfirmation !== undefined ? newComp.contentodalConfirmation : undefined
     newComp.required =  newComp.required !== undefined ? newComp.required : undefined
+
+    let parent_ref_local = newComp.parent_ref;
+    parent_ref_local[parent_ref_local.length - 1] = dataKey
+    newComp.parent_ref =  parent_ref_local
+
+    let parent_enable_local = true
+    try{
+        for(let parent_ref_index =0; parent_ref_index < parent_ref_local.length; parent_ref_index ++){
+            parent_enable_local = parent_enable_local && reference_index_lookup(parent_ref_local[parent_ref_index]).enable
+        }
+    }catch(e){
+
+    }
+    newComp.parent_enable = parent_enable_local
     
     newComp.hasRemark = false;
     if ( newComp.enableRemark === undefined || (newComp.enableRemark !== undefined && newComp.enableRemark )){  
