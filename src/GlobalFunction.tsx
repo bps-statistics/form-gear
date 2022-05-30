@@ -1017,7 +1017,6 @@ export function load_reference_map(reference_local = null){
     }else{
         let reference_map_lokal = {}
         for (let index = 0; index < reference_local.length; index ++){
-            console.log(reference_local[index])
             reference_map_lokal[reference_local[index].dataKey] = index;
         }
         setReferenceMap(reference_map_lokal)
