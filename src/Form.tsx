@@ -468,6 +468,7 @@ const Form: Component<{
     }
 
     const confirmSubmit = (event: MouseEvent) => {
+      console.log(config().formMode)
       createCaptcha();
       checkDocState();
       if(docState() === 'E') {
@@ -980,10 +981,10 @@ const Form: Component<{
                       </div>
                       <div>
                         <Switch>
-                          <Match when={(summary.error == 0)}>
+                          <Match when={(summary.error == 0 && config().formMode == 1)}>
                             <button class="bg-teal-300 hover:bg-teal-200 text-teal-100 p-3 w-full rounded-md shadow font-medium" onClick={confirmSubmit}>Submit</button>
                           </Match>
-                          <Match when={(summary.error > 0)}>
+                          <Match when={(summary.error > 0 && config().formMode < 3)}>
                             <button class="bg-red-500 hover:bg-red-400 text-teal-100 p-3 w-full rounded-md shadow font-medium" onClick={showListError}>List Error</button>
                           </Match>
                         </Switch>
@@ -1082,7 +1083,7 @@ const Form: Component<{
                             </svg>
                           </button>
                         </Match>
-                        <Match when={sidebar.details.filter((obj, i) => (obj.enable) && (i > form.activeComponent.position)).length === 0 && summary.error == 0}>
+                        <Match when={sidebar.details.filter((obj, i) => (obj.enable) && (i > form.activeComponent.position)).length === 0 && summary.error == 0 && config().formMode == 1}>
                           <button class="bg-teal-200 text-teal-500 sm:h-10 sm:w-10 rounded-full focus:outline-none h-5 w-5 flex justify-center items-center"
                             onClick={confirmSubmit}
                           >
@@ -1157,7 +1158,7 @@ const Form: Component<{
                           </svg>
                         </button>
                       </Match>
-                      <Match when={sidebar.details.filter((obj, i) => (obj.enable) && (i > form.activeComponent.position)).length === 0 && summary.error == 0}>
+                      <Match when={sidebar.details.filter((obj, i) => (obj.enable) && (i > form.activeComponent.position)).length === 0 && summary.error == 0 && config().formMode == 1}>
                         <button class="bg-teal-200 text-teal-500 h-8 w-8 rounded-full focus:outline-none flex justify-center items-center"
                           onClick={confirmSubmit}
                         >
@@ -1189,12 +1190,14 @@ const Form: Component<{
                     </button>
                   </div>
                   <div  class="flex justify-end items-center col-start-6 pr-5 transition">
+                    <Show when={(config().formMode < 3)}>
                     <button class=" bg-teal-500 text-white p-2 rounded-full focus:outline-none items-center h-10 w-10 hover:bg-teal-400"  
                       onClick={writeResponse}>
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </button>
+                    </Show>
                   </div>
                 </div>                
                 
