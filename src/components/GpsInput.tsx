@@ -109,7 +109,7 @@ const GpsInput: FormComponentBase = props => {
     (instruction()) ? setInstruction(false) : setInstruction(true);
   }
 
-  const [enableRemark] = createSignal(config.formMode > 2 ? false : props.component.enableRemark !== undefined ? props.component.enableRemark : true);
+  const [enableRemark] = createSignal(props.component.enableRemark !== undefined ? props.component.enableRemark : true);
 
   return (
     <div>

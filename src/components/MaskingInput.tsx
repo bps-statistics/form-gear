@@ -40,7 +40,7 @@ const MaskingInput: FormComponentBase = props => {
     (instruction()) ? setInstruction(false) : setInstruction(true);
   }
 
-  const [enableRemark] = createSignal(config.formMode > 2 ? false : props.component.enableRemark !== undefined ? props.component.enableRemark : true);
+  const [enableRemark] = createSignal(props.component.enableRemark !== undefined ? props.component.enableRemark : true);
 
   return (
     <div class="md:grid md:grid-cols-3 border-b border-gray-300/[.40] dark:border-gray-200/[.10] p-2">
@@ -72,44 +72,44 @@ const MaskingInput: FormComponentBase = props => {
             'col-span-12': !(enableRemark()),
           }}  >
 
-          <input value={props.value} type="text"
-            id={"inputMask" + props.component.dataKey} ref={inputMask.ref}
-            class={classInput}
-            placeholder={props.component.maskingFormat.replace(/[a]/g, '__').replace(/[9]/g, '#')}
-            disabled={disableInput()}
-            onChange={(e) => handleOnChange(e.currentTarget.value)}
-            onclick={formatMask} oninput={formatMask} onpaste={formatMask}
+          <input value={props.value} type="text" 
+              id={"inputMask" + props.component.dataKey} ref={inputMask.ref} 
+              class={ classInput } 
+              placeholder={props.component.maskingFormat.replace(/[a]/g, '__').replace(/[9]/g, '#')}
+              disabled = { disableInput() }
+              onChange={(e) => handleOnChange(e.currentTarget.value)} 
+              onclick={formatMask} oninput={formatMask} onpaste={formatMask} 
           />
 
           <Show when={props.validationMessage.length > 0}>
             <For each={props.validationMessage}>
               {(item: any) => (
-                <div
-                  class="text-xs font-light mt-1">
-                  <div class="grid grid-cols-12"
-                    classList={{
-                      ' text-orange-500 dark:text-orange-200 ': props.classValidation === 1,
-                      ' text-pink-600 dark:text-pink-200 ': props.classValidation === 2,
-                    }} >
-                    <Switch>
-                      <Match when={props.classValidation === 1}>
-                        <div class="col-span-1 flex justify-center items-start">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                          </svg>
-                        </div>
-                      </Match>
-                      <Match when={props.classValidation === 2}>
-                        <div class="col-span-1 flex justify-center items-start">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                        </div>
-                      </Match>
-                    </Switch>
-                    <div class="col-span-11 text-justify mr-1" innerHTML={item} />
-                  </div>
+                <div 
+                class="text-xs font-light mt-1"> 
+                <div class="grid grid-cols-12"                  
+                  classList={{
+                    ' text-orange-500 dark:text-orange-200 ' : props.classValidation === 1,
+                    ' text-pink-600 dark:text-pink-200 ' : props.classValidation === 2,
+                  }} >
+                  <Switch>
+                    <Match when={props.classValidation === 1}>
+                      <div class="col-span-1 flex justify-center items-start">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                      </div>
+                    </Match>
+                    <Match when={props.classValidation === 2}>
+                      <div class="col-span-1 flex justify-center items-start">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                    </Match>
+                  </Switch>
+                  <div class="col-span-11 text-justify mr-1" innerHTML={item}/>
                 </div>
+              </div>
               )}
             </For>
           </Show>

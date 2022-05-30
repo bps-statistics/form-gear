@@ -30,12 +30,6 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 		type: string
 	}
 
-	// type contentData = {
-	// 	data: [],
-	// 	metadata: contentMeta[],
-	// 	tableName: String,
-	// }
-
 	type optionSelect = {
 		success: boolean,
 		data: [],
