@@ -12,7 +12,7 @@ const TimeInput: FormComponentBase = props => {
     (instruction()) ? setInstruction(false) : setInstruction(true);
   }
 
-  const [enableRemark] = createSignal(config.formMode > 2 ? false : props.component.enableRemark !== undefined ? props.component.enableRemark : true );
+  const [enableRemark] = createSignal(props.component.enableRemark !== undefined ? props.component.enableRemark : true );
 
   return (
 		<div class="grid md:grid-cols-3 border-b border-gray-300/[.40] dark:border-gray-200/[.10] p-2">

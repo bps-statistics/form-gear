@@ -160,6 +160,7 @@ const FormInput: FormComponentBase = props => {
 
   const modalRemark = (dataKey: string) => {
     if(flagRemark() === ''){
+      console.log('agung remark', props.config.formMode)
       setFlagRemark(dataKey);
 
       let updatedNote = JSON.parse(JSON.stringify(note.details.notes))
@@ -219,7 +220,7 @@ const FormInput: FormComponentBase = props => {
                     )}
                   </For>
               </div>
-  
+              
               <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div class="grid grid-cols-8">
                   <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full text-yellow-400 bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
@@ -228,26 +229,39 @@ const FormInput: FormComponentBase = props => {
                     </svg>
                   </div>
                   <div class="mt-1 text-left col-span-7 ">
-                      <textarea rows={2}
-                          class="w-full rounded font-light px-4 py-2.5 text-sm text-gray-700 border 
-                            border-solid border-gray-300 bg-white bg-clip-padding transition ease-in-out m-0 
-                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                          placeholder="" 
-                          onChange={(e) => { setTmpComment(e.currentTarget.value) } }
-                      />
+                      <Show when={(props.config.formMode < 3)}>
+                        <textarea rows={2}
+                            class="w-full rounded font-light px-4 py-2.5 text-sm text-gray-700 border 
+                              border-solid border-gray-300 bg-white bg-clip-padding transition ease-in-out m-0 
+                              focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                            placeholder="" 
+                            onChange={(e) => { setTmpComment(e.currentTarget.value) } }
+                        />
+                      </Show>
+                      <Show when={(props.config.formMode == 3)}>
+                        <span class="italic">This form is closed, so remark can't be added</span>
+                      </Show>
                   </div>
                 </div>
               </div>
-              
-              <div class="bg-white px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                <button type="button" 
-                  class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white 
-                      hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm" 
-                      onClick={e => saveRemark()}>&nbsp;&nbsp;Save&nbsp;&nbsp;</button>
-                <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
-                        font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" 
-                      onClick={e => modalRemark('')}>Cancel</button>
-              </div>
+              <Show when={(props.config.formMode < 3)}>
+                <div class="bg-white px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                  <button type="button" 
+                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white 
+                        hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm" 
+                        onClick={e => saveRemark()}>&nbsp;&nbsp;Save&nbsp;&nbsp;</button>
+                  <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
+                          font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" 
+                        onClick={e => modalRemark('')}>Cancel</button>
+                </div>
+              </Show>
+              <Show when={(props.config.formMode == 3)}>
+                <div class="bg-white px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                  <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
+                          font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" 
+                        onClick={e => modalRemark('')}>Close</button>
+                </div>
+              </Show>
 
 						</div>
 					</div>
