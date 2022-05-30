@@ -296,8 +296,16 @@ const Form: Component<{
       const dataForm = [];
       const dataPrincipal = [];
       reference.details.forEach((element) => {
-        if(
-          (element.type > 3)
+
+        let parent_ref_bol_value = true
+        if(element.parent_ref !== undefined){
+          element.parent_ref.forEach((item) => {
+            parent_ref_bol_value = parent_ref_bol_value && reference.details[reference_index_lookup(item)].enable
+          })
+        }
+
+        if( parent_ref_bol_value
+          && (element.type > 3)
           && ( element.enable ) 
           && ( element.answer !== undefined)
           && ( element.answer !== '') 
