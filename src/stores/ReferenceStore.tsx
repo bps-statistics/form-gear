@@ -57,7 +57,6 @@ type Detail = {
     sourceOption?: any
     disableInitial?: boolean
     parent_ref?: []
-    parent_enable?: boolean
 }
 
 export interface Reference {

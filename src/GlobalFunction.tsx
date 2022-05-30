@@ -40,7 +40,7 @@ export const getValue = (dataKey: string) => {
     return answer;
 }
 
-export const createComponent = (dataKey: string, nestedPosition: number, componentPosition: number, sidebarPosition: number, components: any, parentIndex: number[], parentName: string) => {
+export const createComponent = (dataKey: string, nestedPosition: number, componentPosition: number, sidebarPosition: number, components: any, parentIndex: number[], parentName: string, parent_ref: any) => {
     const eval_enable = (eval_text) => {
         try{
             return eval(eval_text)
@@ -188,19 +188,7 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
     newComp.contentModalConfirmation = newComp.contentModalConfirmation !== undefined ? newComp.contentodalConfirmation : undefined
     newComp.required =  newComp.required !== undefined ? newComp.required : undefined
 
-    let parent_ref_local = newComp.parent_ref;
-    parent_ref_local[parent_ref_local.length - 1] = dataKey
-    newComp.parent_ref =  parent_ref_local
-
-    let parent_enable_local = true
-    try{
-        for(let parent_ref_index =0; parent_ref_index < parent_ref_local.length; parent_ref_index ++){
-            parent_enable_local = parent_enable_local && reference_index_lookup(parent_ref_local[parent_ref_index]).enable
-        }
-    }catch(e){
-
-    }
-    newComp.parent_enable = parent_enable_local
+    newComp.parent_ref = parent_ref
     
     newComp.hasRemark = false;
     if ( newComp.enableRemark === undefined || (newComp.enableRemark !== undefined && newComp.enableRemark )){  
@@ -215,10 +203,13 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
     }
     newComp.presetMaster = newComp.presetMaster !== undefined ? newComp.presetMaster : undefined
     if(tmp_type < 3){
+        let parent_ref_local_child = JSON.parse(JSON.stringify(parent_ref))
+        parent_ref_local_child.push(newComp.dataKey)
+
         let comp_array = [];
-        newComp.components[0].forEach((element, index) => 
-            comp_array.push(createComponent(element.dataKey, nestedPosition, index, sidebarPosition, newComp.components[0][index], JSON.parse(JSON.stringify(newComp.index)), null))
-        )
+        newComp.components[0].forEach((element, index) => {
+            comp_array.push(createComponent(element.dataKey, nestedPosition, index, sidebarPosition, newComp.components[0][index], JSON.parse(JSON.stringify(newComp.index)), null, parent_ref_local_child))
+        })
         newComp.components[0] = JSON.parse(JSON.stringify(comp_array));
     }
     return newComp;
@@ -246,8 +237,11 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
         
         defaultRef.components[0][index].validations = (valPosition !== -1) ? validation.details.testFunctions[valPosition].validations : [];
         defaultRef.components[0][index].componentValidation = (valPosition !== -1) ? validation.details.testFunctions[valPosition].componentValidation : [];
+
+        let parent_ref_for_comp = JSON.parse(JSON.stringify(defaultRef.components[0][index].parent_ref))
+        parent_ref_for_comp.push(defaultRef.components[0][index].dataKey)
         
-        let newComp = createComponent(defaultRef.components[0][index].dataKey, (Number(answer.value)), Number(index), sidebarPosition, defaultRef.components[0][index], [], answer.label);
+        let newComp = createComponent(defaultRef.components[0][index].dataKey, (Number(answer.value)), Number(index), sidebarPosition, defaultRef.components[0][index], [], answer.label, parent_ref_for_comp);
         components.push(newComp);
         //insert into reference
 
@@ -461,7 +455,10 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
         let checkedDataKey = defaultRef.components[0][c].dataKey+'#'+now.toString();
         // reference.details.findIndex(obj => obj.dataKey === checkedDataKey)
         if(reference_index_lookup(checkedDataKey) === -1){
-            let newComp = createComponent(defaultRef.components[0][c].dataKey, now, Number(c), sidebarPosition, defaultRef.components[0][c], [], now.toString());
+            let parent_ref_for_comp = JSON.parse(JSON.stringify(defaultRef.components[0][c].parent_ref))
+            parent_ref_for_comp.push(defaultRef.components[0][c].dataKey)
+
+            let newComp = createComponent(defaultRef.components[0][c].dataKey, now, Number(c), sidebarPosition, defaultRef.components[0][c], [], now.toString(), parent_ref_for_comp);
             components.push(newComp);
             //insert ke reference
             let updatedRef = JSON.parse(JSON.stringify(reference.details));
@@ -718,7 +715,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
 
     let refPosition = reference_index_lookup(dataKey)
     if(attributeParam === 'answer' || attributeParam === 'enable'){
-        
+
         let beforeAnswer = (typeof answer === 'number' || typeof answer === 'string') ? 0 : [];
         beforeAnswer = (reference.details[refPosition]) ? reference.details[refPosition].answer : beforeAnswer;
         setReference('details', refPosition, attributeParam, answer);
@@ -735,7 +732,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 return
             }
         }
-        
+
         //enabling ~ run when answer
         if(attributeParam === 'answer') {
             const hasSideCompEnable = JSON.parse(JSON.stringify(sidebar.details.filter(obj => {
@@ -1014,13 +1011,14 @@ export function load_reference_map(reference_local = null){
     if(reference_local === null){
         let reference_map_lokal = {}
         for (let index = 0; index < reference.details.length; index ++){
-        reference_map_lokal[reference.details[index].dataKey] = index;
+            reference_map_lokal[reference.details[index].dataKey] = index;
         }
         setReferenceMap(reference_map_lokal)
     }else{
         let reference_map_lokal = {}
         for (let index = 0; index < reference_local.length; index ++){
-        reference_map_lokal[reference_local[index].dataKey] = index;
+            console.log(reference_local[index])
+            reference_map_lokal[reference_local[index].dataKey] = index;
         }
         setReferenceMap(reference_map_lokal)
     }
@@ -1050,8 +1048,11 @@ export const loadAnswer = (config: any, preset_lokal: Preset | any, response_lok
             
             defaultRef.components[0][index].validations = (valPosition !== -1) ? validation.details.testFunctions[valPosition].validations : [];
             defaultRef.components[0][index].componentValidation = (valPosition !== -1) ? validation.details.testFunctions[valPosition].componentValidation : [];
+
+            let parent_ref_for_comp = JSON.parse(JSON.stringify(defaultRef.components[0][index].parent_ref))
+            parent_ref_for_comp.push(defaultRef.components[0][index].dataKey)
             
-            let newComp = createComponent(defaultRef.components[0][index].dataKey, (Number(answer.value)), Number(index), sidebarPosition, defaultRef.components[0][index], [], answer.label);
+            let newComp = createComponent(defaultRef.components[0][index].dataKey, (Number(answer.value)), Number(index), sidebarPosition, defaultRef.components[0][index], [], answer.label, parent_ref_for_comp);
             components.push(newComp);
             //insert into reference
             // reference.details.findIndex(obj => obj.dataKey === newComp.dataKey)
@@ -1162,7 +1163,10 @@ export const loadAnswer = (config: any, preset_lokal: Preset | any, response_lok
             let checkedDataKey = defaultRef.components[0][c].dataKey+'#'+now.toString();
             // (reference.details.findIndex(obj => obj.dataKey === checkedDataKey)
             if(reference_index_lookup(checkedDataKey) === -1){
-                let newComp = createComponent(defaultRef.components[0][c].dataKey, now, Number(c), sidebarPosition, defaultRef.components[0][c], [], now.toString());
+                let parent_ref_for_comp = JSON.parse(JSON.stringify(defaultRef.components[0][c].parent_ref))
+                parent_ref_for_comp.push(defaultRef.components[0][c].dataKey)
+
+                let newComp = createComponent(defaultRef.components[0][c].dataKey, now, Number(c), sidebarPosition, defaultRef.components[0][c], [], now.toString(), parent_ref_for_comp);
                 components.push(newComp);
                 //insert ke reference
                 let updatedRef = JSON.parse(JSON.stringify(reference.details));

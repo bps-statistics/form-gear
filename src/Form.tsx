@@ -211,25 +211,57 @@ const Form: Component<{
       setComponents(getComponents(form.activeComponent.dataKey));    
       setSummary({
         answer: reference.details.filter( (element) => { 
-                                      return ( element.type > 4 ) 
-                                          && ( element.enable ) 
-                                          && ( element.answer !== undefined)
-                                          && ( element.answer !== '') 
-                                          && ( element.answer !== null)
-                                    }).length,
+                let nilai = true
+                nilai = nilai && ( element.type > 4 ) 
+                  && ( element.enable ) 
+                  && ( element.answer !== undefined)
+
+                  if(element.answer !== undefined){
+                    if(element.type != 21 && element.type != 22){
+                      nilai =  nilai  && element.answer !== ''  && element.answer !== null
+                    }else if(element.type == 21 || element.type == 22){
+                      nilai =  nilai  && element.answer.length > 1
+                    }
+                  }else{
+                    nilai = nilai && false
+                  }
+                  if(element.parent_ref !== undefined){
+                    element.parent_ref.forEach((item) => {
+                      nilai = nilai && reference.details[reference_index_lookup(item)].enable
+                    })
+                  }
+                
+                return nilai
+            }).length,
         blank: reference.details.filter( (element) => { 
-                                      return ( element.type > 4 ) 
-                                          && ( element.enable ) 
-                                          && ( ( element.answer === undefined || element.answer === '')
-                                                || ( (element.type == 21) && element.answer.length == 1 ) 
-                                                || ( (element.type == 22) && element.answer.length == 1 ) 
-                                              )
-                                          && !( JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 
-                                          && element.level > 1 )
-                                    }).length,
+              let nilai = true
+              nilai = nilai && ( element.type > 4 ) 
+                  && ( element.enable ) 
+                  && !( JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)
+
+                  if(element.answer !== undefined){
+                    nilai =  nilai &&((element.answer === '' )
+                      || ( (element.type == 21) && element.answer.length == 1 ) 
+                      || ( (element.type == 22) && element.answer.length == 1 ) )
+                  }
+
+                  if(element.parent_ref !== undefined){
+                    element.parent_ref.forEach((item) => {
+                      nilai = nilai && reference.details[reference_index_lookup(item)].enable
+                    })
+                  }
+              return nilai
+            }).length,
         error: reference.details.filter( (element) => {
-                                      return ( element.type > 4 && ( element.enable ) && element.validationState == 2 )
-                                    }).length,
+              let nilai = true
+              nilai = nilai && ( element.type > 4 && ( element.enable ) && element.validationState == 2 )
+              if(element.parent_ref !== undefined){
+                element.parent_ref.forEach((item) => {
+                  nilai = nilai && reference.details[reference_index_lookup(item)].enable
+                })
+              }
+              return nilai
+            }).length,
         remark: note.details.notes.length
       });
       const [formProps] = useForm();
@@ -419,11 +451,18 @@ const Form: Component<{
       let filteredWarning = [];
       reference.details.forEach((element,i) =>{
         // let sidebarIndex = element.index.splice(-1)
-          if (element.type > 4 && ( element.enable ) && element.validationState == 2) {
+          let parent_ref_bol_value = true
+          if(element.parent_ref !== undefined){
+            element.parent_ref.forEach((item) => {
+              parent_ref_bol_value = parent_ref_bol_value && reference.details[reference_index_lookup(item)].enable
+            })
+          }
+
+          if (parent_ref_bol_value && element.type > 4 && ( element.enable ) && element.validationState == 2) {
             let sidebarIndex = element.level > 1 ? element.index.slice(0,-1) : element.index.slice(0,-2)
             filteredError.push({label:element.label,message:element.validationMessage,sideIndex:sidebarIndex,dataKey:element.dataKey})
           }
-          if (element.type > 4 && ( element.enable ) && element.validationState == 1) {
+          if (parent_ref_bol_value && element.type > 4 && ( element.enable ) && element.validationState == 1) {
             let sidebarIndex = element.level > 1 ? element.index.slice(0,-1) : element.index.slice(0,-2)
             filteredWarning.push({label:element.label,message:element.validationMessage,sideIndex:sidebarIndex,dataKey:element.dataKey})
           }
@@ -472,14 +511,19 @@ const Form: Component<{
       if(docState() === 'E') {
         toastInfo(locale.details.language[0].submitInvalid, 3000, "", "bg-pink-600/80");
       } else {
-        let reference_local = [];
         reference.details.forEach((obj, ind) => {
           let updatedRef = JSON.parse(JSON.stringify(obj));
           let run = 0
           
           // let notePosition = note.details.notes.findIndex(elNote => elNote.dataKey === obj.dataKey);
+          let parent_ref_bol_value = true
+          if(updatedRef.parent_ref !== undefined){
+            updatedRef.parent_ref.forEach((item) => {
+              parent_ref_bol_value = parent_ref_bol_value && reference.details[reference_index_lookup(item)].enable
+            })
+          }
 
-          if((updatedRef.enable) && updatedRef.required !== undefined && (updatedRef.required)){
+          if((updatedRef.enable && parent_ref_bol_value) && updatedRef.required !== undefined && (updatedRef.required)){
             let editedDataKey = updatedRef.dataKey.split('@');
             let newEdited = editedDataKey[0].split('#');
             if(updatedRef.level < 2 || updatedRef.level > 1 && newEdited[1] !== undefined){
@@ -496,13 +540,12 @@ const Form: Component<{
                   updatedRef.validationMessage.push(locale.details.language[0].validationRequired);
                   updatedRef.validationState = 2;
               }
-              reference_local[ind] = updatedRef
+              setReference('details',ind, updatedRef);
             }
           }
         });
 
-        load_reference_map(reference_local)
-        setReference('details', reference_local)
+        load_reference_map()
         
         if(summary.error === 0){
           if(docState() === 'W') {

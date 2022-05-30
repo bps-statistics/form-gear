@@ -158,7 +158,6 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                 disableInput: e.disableInput !== undefined ? e.disableInput : undefined,
                 disableInitial: e.disableInitial !== undefined ? e.disableInitial : undefined,
                 parent_ref: datekey_parent,
-                parent_enable: true
               })
               nestMasterComp ? nestMasterComp.push(nestEachComp[0]) : nestMasterComp.splice(nestMasterComp.length, 0, nestEachComp[0])
             
@@ -190,7 +189,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
             // console.log ('start',element[j].dataKey, d.getTime());
             flagArr[j] = 0;
             setTimeout( () => {
-              const loopTemplate = (element, index, parent, level, sideEnable, parant_ref) => {
+              const loopTemplate = (element, index, parent, level, sideEnable, parent_ref) => {
                 let el_len = element.length
                 for (let i = 0; i < el_len; i++) {
                   let answer = element[i].answer;
@@ -305,10 +304,9 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                       presetMaster: element[i].presetMaster !== undefined ? element[i].presetMaster : undefined,
                       disableInput: element[i].disableInput !== undefined ? element[i].disableInput : undefined,
                       disableInitial: element[i].disableInitial !== undefined ? element[i].disableInitial : undefined,
-                      parant_ref: parant_ref,
-                      parent_enable: true
+                      parent_ref: parent_ref,
                   }
-                  let datekey_parent = (JSON.parse(JSON.stringify(parant_ref)))
+                  let datekey_parent = (JSON.parse(JSON.stringify(parent_ref)))
                   datekey_parent.push(refList[j][refListLen].dataKey)
                   element[i].components && element[i].components.forEach((element) => loopTemplate(element, refListLen, parent.concat(i,0), level+1, sideEnable, datekey_parent))
                 }
@@ -376,8 +374,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                 titleModalConfirmation: element[j].titleModalConfirmation !== undefined ? element[j].titleModalConfirmation : undefined,
                 contentModalConfirmation: element[j].contentModalConfirmation !== undefined ? element[j].contentModalConfirmation : undefined,
                 required: element[j].required !== undefined ? element[j].required : undefined,
-                parant_ref: [],
-                parent_enable: true
+                parent_ref: [],
               }
 
               loopTemplate(element[j].components[0], 0, [0, j, 0], 1, hasSideEnable, [element[j].dataKey])
@@ -414,7 +411,6 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
           load_reference_map(referenceList)
           setReference('details', referenceList)
           setSidebar('details', sidebarList)
-          console.log(referenceList)
 
           render(() => (
             <FormProvider config={config}>
