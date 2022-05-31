@@ -161,10 +161,9 @@ const FormInput: FormComponentBase = props => {
       setFlagRemark('');
 
       toastInfo(locale.details.language[0].remarkAdded, 500, "",  "bg-teal-600/80");
-      if(form.formConfig.formMode == 2){
-        setData();
-        props.setResponseMobile( response.details, remark.details, principal.details, reference );
-      }
+      
+      setData();
+      props.setResponseMobile( response.details, remark.details, principal.details, reference );
     }else{
       toastInfo(locale.details.language[0].remarkEmpty, 500, "", "bg-red-700/80");
     }
