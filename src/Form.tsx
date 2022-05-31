@@ -14,7 +14,7 @@ import { principal, setPrincipal} from './stores/PrincipalStore';
 import { locale, setLocale} from './stores/LocaleStore';
 import { summary, setSummary } from './stores/SummaryStore';
 
-import { saveAnswer } from "./GlobalFunction";
+import { saveAnswer, reference_index_lookup, load_reference_map, runValidation } from "./GlobalFunction";
 import { toastInfo } from "./FormInput";
 
 import dayjs from 'dayjs';
@@ -57,7 +57,8 @@ const Form: Component<{
     openMap : any
   }> = props => {
     const getValue = (dataKey: string) => {
-      const componentIndex = reference.details.findIndex(obj => obj.dataKey === dataKey);
+      // const componentIndex = reference.details.findIndex(obj => obj.dataKey === dataKey);
+      const componentIndex = reference_index_lookup(dataKey)
       let answer = '';
       if(componentIndex !== -1 && (reference.details[componentIndex].answer) && (reference.details[componentIndex].enable)) answer = reference.details[componentIndex].answer;
       return answer;
@@ -132,10 +133,10 @@ const Form: Component<{
         saveAnswer(element.dataKey, 'answer', answer, sidePosition, {'clientMode': getProp('clientMode'),'baseUrl': getProp('baseUrl')});
       })
       // console.timeEnd('tmpVarComp ')
-
       // console.time('response ');
       props.preset.details.predata.forEach((element, index) => {
-        let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
+        // let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
+        let refPosition = reference_index_lookup(element.dataKey)
         let run = 0;
         if(refPosition !== -1){
           if((config().initialMode == 1 && reference.details[refPosition].presetMaster !== undefined && (reference.details[refPosition].presetMaster)) || (config().initialMode == 2)){
@@ -150,7 +151,8 @@ const Form: Component<{
       })
 
       props.response.details.answers.forEach((element, index) => {
-        let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
+        // let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
+        let refPosition = reference_index_lookup(element.dataKey)
         if(refPosition !== -1){
           let sidePosition = sidebar.details.findIndex(obj => {
             const cekInsideIndex = obj.components[0].findIndex(objChild => objChild.dataKey === element.dataKey);
@@ -198,6 +200,16 @@ const Form: Component<{
     }
     // console.timeEnd('response ');
     // console.timeEnd('');
+    load_reference_map()
+
+    for(let index_ref =0; index_ref < reference.details.length; index_ref++){
+      if(reference.details[index_ref].validationState === 0 
+          && !( JSON.parse(JSON.stringify(reference.details[index_ref].index[reference.details[index_ref].index.length - 2])) == 0 && reference.details[index_ref].level > 1)){
+        runValidation(reference.details[index_ref].dataKey, JSON.parse(JSON.stringify(reference.details[index_ref])), null)
+      }
+    }
+
+    // console.log(reference)
     
     const [onMobile , setOnMobile] = createSignal(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
     const checkOnMobile = () => {
@@ -208,25 +220,87 @@ const Form: Component<{
       setComponents(getComponents(form.activeComponent.dataKey));    
       setSummary({
         answer: reference.details.filter( (element) => { 
-                                      return ( element.type > 4 ) 
-                                          && ( element.enable ) 
-                                          && ( element.answer !== undefined)
-                                          && ( element.answer !== '') 
-                                          && ( element.answer !== null)
-                                    }).length,
+                let nilai = true
+                nilai = nilai && ( element.type > 4 ) 
+                  && ( element.enable ) 
+                  && ( element.answer !== undefined)
+                  && !( JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)
+
+                  if(element.parent_ref !== undefined){
+                    element.parent_ref.forEach((item) => {
+                      nilai = nilai && reference.details[reference_index_lookup(item)].enable
+                    })
+                  }
+                  if(nilai){
+                    if(element.answer !== undefined){
+                      if(element.type !== 21 && element.type !== 22){
+                          if(typeof element.answer.answer === 'object'){
+                              if(!(element.answer.length > 0)){
+                                nilai = nilai && false
+                              }
+                          }else{
+                              if(!(element.answer.answer !== null && element.answer.answer !== '')){
+                                nilai = nilai && false
+                              }
+                          }
+                      }else{
+                          if(!((element.answer.type == 21 && element.answer.answer.length > 1 ) || ( element.answer.type == 22 && element.answer.answer.length > 1 ))){
+                            nilai = nilai && false
+                          }
+                      }
+                    }else{
+                      nilai = nilai && false
+                    }
+                  }
+                
+                return nilai
+            }).length,
         blank: reference.details.filter( (element) => { 
-                                      return ( element.type > 4 ) 
-                                          && ( element.enable ) 
-                                          && ( ( element.answer === undefined || element.answer === '')
-                                                || ( (element.type == 21) && element.answer.length == 1 ) 
-                                                || ( (element.type == 22) && element.answer.length == 1 ) 
-                                              )
-                                          && !( JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 
-                                          && element.level > 1 )
-                                    }).length,
+              let nilai = true
+              nilai = nilai && ( element.type > 4 ) 
+                  && ( element.enable ) 
+                  && !( JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)
+
+                  if(element.parent_ref !== undefined){
+                    element.parent_ref.forEach((item) => {
+                      nilai = nilai && reference.details[reference_index_lookup(item)].enable
+                    })
+                  }
+
+                  if(nilai){
+                    if(element.answer !== undefined){
+                      if(element.type !== 21 && element.type !== 22){
+                          if(typeof element.answer === 'object'){
+                              if(element.answer.length > 0){
+                                nilai = nilai && false
+                              }
+                          }else{
+                              if(element.answer !== null && element.answer !== ''){
+                                nilai = nilai && false
+                              }
+                          }
+                      }else{
+                          if((element.type == 21 && element.answer.length > 1 ) || ( element.type == 22 && element.answer.length > 1 )){
+                            nilai = nilai && false
+                          }
+                      }
+                    }
+                  }
+
+                  
+              return nilai
+            }).length,
         error: reference.details.filter( (element) => {
-                                      return ( element.type > 4 && ( element.enable ) && element.validationState == 2 )
-                                    }).length,
+              let nilai = true
+              nilai = nilai && ( element.type > 4 && ( element.enable ) && element.validationState == 2 )
+                && !( JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)
+              if(element.parent_ref !== undefined){
+                element.parent_ref.forEach((item) => {
+                  nilai = nilai && reference.details[reference_index_lookup(item)].enable
+                })
+              }
+              return nilai
+            }).length,
         remark: note.details.notes.length
       });
       const [formProps] = useForm();
@@ -261,8 +335,16 @@ const Form: Component<{
       const dataForm = [];
       const dataPrincipal = [];
       reference.details.forEach((element) => {
-        if(
-          (element.type > 3)
+
+        let parent_ref_bol_value = true
+        if(element.parent_ref !== undefined){
+          element.parent_ref.forEach((item) => {
+            parent_ref_bol_value = parent_ref_bol_value && reference.details[reference_index_lookup(item)].enable
+          })
+        }
+
+        if( parent_ref_bol_value
+          && (element.type > 3)
           && ( element.enable ) 
           && ( element.answer !== undefined)
           && ( element.answer !== '') 
@@ -416,11 +498,21 @@ const Form: Component<{
       let filteredWarning = [];
       reference.details.forEach((element,i) =>{
         // let sidebarIndex = element.index.splice(-1)
-          if (element.type > 4 && ( element.enable ) && element.validationState == 2) {
+          let parent_ref_bol_value = true
+          if(element.parent_ref !== undefined){
+            element.parent_ref.forEach((item) => {
+              parent_ref_bol_value = parent_ref_bol_value && reference.details[reference_index_lookup(item)].enable
+            })
+          }
+          
+
+          if (parent_ref_bol_value && element.type > 4 && ( element.enable ) && element.validationState == 2
+            && !( JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)) {
             let sidebarIndex = element.level > 1 ? element.index.slice(0,-1) : element.index.slice(0,-2)
             filteredError.push({label:element.label,message:element.validationMessage,sideIndex:sidebarIndex,dataKey:element.dataKey})
           }
-          if (element.type > 4 && ( element.enable ) && element.validationState == 1) {
+          if (parent_ref_bol_value && element.type > 4 && ( element.enable ) && element.validationState == 1
+            && !( JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)) {
             let sidebarIndex = element.level > 1 ? element.index.slice(0,-1) : element.index.slice(0,-2)
             filteredWarning.push({label:element.label,message:element.validationMessage,sideIndex:sidebarIndex,dataKey:element.dataKey})
           }
@@ -475,8 +567,14 @@ const Form: Component<{
           let run = 0
           
           // let notePosition = note.details.notes.findIndex(elNote => elNote.dataKey === obj.dataKey);
+          let parent_ref_bol_value = true
+          if(updatedRef.parent_ref !== undefined){
+            updatedRef.parent_ref.forEach((item) => {
+              parent_ref_bol_value = parent_ref_bol_value && reference.details[reference_index_lookup(item)].enable
+            })
+          }
 
-          if((updatedRef.enable) && updatedRef.required !== undefined && (updatedRef.required)){
+          if((updatedRef.enable && parent_ref_bol_value) && updatedRef.required !== undefined && (updatedRef.required)){
             let editedDataKey = updatedRef.dataKey.split('@');
             let newEdited = editedDataKey[0].split('#');
             if(updatedRef.level < 2 || updatedRef.level > 1 && newEdited[1] !== undefined){
@@ -497,6 +595,8 @@ const Form: Component<{
             }
           }
         });
+
+        load_reference_map()
         
         if(summary.error === 0){
           if(docState() === 'W') {

@@ -1,4 +1,5 @@
 import { reference, setReference} from './stores/ReferenceStore';
+import { referenceMap, setReferenceMap} from './stores/ReferenceStore';
 // import { nested, setNested} from './stores/NestedStore';
 import { validation, setValidation} from './stores/ValidationStore';
 import { sidebar, setSidebar} from './stores/SidebarStore';
@@ -9,6 +10,9 @@ import { note, setNote} from './stores/NoteStore';
 import { createSignal } from 'solid-js';
 import { locale, setLocale} from './stores/LocaleStore';
 import { getConfig } from './Form';
+
+export const default_value_enable = true
+export const default_validation_enable = true
 
 export const getValue = (dataKey: string) => {
     let tmpDataKey = dataKey.split('@');
@@ -30,14 +34,25 @@ export const getValue = (dataKey: string) => {
             break;
         }
     }
-    const componentIndex = reference.details.findIndex(obj => obj.dataKey === dataKey);
+
+    const componentIndex = reference_index_lookup(dataKey)
     let answer = (componentIndex !== -1 && (reference.details[componentIndex].answer) && (reference.details[componentIndex].enable)) ? reference.details[componentIndex].answer : ''
     return answer;
 }
 
-export const createComponent = (dataKey: string, nestedPosition: number, componentPosition: number, sidebarPosition: number, components: any, parentIndex: number[], parentName: string) => {
+export const createComponent = (dataKey: string, nestedPosition: number, componentPosition: number, sidebarPosition: number, components: any, parentIndex: number[], parentName: string, parent_ref: any) => {
+    const eval_enable = (eval_text) => {
+        try{
+            return eval(eval_text)
+        }catch(e){
+            console.log(e)
+            return default_value_enable
+        }
+    }
+
     let dataKeySplit = dataKey.split('#');
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKeySplit[0]);
+    // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKeySplit[0]);
+    const refPosition = reference_index_lookup(dataKeySplit[0])
     
     let newComp = JSON.parse(JSON.stringify(components));
     newComp.dataKey = newComp.dataKey+'#'+nestedPosition;
@@ -151,7 +166,8 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
     } else {
         newComp.enableCondition = undefined
     }
-    newComp.enable = (newComp.enableCondition === undefined || newComp.enableCondition === '') ? true : eval(newComp.enableCondition);
+    // newComp.enable = (newComp.enableCondition === undefined || newComp.enableCondition === '') ? true : eval(newComp.enableCondition);
+    newComp.enable = (newComp.enableCondition === undefined || newComp.enableCondition === '') ? true : eval_enable(newComp.enableCondition);
     //
     newComp.enableRemark = newComp.enableRemark !== undefined ? newComp.enableRemark : true;
     newComp.client = newComp.client !== undefined ? newComp.client : true;
@@ -171,6 +187,8 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
     newComp.titleModalConfirmation = newComp.titleModalConfirmation !== undefined ? newComp.titleModalConfirmation : undefined
     newComp.contentModalConfirmation = newComp.contentModalConfirmation !== undefined ? newComp.contentodalConfirmation : undefined
     newComp.required =  newComp.required !== undefined ? newComp.required : undefined
+
+    newComp.parent_ref = parent_ref
     
     newComp.hasRemark = false;
     if ( newComp.enableRemark === undefined || (newComp.enableRemark !== undefined && newComp.enableRemark )){  
@@ -185,17 +203,30 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
     }
     newComp.presetMaster = newComp.presetMaster !== undefined ? newComp.presetMaster : undefined
     if(tmp_type < 3){
+        let parent_ref_local_child = JSON.parse(JSON.stringify(parent_ref))
+        parent_ref_local_child.push(newComp.dataKey)
+
         let comp_array = [];
-        newComp.components[0].forEach((element, index) => 
-            comp_array.push(createComponent(element.dataKey, nestedPosition, index, sidebarPosition, newComp.components[0][index], JSON.parse(JSON.stringify(newComp.index)), null))
-        )
+        newComp.components[0].forEach((element, index) => {
+            comp_array.push(createComponent(element.dataKey, nestedPosition, index, sidebarPosition, newComp.components[0][index], JSON.parse(JSON.stringify(newComp.index)), null, parent_ref_local_child))
+        })
         newComp.components[0] = JSON.parse(JSON.stringify(comp_array));
     }
     return newComp;
 }
 
 export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const eval_enable = (eval_text) => {
+        try{
+            return eval(eval_text)
+        }catch(e){
+            console.log(e)
+            return default_value_enable
+        }
+    }
+    
+    const refPosition = reference_index_lookup(dataKey);
     let defaultRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
     
     let components = [];
@@ -206,11 +237,17 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
         
         defaultRef.components[0][index].validations = (valPosition !== -1) ? validation.details.testFunctions[valPosition].validations : [];
         defaultRef.components[0][index].componentValidation = (valPosition !== -1) ? validation.details.testFunctions[valPosition].componentValidation : [];
+
+        let parent_ref_for_comp = JSON.parse(JSON.stringify(defaultRef.components[0][index].parent_ref))
+        parent_ref_for_comp.push(defaultRef.components[0][index].dataKey)
         
-        let newComp = createComponent(defaultRef.components[0][index].dataKey, (Number(answer.value)), Number(index), sidebarPosition, defaultRef.components[0][index], [], answer.label);
+        let newComp = createComponent(defaultRef.components[0][index].dataKey, (Number(answer.value)), Number(index), sidebarPosition, defaultRef.components[0][index], [], answer.label, parent_ref_for_comp);
         components.push(newComp);
         //insert into reference
-        if(reference.details.findIndex(obj => obj.dataKey === newComp.dataKey) === -1){
+
+        // reference.details.findIndex(obj => obj.dataKey === newComp.dataKey)
+
+        if(reference_index_lookup(newComp.dataKey) === -1){
             let updatedRef = JSON.parse(JSON.stringify(reference.details));
             let newIndexLength = newComp.index.length;
             for(let looping = newIndexLength; looping > 1; looping--){
@@ -248,7 +285,15 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
                 return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
             }
             const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-            if(Number(newComp.type) === 4) answer = eval(newComp.expression);
+            // if(Number(newComp.type) === 4) answer = eval(newComp.expression);
+            if(Number(newComp.type) === 4) {
+                try{
+                    let answer_local = eval(newComp.expression)
+                    answer = answer_local
+                }catch(e){
+                    answer = undefined
+                }
+            }
             saveAnswer(newComp.dataKey, 'answer', answer, sidebarPosition, null);
         }
     })
@@ -262,7 +307,8 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
         components: [components],
         sourceQuestion: defaultRef.sourceQuestion !== undefined ? defaultRef.sourceQuestion : '',
         enable: defaultRef.enable !== undefined ? defaultRef.enable : true,
-        enableCondition: (defaultRef.enableCondition === undefined) ? true : eval(defaultRef.enableCondition),
+        // enableCondition: (defaultRef.enableCondition === undefined) ? true : eval(defaultRef.enableCondition),
+        enableCondition: (defaultRef.enableCondition === undefined) ? true : eval_enable(defaultRef.enableCondition),
         componentEnable: defaultRef.componentEnable !== undefined ? defaultRef.componentEnable : []
 
     }
@@ -290,7 +336,8 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
 }
 
 export const deleteSidebarArray = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey)
     let updatedRef = JSON.parse(JSON.stringify(reference.details));
     let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
 
@@ -319,7 +366,8 @@ export const deleteSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
 }
 
 export const changeSidebarArray = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey)
     let now = [];
     let nestedPositionNow = -1;
     
@@ -382,7 +430,17 @@ export const changeSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
 }
 
 export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const eval_enable = (eval_text) => {
+        try{
+            return eval(eval_text)
+        }catch(e){
+            console.log(e)
+            return default_value_enable
+        }
+    }
+
+    // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey)
     let defaultRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
     let components = [];
     let now = (Number(beforeAnswer)+1);
@@ -395,8 +453,12 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
         defaultRef.components[0][c].componentValidation = (valPosition !== -1) ? validation.details.testFunctions[valPosition].componentValidation : [];
         
         let checkedDataKey = defaultRef.components[0][c].dataKey+'#'+now.toString();
-        if(reference.details.findIndex(obj => obj.dataKey === checkedDataKey) === -1){
-            let newComp = createComponent(defaultRef.components[0][c].dataKey, now, Number(c), sidebarPosition, defaultRef.components[0][c], [], now.toString());
+        // reference.details.findIndex(obj => obj.dataKey === checkedDataKey)
+        if(reference_index_lookup(checkedDataKey) === -1){
+            let parent_ref_for_comp = JSON.parse(JSON.stringify(defaultRef.components[0][c].parent_ref))
+            parent_ref_for_comp.push(defaultRef.components[0][c].dataKey)
+
+            let newComp = createComponent(defaultRef.components[0][c].dataKey, now, Number(c), sidebarPosition, defaultRef.components[0][c], [], now.toString(), parent_ref_for_comp);
             components.push(newComp);
             //insert ke reference
             let updatedRef = JSON.parse(JSON.stringify(reference.details));
@@ -417,6 +479,7 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                 }
                 if(!loopingState) break;
             }
+            
             setReference('details',updatedRef);
 
             let answer = 0;
@@ -435,7 +498,15 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                 return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
             }
             const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-            if(Number(newComp.type) === 4) answer = eval(newComp.expression);
+            // if(Number(newComp.type) === 4) answer = eval(newComp.expression);
+            if(Number(newComp.type) === 4) {
+                try{
+                    let answer_local = eval(newComp.expression)
+                    answer = answer_local
+                }catch(e){
+                    answer = undefined
+                }
+            }
             saveAnswer(newComp.dataKey, 'answer', answer, sidebarPosition, null);
         } else {
             break;
@@ -452,7 +523,8 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
             components: [components],
             sourceQuestion: defaultRef.sourceQuestion !== undefined ? defaultRef.sourceQuestion + '#' + (Number(beforeAnswer)+1) : '',
             enable: defaultRef.enable !== undefined ? defaultRef.enable : true,
-            enableCondition: (defaultRef.enableCondition === undefined) ? true : eval(defaultRef.enableCondition),
+            // enableCondition: (defaultRef.enableCondition === undefined) ? true : eval(defaultRef.enableCondition),
+            enableCondition: (defaultRef.enableCondition === undefined) ? true : eval_enable(defaultRef.enableCondition),
             componentEnable: defaultRef.componentEnable !== undefined ? defaultRef.componentEnable : []
         }
         let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
@@ -481,7 +553,8 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
 }
 
 export const deleteSidebarNumber = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey)
     let updatedRef = JSON.parse(JSON.stringify(reference.details));
     let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
 
@@ -521,15 +594,35 @@ export const runVariableComponent = (dataKey: string, activeComponentPosition: n
         return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
     }
     const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey)
     if(refPosition !== -1){
         let updatedRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
-        let answerVariable = eval(updatedRef.expression);
-        saveAnswer(dataKey, 'answer', answerVariable, activeComponentPosition, null);
+        // let answerVariable = eval(updatedRef.expression);
+        // saveAnswer(dataKey, 'answer', answerVariable, activeComponentPosition, null);
+        try{
+            let answerVariable = eval(updatedRef.expression);
+            saveAnswer(dataKey, 'answer', answerVariable, activeComponentPosition, null);
+        }catch(e){
+            saveAnswer(dataKey, 'answer', undefined, activeComponentPosition, null);
+            // console.log(dataKey)
+            // console.log(updatedRef.expression)
+            // console.log(e)
+        }
+        
     }
 }
 
 export const runEnabling = (dataKey: string, activeComponentPosition: number, prop:any | null, enableCondition:string) => {
+    const eval_enable = (eval_text) => {
+        try{
+            return eval(eval_text)
+        }catch(e){
+            console.log(e)
+            return default_value_enable
+        }
+    }
+
     const getProp = (config: string) => {
         switch(config) {
             case 'clientMode': {
@@ -549,11 +642,12 @@ export const runEnabling = (dataKey: string, activeComponentPosition: number, pr
     }
     const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
 
-    let enable = eval(enableCondition);
+    // let enable = eval(enableCondition);
+    let enable = eval_enable(enableCondition);
     saveAnswer(dataKey, 'enable', enable, activeComponentPosition, null);
 }
 
-export const runValidation = (dataKey:string, updatedRef:any, activeComponentPosition: number) => {
+export const runValidation = (dataKey:string, updatedRef:any, activeComponentPosition: number) => {    
     const getRowIndex = (positionOffset:number) => {
         let editedDataKey = dataKey.split('@');
         let splitDataKey = editedDataKey[0].split('#');
@@ -568,7 +662,15 @@ export const runValidation = (dataKey:string, updatedRef:any, activeComponentPos
     if(!updatedRef.hasRemark){
         let biggest = 0;
         for(let i in updatedRef.validations){
-            let result = eval(updatedRef.validations[i].test);
+            // let result = eval(updatedRef.validations[i].test);
+            let result = default_validation_enable;
+            try{
+                result = eval(updatedRef.validations[i].test)
+            }catch(e){
+                // console.log(dataKey)
+                // console.log(updatedRef.validations[i].test)
+                // console.log(e)
+            }
             if(result){
                 updatedRef.validationMessage.push(updatedRef.validations[i].message);
                 biggest = (biggest < updatedRef.validations[i].type) ? updatedRef.validations[i].type : biggest;
@@ -595,6 +697,31 @@ export const runValidation = (dataKey:string, updatedRef:any, activeComponentPos
                 biggest = 2;
             }
         }
+        if(updatedRef.required !== undefined && updatedRef.required && updatedRef.enable && updatedRef.type > 4){
+            let violating_required = true
+
+            if(updatedRef.answer !== undefined){
+                if(updatedRef.type !== 21 && updatedRef.type !== 22){
+                    if(typeof updatedRef.answer === 'object'){
+                        if(updatedRef.answer.length > 0){
+                            violating_required = false
+                        }
+                    }else{
+                        if(updatedRef.answer !== null && updatedRef.answer !== ''){
+                            violating_required = false
+                        }
+                    }
+                }else{
+                    if((updatedRef.type == 21 && updatedRef.answer.length > 1 ) || ( updatedRef.type == 22 && updatedRef.answer.length > 1 )){
+                        violating_required = false
+                    }
+                }
+            }
+            if(violating_required){
+                updatedRef.validationMessage.push(locale.details.language[0].validationRequired);
+                biggest = 2;
+            }
+        }
         updatedRef.validationState = biggest;
     }
     
@@ -602,15 +729,35 @@ export const runValidation = (dataKey:string, updatedRef:any, activeComponentPos
 }
 
 export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, activeComponentPosition: number, prop:any | null) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const eval_enable = (eval_text) => {
+        try{
+            return eval(eval_text)
+        }catch(e){
+            console.log(e)
+            return default_value_enable
+        }
+    }
+
+    let refPosition = reference_index_lookup(dataKey)
     if(attributeParam === 'answer' || attributeParam === 'enable'){
-        
+
         let beforeAnswer = (typeof answer === 'number' || typeof answer === 'string') ? 0 : [];
         beforeAnswer = (reference.details[refPosition]) ? reference.details[refPosition].answer : beforeAnswer;
         setReference('details', refPosition, attributeParam, answer);
         //validate for its own dataKey 
         runValidation(dataKey, JSON.parse(JSON.stringify(reference.details[refPosition])), activeComponentPosition);
-        
+
+        if(attributeParam === 'answer'){
+            if(beforeAnswer === answer){
+                return
+            }
+        }
+        if(attributeParam === 'enable'){
+            if((reference.details[refPosition]) &&  reference.details[refPosition]['enable'] === answer){
+                return
+            }
+        }
+
         //enabling ~ run when answer
         if(attributeParam === 'answer') {
             const hasSideCompEnable = JSON.parse(JSON.stringify(sidebar.details.filter(obj => {
@@ -648,7 +795,8 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
             if(hasSideCompEnable.length > 0) {//at least there is minimal 1 enable in this datakey
                 hasSideCompEnable.forEach(sidebarEnable => {
                     let sidePosition = sidebar.details.findIndex(objSide => objSide.dataKey === sidebarEnable.dataKey);
-                    let enableSide = eval(sidebarEnable.enableCondition);
+                     // let enableSide = eval(sidebarEnable.enableCondition);
+                     let enableSide = eval_enable(sidebarEnable.enableCondition); 
                     setSidebar('details',sidePosition,'enable',enableSide);
                     let updatedRef = JSON.parse(JSON.stringify(reference.details));
                     let tmpVarComp = [];
@@ -666,8 +814,16 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                     });
                     if(tmpVarComp.length > 0) {
                         tmpVarComp.forEach((e,i) => {
-                            let evVal = eval(e.expression);
-                            saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
+                            // let evVal = eval(e.expression);
+                            // saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
+                            try{
+                                let evVal = eval(e.expression);
+                                saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
+                            }catch(e){
+                                saveAnswer(e.dataKey, 'answer', undefined, tmpIndex[i], null);
+                                // console.log(e.dataKey)
+                                // console.log(e)
+                            }
                         })
                     }
                 })
@@ -712,6 +868,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
             }
         }
 
+        refPosition = reference_index_lookup(dataKey)
         if(reference.details[refPosition].enable) {
             //validating ~ run weel when answer or enable
             const hasComponentValidation = JSON.parse(JSON.stringify(reference.details.filter(obj => {
@@ -799,6 +956,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                             :
                             deleteSidebarNumber(element.dataKey, answer, beforeAnswer, activeComponentPosition)
                             ;
+                            load_reference_map()
                     } else if(typeof answer === 'object'){
                         beforeAnswer = (beforeAnswer === undefined) ? [] : beforeAnswer;
                         answer = JSON.parse(JSON.stringify(answer));
@@ -840,6 +998,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                         } else if(answerLength === beforeAnswerLength){
                             answerLength > 0 && changeSidebarArray(element.dataKey, answer, beforeAnswer, activeComponentPosition);
                         }
+                        load_reference_map()
                     }
                 });
                 console.timeEnd('Nested 🚀');
@@ -848,5 +1007,43 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
         }
     } else if(attributeParam === 'validate'){
         setReference('details', refPosition, answer);
+    }
+}
+
+export function reference_index_lookup(datakey){
+    if(datakey in referenceMap){
+        if(reference.details[referenceMap[datakey]].dataKey === datakey){
+            return referenceMap[datakey];
+        }else{
+            load_reference_map()
+            if(datakey in referenceMap){
+                return referenceMap[datakey];
+            }else{
+                return -1
+            }
+        }
+    }else{
+        load_reference_map()
+        if(datakey in referenceMap){
+            return referenceMap[datakey];
+        }else{
+            return -1
+        }
+    }
+}
+
+export function load_reference_map(reference_local = null){
+    if(reference_local === null){
+        let reference_map_lokal = {}
+        for (let index = 0; index < reference.details.length; index ++){
+            reference_map_lokal[reference.details[index].dataKey] = index;
+        }
+        setReferenceMap(reference_map_lokal)
+    }else{
+        let reference_map_lokal = {}
+        for (let index = 0; index < reference_local.length; index ++){
+            reference_map_lokal[reference_local[index].dataKey] = index;
+        }
+        setReferenceMap(reference_map_lokal)
     }
 }

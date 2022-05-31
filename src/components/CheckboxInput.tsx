@@ -1,6 +1,7 @@
 import { For, Switch, Match, createMemo, createSignal, Show } from "solid-js"
 import { FormComponentBase, Option } from "../FormType"
 import { reference, setReference } from '../stores/ReferenceStore'
+import { reference_index_lookup} from './../GlobalFunction'
 
 const CheckboxInput: FormComponentBase = props => {
     const config = props.config
@@ -46,7 +47,8 @@ const CheckboxInput: FormComponentBase = props => {
 	let getOptions = createMemo(() => {
         if(props.component.sourceOption !== undefined && props.component.typeOption === 3){
             let newSourceOption = props.component.sourceOption.split('@');
-            const componentAnswerIndex = reference.details.findIndex(obj => obj.dataKey === newSourceOption[0]);
+            // const componentAnswerIndex = reference.details.findIndex(obj => obj.dataKey === newSourceOption[0]);
+            const componentAnswerIndex = reference_index_lookup(newSourceOption[0]);
 			if( (reference.details[componentAnswerIndex].type === 21 || 22 || 23 || 26 || 27 || 29 )
 				|| (reference.details[componentAnswerIndex].type === 4 && reference.details[componentAnswerIndex].renderType === 2) ){				
 					return reference.details[componentAnswerIndex].answer

@@ -15,10 +15,13 @@ import { remark, setRemark, Remark } from './stores/RemarkStore';
 import { note, setNote } from './stores/NoteStore';
 
 import { reference, setReference } from './stores/ReferenceStore';
+import { referenceMap, setReferenceMap} from './stores/ReferenceStore';
 import { nested, setNested } from './stores/NestedStore';
 import { sidebar, setSidebar } from './stores/SidebarStore';
 
 import { createSignal } from "solid-js";
+
+import { load_reference_map } from "./GlobalFunction";
 
 import semverCompare from "semver-compare";
 import { toastInfo } from "./FormInput";
@@ -57,10 +60,12 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
     // If the semver string b is greater than a, return -1. 
     // If a equals b, return 0;
     let runAll = 0;
+    // versionState == 0 && referenceLen > 0 && sidebarLen >0
     if( versionState == 0 && referenceLen > 0 && sidebarLen >0 ){
       console.log('Reuse reference 🚀')
       setReference(referenceFetch)
       setSidebar('details',referenceFetch.sidebar)
+      load_reference_map()
       runAll = 1;
       
       render(() => (
@@ -84,9 +89,13 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
         return answer;
       }
       
-      const loopValidation = (element, index, parent, level) => {
+      const loopValidation = (element, index, parent, level, parent_key) => {
         let el_len = element.length
+
         for (let i = 0; i < el_len; i++) {
+          let datekey_parent = (JSON.parse(JSON.stringify(parent_key)))
+          datekey_parent.push(element[i].dataKey)
+
           let el_type = element[i].type
           if(el_type == 2){
             let nestMasterComp = []
@@ -148,6 +157,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                 presetMaster: e.presetMaster !== undefined ? e.presetMaster : undefined,
                 disableInput: e.disableInput !== undefined ? e.disableInput : undefined,
                 disableInitial: e.disableInitial !== undefined ? e.disableInitial : undefined,
+                parent_ref: datekey_parent,
               })
               nestMasterComp ? nestMasterComp.push(nestEachComp[0]) : nestMasterComp.splice(nestMasterComp.length, 0, nestEachComp[0])
             
@@ -162,10 +172,11 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
             })
           }
 
-          element[i].components && element[i].components.forEach((element, index) => loopValidation(element, index, parent.concat(i,0), level+1))
+
+          element[i].components && element[i].components.forEach((element, index) => loopValidation(element, index, parent.concat(i,0), level+1, datekey_parent))
         }
       }
-      template.details.components.forEach((element, index) => loopValidation(element, index, [0], 0));
+      template.details.components.forEach((element, index) => loopValidation(element, index, [0], 0, []));
       setNested('details',nestComp)
       
       const [components , setComponents] = createSignal([]);
@@ -178,7 +189,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
             // console.log ('start',element[j].dataKey, d.getTime());
             flagArr[j] = 0;
             setTimeout( () => {
-              const loopTemplate = (element, index, parent, level, sideEnable) => {
+              const loopTemplate = (element, index, parent, level, sideEnable, parent_ref) => {
                 let el_len = element.length
                 for (let i = 0; i < el_len; i++) {
                   let answer = element[i].answer;
@@ -292,10 +303,12 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                       required: element[i].required !== undefined ? element[i].required : undefined,
                       presetMaster: element[i].presetMaster !== undefined ? element[i].presetMaster : undefined,
                       disableInput: element[i].disableInput !== undefined ? element[i].disableInput : undefined,
-                      disableInitial: element[i].disableInitial !== undefined ? element[i].disableInitial : undefined
+                      disableInitial: element[i].disableInitial !== undefined ? element[i].disableInitial : undefined,
+                      parent_ref: parent_ref,
                   }
-                  
-                  element[i].components && element[i].components.forEach((element) => loopTemplate(element, refListLen, parent.concat(i,0), level+1, sideEnable))
+                  let datekey_parent = (JSON.parse(JSON.stringify(parent_ref)))
+                  datekey_parent.push(refList[j][refListLen].dataKey)
+                  element[i].components && element[i].components.forEach((element) => loopTemplate(element, refListLen, parent.concat(i,0), level+1, sideEnable, datekey_parent))
                 }
               }
               
@@ -361,9 +374,10 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                 titleModalConfirmation: element[j].titleModalConfirmation !== undefined ? element[j].titleModalConfirmation : undefined,
                 contentModalConfirmation: element[j].contentModalConfirmation !== undefined ? element[j].contentModalConfirmation : undefined,
                 required: element[j].required !== undefined ? element[j].required : undefined,
+                parent_ref: [],
               }
 
-              loopTemplate(element[j].components[0], 0, [0, j, 0], 1, hasSideEnable)
+              loopTemplate(element[j].components[0], 0, [0, j, 0], 1, hasSideEnable, [element[j].dataKey])
               
               // let e = new Date();
               // console.log ('end',element[j].dataKey, e.getTime());
@@ -374,7 +388,6 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
       }
       template.details.components.forEach((element,index) => buildReference(element, index)) 
       runAll = 0;
-      
       let sum = 0;
       const t = setInterval(() => {
         sum = 0;
@@ -395,6 +408,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
             }
           }
           
+          load_reference_map(referenceList)
           setReference('details', referenceList)
           setSidebar('details', sidebarList)
 
@@ -409,7 +423,6 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
         } 
       },500)
     }
-
     console.timeEnd('FormGear renders successfully in ')
   } catch (e: unknown) {
     toastInfo("Failed to render the questionnaire", 30000, "", "bg-pink-600/80");

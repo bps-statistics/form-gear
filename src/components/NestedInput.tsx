@@ -1,17 +1,20 @@
 import { FormComponentBase } from "../FormType"
 import { For, createMemo, Switch, Match, Show } from 'solid-js'
 import { reference, setReference } from '../stores/ReferenceStore';
+import { reference_index_lookup} from './../GlobalFunction'
 
 const NestedInput: FormComponentBase = props => {
 
 	let componentAnswerIndex = createMemo(() => {
-		return String(reference.details.findIndex(obj => obj.dataKey === props.component.sourceQuestion));
+		// return String(reference.details.findIndex(obj => obj.dataKey === props.component.sourceQuestion));
+		return String(reference_index_lookup(props.component.sourceQuestion));
 	})
 
 	let sourceAnswer = createMemo(() => {
 		let answer = [];
 		if(props.component.sourceQuestion !== ''){
-			const componentAnswerIndex = reference.details.findIndex(obj => obj.dataKey === props.component.sourceQuestion);
+			// const componentAnswerIndex = reference.details.findIndex(obj => obj.dataKey === props.component.sourceQuestion);
+			const componentAnswerIndex = reference_index_lookup(props.component.sourceQuestion);
 			if(reference.details[componentAnswerIndex]){
 				if(typeof reference.details[componentAnswerIndex].answer === 'object'){
 					answer = reference.details[componentAnswerIndex].answer == '' ? [] : reference.details[componentAnswerIndex].answer;

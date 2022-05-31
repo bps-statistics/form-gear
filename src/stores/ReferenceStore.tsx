@@ -56,6 +56,7 @@ type Detail = {
     presetMaster?: boolean
     sourceOption?: any
     disableInitial?: boolean
+    parent_ref?: []
 }
 
 export interface Reference {
@@ -68,3 +69,4 @@ export const [reference, setReference] = createStore<Reference>({
     sidebar: []
 });
 
+export const [referenceMap, setReferenceMap] = createStore({})
