@@ -7,6 +7,12 @@ const PhotoInput: FormComponentBase = props => {
   const [fileSource, setFileSource] = createSignal('');
   let reader = new FileReader();
 
+  type imageType = {
+    image : string,
+    label : string,
+    type : string
+  }
+
   const config = props.config
   const [disableInput] = createSignal((config.formMode > 1 ) ? true : props.component.disableInput)
 
@@ -21,14 +27,11 @@ const PhotoInput: FormComponentBase = props => {
 
   })
 
-  let handleOnChange = (event) => {
+  let handleOnChange = (event : imageType) => {
     let updatedAnswer = JSON.parse(JSON.stringify(props.value))
     updatedAnswer = [];
 
-
-    let imgSrc = "file://" + event
-
-    updatedAnswer.push({ value: event, label: event })
+    updatedAnswer.push({ value: event.image, label: event.label, type: event.type })
 
 
     props.onValueChange(updatedAnswer)
