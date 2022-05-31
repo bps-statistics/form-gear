@@ -2,26 +2,31 @@
 
 ## FormGear | Ver. 0.1.3
 
-> May 27, 2022
+> May 31, 2022
 
 ### Changed
-- Update range value for formMode (has impact for disable input and / or remark)
+- Update formMode: 
+	- 1 => OPEN
+	- 2 => REVIEW 
+	- 3 => CLOSE 
 - Update label view on SelectInput inline with required and hint
 - Update Clickable label on nested input button to enter the nested section
+- Remove reformat answer onValueChange on MaskingInput
+- Update error list css on MaskingInput
 
 ### Added
 - Cols and rows property has been added. Both are used to specify columns and rows in a grid layout.
 	```json
-		"label":"Address",
-		"dataKey":"address",
-		"type":30,
-		"rows":3
+	"label":"Address",
+	"dataKey":"address",
+	"type":30,
+	"rows":3
 	```
 	```json
-		"label":"Healthy neighborhood rating",
-		"dataKey":"rating",
-		"type":26,
-		"cols":5,
+	"label":"Healthy neighborhood rating",
+	"dataKey":"rating",
+	"type":26,
+	"cols":5,
 	```
 
 
@@ -105,6 +110,7 @@
 	"test":"let values = getValue('hobbies'); if(values[0] !== undefined) values[0].value == 1",
 	```
 
+---
 
 ## FormGear | Ver. 0.1.1
 
