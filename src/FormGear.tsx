@@ -63,9 +63,9 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
     // versionState == 0 && referenceLen > 0 && sidebarLen >0
     if( versionState == 0 && referenceLen > 0 && sidebarLen >0 ){
       console.log('Reuse reference 🚀')
-      load_reference_map(referenceFetch)
       setReference(referenceFetch)
       setSidebar('details',referenceFetch.sidebar)
+      load_reference_map()
       runAll = 1;
       
       render(() => (
