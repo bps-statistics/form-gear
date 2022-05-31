@@ -5,8 +5,10 @@ import { Switch, For, Match, createSignal, createMemo, Show } from 'solid-js'
 import { reference, setReference} from './stores/ReferenceStore';
 import { sidebar, setSidebar} from './stores/SidebarStore';
 import { response, setResponse} from './stores/ResponseStore';
+import { validation, setValidation, Validation } from './stores/ValidationStore';
 import { remark, setRemark} from './stores/RemarkStore';
 import { note, setNote} from './stores/NoteStore';
+import { principal, setPrincipal} from './stores/PrincipalStore';
 import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
 import { locale, setLocale} from './stores/LocaleStore';
 import { useLoaderDispatch } from "./loader/FormLoaderProvider"
@@ -44,7 +46,6 @@ const FormInput: FormComponentBase = props => {
   const [form, { setActiveComponent }] = useForm();
   const { setLoader, removeLoader } = useLoaderDispatch();
 
-  
   const [flagRemark, setFlagRemark] = createSignal(''); //dataKey Remark
   const [comments, setComments] = createSignal([]); //temp Comments
   const [tmpComment, setTmpComment] = createSignal(''); //temp Comment
@@ -52,35 +53,57 @@ const FormInput: FormComponentBase = props => {
   
   const [loading, setLoading] = createSignal(false); //temp Comment
 
-  const onUserClick = (dataKey: string) => {
-    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-      const dataForm = [];
-      reference.details.forEach((element) => {
-        if(
-          (element.type > 3)
-          && ( element.enable ) 
-          && ( element.answer !== undefined)
-          && ( element.answer !== '') 
-          && ( element.answer !== null)
-        ) {
-          dataForm.push({
+  const setData = () => {
+    const dataForm = [];
+    const dataPrincipal = [];
+    reference.details.forEach((element) => {
+      if(
+        (element.type > 3)
+        && ( element.enable ) 
+        && ( element.answer !== undefined)
+        && ( element.answer !== '') 
+        && ( element.answer !== null)
+      ) {
+        dataForm.push({
+          dataKey: element.dataKey,
+          answer: element.answer
+        })
+        if(element.principal !== undefined){
+          dataPrincipal.push({
             dataKey: element.dataKey,
-            answer: element.answer
+            answer: element.answer,
+            principal: element.principal,
+            columnName: element.columnName
           })
         }
+      }
+    })      
 
-        setResponse('details', 'answers', dataForm)
-        setResponse('details','templateVersion', template.details.version);
-        setResponse('details','validationVersion', template.details.version);
-        setResponse('details','docState', docState());
-        let now = dayjs().format('YYYY-MM-DD HH:mm:ss');
-        (response.details.createdAt === '') ? setResponse('details','createdAt', now) : setResponse('details','createdAt', '');
-        setResponse('details','createdBy', now);
-        setResponse('details','createdBy', form.formConfig.username);
-        (response.details.createdBy === '') ? setResponse('details','editedBy', form.formConfig.username): setResponse('details','editedBy', '');
-        let copiedNote = JSON.parse(JSON.stringify(note.details.notes));
-        setRemark('details','notes',copiedNote);
-      })
+    //setResponse
+    setResponse('details', 'answers', dataForm)
+    setResponse('details','templateVersion', template.details.version);
+    setResponse('details','validationVersion', validation.details.version);
+    setResponse('details','docState', docState());
+    let now = dayjs().format('YYYY-MM-DD HH:mm:ss');
+    (response.details.createdAt === '') ? setResponse('details','createdAt', now) : setResponse('details','createdAt', '');
+    setResponse('details','lastUpdated', now);
+    setResponse('details','editedBy', form.formConfig.username);
+    (response.details.createdBy === '') ? setResponse('details','createdBy', form.formConfig.username): setResponse('details','createdBy', '');
+    //setPrincipal
+    setPrincipal('details','principals', dataPrincipal)
+    setPrincipal('details','templateVersion', template.details.version);
+    setPrincipal('details','createdAt', now);
+    setResponse('details','createdBy', form.formConfig.username);
+    //setRemark
+    let copiedNote = JSON.parse(JSON.stringify(note.details.notes));
+    setRemark('details','notes',copiedNote);
+    //setReference
+    setReference('sidebar', sidebar.details)
+  }
+
+  const onUserClick = (dataKey: string) => {
+    setData();
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
       var component = document.querySelector(".mobile-component-div");
     }else{
       var component = document.querySelector(".component-div");
@@ -88,13 +111,11 @@ const FormInput: FormComponentBase = props => {
     const position = sidebar.details.findIndex(obj => obj.dataKey === dataKey);
     setActiveComponent({dataKey: dataKey, label: sidebar.details[position].label, index: JSON.parse(JSON.stringify(sidebar.details[position].index)), position:position});
     window.scrollTo({ top: 0, behavior: "smooth" });
-    component.scrollTo({ top: 0, behavior: "smooth" });   
+    component.scrollTo({ top: 0, behavior: "smooth" });
   }
   
   const onValueChange = (value: any) => {
     setLoader({});
-    // toastInfo(locale.details.language[0].componentRendered, 500, "", "bg-orange-600/80");
-    // saveAnswer(props.component.dataKey, 'answer', value, form.activeComponent.position, {'clientMode': form.formConfig.clientMode,'baseUrl': form.formConfig.baseUrl});      
     setTimeout(() => saveAnswer(props.component.dataKey, 'answer', value, form.activeComponent.position, {'clientMode': form.formConfig.clientMode,'baseUrl': form.formConfig.baseUrl}), 50);
   }
 
@@ -102,7 +123,6 @@ const FormInput: FormComponentBase = props => {
 
   let handleValidation = createMemo(() => {
     const componentIndex = reference.details.findIndex(obj => obj.dataKey === props.component.dataKey);
-    // console.log('valState:',props.component.dataKey, reference.details[componentIndex].validationState)
     return (reference.details[componentIndex]) ? reference.details[componentIndex].validationState : 0;    
   })
     
@@ -111,11 +131,8 @@ const FormInput: FormComponentBase = props => {
     return (reference.details[componentIndex]) ? reference.details[componentIndex].validationMessage : [];
   }
 
-
-  const saveRemark = () => { 
-
+  const saveRemark = () => {
     if(tmpComment().length !== 0){
-    
       let commentRemark = []
       commentRemark.push({
         sender: form.formConfig.username, 
@@ -139,12 +156,15 @@ const FormInput: FormComponentBase = props => {
       setReference('details',refPosition,'validationState',0);
       setReference('details',refPosition,'validationMessage',[]);
       setNote('details','notes', updatedNote);
-      // console.log('remark', remark) 
       
       setTmpComment('');
       setFlagRemark('');
 
       toastInfo(locale.details.language[0].remarkAdded, 500, "",  "bg-teal-600/80");
+      if(form.formConfig.formMode == 2){
+        setData();
+        props.setResponseMobile( response.details, remark.details, principal.details, reference );
+      }
     }else{
       toastInfo(locale.details.language[0].remarkEmpty, 500, "", "bg-red-700/80");
     }
@@ -156,7 +176,6 @@ const FormInput: FormComponentBase = props => {
 
   const modalRemark = (dataKey: string) => {
     if(flagRemark() === ''){
-      console.log('agung remark', props.config.formMode)
       setFlagRemark(dataKey);
 
       let updatedNote = JSON.parse(JSON.stringify(note.details.notes))

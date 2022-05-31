@@ -13,6 +13,7 @@ const FormComponent: Component<{
   offlineSearch : any
   onlineSearch : any
   openMap : any
+  setResponseMobile: any
 }> = props => {
 
   return (
@@ -29,7 +30,8 @@ const FormComponent: Component<{
                 MobileGpsHandler: props.GpsHandler,
                 MobileOfflineSearch : props.offlineSearch,
                 MobileOnlineSearch : props.onlineSearch,
-                MobileOpenMap : props.openMap})} />
+                MobileOpenMap : props.openMap,
+                setResponseMobile: props.setResponseMobile})} />
       </div>
     </div>
   )

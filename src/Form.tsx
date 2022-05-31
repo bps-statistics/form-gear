@@ -337,7 +337,7 @@ const Form: Component<{
       });
       window.scrollTo({ top: 0, behavior: "smooth" });
       component.scrollTo({ top: 0, behavior: "smooth" });   
-    }    
+    }
 
     const nextPage = (event: MouseEvent) => {
       writeResponse();
@@ -464,7 +464,6 @@ const Form: Component<{
     }
 
     const confirmSubmit = (event: MouseEvent) => {
-      console.log(config().formMode)
       createCaptcha();
       checkDocState();
       if(docState() === 'E') {
@@ -1045,6 +1044,7 @@ const Form: Component<{
                     offlineSearch = { props.offlineSearch }
                     onlineSearch = { props.onlineSearch }
                     openMap = { props.openMap }
+                    setResponseMobile = { props.setResponseMobile }
                   />
 
                   <div  class="grid grid-cols-6 sticky w-full justify-end bottom-12 mt-10"

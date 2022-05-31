@@ -144,6 +144,7 @@ export interface FormComponentBase extends Component<{
   MobileOnlineSearch?: (value: any) => void
   MobileOpenMap?: (value: any) => void
   openRemark?: (dataKey: string) =>void
+  setResponseMobile?: any
 }> { }
 
 export const CONTROL_MAP = new Map<ControlType, FormComponentBase>([
