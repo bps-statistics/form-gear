@@ -14,7 +14,7 @@ import { principal, setPrincipal} from './stores/PrincipalStore';
 import { locale, setLocale} from './stores/LocaleStore';
 import { summary, setSummary } from './stores/SummaryStore';
 
-import { saveAnswer, reference_index_lookup, load_reference_map } from "./GlobalFunction";
+import { saveAnswer, reference_index_lookup, load_reference_map, runValidation } from "./GlobalFunction";
 import { toastInfo } from "./FormInput";
 
 import dayjs from 'dayjs';
@@ -201,6 +201,15 @@ const Form: Component<{
     // console.timeEnd('response ');
     // console.timeEnd('');
     load_reference_map()
+
+    for(let index_ref =0; index_ref < reference.details.length; index_ref++){
+      if(reference.details[index_ref].validationState === 0 
+          && !( JSON.parse(JSON.stringify(reference.details[index_ref].index[reference.details[index_ref].index.length - 2])) == 0 && reference.details[index_ref].level > 1)){
+        runValidation(reference.details[index_ref].dataKey, JSON.parse(JSON.stringify(reference.details[index_ref])), null)
+      }
+    }
+
+    // console.log(reference)
     
     const [onMobile , setOnMobile] = createSignal(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
     const checkOnMobile = () => {
@@ -215,20 +224,33 @@ const Form: Component<{
                 nilai = nilai && ( element.type > 4 ) 
                   && ( element.enable ) 
                   && ( element.answer !== undefined)
+                  && !( JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)
 
-                  if(element.answer !== undefined){
-                    if(element.type != 21 && element.type != 22){
-                      nilai =  nilai  && element.answer !== ''  && element.answer !== null
-                    }else if(element.type == 21 || element.type == 22){
-                      nilai =  nilai  && element.answer.length > 1
-                    }
-                  }else{
-                    nilai = nilai && false
-                  }
                   if(element.parent_ref !== undefined){
                     element.parent_ref.forEach((item) => {
                       nilai = nilai && reference.details[reference_index_lookup(item)].enable
                     })
+                  }
+                  if(nilai){
+                    if(element.answer !== undefined){
+                      if(element.type !== 21 && element.type !== 22){
+                          if(typeof element.answer.answer === 'object'){
+                              if(!(element.answer.length > 0)){
+                                nilai = nilai && false
+                              }
+                          }else{
+                              if(!(element.answer.answer !== null && element.answer.answer !== '')){
+                                nilai = nilai && false
+                              }
+                          }
+                      }else{
+                          if(!((element.answer.type == 21 && element.answer.answer.length > 1 ) || ( element.answer.type == 22 && element.answer.answer.length > 1 ))){
+                            nilai = nilai && false
+                          }
+                      }
+                    }else{
+                      nilai = nilai && false
+                    }
                   }
                 
                 return nilai
@@ -239,22 +261,39 @@ const Form: Component<{
                   && ( element.enable ) 
                   && !( JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)
 
-                  if(element.answer !== undefined){
-                    nilai =  nilai &&((element.answer === '' )
-                      || ( (element.type == 21) && element.answer.length == 1 ) 
-                      || ( (element.type == 22) && element.answer.length == 1 ) )
-                  }
-
                   if(element.parent_ref !== undefined){
                     element.parent_ref.forEach((item) => {
                       nilai = nilai && reference.details[reference_index_lookup(item)].enable
                     })
                   }
+
+                  if(nilai){
+                    if(element.answer !== undefined){
+                      if(element.type !== 21 && element.type !== 22){
+                          if(typeof element.answer === 'object'){
+                              if(element.answer.length > 0){
+                                nilai = nilai && false
+                              }
+                          }else{
+                              if(element.answer !== null && element.answer !== ''){
+                                nilai = nilai && false
+                              }
+                          }
+                      }else{
+                          if((element.type == 21 && element.answer.length > 1 ) || ( element.type == 22 && element.answer.length > 1 )){
+                            nilai = nilai && false
+                          }
+                      }
+                    }
+                  }
+
+                  
               return nilai
             }).length,
         error: reference.details.filter( (element) => {
               let nilai = true
               nilai = nilai && ( element.type > 4 && ( element.enable ) && element.validationState == 2 )
+                && !( JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)
               if(element.parent_ref !== undefined){
                 element.parent_ref.forEach((item) => {
                   nilai = nilai && reference.details[reference_index_lookup(item)].enable
@@ -465,12 +504,15 @@ const Form: Component<{
               parent_ref_bol_value = parent_ref_bol_value && reference.details[reference_index_lookup(item)].enable
             })
           }
+          
 
-          if (parent_ref_bol_value && element.type > 4 && ( element.enable ) && element.validationState == 2) {
+          if (parent_ref_bol_value && element.type > 4 && ( element.enable ) && element.validationState == 2
+            && !( JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)) {
             let sidebarIndex = element.level > 1 ? element.index.slice(0,-1) : element.index.slice(0,-2)
             filteredError.push({label:element.label,message:element.validationMessage,sideIndex:sidebarIndex,dataKey:element.dataKey})
           }
-          if (parent_ref_bol_value && element.type > 4 && ( element.enable ) && element.validationState == 1) {
+          if (parent_ref_bol_value && element.type > 4 && ( element.enable ) && element.validationState == 1
+            && !( JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)) {
             let sidebarIndex = element.level > 1 ? element.index.slice(0,-1) : element.index.slice(0,-2)
             filteredWarning.push({label:element.label,message:element.validationMessage,sideIndex:sidebarIndex,dataKey:element.dataKey})
           }
