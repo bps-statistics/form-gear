@@ -274,6 +274,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                       client: element[i].client !== undefined ? element[i].client : undefined,
                       titleModalDelete: element[i].titleModalDelete !== undefined ? element[i].titleModalDelete : undefined,
                       sourceOption: element[i].sourceOption !== undefined ? element[i].sourceOption : undefined,
+                      sourceSelect: element[i].sourceSelect !== undefined ? element[i].sourceSelect : undefined,
                       typeOption: element[i].typeOption !== undefined ? element[i].typeOption : undefined,
                       contentModalDelete: element[i].contentModalDelete !== undefined ? element[i].contentModalDelete : undefined,
                       validationState: element[i].validationState !== undefined ? element[i].validationState : 0,

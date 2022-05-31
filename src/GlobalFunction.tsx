@@ -262,7 +262,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
         components: [components],
         sourceQuestion: defaultRef.sourceQuestion !== undefined ? defaultRef.sourceQuestion : '',
         enable: defaultRef.enable !== undefined ? defaultRef.enable : true,
-        enableCondition: (defaultRef.enableCondition === undefined) ? true : eval(defaultRef.enableCondition),
+        enableCondition: (defaultRef.enableCondition === undefined) ? undefined : defaultRef.enableCondition,
         componentEnable: defaultRef.componentEnable !== undefined ? defaultRef.componentEnable : []
 
     }
@@ -452,7 +452,7 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
             components: [components],
             sourceQuestion: defaultRef.sourceQuestion !== undefined ? defaultRef.sourceQuestion + '#' + (Number(beforeAnswer)+1) : '',
             enable: defaultRef.enable !== undefined ? defaultRef.enable : true,
-            enableCondition: (defaultRef.enableCondition === undefined) ? true : eval(defaultRef.enableCondition),
+            enableCondition: (defaultRef.enableCondition === undefined) ? undefined : defaultRef.enableCondition,
             componentEnable: defaultRef.componentEnable !== undefined ? defaultRef.componentEnable : []
         }
         let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
@@ -513,6 +513,7 @@ export const deleteSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
 }
 
 export const runVariableComponent = (dataKey: string, activeComponentPosition: number) => {
+    console.log('runVariable', dataKey);
     const getRowIndex = (positionOffset:number) => {
         let editedDataKey = dataKey.split('@');
         let splitDataKey = editedDataKey[0].split('#');
@@ -530,6 +531,7 @@ export const runVariableComponent = (dataKey: string, activeComponentPosition: n
 }
 
 export const runEnabling = (dataKey: string, activeComponentPosition: number, prop:any | null, enableCondition:string) => {
+    console.log('runEnabling', dataKey);
     const getProp = (config: string) => {
         switch(config) {
             case 'clientMode': {
@@ -554,6 +556,7 @@ export const runEnabling = (dataKey: string, activeComponentPosition: number, pr
 }
 
 export const runValidation = (dataKey:string, updatedRef:any, activeComponentPosition: number) => {
+    console.log('runValidation', dataKey);
     const getRowIndex = (positionOffset:number) => {
         let editedDataKey = dataKey.split('@');
         let splitDataKey = editedDataKey[0].split('#');
@@ -602,6 +605,7 @@ export const runValidation = (dataKey:string, updatedRef:any, activeComponentPos
 }
 
 export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, activeComponentPosition: number, prop:any | null) => {
+    console.log('saveAnswer', dataKey, attributeParam);
     const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
     if(attributeParam === 'answer' || attributeParam === 'enable'){
         
@@ -646,6 +650,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 }
             })));
             if(hasSideCompEnable.length > 0) {//at least there is minimal 1 enable in this datakey
+                console.log('agungssss', hasSideCompEnable, JSON.parse(JSON.stringify(sidebar.details)))
                 hasSideCompEnable.forEach(sidebarEnable => {
                     let sidePosition = sidebar.details.findIndex(objSide => objSide.dataKey === sidebarEnable.dataKey);
                     let enableSide = eval(sidebarEnable.enableCondition);
@@ -665,6 +670,14 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                         }
                     });
                     if(tmpVarComp.length > 0) {
+                        const getRowIndex = (positionOffset:number) => {
+                            let editedDataKey = dataKey.split('@');
+                            let splitDataKey = editedDataKey[0].split('#');
+                            let splLength = splitDataKey.length;
+                            let reducer = positionOffset+1;
+                            return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
+                        }
+                        const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
                         tmpVarComp.forEach((e,i) => {
                             let evVal = eval(e.expression);
                             saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);

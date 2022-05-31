@@ -13,6 +13,7 @@
 - Update Clickable label on nested input button to enter the nested section
 - Remove reformat answer onValueChange on MaskingInput
 - Update error list css on MaskingInput
+- Reactive changing on dependent selectInput
 
 ### Added
 - Cols and rows property has been added. Both are used to specify columns and rows in a grid layout.
@@ -29,6 +30,11 @@
 	"cols":5,
 	```
 - save data (including response, principal, remark, and reference) each user add remark on formMode 1 and 2
+
+### Fixed
+- Fix function eval expression on enableSection
+- Fix copied attribute enableCondition when create sidebar component
+
 
 ---
 
