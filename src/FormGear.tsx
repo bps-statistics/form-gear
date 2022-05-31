@@ -25,7 +25,7 @@ import { toastInfo } from "./FormInput";
 
 export function FormGear(referenceFetch, templateFetch, presetFetch, responseFetch, validationFetch, remarkFetch, config, uploadHandler, GpsHandler, offlineSearch, onlineSearch, mobileExit, setResponseMobile, setSubmitMobile, openMap) {
 
-  console.log('form-gear@0.1.2');
+  console.log('form-gear@0.1.3');
   // console.time('FormGear renders successfully in ');
   let timeStart = new Date();
 
