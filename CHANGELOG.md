@@ -6,17 +6,27 @@
 
 ### Changed
 - Update formMode: 
-	- 1 => OPEN
-	- 2 => REVIEW 
-	- 3 => CLOSE 
-- Update label view on SelectInput inline with required and hint
-- Update Clickable label on nested input button to enter the nested section
-- Remove reformat answer onValueChange on MaskingInput
-- Update error list css on MaskingInput
-- Reactive changing on dependent selectInput
+	- *1 => OPEN*
+	
+		This mode is used for data collection activities in general, and it allows users to modify all components of questions and remarks according to the template's constraints.
+
+	- *2 => REVIEW*
+
+		This mode is used to review the questionnaire post-data collection, and it only allows users to add remarks on each component based on the examination findings.
+
+	- *3 => CLOSE* 
+
+		This mode is used just to review the questionnaire upon post-data collection and examination findings.
+- Update label view css on SelectInput inline with required and hint instruction.
+- Set clickable label on nested input button to enter the nested section.
+- Remove reformat answer onValueChange on MaskingInput.
+- Update error list css on MaskingInput as other.
+- Reactive changes in related components when dependent selectInput change.
+
 
 ### Added
-- Cols and rows property has been added. Both are used to specify columns and rows in a grid layout.
+- Trigger save (including response, principal, remark, and reference) on post remark.
+- Add cols and rows property to specify in a grid layout on components.
 	```json
 	"label":"Address",
 	"dataKey":"address",
@@ -29,11 +39,11 @@
 	"type":26,
 	"cols":5,
 	```
-- save data (including response, principal, remark, and reference) each user add remark on formMode 1 and 2
+
 
 ### Fixed
 - Fix function eval expression on enableSection
-- Fix copied attribute enableCondition when create sidebar component
+- Fix copied attribute enableCondition while creating sidebar component
 
 
 ---
