@@ -1,6 +1,6 @@
 {
   "name": "form-gear",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "FormGear is a framework engine for dynamic form creation and complex form processing and validation for data collection.",
   "info": "It is easy to use and efficiently handle nested inquiries to capture everything down to the last detail. Unlike other similar framework, validation is handled in a FALSE condition in which each field is validated against a test equation. This leads to a more efficient and effective way to validate each component.",
   "homepage": "https://solid-form-gear.vercel.app/",

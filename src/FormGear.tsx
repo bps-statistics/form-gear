@@ -26,7 +26,7 @@ import { toastInfo } from "./FormInput";
 export function FormGear(referenceFetch, templateFetch, presetFetch, responseFetch, validationFetch, remarkFetch, config, uploadHandler, GpsHandler, offlineSearch, onlineSearch, mobileExit, setResponseMobile, setSubmitMobile, openMap) {
 
   console.log('form-gear@0.1.2');
-  console.time('FormGear renders successfully in ');
+  // console.time('FormGear renders successfully in ');
   let timeStart = new Date();
 
   try{
@@ -58,7 +58,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
     // If a equals b, return 0;
     let runAll = 0;
     if( versionState == 0 && referenceLen > 0 && sidebarLen >0 ){
-      console.log('Reuse reference 🚀')
+      console.log('Reuse reference ♻️')
       setReference(referenceFetch)
       setSidebar('details',referenceFetch.sidebar)
       runAll = 1;
@@ -411,7 +411,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
       },500)
     }
 
-    console.timeEnd('FormGear renders successfully in ')
+    // console.timeEnd('FormGear renders successfully in ')
   } catch (e: unknown) {
     toastInfo("Failed to render the questionnaire", 30000, "", "bg-pink-600/80");
   };  

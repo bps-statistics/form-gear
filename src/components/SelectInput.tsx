@@ -355,7 +355,7 @@ const SelectInput: FormComponentBase = props => {
                         let check = ref.sourceSelect[0].parentCondition
                         check.map((child: any) => {
                             if (child.value == parentKey && ref.answer != null) {
-                                console.log('this ', ref)
+                                // console.log('this ', ref)
                                 let sidePosition = sidebar.details.findIndex((obj, index) => {
                                     const cekInsideIndex = obj.components[0].findIndex((objChild, index) => {
                                         objChild.dataKey === ref.dataKey;
