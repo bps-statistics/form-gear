@@ -62,6 +62,8 @@ const Form: Component<{
       if(componentIndex !== -1 && (reference.details[componentIndex].answer) && (reference.details[componentIndex].enable)) answer = reference.details[componentIndex].answer;
       return answer;
     }
+    const [renderGear, setRenderGear] = createSignal('FormGear-0.1.2 🚀:');
+
     const [prop, setProp] = createSignal(getProp(''));
     const [config, setConfig] = createSignal(getConfig());
     const [form, { setActiveComponent }] = useForm();
@@ -185,7 +187,8 @@ const Form: Component<{
       })
       // console.timeEnd('tmpEnableComp ')
     } else {
-      let hasRemarkComp = reference.details.filter(obj => obj.hasRemark = true);
+      // @ts-ignore
+      let hasRemarkComp = reference.details.filter(obj => obj.hasRemark == true);
       hasRemarkComp.forEach(e => {
         let remarkPosition = remark.details.notes.findIndex(obj => obj.dataKey === e.dataKey);
         if(remarkPosition !== -1){
@@ -195,6 +198,7 @@ const Form: Component<{
           setNote('details','notes',updatedNote);
         }
       })
+      setRenderGear('FormGear-0.1.2 ♻️:')
     }
     // console.timeEnd('response ');
     // console.timeEnd('');
@@ -629,6 +633,7 @@ const Form: Component<{
                                             {(item_msg, index_msg) => (
                                                 <div class="grid grid-cols-12 text-sm font-light mt-1">
                                                   <div class="col-span-1 flex justify-center items-start">-</div>
+                                                  {/* @ts-ignore */}
                                                   <div class="col-span-11 text-justify mr-1">{item_msg}</div>
                                                 </div>
                                             )}
@@ -703,6 +708,7 @@ const Form: Component<{
                                               {(item_msg, index_msg) => (
                                                   <div class="grid grid-cols-12 text-sm font-light mt-1">
                                                     <div class="col-span-1 flex justify-center items-start">-</div>
+                                                    {/* @ts-ignore */}
                                                     <div class="col-span-11 text-justify mr-1">{item_msg}</div>
                                                   </div>
                                               )}
@@ -997,7 +1003,7 @@ const Form: Component<{
                               'hidden': onMobile() === true,
                             }}
                           />
-                        <div class="text-xs font-extralight text-gray-400 ">FormGear-0.1.2 🚀: &#177; {timeDiff+20} ms</div>
+                        <div class="text-xs font-extralight text-gray-400 "> {renderGear} &#177; {timeDiff} ms</div>
                       </div>
                       <div class="ml-auto sm:flex items-center p-2 ">
                         <button onClick={toggleSwitch} type="button" 
