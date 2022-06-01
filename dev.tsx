@@ -27,7 +27,7 @@ var referenceGear = null;
 let reference = await fetch("../src/data/reference.json").then((res) => res.json()) || []
 let template = await fetch("../src/data/template.json").then((res) => res.json()) || []
 let preset = await fetch("../src/data/preset.json").then((res) => res.json()) || []
-let response = await fetch("../src/data/response.json").then((res) => res.json()) || []
+let response = await fetch("../src/data/data.json").then((res) => res.json()) || []
 let validation = await fetch("../src/data/validation.json").then((res) => res.json()) || []
 let remark = await fetch("../src/data/remark.json").then((res) => res.json()) || []
 

@@ -40,7 +40,7 @@ export const getValue = (dataKey: string) => {
     return answer;
 }
 
-export const createComponent = (dataKey: string, nestedPosition: number, componentPosition: number, sidebarPosition: number, components: any, parentIndex: number[], parentName: string, parent_ref: any) => {
+export const createComponent = (dataKey: string, nestedPosition: number, componentPosition: number, sidebarPosition: number, components: any, parentIndex: number[], parentName: string, parentRef: any) => {
     const eval_enable = (eval_text) => {
         try{
             return eval(eval_text)
@@ -188,7 +188,7 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
     newComp.contentModalConfirmation = newComp.contentModalConfirmation !== undefined ? newComp.contentodalConfirmation : undefined
     newComp.required =  newComp.required !== undefined ? newComp.required : undefined
 
-    newComp.parent_ref = parent_ref
+    newComp.parentRef = parentRef
     
     newComp.hasRemark = false;
     if ( newComp.enableRemark === undefined || (newComp.enableRemark !== undefined && newComp.enableRemark )){  
@@ -203,12 +203,12 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
     }
     newComp.presetMaster = newComp.presetMaster !== undefined ? newComp.presetMaster : undefined
     if(tmp_type < 3){
-        let parent_ref_local_child = JSON.parse(JSON.stringify(parent_ref))
-        parent_ref_local_child.push(newComp.dataKey)
+        let parentRef_local_child = JSON.parse(JSON.stringify(parentRef))
+        parentRef_local_child.push(newComp.dataKey)
 
         let comp_array = [];
         newComp.components[0].forEach((element, index) => {
-            comp_array.push(createComponent(element.dataKey, nestedPosition, index, sidebarPosition, newComp.components[0][index], JSON.parse(JSON.stringify(newComp.index)), null, parent_ref_local_child))
+            comp_array.push(createComponent(element.dataKey, nestedPosition, index, sidebarPosition, newComp.components[0][index], JSON.parse(JSON.stringify(newComp.index)), null, parentRef_local_child))
         })
         newComp.components[0] = JSON.parse(JSON.stringify(comp_array));
     }
@@ -238,19 +238,19 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
         defaultRef.components[0][index].validations = (valPosition !== -1) ? validation.details.testFunctions[valPosition].validations : [];
         defaultRef.components[0][index].componentValidation = (valPosition !== -1) ? validation.details.testFunctions[valPosition].componentValidation : [];
 
-        let parent_ref_for_comp = JSON.parse(JSON.stringify(defaultRef.components[0][index].parent_ref))
-        parent_ref_for_comp.push(defaultRef.components[0][index].dataKey)
+        let parentRef_for_comp = JSON.parse(JSON.stringify(defaultRef.components[0][index].parentRef))
+        parentRef_for_comp.push(defaultRef.components[0][index].dataKey)
         
-        let newComp = createComponent(defaultRef.components[0][index].dataKey, (Number(answer.value)), Number(index), sidebarPosition, defaultRef.components[0][index], [], answer.label, parent_ref_for_comp);
+        let newComp = createComponent(defaultRef.components[0][index].dataKey, (Number(answer.value)), Number(index), sidebarPosition, defaultRef.components[0][index], [], answer.label, parentRef_for_comp);
         components.push(newComp);
         //insert into reference
 
         // reference.details.findIndex(obj => obj.dataKey === newComp.dataKey)
-
-        if(reference_index_lookup(newComp.dataKey) === -1){
+        if(!(newComp.dataKey in referenceMap)){
             let updatedRef = JSON.parse(JSON.stringify(reference.details));
             let newIndexLength = newComp.index.length;
             for(let looping = newIndexLength; looping > 1; looping--){
+                let referenceMap_local = JSON.parse(JSON.stringify(referenceMap))
                 let loopingState = true;
                 let myIndex = JSON.parse(JSON.stringify(newComp.index))
                 myIndex.length = looping;
@@ -259,10 +259,16 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
                     let refIndexToBeFound = JSON.parse(JSON.stringify(reference.details[y].index));
                     refIndexToBeFound.length = looping;
                     if(JSON.stringify(refIndexToBeFound) === JSON.stringify(myIndex)){
+                        referenceMap_local[newComp.dataKey] = y + 1
                         updatedRef.splice(y+1, 0, newComp);
                         loopingState = false;
                         break;
+                    }else{
+                        referenceMap_local[reference.details[y].dataKey] = y + 1
                     }
+                }
+                if(!loopingState){
+                    setReferenceMap(referenceMap_local)
                 }
                 if(!loopingState) break;
             }
@@ -360,7 +366,7 @@ export const deleteSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
             updatedSidebar.splice(x, 1);
         }
     }
-    
+    load_reference_map(updatedRef)
     setReference('details',updatedRef);
     setSidebar('details',updatedSidebar);
 }
@@ -454,16 +460,17 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
         
         let checkedDataKey = defaultRef.components[0][c].dataKey+'#'+now.toString();
         // reference.details.findIndex(obj => obj.dataKey === checkedDataKey)
-        if(reference_index_lookup(checkedDataKey) === -1){
-            let parent_ref_for_comp = JSON.parse(JSON.stringify(defaultRef.components[0][c].parent_ref))
-            parent_ref_for_comp.push(defaultRef.components[0][c].dataKey)
+        if(!(checkedDataKey in referenceMap)){
+            let parentRef_for_comp = JSON.parse(JSON.stringify(defaultRef.components[0][c].parentRef))
+            parentRef_for_comp.push(defaultRef.components[0][c].dataKey)
 
-            let newComp = createComponent(defaultRef.components[0][c].dataKey, now, Number(c), sidebarPosition, defaultRef.components[0][c], [], now.toString(), parent_ref_for_comp);
+            let newComp = createComponent(defaultRef.components[0][c].dataKey, now, Number(c), sidebarPosition, defaultRef.components[0][c], [], now.toString(), parentRef_for_comp);
             components.push(newComp);
             //insert ke reference
             let updatedRef = JSON.parse(JSON.stringify(reference.details));
             let newIndexLength = newComp.index.length;
             for(let looping = newIndexLength; looping > 1; looping--){
+                let referenceMap_local = JSON.parse(JSON.stringify(referenceMap))
                 let loopingState = true;
                 let myIndex = JSON.parse(JSON.stringify(newComp.index))
                 myIndex.length = looping;
@@ -472,10 +479,16 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                     let refIndexToBeFound = JSON.parse(JSON.stringify(reference.details[y].index));
                     refIndexToBeFound.length = looping;
                     if(JSON.stringify(refIndexToBeFound) === JSON.stringify(myIndex)){
+                        referenceMap_local[newComp.dataKey] = y + 1
                         updatedRef.splice(y+1, 0, newComp);
                         loopingState = false;
                         break;
+                    }else{
+                        referenceMap_local[reference.details[y].dataKey] = y + 1
                     }
+                }
+                if(!loopingState){
+                    setReferenceMap(referenceMap_local)
                 }
                 if(!loopingState) break;
             }
@@ -582,7 +595,11 @@ export const deleteSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
     setSidebar('details',updatedSidebar);
     let now = beforeAnswer-1;
     
-    if(now > answer) deleteSidebarNumber(dataKey, answer, now, sidebarPosition);
+    if(now > answer) {
+        deleteSidebarNumber(dataKey, answer, now, sidebarPosition)
+    }else{
+        load_reference_map()
+    };
 }
 
 export const runVariableComponent = (dataKey: string, activeComponentPosition: number) => {
@@ -697,31 +714,31 @@ export const runValidation = (dataKey:string, updatedRef:any, activeComponentPos
                 biggest = 2;
             }
         }
-        if(updatedRef.required !== undefined && updatedRef.required && updatedRef.enable && updatedRef.type > 4){
-            let violating_required = true
+        // if(updatedRef.required !== undefined && updatedRef.required && updatedRef.enable && updatedRef.type > 4){
+        //     let violating_required = true
 
-            if(updatedRef.answer !== undefined){
-                if(updatedRef.type !== 21 && updatedRef.type !== 22){
-                    if(typeof updatedRef.answer === 'object'){
-                        if(updatedRef.answer.length > 0){
-                            violating_required = false
-                        }
-                    }else{
-                        if(updatedRef.answer !== null && updatedRef.answer !== ''){
-                            violating_required = false
-                        }
-                    }
-                }else{
-                    if((updatedRef.type == 21 && updatedRef.answer.length > 1 ) || ( updatedRef.type == 22 && updatedRef.answer.length > 1 )){
-                        violating_required = false
-                    }
-                }
-            }
-            if(violating_required){
-                updatedRef.validationMessage.push(locale.details.language[0].validationRequired);
-                biggest = 2;
-            }
-        }
+        //     if(updatedRef.answer !== undefined){
+        //         if(updatedRef.type !== 21 && updatedRef.type !== 22){
+        //             if(typeof updatedRef.answer === 'object'){
+        //                 if(updatedRef.answer.length > 0){
+        //                     violating_required = false
+        //                 }
+        //             }else{
+        //                 if(updatedRef.answer !== null && updatedRef.answer !== ''){
+        //                     violating_required = false
+        //                 }
+        //             }
+        //         }else{
+        //             if((updatedRef.type == 21 && updatedRef.answer.length > 1 ) || ( updatedRef.type == 22 && updatedRef.answer.length > 1 )){
+        //                 violating_required = false
+        //             }
+        //         }
+        //     }
+        //     if(violating_required){
+        //         updatedRef.validationMessage.push(locale.details.language[0].validationRequired);
+        //         biggest = 2;
+        //     }
+        // }
         updatedRef.validationState = biggest;
     }
     
@@ -956,7 +973,6 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                             :
                             deleteSidebarNumber(element.dataKey, answer, beforeAnswer, activeComponentPosition)
                             ;
-                            load_reference_map()
                     } else if(typeof answer === 'object'){
                         beforeAnswer = (beforeAnswer === undefined) ? [] : beforeAnswer;
                         answer = JSON.parse(JSON.stringify(answer));
@@ -998,7 +1014,6 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                         } else if(answerLength === beforeAnswerLength){
                             answerLength > 0 && changeSidebarArray(element.dataKey, answer, beforeAnswer, activeComponentPosition);
                         }
-                        load_reference_map()
                     }
                 });
                 console.timeEnd('Nested 🚀');
@@ -1015,6 +1030,7 @@ export function reference_index_lookup(datakey){
         if(reference.details[referenceMap[datakey]].dataKey === datakey){
             return referenceMap[datakey];
         }else{
+            // console.log(datakey)
             load_reference_map()
             if(datakey in referenceMap){
                 return referenceMap[datakey];
@@ -1023,16 +1039,21 @@ export function reference_index_lookup(datakey){
             }
         }
     }else{
-        load_reference_map()
-        if(datakey in referenceMap){
-            return referenceMap[datakey];
-        }else{
-            return -1
-        }
+        // console.log(datakey)
+        // console.log('load_reference_map --1')
+        // load_reference_map()
+        // if(datakey in referenceMap){
+        //     return referenceMap[datakey];
+        // }else{
+        //     console.log('still --1')
+        //     return -1
+        // }
+        return -1
     }
 }
 
 export function load_reference_map(reference_local = null){
+    console.log('load_reference_map')
     if(reference_local === null){
         let reference_map_lokal = {}
         for (let index = 0; index < reference.details.length; index ++){

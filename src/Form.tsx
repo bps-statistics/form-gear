@@ -209,7 +209,7 @@ const Form: Component<{
       }
     }
 
-    // console.log(reference)
+    console.log(JSON.parse(JSON.stringify(reference)))
     
     const [onMobile , setOnMobile] = createSignal(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
     const checkOnMobile = () => {
@@ -226,8 +226,8 @@ const Form: Component<{
                   && ( element.answer !== undefined)
                   && !( JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)
 
-                  if(element.parent_ref !== undefined){
-                    element.parent_ref.forEach((item) => {
+                  if(element.parentRef !== undefined){
+                    element.parentRef.forEach((item) => {
                       nilai = nilai && reference.details[reference_index_lookup(item)].enable
                     })
                   }
@@ -261,8 +261,8 @@ const Form: Component<{
                   && ( element.enable ) 
                   && !( JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)
 
-                  if(element.parent_ref !== undefined){
-                    element.parent_ref.forEach((item) => {
+                  if(element.parentRef !== undefined){
+                    element.parentRef.forEach((item) => {
                       nilai = nilai && reference.details[reference_index_lookup(item)].enable
                     })
                   }
@@ -294,8 +294,8 @@ const Form: Component<{
               let nilai = true
               nilai = nilai && ( element.type > 4 && ( element.enable ) && element.validationState == 2 )
                 && !( JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)
-              if(element.parent_ref !== undefined){
-                element.parent_ref.forEach((item) => {
+              if(element.parentRef !== undefined){
+                element.parentRef.forEach((item) => {
                   nilai = nilai && reference.details[reference_index_lookup(item)].enable
                 })
               }
@@ -336,14 +336,14 @@ const Form: Component<{
       const dataPrincipal = [];
       reference.details.forEach((element) => {
 
-        let parent_ref_bol_value = true
-        if(element.parent_ref !== undefined){
-          element.parent_ref.forEach((item) => {
-            parent_ref_bol_value = parent_ref_bol_value && reference.details[reference_index_lookup(item)].enable
+        let parentRef_bol_value = true
+        if(element.parentRef !== undefined){
+          element.parentRef.forEach((item) => {
+            parentRef_bol_value = parentRef_bol_value && reference.details[reference_index_lookup(item)].enable
           })
         }
 
-        if( parent_ref_bol_value
+        if( parentRef_bol_value
           && (element.type > 3)
           && ( element.enable ) 
           && ( element.answer !== undefined)
@@ -498,20 +498,20 @@ const Form: Component<{
       let filteredWarning = [];
       reference.details.forEach((element,i) =>{
         // let sidebarIndex = element.index.splice(-1)
-          let parent_ref_bol_value = true
-          if(element.parent_ref !== undefined){
-            element.parent_ref.forEach((item) => {
-              parent_ref_bol_value = parent_ref_bol_value && reference.details[reference_index_lookup(item)].enable
+          let parentRef_bol_value = true
+          if(element.parentRef !== undefined){
+            element.parentRef.forEach((item) => {
+              parentRef_bol_value = parentRef_bol_value && reference.details[reference_index_lookup(item)].enable
             })
           }
           
 
-          if (parent_ref_bol_value && element.type > 4 && ( element.enable ) && element.validationState == 2
+          if (parentRef_bol_value && element.type > 4 && ( element.enable ) && element.validationState == 2
             && !( JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)) {
             let sidebarIndex = element.level > 1 ? element.index.slice(0,-1) : element.index.slice(0,-2)
             filteredError.push({label:element.label,message:element.validationMessage,sideIndex:sidebarIndex,dataKey:element.dataKey})
           }
-          if (parent_ref_bol_value && element.type > 4 && ( element.enable ) && element.validationState == 1
+          if (parentRef_bol_value && element.type > 4 && ( element.enable ) && element.validationState == 1
             && !( JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)) {
             let sidebarIndex = element.level > 1 ? element.index.slice(0,-1) : element.index.slice(0,-2)
             filteredWarning.push({label:element.label,message:element.validationMessage,sideIndex:sidebarIndex,dataKey:element.dataKey})
@@ -567,14 +567,14 @@ const Form: Component<{
           let run = 0
           
           // let notePosition = note.details.notes.findIndex(elNote => elNote.dataKey === obj.dataKey);
-          let parent_ref_bol_value = true
-          if(updatedRef.parent_ref !== undefined){
-            updatedRef.parent_ref.forEach((item) => {
-              parent_ref_bol_value = parent_ref_bol_value && reference.details[reference_index_lookup(item)].enable
+          let parentRef_bol_value = true
+          if(updatedRef.parentRef !== undefined){
+            updatedRef.parentRef.forEach((item) => {
+              parentRef_bol_value = parentRef_bol_value && reference.details[reference_index_lookup(item)].enable
             })
           }
 
-          if((updatedRef.enable && parent_ref_bol_value) && updatedRef.required !== undefined && (updatedRef.required)){
+          if((updatedRef.enable && parentRef_bol_value) && updatedRef.required !== undefined && (updatedRef.required)){
             let editedDataKey = updatedRef.dataKey.split('@');
             let newEdited = editedDataKey[0].split('#');
             if(updatedRef.level < 2 || updatedRef.level > 1 && newEdited[1] !== undefined){
@@ -595,8 +595,6 @@ const Form: Component<{
             }
           }
         });
-
-        load_reference_map()
         
         if(summary.error === 0){
           if(docState() === 'W') {
