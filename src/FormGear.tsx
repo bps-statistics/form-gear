@@ -56,14 +56,14 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
     const referenceList = [];
     let len = template.details.components[0].length;
 
-    const versionState = template.details.version == undefined ? 1 : semverCompare(
+    const templateVersionState = template.details.version == undefined ? 1 : semverCompare(
       template.details.version !== undefined ? template.details.version : '0.0.1', 
       response.details.templateVersion !== undefined ? response.details.templateVersion : '0.0.0'
     )
 
-    const versionStateTemplateVal = template.details.version == undefined ? 1 : semverCompare(
-      template.details.version !== undefined ? template.details.version : '0.0.1', 
-      validation.details.version !== undefined ? validation.details.version : '0.0.0'
+    const validationVersionState = validation.details.version == undefined ? 1 : semverCompare(
+      validation.details.version !== undefined ? validation.details.version : '0.0.1', 
+      response.details.validationVersion !== undefined ? response.details.validationVersion : '0.0.0'
     )
 
     const sidebarLen = reference !== undefined ? referenceFetch.sidebar.length : 0
@@ -74,7 +74,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
     // If the semver string b is greater than a, return -1. 
     // If a equals b, return 0;
     let runAll = 0;
-    if( versionState == 0 && versionStateTemplateVal == 0 && referenceLen > 0 && sidebarLen >0 ){
+    if( templateVersionState == 0 && validationVersionState == 0 && referenceLen > 0 && sidebarLen >0 ){
       console.log('Reuse reference ♻️')
       setReference(referenceFetch)
       setSidebar('details',referenceFetch.sidebar)
