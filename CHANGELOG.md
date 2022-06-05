@@ -11,6 +11,7 @@
 ### Changed
 - Rename lastUpdated to updatedAt
 - Disable ListTextInput and ListSelectInput button on formMode > 1
+- Optimize on create nested component
 
 
 ### Fixed

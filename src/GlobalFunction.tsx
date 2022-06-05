@@ -1,5 +1,4 @@
 import { reference, setReference} from './stores/ReferenceStore';
-// import { nested, setNested} from './stores/NestedStore';
 import { validation, setValidation} from './stores/ValidationStore';
 import { sidebar, setSidebar} from './stores/SidebarStore';
 import { preset, setPreset, Preset } from './stores/PresetStore';
@@ -209,48 +208,55 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
         
         let newComp = createComponent(defaultRef.components[0][index].dataKey, (Number(answer.value)), Number(index), sidebarPosition, defaultRef.components[0][index], [], answer.label);
         components.push(newComp);
-        //insert into reference
-        if(reference.details.findIndex(obj => obj.dataKey === newComp.dataKey) === -1){
-            let updatedRef = JSON.parse(JSON.stringify(reference.details));
-            let newIndexLength = newComp.index.length;
-            for(let looping = newIndexLength; looping > 1; looping--){
-                let loopingState = true;
-                let myIndex = JSON.parse(JSON.stringify(newComp.index))
-                myIndex.length = looping;
-                let refLength = reference.details.length;
-                for(let y = refLength-1; y >= 0; y--){
-                    let refIndexToBeFound = JSON.parse(JSON.stringify(reference.details[y].index));
-                    refIndexToBeFound.length = looping;
-                    if(JSON.stringify(refIndexToBeFound) === JSON.stringify(myIndex)){
-                        updatedRef.splice(y+1, 0, newComp);
-                        loopingState = false;
-                        break;
-                    }
-                }
-                if(!loopingState) break;
-            }
-            setReference('details',updatedRef);
+    })
 
-            let answer = [];
-            answer = (newComp.answer) ? newComp.answer : answer;
-            
-            const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
-            answer = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig().initialMode == 2) || (getConfig().initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : answer;
-            
-            let answerIndex = response.details.answers.findIndex(obj => obj.dataKey === newComp.dataKey);
-            answer = (answerIndex !== -1 && response.details.answers[answerIndex] !== undefined) ? response.details.answers[answerIndex].answer : answer;
-            
-            const getRowIndex = (positionOffset:number) => {
-                let editedDataKey = newComp.dataKey.split('@');
-                let splitDataKey = editedDataKey[0].split('#');
-                let splLength = splitDataKey.length;
-                let reducer = positionOffset+1;
-                return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
+    let startPosition = 0;
+    let updatedRef = JSON.parse(JSON.stringify(reference.details));
+    let newIndexLength = components[0].index.length;
+    for(let looping = newIndexLength; looping > 1; looping--){
+        let loopingState = true;
+        let myIndex = JSON.parse(JSON.stringify(components[0].index))
+        myIndex.length = looping;
+        let refLength = reference.details.length;
+        for(let y = refLength-1; y >= 0; y--){
+            let refIndexToBeFound = JSON.parse(JSON.stringify(reference.details[y].index));
+            refIndexToBeFound.length = looping;
+            if(JSON.stringify(refIndexToBeFound) === JSON.stringify(myIndex)){
+                startPosition = y +1;
+                loopingState = false;
+                break;
             }
-            const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-            if(Number(newComp.type) === 4) answer = eval(newComp.expression);
-            saveAnswer(newComp.dataKey, 'answer', answer, sidebarPosition, null);
         }
+        if(!loopingState) break;
+    }
+    components.forEach(el =>{
+        if(reference.details.findIndex(obj => obj.dataKey === el.dataKey) === -1){
+            updatedRef.splice(startPosition, 0, el);
+            startPosition += 1
+        }
+    })
+    setReference('details',updatedRef);
+    
+    components.forEach(newComp =>{
+        let value = [];
+        value = (newComp.answer) ? newComp.answer : value;
+        
+        const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
+        value = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig().initialMode == 2) || (getConfig().initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : value;
+        
+        let answerIndex = response.details.answers.findIndex(obj => obj.dataKey === newComp.dataKey);
+        value = (answerIndex !== -1 && response.details.answers[answerIndex] !== undefined) ? response.details.answers[answerIndex].answer : value;
+        
+        const getRowIndex = (positionOffset:number) => {
+            let editedDataKey = newComp.dataKey.split('@');
+            let splitDataKey = editedDataKey[0].split('#');
+            let splLength = splitDataKey.length;
+            let reducer = positionOffset+1;
+            return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
+        }
+        const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
+        if(Number(newComp.type) === 4) value = eval(newComp.expression);
+        saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null);
     })
     
     let newSide = {
@@ -264,7 +270,6 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
         enable: defaultRef.enable !== undefined ? defaultRef.enable : true,
         enableCondition: (defaultRef.enableCondition === undefined) ? undefined : defaultRef.enableCondition,
         componentEnable: defaultRef.componentEnable !== undefined ? defaultRef.componentEnable : []
-
     }
     let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
     if(sidebar.details.findIndex(obj => obj.dataKey === newSide.dataKey) === -1){
@@ -394,39 +399,48 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
         defaultRef.components[0][c].validations = (valPosition !== -1) ? validation.details.testFunctions[valPosition].validations : [];
         defaultRef.components[0][c].componentValidation = (valPosition !== -1) ? validation.details.testFunctions[valPosition].componentValidation : [];
         
-        let checkedDataKey = defaultRef.components[0][c].dataKey+'#'+now.toString();
-        if(reference.details.findIndex(obj => obj.dataKey === checkedDataKey) === -1){
-            let newComp = createComponent(defaultRef.components[0][c].dataKey, now, Number(c), sidebarPosition, defaultRef.components[0][c], [], now.toString());
-            components.push(newComp);
-            //insert ke reference
-            let updatedRef = JSON.parse(JSON.stringify(reference.details));
-            let newIndexLength = newComp.index.length;
-            for(let looping = newIndexLength; looping > 1; looping--){
-                let loopingState = true;
-                let myIndex = JSON.parse(JSON.stringify(newComp.index))
-                myIndex.length = looping;
-                let refLength = reference.details.length;
-                for(let y = refLength-1; y >= refPosition; y--){
-                    let refIndexToBeFound = JSON.parse(JSON.stringify(reference.details[y].index));
-                    refIndexToBeFound.length = looping;
-                    if(JSON.stringify(refIndexToBeFound) === JSON.stringify(myIndex)){
-                        updatedRef.splice(y+1, 0, newComp);
-                        loopingState = false;
-                        break;
-                    }
-                }
-                if(!loopingState) break;
-            }
-            setReference('details',updatedRef);
+        let newComp = createComponent(defaultRef.components[0][c].dataKey, now, Number(c), sidebarPosition, defaultRef.components[0][c], [], now.toString());
+        components.push(newComp);
+    }
 
-            let answer = 0;
-            answer = (newComp.answer) ? newComp.answer : answer;
+    if(components.length > 0){
+        let startPosition = 0;
+        let updatedRef = JSON.parse(JSON.stringify(reference.details));
+        let newIndexLength = components[0].index.length;
+        for(let looping = newIndexLength; looping > 1; looping--){
+            let loopingState = true;
+            let myIndex = JSON.parse(JSON.stringify(components[0].index))
+            myIndex.length = looping;
+            let refLength = reference.details.length;
+            for(let y = refLength-1; y >= 0; y--){
+                let refIndexToBeFound = JSON.parse(JSON.stringify(reference.details[y].index));
+                refIndexToBeFound.length = looping;
+                if(JSON.stringify(refIndexToBeFound) === JSON.stringify(myIndex)){
+                    startPosition = y +1;
+                    loopingState = false;
+                    break;
+                }
+            }
+            if(!loopingState) break;
+        }
+        components.forEach(el =>{
+            if(reference.details.findIndex(obj => obj.dataKey === el.dataKey) === -1){
+                updatedRef.splice(startPosition, 0, el);
+                startPosition += 1
+            }
+        })
+        setReference('details',updatedRef);
+        
+        components.forEach(newComp =>{
+            let value = [];
+            value = (newComp.answer) ? newComp.answer : value;
             
             const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
-            answer = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined) ? preset.details.predata[presetIndex].answer : answer;
+            value = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig().initialMode == 2) || (getConfig().initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : value;
             
             let answerIndex = response.details.answers.findIndex(obj => obj.dataKey === newComp.dataKey);
-            answer = (answerIndex !== -1 && response.details.answers[answerIndex] !== undefined) ? response.details.answers[answerIndex].answer : answer;
+            value = (answerIndex !== -1 && response.details.answers[presetIndex] !== undefined) ? response.details.answers[presetIndex].answer : value;
+            
             const getRowIndex = (positionOffset:number) => {
                 let editedDataKey = newComp.dataKey.split('@');
                 let splitDataKey = editedDataKey[0].split('#');
@@ -435,14 +449,10 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                 return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
             }
             const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-            if(Number(newComp.type) === 4) answer = eval(newComp.expression);
-            saveAnswer(newComp.dataKey, 'answer', answer, sidebarPosition, null);
-        } else {
-            break;
-        }
-    }
+            if(Number(newComp.type) === 4) value = eval(newComp.expression);
+            saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null);
+        })
 
-    if(components.length > 0){
         let newSide = {
             dataKey: dataKey + '#' + now,
             label: defaultRef.label,
@@ -513,7 +523,6 @@ export const deleteSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
 }
 
 export const runVariableComponent = (dataKey: string, activeComponentPosition: number) => {
-    // console.log('runVariable', dataKey);
     const getRowIndex = (positionOffset:number) => {
         let editedDataKey = dataKey.split('@');
         let splitDataKey = editedDataKey[0].split('#');
@@ -531,7 +540,6 @@ export const runVariableComponent = (dataKey: string, activeComponentPosition: n
 }
 
 export const runEnabling = (dataKey: string, activeComponentPosition: number, prop:any | null, enableCondition:string) => {
-    // console.log('runEnabling', dataKey);
     const getProp = (config: string) => {
         switch(config) {
             case 'clientMode': {
@@ -556,7 +564,6 @@ export const runEnabling = (dataKey: string, activeComponentPosition: number, pr
 }
 
 export const runValidation = (dataKey:string, updatedRef:any, activeComponentPosition: number) => {
-    // console.log('runValidation', dataKey);
     const getRowIndex = (positionOffset:number) => {
         let editedDataKey = dataKey.split('@');
         let splitDataKey = editedDataKey[0].split('#');
@@ -605,7 +612,6 @@ export const runValidation = (dataKey:string, updatedRef:any, activeComponentPos
 }
 
 export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, activeComponentPosition: number, prop:any | null) => {
-    // console.log('saveAnswer', dataKey, attributeParam);
     const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
     if(attributeParam === 'answer' || attributeParam === 'enable'){
         
@@ -650,7 +656,6 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 }
             })));
             if(hasSideCompEnable.length > 0) {//at least there is minimal 1 enable in this datakey
-                // console.log('agungssss', hasSideCompEnable, JSON.parse(JSON.stringify(sidebar.details)))
                 hasSideCompEnable.forEach(sidebarEnable => {
                     let sidePosition = sidebar.details.findIndex(objSide => objSide.dataKey === sidebarEnable.dataKey);
                     let enableSide = eval(sidebarEnable.enableCondition);
@@ -661,8 +666,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                     sidebarEnable.components[0].forEach((element, index) => {
                         let refPos = updatedRef.findIndex(objRef => objRef.dataKey === element.dataKey);
                         if(refPos !== -1){
-                            if(updatedRef[refPos].enableCondition === undefined || updatedRef[refPos].enableCondition === '') 
-                                setReference('details',refPos,'enable',enableSide);
+                            if(updatedRef[refPos].enableCondition === undefined || updatedRef[refPos].enableCondition === '') setReference('details',refPos,'enable',enableSide);
                             if(Number(updatedRef[refPos].type) === 4){
                                 tmpVarComp.push(updatedRef[refPos])
                                 tmpIndex.push(index)
@@ -798,10 +802,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
             const hasComponentUsing = JSON.parse(JSON.stringify(reference.details.filter(obj => (obj.type === 2 && obj.sourceQuestion == dataKey))));
             
             if(hasComponentUsing.length > 0) {//this dataKey is used as a source in Nested at minimum 1 component
-                if(reference.details[refPosition].type === 4) {
-                //     answer = JSON.parse(JSON.stringify(reference.details[refPosition].answer));
-                    beforeAnswer = [];
-                }
+                if(reference.details[refPosition].type === 4) beforeAnswer = [];
                 if(typeof answer !== 'boolean') {
                 console.time('Nested 🚀');
                 hasComponentUsing.forEach(element => {
