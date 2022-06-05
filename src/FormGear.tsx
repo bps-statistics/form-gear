@@ -28,7 +28,18 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
   console.log('form-gear@0.1.3');
   // console.time('FormGear renders successfully in ');
   let timeStart = new Date();
+  let stuff = {"reference" : referenceFetch, "template" : templateFetch, "preset" : presetFetch, "response" : responseFetch, "validation" : validationFetch, "remark" : remarkFetch};
 
+  let checkJson = (json : string, message : string) => {
+    if(Object.keys(json).length == 0){
+      toastInfo(message, 30000, "", "bg-pink-600/80");
+    }
+  }
+
+  Object.keys(stuff).map((key) => {
+    checkJson(stuff[key], `Failed to fetch ${key} file`)
+  })
+  
   try{
     setTemplate({details: templateFetch});
     setPreset({details: presetFetch});
@@ -180,8 +191,6 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
           for(let j=0; j < element.length; j++){
             refList[j] = [];
             sideList[j] = [];
-            // let d = new Date();
-            // console.log ('start',element[j].dataKey, d.getTime());
             flagArr[j] = 0;
             setTimeout( () => {
               const loopTemplate = (element, index, parent, level, sideEnable) => {
@@ -372,8 +381,6 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
 
               loopTemplate(element[j].components[0], 0, [0, j, 0], 1, hasSideEnable)
               
-              // let e = new Date();
-              // console.log ('end',element[j].dataKey, e.getTime());
               flagArr[j] = 1;
             },
             500)

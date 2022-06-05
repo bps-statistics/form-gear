@@ -1,6 +1,5 @@
 // import handler  from "./src/FormGear"
 import { FormGear } from "./src/index"
-import Toastify from 'toastify-js'
 
 //variable config
 let config = {
@@ -24,29 +23,13 @@ var remarkGear = null;
 var principalGear = null;
 var referenceGear = null;
 
-const toastInfo = (text: string) => {
-  Toastify({
-      text: (text == '') ? "" : text,
-      duration: 3000,
-      gravity: "top",
-      position: "right",
-      stopOnFocus: true,
-      className: "bg-pink-700/80",
-      style: {
-          background: "rgba(8, 145, 178, 0.7)",
-          width: "400px"
-      }
-  }).showToast();
-}
-
 //JSON Object defined template
-let reference = await fetch("../src/data/reference.json").then((res) => res.json()).catch((error : Error) => {toastInfo('Failed to fetch reference')}) || []
-let template = await fetch("../src/data/template.json").then((res) => res.json()).catch((error : Error) => {toastInfo('Failed to fetch template')}) || []
-let preset = await fetch("../src/data/preset.json").then((res) => res.json()).catch((error : Error) => {toastInfo('Failed to fetch preset')}) || []
-let response = await fetch("../src/data/response.json").then((res) => res.json()).catch((error : Error) => {toastInfo('Failed to fetch response')}) || []
-let validation = await fetch("../src/data/validation.json").then((res) => res.json()).catch((error : Error) => {toastInfo('Failed to fetch validation')}) || []
-let remark = await fetch("../src/data/remark.json").then((res) => res.json()).catch((error : Error) => {toastInfo('Failed to fetch remark')}) || []
-
+let reference = await fetch("../src/data/reference.json").then((res) => res.json()).catch((error : Error) => {return {}}) || []
+let template = await fetch("../src/data/template.json").then((res) => res.json()).catch((error : Error) => {return {}}) || []
+let preset = await fetch("../src/data/preset.json").then((res) => res.json()).catch((error : Error) => {return {}}) || []
+let response = await fetch("../src/data/response.json").then((res) => res.json()).catch((error : Error) => {return {}}) || []
+let validation = await fetch("../src/data/validation.json").then((res) => res.json()).catch((error : Error) => {return {}}) || []
+let remark = await fetch("../src/data/remark.json").then((res) => res.json()).catch((error : Error) => {return {}}) || []
 
 //function to open camera on mobile  CAPI
 function openCamera() {
