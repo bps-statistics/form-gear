@@ -5,17 +5,17 @@
 > June 5, 2022
 
 ### Added
-- Add summary to response
-- Add click on label on SingleCheckInput and ToggleInput
+- Add summary to response.
+- Add click on label on SingleCheckInput and ToggleInput.
 
 ### Changed
-- Rename lastUpdated to updatedAt
-- Disable ListTextInput and ListSelectInput button on formMode > 1
-- Optimize on create nested component
-
+- Rename lastUpdated to updatedAt.
+- Disable ListTextInput and ListSelectInput button on formMode > 1.
+- Optimize on create nested component.
 
 ### Fixed
-- Fix missed code in if statement on FormGear.tsx and in set answer GlobalFunction
+- Fix missed code in if statement on FormGear.tsx and in set answer GlobalFunction.
+- Fix disable remark on formMode == 3 and without any comments in it on each component.
 
 
 ---

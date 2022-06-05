@@ -244,30 +244,25 @@ const FormInput: FormComponentBase = props => {
                   </For>
               </div>
               
-              <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <div class="grid grid-cols-8">
-                  <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full text-yellow-400 bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 " fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-                    </svg>
-                  </div>
-                  <div class="mt-1 text-left col-span-7 ">
-                      <Show when={(props.config.formMode < 3)}>
-                        <textarea rows={2}
-                            class="w-full rounded font-light px-4 py-2.5 text-sm text-gray-700 border 
-                              border-solid border-gray-300 bg-white bg-clip-padding transition ease-in-out m-0 
-                              focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                            placeholder="" 
-                            onChange={(e) => { setTmpComment(e.currentTarget.value) } }
-                        />
-                      </Show>
-                      <Show when={(props.config.formMode == 3)}>
-                        <span class="italic">This form is closed, so remark can't be added</span>
-                      </Show>
+              <Show when={(props.config.formMode < 3)}>
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                  <div class="grid grid-cols-8">
+                    <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full text-yellow-400 bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 " fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                      </svg>
+                    </div>
+                      <div class="mt-1 text-left col-span-7 ">
+                            <textarea rows={2}
+                                class="w-full rounded font-light px-4 py-2.5 text-sm text-gray-700 border 
+                                  border-solid border-gray-300 bg-white bg-clip-padding transition ease-in-out m-0 
+                                  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                                placeholder="" 
+                                onChange={(e) => { setTmpComment(e.currentTarget.value) } }
+                            />
+                      </div>
                   </div>
                 </div>
-              </div>
-              <Show when={(props.config.formMode < 3)}>
                 <div class="bg-white px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                   <button type="button" 
                     class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white 
