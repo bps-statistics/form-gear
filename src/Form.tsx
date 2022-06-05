@@ -192,9 +192,8 @@ const Form: Component<{
       })
       // console.timeEnd('tmpEnableComp ')
     } else {
-      // @ts-ignore
-      let hasRemarkComp = reference.details.filter(obj => obj.hasRemark == true);
-      hasRemarkComp.forEach(e => {
+      // let hasRemarkComp = reference.details.filter(obj => obj.hasRemark == true);
+      reference.details.forEach(e => {
         let remarkPosition = remark.details.notes.findIndex(obj => obj.dataKey === e.dataKey);
         if(remarkPosition !== -1){
           let newNote = remark.details.notes[remarkPosition];
@@ -632,14 +631,14 @@ const Form: Component<{
                     <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                       <h3 class="text-lg leading-6 font-medium text-gray-900" id="titleModalError">List Error</h3>
                       <div class="relative overflow-auto">
-                        <div class="shadow-sm overflow-hidden my-6">
+                        <div class="shadow-sm overflow-auto my-6">
                           <table class="border-collapse table-fixed w-full text-sm">
                             <thead class="text-sm font-semibold text-gray-600 bg-gray-50">
                               <tr>
                                 <th class="p-2 whitespace-nowrap font-semibold text-left w-1/12">No</th>
-                                <th class="p-2 whitespace-nowrap font-semibold text-left w-5/12">Field</th>
+                                <th class="p-2 whitespace-nowrap font-semibold text-left w-4/12">Field</th>
                                 <th class="p-2 whitespace-nowrap font-semibold text-left w-5/12">Error Messages</th>
-                                <th class="p-2 whitespace-nowrap font-semibold text-left w-1/12"></th>
+                                <th class="p-2 whitespace-nowrap font-semibold text-left w-2/12"></th>
                               </tr>
                             </thead>
                             <tbody class="text-sm divide-y divide-gray-100 ">
@@ -707,14 +706,14 @@ const Form: Component<{
                       <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                         <h3 class="text-lg leading-6 font-medium text-gray-900" id="titleModalError">List Warning</h3>
                         <div class="relative overflow-auto">
-                          <div class="shadow-sm overflow-hidden my-6">                            
+                          <div class="shadow-sm overflow-auto my-6">                            
                             <table class="border-collapse table-fixed w-full text-sm">
                               <thead class="text-sm font-semibold text-gray-600 bg-gray-50">
                                 <tr>
                                   <th class="p-2 whitespace-nowrap font-semibold text-left w-1/12">No</th>
-                                  <th class="p-2 whitespace-nowrap font-semibold text-left w-5/12">Field</th>
+                                  <th class="p-2 whitespace-nowrap font-semibold text-left w-4/12">Field</th>
                                   <th class="p-2 whitespace-nowrap font-semibold text-left w-5/12">Warning Messages</th>
-                                  <th class="p-2 whitespace-nowrap font-semibold text-left w-1/12"></th>
+                                  <th class="p-2 whitespace-nowrap font-semibold text-left w-2/12"></th>
                                 </tr>
                               </thead>
                               <tbody class="text-sm divide-y divide-gray-100 ">
@@ -776,13 +775,13 @@ const Form: Component<{
                   <div class="sm:flex sm:items-start mt-6">
                     <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-gray-200 sm:mx-0 sm:h-10 sm:w-10 text-gray-500">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
                     <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                       <h3 class="text-lg leading-6 font-medium text-gray-900" id="titleModalError">List Blank</h3>
                       <div class="relative overflow-auto">
-                        <div class="shadow-sm overflow-hidden my-6">
+                        <div class="shadow-sm overflow-auto my-6">
                           <table class="border-collapse table-fixed w-full text-sm">
                             <thead class="text-sm font-semibold text-gray-600 bg-gray-50">
                               <tr>
