@@ -192,9 +192,8 @@ const Form: Component<{
       })
       // console.timeEnd('tmpEnableComp ')
     } else {
-      // @ts-ignore
-      let hasRemarkComp = reference.details.filter(obj => obj.hasRemark == true);
-      hasRemarkComp.forEach(e => {
+      // let hasRemarkComp = reference.details.filter(obj => obj.hasRemark == true);
+      reference.details.forEach(e => {
         let remarkPosition = remark.details.notes.findIndex(obj => obj.dataKey === e.dataKey);
         if(remarkPosition !== -1){
           let newNote = remark.details.notes[remarkPosition];

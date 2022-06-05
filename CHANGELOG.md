@@ -9,13 +9,14 @@
 - Add click on label on SingleCheckInput and ToggleInput.
 
 ### Changed
-- Rename lastUpdated to updatedAt.
+- Rename lastUpdated to updatedAt on response output.
 - Disable ListTextInput and ListSelectInput button on formMode > 1.
 - Optimize on create nested component.
 
 ### Fixed
 - Fix missed code in if statement on FormGear.tsx and in set answer GlobalFunction.
 - Fix disable remark on formMode == 3 and without any comments in it on each component.
+- Fix bug not load updated remarks when reuse reference.
 
 
 ---
