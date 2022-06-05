@@ -7,6 +7,7 @@
 ### Added
 - Add summary to response.
 - Add click on label on SingleCheckInput and ToggleInput.
+- Add list blank.
 
 ### Changed
 - Rename lastUpdated to updatedAt on response output.
@@ -17,6 +18,7 @@
 - Fix missed code in if statement on FormGear.tsx and in set answer GlobalFunction.
 - Fix disable remark on formMode == 3 and without any comments in it on each component.
 - Fix bug not load updated remarks when reuse reference.
+- Fix overflow bug on list error when user cannot see the lookinto button.
 
 
 ---
