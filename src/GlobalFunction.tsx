@@ -959,12 +959,21 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
 }
 
 export function reference_index_lookup(datakey){
-    if(datakey in referenceMap()){
-        try{
-            if(reference.details[referenceMap()[datakey]].dataKey === datakey){
-                return referenceMap()[datakey];
-            }else{
-                // console.log(datakey)
+    try{
+        if(datakey in referenceMap()){
+            try{
+                if(reference.details[referenceMap()[datakey]].dataKey === datakey){
+                    return referenceMap()[datakey];
+                }else{
+                    // console.log(datakey)
+                    load_reference_map()
+                    if(datakey in referenceMap()){
+                        return referenceMap()[datakey];
+                    }else{
+                        return -1
+                    }
+                }
+            }catch(e){
                 load_reference_map()
                 if(datakey in referenceMap()){
                     return referenceMap()[datakey];
@@ -972,15 +981,10 @@ export function reference_index_lookup(datakey){
                     return -1
                 }
             }
-        }catch(e){
-            load_reference_map()
-            if(datakey in referenceMap()){
-                return referenceMap()[datakey];
-            }else{
-                return -1
-            }
+        }else{
+            return -1
         }
-    }else{
+    }catch(ex){
         return -1
     }
 }
