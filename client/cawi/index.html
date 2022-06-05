@@ -330,12 +330,12 @@
       }
 
       const data = Promise.all([
-                      fetch("./data/reference.json").then((res) => res.json()) || [],
-                      fetch("./data/template.json").then((res) => res.json()) || [],
-                      fetch("./data/preset.json").then((res) => res.json()) || [],
-                      fetch("./data/response.json").then((res) => res.json()) || [],
-                      fetch("./data/validation.json").then((res) => res.json()) || [],
-                      fetch("./data/remark.json").then((res) => res.json()) || []
+                      fetch("./data/reference.json").then((res) => res.json()).catch((error) => {return {}}) || [],
+                      fetch("./data/template.json").then((res) => res.json()).catch((error) => {return {}}) || [],
+                      fetch("./data/preset.json").then((res) => res.json()).catch((error) => {return {}}) || [],
+                      fetch("./data/response.json").then((res) => res.json()).catch((error) => {return {}}) || [],
+                      fetch("./data/validation.json").then((res) => res.json()).catch((error) => {return {}}) || [],
+                      fetch("./data/remark.json").then((res) => res.json()).catch((error) => {return {}}) || []
                     ]);
 
       data.then(([reference, template, preset, response, validation, remark]) => initForm(reference, template, preset, response, validation, remark));

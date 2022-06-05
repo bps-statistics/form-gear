@@ -444,7 +444,7 @@ const Form: Component<{
     
             let sidebarIndex = element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
             blankCollection.push({ label: element.label, sideIndex: sidebarIndex, dataKey: element.dataKey })
-          }
+        }
       });
 
       setListError(JSON.parse(JSON.stringify(filteredError)))
