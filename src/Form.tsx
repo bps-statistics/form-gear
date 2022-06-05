@@ -84,6 +84,11 @@ const Form: Component<{
     const [listWarningPage, setListWarningPage] = createSignal([])
     const [currentWarningPage, setCurrentWarningPage] = createSignal(1)
     const [maxWarningPage, setMaxWarningPage] = createSignal(1)
+
+    const [listBlank, setListBlank] = createSignal([])
+    const [listBlankPage, setListBlankPage] = createSignal([])
+    const [currentBlankPage, setCurrentBlankPage] = createSignal(1)
+    const [maxBlankPage, setMaxBlankPage] = createSignal(1)
     
     if(props.template.details.language !== undefined && props.template.details.language.length > 0){
       const keys = Object.keys(locale.details.language[0]);
@@ -423,6 +428,7 @@ const Form: Component<{
     const showListError = (event: MouseEvent) => {
       let filteredError = [];
       let filteredWarning = [];
+      let blankCollection = [];
       reference.details.forEach((element,i) =>{
         // let sidebarIndex = element.index.splice(-1)
           if (element.type > 4 && ( element.enable ) && element.validationState == 2) {
@@ -433,13 +439,22 @@ const Form: Component<{
             let sidebarIndex = element.level > 1 ? element.index.slice(0,-1) : element.index.slice(0,-2)
             filteredWarning.push({label:element.label,message:element.validationMessage,sideIndex:sidebarIndex,dataKey:element.dataKey})
           }
+          if ((element.type > 4) && (element.enable) && ((element.answer === undefined || element.answer === '')
+            || ((element.type == 21) && element.answer.length == 1) || ((element.type == 22) && element.answer.length == 1))
+            && !(JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)) {
+    
+            let sidebarIndex = element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
+            blankCollection.push({ label: element.label, sideIndex: sidebarIndex, dataKey: element.dataKey })
+          }
       });
 
       setListError(JSON.parse(JSON.stringify(filteredError)))
       setListWarning(JSON.parse(JSON.stringify(filteredWarning)))
+      setListBlank(JSON.parse(JSON.stringify(blankCollection)))
 
       showListPage(listError().length, 3, 1, listError(), 2)
       showListPage(listWarning().length, 3, 1, listWarning(), 1)
+      showListPage(listBlank().length, 3, 1, listBlank(), 3)
 
       setShowError(true);
     }
@@ -455,10 +470,14 @@ const Form: Component<{
           setCurrentErrorPage(current)
           setMaxErrorPage(maxPages)
           setListErrorPage(JSON.parse(JSON.stringify(listPage)))
-        }else{
+        }else if (errorType == 1) {
           setCurrentWarningPage(current)
           setMaxWarningPage(maxPages)
           setListWarningPage(JSON.parse(JSON.stringify(listPage)))
+        } else {
+          setCurrentBlankPage(current)
+          setMaxBlankPage(maxPages)
+          setListBlankPage(JSON.parse(JSON.stringify(listPage)))
         }
     }
 
@@ -753,6 +772,69 @@ const Form: Component<{
                       </div>
                     </div>
                   </Show>
+                  <Show when={listBlank().length > 0}>
+                  <div class="sm:flex sm:items-start mt-6">
+                    <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-gray-200 sm:mx-0 sm:h-10 sm:w-10 text-gray-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                      <h3 class="text-lg leading-6 font-medium text-gray-900" id="titleModalError">List Blank</h3>
+                      <div class="relative overflow-auto">
+                        <div class="shadow-sm overflow-hidden my-6">
+                          <table class="border-collapse table-fixed w-full text-sm">
+                            <thead class="text-sm font-semibold text-gray-600 bg-gray-50">
+                              <tr>
+                                <th class="p-2 whitespace-nowrap font-semibold text-left w-1/12">No</th>
+                                <th class="p-2 whitespace-nowrap font-semibold text-left w-5/12">Field</th>
+                                <th class="p-2 whitespace-nowrap font-semibold text-left w-1/12"></th>
+                              </tr>
+                            </thead>
+                            <tbody class="text-sm divide-y divide-gray-100 ">
+                              <For each={listBlankPage()}>
+                                {(item, index) => (
+                                  <tr class="text-gray-600">
+                                    <td class="border-b border-slate-100 p-2 align-top">
+                                      <div class="text-left text-sm font-light">&nbsp;&nbsp;{Number(index()) + 1 + (currentBlankPage() * 3 - 3)}</div>
+                                    </td>
+                                    <td class="border-b border-slate-100 p-2 align-top">
+                                      <div class="text-left text-sm font-light" innerHTML={item['label']} />
+                                    </td>
+                                    <td class="border-b border-slate-100 align-top p-2">
+                                      <button class="bg-transparent text-gray-500 rounded-full focus:outline-none h-5 w-5 hover:bg-gray-400 hover:text-white flex justify-center items-center"
+                                        onClick={(e) => { lookInto(e, item.sideIndex, item.dataKey) }}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" stroke-width="2">
+                                          <path fill-rule="evenodd" d="M6.672 1.911a1 1 0 10-1.932.518l.259.966a1 1 0 001.932-.518l-.26-.966zM2.429 4.74a1 1 0 10-.517 1.932l.966.259a1 1 0 00.517-1.932l-.966-.26zm8.814-.569a1 1 0 00-1.415-1.414l-.707.707a1 1 0 101.415 1.415l.707-.708zm-7.071 7.072l.707-.707A1 1 0 003.465 9.12l-.708.707a1 1 0 001.415 1.415zm3.2-5.171a1 1 0 00-1.3 1.3l4 10a1 1 0 001.823.075l1.38-2.759 3.018 3.02a1 1 0 001.414-1.415l-3.019-3.02 2.76-1.379a1 1 0 00-.076-1.822l-10-4z" clip-rule="evenodd" />
+                                        </svg>
+                                      </button>
+                                    </td>
+                                  </tr>
+                                )}
+                              </For>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div class="flex justify-start items-center text-center font-light px-3 pb-3">
+                          <button type="button" class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
+                                    font-light text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+                            onClick={e => showListPage(listBlank().length, 3, currentBlankPage() - 1, listBlank(), 3)}
+                            disabled={(currentBlankPage() == 1) ? true : false}
+                          >Prev</button>
+
+                          <div class="text-center px-4 text-xs">{currentBlankPage}</div>
+
+                          <button type="button" class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
+                                    font-light text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+                            onClick={e => showListPage(listBlank().length, 3, currentBlankPage() + 1, listBlank(), 3)}
+                            disabled={(currentBlankPage() == maxBlankPage()) ? true : false}
+                          >Next</button>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </Show>
                 </div>
                 
                 <div class="bg-white px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">

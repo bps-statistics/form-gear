@@ -49,6 +49,12 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
       template.details.version !== undefined ? template.details.version : '0.0.1', 
       response.details.templateVersion !== undefined ? response.details.templateVersion : '0.0.0'
     )
+
+    const versionStateTemplateVal = template.details.version == undefined ? 1 : semverCompare(
+      template.details.version !== undefined ? template.details.version : '0.0.1', 
+      validation.details.version !== undefined ? validation.details.version : '0.0.0'
+    )
+
     const sidebarLen = reference !== undefined ? referenceFetch.sidebar.length : 0
     const referenceLen = reference !== undefined ? referenceFetch.details.length : 0
 
@@ -57,7 +63,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
     // If the semver string b is greater than a, return -1. 
     // If a equals b, return 0;
     let runAll = 0;
-    if( versionState == 0 && referenceLen > 0 && sidebarLen >0 ){
+    if( versionState == 0 && versionStateTemplateVal == 0 && referenceLen > 0 && sidebarLen >0 ){
       console.log('Reuse reference ♻️')
       setReference(referenceFetch)
       setSidebar('details',referenceFetch.sidebar)
