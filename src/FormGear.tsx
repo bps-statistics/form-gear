@@ -386,7 +386,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
       const t = setInterval(() => {
         sum = 0;
         for(let a = 0; a < len; a++){
-          if(flagArr[a] = 1) sum++;
+          if(flagArr[a] == 1) sum++;
         }
         
         if(sum === len){

@@ -13,6 +13,9 @@
 - Disable ListTextInput and ListSelectInput button on formMode > 1
 
 
+### Fixed
+- Fix missed code in if statement on FormGear.tsx and in set answer GlobalFunction
+
 
 ---
 

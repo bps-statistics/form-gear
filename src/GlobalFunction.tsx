@@ -238,7 +238,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
             answer = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig().initialMode == 2) || (getConfig().initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : answer;
             
             let answerIndex = response.details.answers.findIndex(obj => obj.dataKey === newComp.dataKey);
-            answer = (answerIndex !== -1 && response.details.answers[presetIndex] !== undefined) ? response.details.answers[presetIndex].answer : answer;
+            answer = (answerIndex !== -1 && response.details.answers[answerIndex] !== undefined) ? response.details.answers[answerIndex].answer : answer;
             
             const getRowIndex = (positionOffset:number) => {
                 let editedDataKey = newComp.dataKey.split('@');
@@ -426,7 +426,7 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
             answer = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined) ? preset.details.predata[presetIndex].answer : answer;
             
             let answerIndex = response.details.answers.findIndex(obj => obj.dataKey === newComp.dataKey);
-            answer = (answerIndex !== -1 && response.details.answers[presetIndex] !== undefined) ? response.details.answers[presetIndex].answer : answer;
+            answer = (answerIndex !== -1 && response.details.answers[answerIndex] !== undefined) ? response.details.answers[answerIndex].answer : answer;
             const getRowIndex = (positionOffset:number) => {
                 let editedDataKey = newComp.dataKey.split('@');
                 let splitDataKey = editedDataKey[0].split('#');
