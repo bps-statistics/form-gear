@@ -293,20 +293,24 @@ const Form: Component<{
       setResponse('details','templateVersion', template.details.version);
       setResponse('details','validationVersion', validation.details.version);
       setResponse('details','docState', docState());
+      setResponse('details','summary', JSON.parse(JSON.stringify(summary)));
+
       let now = dayjs().format('YYYY-MM-DD HH:mm:ss');
-      (response.details.createdAt === '') ? setResponse('details','createdAt', now) : setResponse('details','createdAt', '');
-      setResponse('details','lastUpdated', now);
-      setResponse('details','editedBy', form.formConfig.username);
-      (response.details.createdBy === '') ? setResponse('details','createdBy', form.formConfig.username): setResponse('details','createdBy', '');
-      setResponse('details','summary',JSON.parse(JSON.stringify(summary)));
+        (response.details.createdBy === undefined) ? 
+          setResponse('details','createdBy', form.formConfig.username) :
+            setResponse('details','editedBy', form.formConfig.username);
+        (response.details.createdAt === undefined) ? 
+          setResponse('details','createdAt', now) : 
+            setResponse('details','updatedAt', now);
+      
       //setPrincipal
       setPrincipal('details','principals', dataPrincipal)
       setPrincipal('details','templateVersion', template.details.version);
       setPrincipal('details','createdAt', now);
-      setResponse('details','createdBy', form.formConfig.username);
+      
       //setRemark
-      let copiedNote = JSON.parse(JSON.stringify(note.details.notes));
-      setRemark('details','notes',copiedNote);
+      setRemark('details','notes', JSON.parse(JSON.stringify(note.details.notes)));
+
       //setReference
       setReference('sidebar', sidebar.details)
     }

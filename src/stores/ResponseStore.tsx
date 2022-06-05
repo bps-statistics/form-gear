@@ -15,7 +15,7 @@ type Detail = {
     createdBy: string;
     editedBy: string;
     createdAt: any;
-    lastUpdated: any;
+    updatedAt: any;
     answers: Answer[];
     summary: Summary[];
 }
@@ -35,7 +35,7 @@ export const [response, setResponse] = createStore<Response>({
         createdBy: '',
         editedBy: '',
         createdAt: '',
-        lastUpdated: '',
+        updatedAt: '',
         answers: [],
         summary: [],
     }

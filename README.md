@@ -600,7 +600,7 @@ response.json
 │   createdBy
 │   editedBy
 │   createdAt
-│   lastUpdated
+│   updatedAt
 └───answers
 │   	   │
 │   	   └───

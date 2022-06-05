@@ -5,6 +5,7 @@ import { Switch, For, Match, createSignal, createMemo, Show } from 'solid-js'
 import { reference, setReference} from './stores/ReferenceStore';
 import { sidebar, setSidebar} from './stores/SidebarStore';
 import { response, setResponse} from './stores/ResponseStore';
+import { summary } from './stores/SummaryStore';
 import { validation, setValidation, Validation } from './stores/ValidationStore';
 import { remark, setRemark} from './stores/RemarkStore';
 import { note, setNote} from './stores/NoteStore';
@@ -77,6 +78,7 @@ const FormInput: FormComponentBase = props => {
           })
         }
       }
+
     })      
 
     //setResponse
@@ -84,22 +86,29 @@ const FormInput: FormComponentBase = props => {
     setResponse('details','templateVersion', template.details.version);
     setResponse('details','validationVersion', validation.details.version);
     setResponse('details','docState', docState());
+    setResponse('details','summary', JSON.parse(JSON.stringify(summary)));
+
     let now = dayjs().format('YYYY-MM-DD HH:mm:ss');
-    (response.details.createdAt === '') ? setResponse('details','createdAt', now) : setResponse('details','createdAt', '');
-    setResponse('details','lastUpdated', now);
-    setResponse('details','editedBy', form.formConfig.username);
-    (response.details.createdBy === '') ? setResponse('details','createdBy', form.formConfig.username): setResponse('details','createdBy', '');
+      (response.details.createdBy === undefined) ? 
+        setResponse('details','createdBy', form.formConfig.username) :
+          setResponse('details','editedBy', form.formConfig.username);
+      (response.details.createdAt === undefined) ? 
+        setResponse('details','createdAt', now) : 
+          setResponse('details','updatedAt', now);
+    
     //setPrincipal
     setPrincipal('details','principals', dataPrincipal)
     setPrincipal('details','templateVersion', template.details.version);
     setPrincipal('details','createdAt', now);
-    setResponse('details','createdBy', form.formConfig.username);
+    
     //setRemark
-    let copiedNote = JSON.parse(JSON.stringify(note.details.notes));
-    setRemark('details','notes',copiedNote);
+    setRemark('details','notes', JSON.parse(JSON.stringify(note.details.notes)));
+
     //setReference
     setReference('sidebar', sidebar.details)
   }
+
+
 
   const onUserClick = (dataKey: string) => {
     setData();

@@ -7,6 +7,9 @@
 ### Added
 - Add summary to response
 
+### Changed
+- Rename lastUpdated to updatedAt
+
 
 
 ---
