@@ -298,6 +298,7 @@ const Form: Component<{
       setResponse('details','lastUpdated', now);
       setResponse('details','editedBy', form.formConfig.username);
       (response.details.createdBy === '') ? setResponse('details','createdBy', form.formConfig.username): setResponse('details','createdBy', '');
+      setResponse('details','summary',JSON.parse(JSON.stringify(summary)));
       //setPrincipal
       setPrincipal('details','principals', dataPrincipal)
       setPrincipal('details','templateVersion', template.details.version);

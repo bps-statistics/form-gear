@@ -1,4 +1,5 @@
 import { createStore } from "solid-js/store";
+import { Summary } from "./SummaryStore"
 
 type Answer = {
     dataKey: string;
@@ -16,6 +17,7 @@ type Detail = {
     createdAt: any;
     lastUpdated: any;
     answers: Answer[];
+    summary: Summary[];
 }
   
 export interface Response{
@@ -34,7 +36,8 @@ export const [response, setResponse] = createStore<Response>({
         editedBy: '',
         createdAt: '',
         lastUpdated: '',
-        answers: []
+        answers: [],
+        summary: [],
     }
 });
 
