@@ -277,8 +277,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
                 let value_local = eval(newComp.expression)
                 saveAnswer(newComp.dataKey, 'answer', value_local, sidebarPosition, null);
             }catch(e){
-                value = undefined
-                saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null);
+                saveAnswer(newComp.dataKey, 'answer', undefined, sidebarPosition, null);
             }
         }
     })
@@ -480,8 +479,7 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                     let value_local = eval(newComp.expression)
                     saveAnswer(newComp.dataKey, 'answer', value_local, sidebarPosition, null);
                 }catch(e){
-                    value = undefined
-                    saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null);
+                    saveAnswer(newComp.dataKey, 'answer', undefined, sidebarPosition, null);
                 }
             }
         })
