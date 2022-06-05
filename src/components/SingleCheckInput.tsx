@@ -9,6 +9,12 @@ const SingleCheckInput: FormComponentBase = props => {
     const showInstruction = () => {
       (instruction()) ? setInstruction(false) : setInstruction(true);
     }
+    
+    let handleLabelClick = () => {
+        let id  = "singlecheck-"+props.component.dataKey+"_id"
+        document.getElementById(id).click()
+    }
+    
 
     return (
         <div class="grid grid-cols-12 border-b border-gray-300/[.50] dark:border-gray-200/[.10] p-2">
@@ -19,6 +25,7 @@ const SingleCheckInput: FormComponentBase = props => {
                     focus:outline-none transition duration-200 mt-1 align-top 
                     bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" 
                     type="checkbox" 
+                    id={ 'singlecheck-' +  props.component.dataKey + '_id' }
                     disabled = { disableInput() }                    
                     checked={(props.value) ? props.value : false}
                     onChange={(e) => props.onValueChange(e.target.checked)} />
@@ -30,7 +37,7 @@ const SingleCheckInput: FormComponentBase = props => {
                         ' border-b border-pink-600 pb-3 ' : props.classValidation === 2,
                     }}>
                     <div class="inline-flex space-x-2"> 
-                        <div innerHTML={props.component.label} />
+                        <div innerHTML={props.component.label}  onClick={e => handleLabelClick()} />
                         <Show when={props.component.required}>
                             <span class="text-pink-600">*</span>
                         </Show>

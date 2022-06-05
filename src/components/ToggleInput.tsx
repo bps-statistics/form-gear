@@ -11,6 +11,12 @@ const ToggleInput: FormComponentBase = props => {
     const showInstruction = () => {
       (instruction()) ? setInstruction(false) : setInstruction(true);
     }
+        
+    let handleLabelClick = () => {
+        let id  = "toggle-"+props.component.dataKey+"_id"
+        document.getElementById(id).click()
+    }
+    
 
     return (
         
@@ -22,7 +28,7 @@ const ToggleInput: FormComponentBase = props => {
                     ' border-b border-pink-600 pb-3 ' : props.classValidation === 2,
                 }}>        
                 <div class="inline-flex space-x-2"> 
-                    <div innerHTML={props.component.label} />
+                    <div innerHTML={props.component.label}  onClick={e => handleLabelClick()} />
                     <Show when={props.component.required}>
                         <span class="text-pink-600">*</span>
                     </Show>
@@ -78,6 +84,7 @@ const ToggleInput: FormComponentBase = props => {
             <button onClick={(e) =>  props.onValueChange(!val())}
                 classList={{'bg-blue-600': val() === true, 'bg-gray-200': val()=== false, }}
                 type="button"
+                id={ 'toggle-' +  props.component.dataKey + '_id' }
                 disabled = { disableInput() }
                 class="relative inline-flex flex-shrink-0
                     h-7 w-12 border-2 border-transparent rounded-full

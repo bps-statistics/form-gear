@@ -6,6 +6,7 @@
 
 ### Added
 - Add summary to response
+- Add click on label on SingleCheckInput and ToggleInput
 
 ### Changed
 - Rename lastUpdated to updatedAt
