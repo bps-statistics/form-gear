@@ -155,7 +155,7 @@ const Form: Component<{
           }
         }
       })
-
+      
       props.response.details.answers.forEach((element, index) => {
         let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
         if(refPosition !== -1){

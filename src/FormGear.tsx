@@ -23,6 +23,8 @@ import { createSignal } from "solid-js";
 import semverCompare from "semver-compare";
 import { toastInfo } from "./FormInput";
 
+import { load_reference_map } from "./GlobalFunction";
+
 export function FormGear(referenceFetch, templateFetch, presetFetch, responseFetch, validationFetch, remarkFetch, config, uploadHandler, GpsHandler, offlineSearch, onlineSearch, mobileExit, setResponseMobile, setSubmitMobile, openMap) {
 
   console.log('form-gear@0.1.3');
@@ -77,6 +79,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
     if( templateVersionState == 0 && validationVersionState == 0 && referenceLen > 0 && sidebarLen >0 ){
       console.log('Reuse reference ♻️')
       setReference(referenceFetch)
+      load_reference_map()
       setSidebar('details',referenceFetch.sidebar)
       runAll = 1;
       
@@ -409,6 +412,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
             }
           }
           
+          load_reference_map(referenceList)
           setReference('details', referenceList)
           setSidebar('details', sidebarList)
 

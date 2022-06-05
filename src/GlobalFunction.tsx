@@ -271,16 +271,16 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
             return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
         }
         const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-        // if(Number(newComp.type) === 4) answer = eval(newComp.expression);
+        // if(Number(newComp.type) === 4) value = eval(newComp.expression);
         if(Number(newComp.type) === 4) {
             try{
-                let answer_local = eval(newComp.expression)
-                answer = answer_local
+                let value_local = eval(newComp.expression)
+                saveAnswer(newComp.dataKey, 'answer', value_local, sidebarPosition, null);
             }catch(e){
-                answer = undefined
+                value = undefined
+                saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null);
             }
         }
-        saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null);
     })
     
     let newSide = {
@@ -342,7 +342,7 @@ export const deleteSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
             updatedSidebar.splice(x, 1);
         }
     }
-    
+    load_reference_map(updatedRef)
     setReference('details',updatedRef);
     setSidebar('details',updatedSidebar);
 }
@@ -474,16 +474,16 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                 return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
             }
             const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-            // if(Number(newComp.type) === 4) answer = eval(newComp.expression);
+            // if(Number(newComp.type) === 4) value = eval(newComp.expression);
             if(Number(newComp.type) === 4) {
                 try{
-                    let answer_local = eval(newComp.expression)
-                    answer = answer_local
+                    let value_local = eval(newComp.expression)
+                    saveAnswer(newComp.dataKey, 'answer', value_local, sidebarPosition, null);
                 }catch(e){
-                    answer = undefined
+                    value = undefined
+                    saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null);
                 }
             }
-            saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null);
         })
 
         let newSide = {
@@ -547,12 +547,16 @@ export const deleteSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
             updatedSidebar.splice(x, 1);
         }
     }
-    
+
     setReference('details',updatedRef);
     setSidebar('details',updatedSidebar);
     let now = beforeAnswer-1;
     
-    if(now > answer) deleteSidebarNumber(dataKey, answer, now, sidebarPosition);
+    if(now > answer) {
+        deleteSidebarNumber(dataKey, answer, now, sidebarPosition);
+    }else{
+        load_reference_map()
+    } 
 }
 
 export const runVariableComponent = (dataKey: string, activeComponentPosition: number) => {
@@ -632,7 +636,15 @@ export const runValidation = (dataKey:string, updatedRef:any, activeComponentPos
     if(!updatedRef.hasRemark){
         let biggest = 0;
         for(let i in updatedRef.validations){
-            let result = eval(updatedRef.validations[i].test);
+            // let result = eval(updatedRef.validations[i].test);
+            let result = default_validation_enable;
+            try{
+                result = eval(updatedRef.validations[i].test)
+            }catch(e){
+                // console.log(dataKey)
+                // console.log(updatedRef.validations[i].test)
+                // console.log(e)
+            }
             if(result){
                 updatedRef.validationMessage.push(updatedRef.validations[i].message);
                 biggest = (biggest < updatedRef.validations[i].type) ? updatedRef.validations[i].type : biggest;
@@ -950,10 +962,19 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
 
 export function reference_index_lookup(datakey){
     if(datakey in referenceMap()){
-        if(reference.details[referenceMap()[datakey]].dataKey === datakey){
-            return referenceMap()[datakey];
-        }else{
-            // console.log(datakey)
+        try{
+            if(reference.details[referenceMap()[datakey]].dataKey === datakey){
+                return referenceMap()[datakey];
+            }else{
+                // console.log(datakey)
+                load_reference_map()
+                if(datakey in referenceMap()){
+                    return referenceMap()[datakey];
+                }else{
+                    return -1
+                }
+            }
+        }catch(e){
             load_reference_map()
             if(datakey in referenceMap()){
                 return referenceMap()[datakey];
