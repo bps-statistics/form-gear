@@ -1,18 +1,29 @@
 # Changelog
 
-## FormGear | Ver. 0.1.4
+## FormGear | Ver. 1.0.0
 
-> June 5, 2022
+> June 6, 2022
+
+### Optimized Performance
+- Optimize on create nested component. 
 
 ### Added
 - Add summary to response.
+	```json	
+    "summary": {
+        "answer": 2,
+        "blank": 15,
+        "error": 0,
+        "remark": 1
+    },
+	```
 - Add click on label on SingleCheckInput and ToggleInput.
 - Add list blank.
 
 ### Changed
 - Rename lastUpdated to updatedAt on response output.
+- Rename editedBy to updatedBy on response output.
 - Disable ListTextInput and ListSelectInput button on formMode > 1.
-- Optimize on create nested component.
 
 ### Fixed
 - Fix missed code in if statement on FormGear.tsx and in set answer GlobalFunction.

@@ -27,7 +27,7 @@ import { load_reference_map } from "./GlobalFunction";
 
 export function FormGear(referenceFetch, templateFetch, presetFetch, responseFetch, validationFetch, remarkFetch, config, uploadHandler, GpsHandler, offlineSearch, onlineSearch, mobileExit, setResponseMobile, setSubmitMobile, openMap) {
 
-  console.log('form-gear@0.1.3');
+  console.log('form-gear@1.0.0');
   // console.time('FormGear renders successfully in ');
   let timeStart = new Date();
   let stuff = {"reference" : referenceFetch, "template" : templateFetch, "preset" : presetFetch, "response" : responseFetch, "validation" : validationFetch, "remark" : remarkFetch};
