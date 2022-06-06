@@ -62,7 +62,7 @@ const Form: Component<{
       if(componentIndex !== -1 && (reference.details[componentIndex].answer) && (reference.details[componentIndex].enable)) answer = reference.details[componentIndex].answer;
       return answer;
     }
-    const [renderGear, setRenderGear] = createSignal('FormGear-0.1.4 🚀:');
+    const [renderGear, setRenderGear] = createSignal('FormGear-1.0.0 🚀:');
 
     const [prop, setProp] = createSignal(getProp(''));
     const [config, setConfig] = createSignal(getConfig());
@@ -202,7 +202,7 @@ const Form: Component<{
           setNote('details','notes',updatedNote);
         }
       })
-      setRenderGear('FormGear-0.1.4 ♻️:')
+      setRenderGear('FormGear-1.0.0 ♻️:')
     }
     // console.timeEnd('response ');
     // console.timeEnd('');
@@ -858,7 +858,7 @@ const Form: Component<{
                 sidebar-span absolute inset-y-0 left-0 transform -translate-x-full transition-transform duration-500 ease-in-out md:relative md:translate-x-0 z-10">
                   <div class=" text-gray-400 tracking-wider flex justify-between "> 
                     <div class="text-lg block p-4 text-gray-600 dark:text-white font-bold sm:text-xl" innerHTML={ props.template.details.acronym 
-                      + '<div class="text-xs font-light text-gray-600 ">🚀0.1.4 📋'+ template.details.version + ' ✔️'+ validation.details.version + ' </div>  '} />                       
+                      + '<div class="text-xs font-light text-gray-600 ">🚀1.0.0 📋'+ template.details.version + ' ✔️'+ validation.details.version + ' </div>  '} />                       
                     
                     <button type="button" 
                       class="md:hidden p-2 mobile-menu-button " onClick={sidebarCollapse}>
