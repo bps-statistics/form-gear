@@ -598,7 +598,7 @@ response.json
 │   templateVersion
 │   validationVersion
 │   createdBy
-│   editedBy
+│   updatedBy
 │   createdAt
 │   updatedAt
 └───answers

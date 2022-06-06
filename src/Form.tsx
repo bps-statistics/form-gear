@@ -62,7 +62,7 @@ const Form: Component<{
       if(componentIndex !== -1 && (reference.details[componentIndex].answer) && (reference.details[componentIndex].enable)) answer = reference.details[componentIndex].answer;
       return answer;
     }
-    const [renderGear, setRenderGear] = createSignal('FormGear-0.1.3 🚀:');
+    const [renderGear, setRenderGear] = createSignal('FormGear-0.1.4 🚀:');
 
     const [prop, setProp] = createSignal(getProp(''));
     const [config, setConfig] = createSignal(getConfig());
@@ -202,7 +202,7 @@ const Form: Component<{
           setNote('details','notes',updatedNote);
         }
       })
-      setRenderGear('FormGear-0.1.3 ♻️:')
+      setRenderGear('FormGear-0.1.4 ♻️:')
     }
     // console.timeEnd('response ');
     // console.timeEnd('');
@@ -302,7 +302,7 @@ const Form: Component<{
       let now = dayjs().format('YYYY-MM-DD HH:mm:ss');
         (response.details.createdBy === undefined) ? 
           setResponse('details','createdBy', form.formConfig.username) :
-            setResponse('details','editedBy', form.formConfig.username);
+            setResponse('details','updatedBy', form.formConfig.username);
         (response.details.createdAt === undefined) ? 
           setResponse('details','createdAt', now) : 
             setResponse('details','updatedAt', now);
@@ -852,13 +852,13 @@ const Form: Component<{
             <div class="mobile-component-div flex-grow overflow-y-auto h-full flex flex-col bg-white dark:bg-gray-900 z-0" onScroll={checkScrollTopMobile}>
               
               <div class="relative min-h-screen md:flex   ">
-                <div class="absolute pt-1 z-20 h-8 w-36 left-0 -ml-8 top-5 bg-sky-400/70 -rotate-45 text-white font-semibold text-center"  >&#946;eta 🔰</div>
+                {/* <div class="absolute pt-1 z-20 h-8 w-36 left-0 -ml-8 top-5 bg-teal-600/70 -rotate-45 text-white font-semibold text-center"  >&#946;eta 🤖</div> */}
 
                 <div class="bg-gray-50 dark:bg-gray-900 w-72 flex-shrink-0 border-r border-gray-200 dark:border-gray-800 h-full overflow-y-auto p-5 space-y-4
                 sidebar-span absolute inset-y-0 left-0 transform -translate-x-full transition-transform duration-500 ease-in-out md:relative md:translate-x-0 z-10">
                   <div class=" text-gray-400 tracking-wider flex justify-between "> 
                     <div class="text-lg block p-4 text-gray-600 dark:text-white font-bold sm:text-xl" innerHTML={ props.template.details.acronym 
-                      + '<div class="text-xs font-extralight text-gray-400 ">🚀0.1.3 📋'+ template.details.version + ' ✔️'+ validation.details.version + ' </div>  '} />                       
+                      + '<div class="text-xs font-light text-gray-600 ">🚀0.1.4 📋'+ template.details.version + ' ✔️'+ validation.details.version + ' </div>  '} />                       
                     
                     <button type="button" 
                       class="md:hidden p-2 mobile-menu-button " onClick={sidebarCollapse}>
@@ -1089,7 +1089,7 @@ const Form: Component<{
                               'hidden': onMobile() === true,
                             }}
                           />
-                        <div class="text-xs font-extralight text-gray-400 "> {renderGear} &#177; {timeDiff} ms</div>
+                        <div class="text-xs font-light text-gray-600 "> {renderGear} &#177; {timeDiff} ms</div>
                       </div>
                       <div class="ml-auto sm:flex items-center p-2 ">
                         <button onClick={toggleSwitch} type="button" 

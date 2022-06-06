@@ -13,7 +13,7 @@ type Detail = {
     validationVersion: string;
     docState?: string;
     createdBy: string;
-    editedBy: string;
+    updatedBy: string;
     createdAt: any;
     updatedAt: any;
     answers: Answer[];
@@ -33,7 +33,7 @@ export const [response, setResponse] = createStore<Response>({
         templateVersion: '',
         validationVersion: '',
         createdBy: '',
-        editedBy: '',
+        updatedBy: '',
         createdAt: '',
         updatedAt: '',
         answers: [],
