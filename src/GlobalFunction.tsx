@@ -275,11 +275,12 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
         if(Number(newComp.type) === 4) {
             try{
                 let value_local = eval(newComp.expression)
-                saveAnswer(newComp.dataKey, 'answer', value_local, sidebarPosition, null);
+                value = value_local
             }catch(e){
-                saveAnswer(newComp.dataKey, 'answer', undefined, sidebarPosition, null);
+                value = undefined
             }
         }
+        saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null);
     })
     
     let newSide = {
@@ -477,11 +478,12 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
             if(Number(newComp.type) === 4) {
                 try{
                     let value_local = eval(newComp.expression)
-                    saveAnswer(newComp.dataKey, 'answer', value_local, sidebarPosition, null);
+                    value = value_local
                 }catch(e){
-                    saveAnswer(newComp.dataKey, 'answer', undefined, sidebarPosition, null);
+                    value = undefined
                 }
             }
+            saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null);
         })
 
         let newSide = {
