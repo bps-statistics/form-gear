@@ -73,7 +73,7 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
         }
     }
     //index
-    if(parentIndex.length == 0){
+    if(parentIndex.length == 0 && refPosition !== -1){
         newComp.index = (newComp.index !== undefined) ? newComp.index : JSON.parse(JSON.stringify(reference.details[refPosition].index));
         newComp.index[newComp.index.length-2] = nestedPosition;
         let label = newComp.label.replace('$NAME$',parentName);
