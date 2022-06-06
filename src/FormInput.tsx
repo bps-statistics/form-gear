@@ -91,7 +91,7 @@ const FormInput: FormComponentBase = props => {
     let now = dayjs().format('YYYY-MM-DD HH:mm:ss');
       (response.details.createdBy === undefined) ? 
         setResponse('details','createdBy', form.formConfig.username) :
-          setResponse('details','editedBy', form.formConfig.username);
+          setResponse('details','updatedBy', form.formConfig.username);
       (response.details.createdAt === undefined) ? 
         setResponse('details','createdAt', now) : 
           setResponse('details','updatedAt', now);
