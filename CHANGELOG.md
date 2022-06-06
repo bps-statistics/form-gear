@@ -19,6 +19,7 @@
 - Fix disable remark on formMode == 3 and without any comments in it on each component.
 - Fix bug not load updated remarks when reuse reference.
 - Fix overflow bug on list error when user cannot see the lookinto button.
+- Fix bug createComponent on insertNestedNumber
 
 
 ---
