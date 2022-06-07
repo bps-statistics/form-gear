@@ -17,6 +17,8 @@ import { summary, setSummary } from './stores/SummaryStore';
 import { saveAnswer } from "./GlobalFunction";
 import { toastInfo } from "./FormInput";
 
+import { referenceHistoryEnable, setReferenceHistoryEnable} from './stores/ReferenceStore';
+
 import dayjs from 'dayjs';
 
 export const getConfig = () => {
@@ -211,6 +213,8 @@ const Form: Component<{
     }
     // console.timeEnd('response ');
     // console.timeEnd('');
+    
+    setReferenceHistoryEnable(true)
     
     const [onMobile , setOnMobile] = createSignal(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
     const checkOnMobile = () => {

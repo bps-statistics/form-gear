@@ -1,5 +1,8 @@
 import { reference, setReference} from './stores/ReferenceStore';
 import { referenceMap, setReferenceMap} from './stores/ReferenceStore';
+import { referenceHistoryEnable, setReferenceHistoryEnable} from './stores/ReferenceStore';
+import { referenceHistory, setReferenceeHistory} from './stores/ReferenceStore';
+import { sideBareHistory, setSideBareHistory} from './stores/ReferenceStore';
 import { validation, setValidation} from './stores/ValidationStore';
 import { sidebar, setSidebar} from './stores/SidebarStore';
 import { preset, setPreset, Preset } from './stores/PresetStore';
@@ -243,13 +246,16 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
         }
         if(!loopingState) break;
     }
+    let history = []
     components.forEach(el =>{
         // reference.details.findIndex(obj => obj.dataKey === el.dataKey) === -1
         if(!(el.dataKey in referenceMap())){
             updatedRef.splice(startPosition, 0, el);
+            history.push({'pos': startPosition, 'data': JSON.parse(JSON.stringify(el.dataKey))})
             startPosition += 1
         }
     })
+    addHistory('insert_ref_detail', null, refPosition, null, history)
     load_reference_map(updatedRef)
     setReference('details',updatedRef);
     
@@ -315,6 +321,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
             if(!loopingState) break;
         }
     }
+    addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
     setSidebar('details',updatedSidebar);
 }
 
@@ -325,13 +332,14 @@ export const deleteSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
 
     let componentForeignIndexRef = JSON.parse(JSON.stringify(reference.details[refPosition].index));
     let newComponentForeignIndexRef = [...componentForeignIndexRef, Number(beforeAnswer.value)];
-    
+    let history = []
     let refLength = reference.details.length
     for(let j= refLength-1; j > refPosition; j--){
         let tmpChildIndex = JSON.parse(JSON.stringify(reference.details[j].index));
         tmpChildIndex.length = newComponentForeignIndexRef.length;
         if(JSON.stringify(tmpChildIndex) === JSON.stringify(newComponentForeignIndexRef)){
             updatedRef.splice(j, 1);
+            history.push({'pos': j, 'data': JSON.parse(JSON.stringify(reference.details[j]))})
         }
     }
     let sideLength = sidebar.details.length;
@@ -342,8 +350,10 @@ export const deleteSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
             updatedSidebar.splice(x, 1);
         }
     }
+    addHistory('delete_ref_detail', null, refPosition, null, history)
     load_reference_map(updatedRef)
     setReference('details',updatedRef);
+    addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
     setSidebar('details',updatedSidebar);
 }
 
@@ -393,7 +403,7 @@ export const changeSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
             
             newSidebarComp.description = updatedSidebarDescription;
             newSidebarComp.components[0] = editedComp;
-            
+            addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
             setSidebar('details', sidebarPosition, newSidebarComp);
         }
     } else {
@@ -447,13 +457,16 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
             }
             if(!loopingState) break;
         }
+        let history = []
         components.forEach(el =>{
             // reference.details.findIndex(obj => obj.dataKey === el.dataKey) === -1
             if(!(el.dataKey in referenceMap())){
                 updatedRef.splice(startPosition, 0, el);
+                history.push({'pos': startPosition, 'data': JSON.parse(JSON.stringify(el.dataKey))})
                 startPosition += 1
             }
         })
+        addHistory('insert_ref_detail', null, refPosition, null, history)
         load_reference_map(updatedRef)
         setReference('details',updatedRef);
         components.forEach(newComp =>{
@@ -518,6 +531,7 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                 if(!loopingState) break;
             }
         }
+        addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
         setSidebar('details',updatedSidebar);
     }
     if(now < answer) insertSidebarNumber(dataKey, answer, now, sidebarPosition);    
@@ -530,13 +544,14 @@ export const deleteSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
 
     let componentForeignIndexRef = JSON.parse(JSON.stringify(reference.details[refPosition].index));
     let newComponentForeignIndexRef = [...componentForeignIndexRef, Number(beforeAnswer)];
-    
+    let history = []
     let refLength = reference.details.length;
     for(let j=refLength-1; j > refPosition; j--){
         let tmpChildIndex = JSON.parse(JSON.stringify(reference.details[j].index));
         tmpChildIndex.length = newComponentForeignIndexRef.length;
         if(JSON.stringify(tmpChildIndex) === JSON.stringify(newComponentForeignIndexRef)){
             updatedRef.splice(j, 1);
+            history.push({'pos': j, 'data': JSON.parse(JSON.stringify(reference.details[j]))})
         }
     }
     let sideLength = sidebar.details.length
@@ -547,8 +562,9 @@ export const deleteSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
             updatedSidebar.splice(x, 1);
         }
     }
-
+    addHistory('delete_ref_detail', null, refPosition, null, history)
     setReference('details',updatedRef);
+    addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
     setSidebar('details',updatedSidebar);
     let now = beforeAnswer-1;
     
@@ -693,6 +709,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
         
         let beforeAnswer = (typeof answer === 'number' || typeof answer === 'string') ? 0 : [];
         beforeAnswer = (reference.details[refPosition]) ? reference.details[refPosition].answer : beforeAnswer;
+        addHistory('saveAnswer', dataKey, refPosition, attributeParam, reference.details[refPosition][attributeParam])
         setReference('details', refPosition, attributeParam, answer);
         //validate for its own dataKey 
         runValidation(dataKey, JSON.parse(JSON.stringify(reference.details[refPosition])), activeComponentPosition);
@@ -746,6 +763,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 hasSideCompEnable.forEach(sidebarEnable => {
                     let sidePosition = sidebar.details.findIndex(objSide => objSide.dataKey === sidebarEnable.dataKey);
                     let enableSide = eval_enable(sidebarEnable.enableCondition);
+                    addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
                     setSidebar('details',sidePosition,'enable',enableSide);
                     let updatedRef = JSON.parse(JSON.stringify(reference.details));
                     let tmpVarComp = [];
@@ -956,6 +974,9 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
             }
         }
     } else if(attributeParam === 'validate'){
+        let item_refff = JSON.parse(JSON.stringify(reference.details[refPosition]))
+        addHistory('saveAnswer', dataKey, refPosition, attributeParam
+            , {'validationState': item_refff.validationState, 'validationMessage': item_refff.validationMessage})
         setReference('details', refPosition, answer);
     }
 }
@@ -1005,5 +1026,71 @@ export function load_reference_map(reference_local = null){
             reference_map_lokal[reference_local[index].dataKey] = index;
         }
         setReferenceMap(reference_map_lokal)
+    }
+}
+
+export function addHistory(type, datakey, position, attributeParam, data){
+    if(!referenceHistoryEnable()){
+        return
+    }
+    if(type === "change_sidebar"){
+        if(sideBareHistory().length === 0){
+            setSideBareHistory(data)
+        }
+    }else{
+        setReferenceeHistory([...referenceHistory(), { 'type': type, 'datakey': datakey, 'position': position, 'attributeParam' : attributeParam, 'data': data }]);
+    }
+}
+
+export function reloadDataFromHistory(){
+    let detail_local = JSON.parse(JSON.stringify(reference.details))
+    for(let index_history = referenceHistory().length -1 ; index_history >=0 ; index_history --){
+        let type = referenceHistory()[index_history]['type']
+        let datakey = referenceHistory()[index_history]['datakey']
+        let position = referenceHistory()[index_history]['position']
+        let attributeParam = referenceHistory()[index_history]['attributeParam']
+        let data = referenceHistory()[index_history]['data']
+        
+        if(type === "insert_ref_detail"){
+            for(let index_lokal = data.length - 1; index_lokal >= 0; index_lokal --){
+                let item_post = data[index_lokal]['pos']
+                if(detail_local[data[index_lokal]['pos']].dataKey !== data[index_lokal]['data']){
+                    let refPostion = detail_local.findIndex((element) => {
+                        element.dataKey === data[index_lokal]['data']
+                    })
+                    item_post = refPostion
+                }
+                if(item_post !== -1){
+                    detail_local.splice(item_post, 1)
+                }
+            }
+        }else if(type === "delete_ref_detail"){
+            for(let index_lokal = data.length - 1; index_lokal >= 0; index_lokal --){
+                let item_post = data[index_lokal]['pos']
+                detail_local.splice(item_post, 0, JSON.parse(JSON.stringify(data[index_lokal]['data'])))
+            }
+        }else if(type === 'saveAnswer'){
+            if(detail_local[position].dataKey !== datakey){
+                let refPostion = detail_local.findIndex((element) => {
+                    element.dataKey === datakey
+                })
+                position = refPostion
+            }
+            if(position !== -1){
+                if(attributeParam === 'answer'){
+                    detail_local[position][attributeParam] = data
+                }else if(attributeParam === 'enable'){
+                    detail_local[position][attributeParam] = data
+                }else if(attributeParam === 'validate'){
+                    detail_local[position]['validationState'] = data['validationState']
+                    detail_local[position]['validationMessage'] = JSON.parse(JSON.stringify(data['validationMessage']))
+                }
+            }
+        }
+    }
+    load_reference_map(detail_local)
+    setReference('details', detail_local)
+    if(sideBareHistory().length > 0){
+        setSidebar('details',JSON.parse(JSON.stringify(sideBareHistory())));
     }
 }
