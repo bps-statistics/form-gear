@@ -77,7 +77,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
     // If a equals b, return 0;
     let runAll = 0;
     // templateVersionState == 0 && validationVersionState == 0 && referenceLen > 0 && sidebarLen >0
-    if( false ){
+    if( templateVersionState == 0 && validationVersionState == 0 && referenceLen > 0 && sidebarLen >0 ){
       console.log('Reuse reference ♻️')
       setReference(referenceFetch)
       load_reference_map()
