@@ -1,8 +1,11 @@
 import { FormComponentBase } from "../FormType"
-import { For, createMemo, Switch, Match, Show } from 'solid-js'
+import { For, createMemo, Switch, Match, Show, createSignal } from 'solid-js'
 import { reference, setReference } from '../stores/ReferenceStore';
 
 const NestedInput: FormComponentBase = props => {
+
+    const config = props.config	
+    const [btnLabel] = createSignal((config.formMode > 1 ) ? 'VIEW' : 'ENTRY')
 
 	let componentAnswerIndex = createMemo(() => {
 		return String(reference.details.findIndex(obj => obj.dataKey === props.component.sourceQuestion));
@@ -98,7 +101,7 @@ const NestedInput: FormComponentBase = props => {
 								<div class="col-span-2 -ml-12 space-x-1 flex justify-evenly -z-0">
 									<button class="bg-blue-800 hover:bg-blue-700 text-white text-justify justify-center text-xs w-full py-2 rounded-tl-none rounded-full focus:outline-none group inline-flex items-center" 
 										onClick={e => handleOnClick(item.value)} id={`nestedButton-${props.component.dataKey}-${index()}`}>
-										&nbsp;&nbsp;ENTRY
+										&nbsp;&nbsp;{btnLabel}
 										<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-5" viewBox="0 0 20 20" fill="currentColor">
 											<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
 										</svg>
