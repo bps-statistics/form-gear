@@ -1,6 +1,7 @@
 import { createSignal, createEffect, Component, For, Show, Switch, Match } from "solid-js";
 import { useForm } from "./FormProvider";
 import FormComponent from './FormComponent';
+import { gearVersion, templateVersion, validationVersion } from "./FormGear"
 
 import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
 import { preset, setPreset, Preset } from './stores/PresetStore';
@@ -62,7 +63,7 @@ const Form: Component<{
     if (componentIndex !== -1 && (reference.details[componentIndex].answer) && (reference.details[componentIndex].enable)) answer = reference.details[componentIndex].answer;
     return answer;
   }
-  const [renderGear, setRenderGear] = createSignal('FormGear-1.0.0 🚀:');
+  const [renderGear, setRenderGear] = createSignal('FormGear-'+gearVersion+' 🚀:');
 
   const [prop, setProp] = createSignal(getProp(''));
   const [config, setConfig] = createSignal(getConfig());
@@ -210,7 +211,7 @@ const Form: Component<{
         setNote('details', 'notes', updatedNote);
       }
     })
-    setRenderGear('FormGear-1.0.0 ♻️:')
+    setRenderGear('FormGear-'+gearVersion+' ♻️:')
   }
   // console.timeEnd('response ');
   // console.timeEnd('');
@@ -297,31 +298,50 @@ const Form: Component<{
           })
         }
       }
-
     })
 
     //setResponse
     setResponse('details', 'answers', dataForm)
-    setResponse('details', 'templateVersion', template.details.version);
-    setResponse('details', 'validationVersion', validation.details.version);
+    setResponse('details', 'templateDataKey', template.details.dataKey)
+    setResponse('details', 'gearVersion', gearVersion)
+    setResponse('details', 'templateVersion', templateVersion)
+    setResponse('details', 'validationVersion', validationVersion)
     setResponse('details', 'docState', docState());
     setResponse('details', 'summary', JSON.parse(JSON.stringify(summary)));
 
     let now = dayjs().format('YYYY-MM-DD HH:mm:ss');
-    (response.details.createdBy === undefined) ?
+    (response.details.createdBy === undefined || (response.details.createdBy !== undefined && response.details.createdBy === '')) ?
       setResponse('details', 'createdBy', form.formConfig.username) :
       setResponse('details', 'updatedBy', form.formConfig.username);
-    (response.details.createdAt === undefined) ?
+    (response.details.createdAt === undefined || (response.details.createdAt !== undefined && response.details.createdAt === '')) ?
       setResponse('details', 'createdAt', now) :
       setResponse('details', 'updatedAt', now);
 
     //setPrincipal
     setPrincipal('details', 'principals', dataPrincipal)
-    setPrincipal('details', 'templateVersion', template.details.version);
-    setPrincipal('details', 'createdAt', now);
+    setPrincipal('details', 'templateDataKey', template.details.dataKey)
+    setPrincipal('details', 'gearVersion', gearVersion)
+    setPrincipal('details', 'templateVersion', templateVersion)
+    setPrincipal('details', 'validationVersion', validationVersion);
+    (principal.details.createdBy === undefined || (principal.details.createdBy !== undefined && principal.details.createdBy === '')) ?
+      setPrincipal('details', 'createdBy', form.formConfig.username) :
+      setPrincipal('details', 'updatedBy', form.formConfig.username);
+    (principal.details.createdAt === undefined || (principal.details.createdAt !== undefined && principal.details.createdAt === '')) ?
+      setPrincipal('details', 'createdAt', now) :
+      setPrincipal('details', 'updatedAt', now);
 
     //setRemark
     setRemark('details', 'notes', JSON.parse(JSON.stringify(note.details.notes)));
+    setRemark('details', 'templateDataKey', template.details.dataKey)
+    setRemark('details', 'gearVersion', gearVersion);
+    setRemark('details', 'templateVersion', templateVersion);
+    setRemark('details', 'validationVersion', validationVersion);
+    (remark.details.createdBy === undefined || (remark.details.createdBy !== undefined && remark.details.createdBy === '')) ?
+      setRemark('details', 'createdBy', form.formConfig.username) :
+      setRemark('details', 'updatedBy', form.formConfig.username);
+    (remark.details.createdAt === undefined || (remark.details.createdAt !== undefined && remark.details.createdAt === '')) ?
+      setRemark('details', 'createdAt', now) :
+      setRemark('details', 'updatedAt', now);
 
     //setReference
     setReference('sidebar', sidebar.details)
@@ -1003,7 +1023,7 @@ const Form: Component<{
                 sidebar-span absolute inset-y-0 left-0 transform -translate-x-full transition-transform duration-500 ease-in-out md:relative md:translate-x-0 z-10">
                 <div class=" text-gray-400 tracking-wider flex justify-between ">
                   <div class="text-lg block p-4 text-gray-600 dark:text-white font-bold sm:text-xl" innerHTML={props.template.details.acronym
-                    + '<div class="text-xs font-light text-gray-600 ">🚀1.0.0 📋' + template.details.version + ' ✔️' + validation.details.version + ' </div>  '} />
+                    + '<div class="text-xs font-light text-gray-600 ">🚀'+gearVersion+' 📋' + templateVersion + ' ✔️' + validationVersion + ' </div>  '} />
 
                   <button type="button"
                     class="md:hidden p-2 mobile-menu-button " onClick={sidebarCollapse}>

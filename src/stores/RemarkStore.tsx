@@ -13,6 +13,14 @@ type Note = {
 
 type Detail = {
     dataKey: string
+    templateDataKey: string
+    gearVersion: string
+    templateVersion: string
+    validationVersion: string
+    createdBy: string
+    updatedBy: string
+    createdAt: any
+    updatedAt: any
     notes: Note[]
 }
   
@@ -25,6 +33,14 @@ export const [remark, setRemark] = createStore<Remark>({
     status: 1,
     details: {
         dataKey: '',
+        templateDataKey: '',
+        gearVersion: '',
+        templateVersion: '',
+        validationVersion: '',
+        createdBy: '',
+        updatedBy: '',
+        createdAt: '',
+        updatedAt: '',
         notes: []
     }
 });

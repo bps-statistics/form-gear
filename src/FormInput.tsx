@@ -1,6 +1,7 @@
 import { useForm } from "./FormProvider";
 import { CONTROL_MAP, FormComponentBase } from "./FormType";
 import { Switch, For, Match, createSignal, createMemo, Show } from 'solid-js'
+import { gearVersion, templateVersion, validationVersion } from "./FormGear"
 
 import { reference, setReference} from './stores/ReferenceStore';
 import { sidebar, setSidebar} from './stores/SidebarStore';
@@ -78,31 +79,50 @@ const FormInput: FormComponentBase = props => {
           })
         }
       }
-
     })      
 
     //setResponse
     setResponse('details', 'answers', dataForm)
-    setResponse('details','templateVersion', template.details.version);
-    setResponse('details','validationVersion', validation.details.version);
-    setResponse('details','docState', docState());
-    setResponse('details','summary', JSON.parse(JSON.stringify(summary)));
+    setResponse('details', 'templateDataKey', template.details.dataKey)
+    setResponse('details', 'gearVersion', gearVersion)
+    setResponse('details', 'templateVersion', templateVersion)
+    setResponse('details', 'validationVersion', validationVersion)
+    setResponse('details', 'docState', docState());
+    setResponse('details', 'summary', JSON.parse(JSON.stringify(summary)));
 
     let now = dayjs().format('YYYY-MM-DD HH:mm:ss');
-      (response.details.createdBy === undefined) ? 
-        setResponse('details','createdBy', form.formConfig.username) :
-          setResponse('details','updatedBy', form.formConfig.username);
-      (response.details.createdAt === undefined) ? 
-        setResponse('details','createdAt', now) : 
-          setResponse('details','updatedAt', now);
-    
+    (response.details.createdBy === undefined || (response.details.createdBy !== undefined && response.details.createdBy === '')) ?
+      setResponse('details', 'createdBy', form.formConfig.username) :
+      setResponse('details', 'updatedBy', form.formConfig.username);
+    (response.details.createdAt === undefined || (response.details.createdAt !== undefined && response.details.createdAt === '')) ?
+      setResponse('details', 'createdAt', now) :
+      setResponse('details', 'updatedAt', now);
+
     //setPrincipal
-    setPrincipal('details','principals', dataPrincipal)
-    setPrincipal('details','templateVersion', template.details.version);
-    setPrincipal('details','createdAt', now);
-    
+    setPrincipal('details', 'principals', dataPrincipal)
+    setPrincipal('details', 'templateDataKey', template.details.dataKey)
+    setPrincipal('details', 'gearVersion', gearVersion)
+    setPrincipal('details', 'templateVersion', templateVersion)
+    setPrincipal('details', 'validationVersion', validationVersion);
+    (principal.details.createdBy === undefined || (principal.details.createdBy !== undefined && principal.details.createdBy === '')) ?
+      setPrincipal('details', 'createdBy', form.formConfig.username) :
+      setPrincipal('details', 'updatedBy', form.formConfig.username);
+    (principal.details.createdAt === undefined || (principal.details.createdAt !== undefined && principal.details.createdAt === '')) ?
+      setPrincipal('details', 'createdAt', now) :
+      setPrincipal('details', 'updatedAt', now);
+
     //setRemark
-    setRemark('details','notes', JSON.parse(JSON.stringify(note.details.notes)));
+    setRemark('details', 'notes', JSON.parse(JSON.stringify(note.details.notes)));
+    setRemark('details', 'templateDataKey', template.details.dataKey)
+    setRemark('details', 'gearVersion', gearVersion);
+    setRemark('details', 'templateVersion', templateVersion);
+    setRemark('details', 'validationVersion', validationVersion);
+    (remark.details.createdBy === undefined || (remark.details.createdBy !== undefined && remark.details.createdBy === '')) ?
+      setRemark('details', 'createdBy', form.formConfig.username) :
+      setRemark('details', 'updatedBy', form.formConfig.username);
+    (remark.details.createdAt === undefined || (remark.details.createdAt !== undefined && remark.details.createdAt === '')) ?
+      setRemark('details', 'createdAt', now) :
+      setRemark('details', 'updatedAt', now);
 
     //setReference
     setReference('sidebar', sidebar.details)

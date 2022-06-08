@@ -1,5 +1,30 @@
 # Changelog
 
+## FormGear | Ver. 1.0.1
+
+> June 8, 2022
+
+### Added
+- Add templateDataKey on response, principal, remark to identify what template is belonging to.
+	```json	
+    "templateDataKey": "family-characteristics-2022",
+	```
+- Add metadata such as gearVersion, templateVersion, validationVersion response, principal, remark to identify what version is used to create these files.
+	```json	
+    "gearVersion": "1.0.1",
+	"templateVersion": "1.0.0",
+	"validationVersion": "1.0.0"
+	```
+- Add metadata such as createdBy, createdAt, updatedBy, updatedAt on response, principal, remark to identify time and user identity that creates these files.
+	```json	
+    "createdBy": "adty",
+    "updatedBy": "adty",
+    "createdAt": "2022-06-08 07:00:19",
+    "updatedAt": "2022-06-08 10:07:04",
+	```
+
+
+
 ## FormGear | Ver. 1.0.0
 
 > June 6, 2022
