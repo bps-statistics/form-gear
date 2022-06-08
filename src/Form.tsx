@@ -514,29 +514,29 @@ const Form: Component<{
     setShowBlank(true);
   }
 
-  const showListPage = (total, shown, current, list, errorType) => {
+  const showListPage = (total, shown, current, list, listType) => {
     let maxPages = Math.ceil(total / shown)
     let minSlicePages = shown * current - shown
     let maxSlicePages = shown * current
 
     let listPage = list.slice(minSlicePages, maxSlicePages)
 
-    if (errorType == 2) {
+    if (listType == 2) {
       setCurrentErrorPage(current)
       setMaxErrorPage(maxPages)
       setListErrorPage(JSON.parse(JSON.stringify(listPage)))
-    } else if (errorType == 1) {
+    } else if (listType == 1) {
       setCurrentWarningPage(current)
       setMaxWarningPage(maxPages)
       setListWarningPage(JSON.parse(JSON.stringify(listPage)))
-    } else if (errorType == 4) {
-      setCurrentRemarkPage(current)
-      setMaxRemarkPage(maxPages)
-      setListRemarkPage(JSON.parse(JSON.stringify(listPage)))
-    } else {
+    } else if (listType == 3) {
       setCurrentBlankPage(current)
       setMaxBlankPage(maxPages)
       setListBlankPage(JSON.parse(JSON.stringify(listPage)))
+    } else if (listType == 4) {
+      setCurrentRemarkPage(current)
+      setMaxRemarkPage(maxPages)
+      setListRemarkPage(JSON.parse(JSON.stringify(listPage)))
     }
   }
 
@@ -685,9 +685,9 @@ const Form: Component<{
 
               <div class="bg-white px-4 pt-5 pb-4 sm:p-6">
                   <div class="sm:flex sm:items-start mt-6">
-                    <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-200 sm:mx-0 sm:h-10 sm:w-10 text-blue-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full text-yellow-400 bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 " fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
                       </svg>
                     </div>
                     <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
