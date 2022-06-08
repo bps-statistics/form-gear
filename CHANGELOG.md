@@ -22,6 +22,16 @@
     "createdAt": "2022-06-08 07:00:19",
     "updatedAt": "2022-06-08 10:07:04",
 	```
+- Add ListBlank Modal to provide the list of blank component during data collection.
+- Add ListRemark Modal to provide the list of component with remark during data collection.
+
+
+### Changed
+- Clickable summary to open ListBlank and ListRemark
+- Update nested button label to 'view' on formMode > 1
+
+
+---
 
 
 
