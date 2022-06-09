@@ -8,10 +8,15 @@ type PrincipalComponent = {
 }
 
 type Detail = {
-    templateVersion: string;
-    createdBy: string;
-    createdAt: any;
-    principals: PrincipalComponent[];
+    templateDataKey: string
+    gearVersion: string
+    templateVersion: string
+    validationVersion: string
+    createdBy: string
+    updatedBy: string
+    createdAt: any
+    updatedAt: any
+    principals: PrincipalComponent[]
 }
   
 export interface Principals{
@@ -22,9 +27,14 @@ export interface Principals{
 export const [principal, setPrincipal] = createStore<Principals>({
     status: 1,
     details: {
+        templateDataKey: '',
+        gearVersion: '',
         templateVersion: '',
+        validationVersion: '',
         createdBy: '',
+        updatedBy: '',
         createdAt: '',
+        updatedAt: '',
         principals: []
     }
 });

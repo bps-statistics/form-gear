@@ -7,17 +7,19 @@ type Answer = {
 }
 
 type Detail = {
-    description: string;
-    dataKey: string;
-    templateVersion: string;
-    validationVersion: string;
-    docState?: string;
-    createdBy: string;
-    updatedBy: string;
-    createdAt: any;
-    updatedAt: any;
-    answers: Answer[];
-    summary: Summary[];
+    description: string
+    dataKey: string
+    templateDataKey: string
+    gearVersion: string
+    templateVersion: string
+    validationVersion: string
+    docState?: string
+    createdBy: string
+    updatedBy: string
+    createdAt: any
+    updatedAt: any
+    answers: Answer[]
+    summary: Summary[]
 }
   
 export interface Response{
@@ -30,6 +32,8 @@ export const [response, setResponse] = createStore<Response>({
     details: {
         description: '',
         dataKey: '',
+        templateDataKey: '',
+        gearVersion: '',
         templateVersion: '',
         validationVersion: '',
         createdBy: '',

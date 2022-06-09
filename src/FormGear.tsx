@@ -25,9 +25,12 @@ import { toastInfo } from "./FormInput";
 
 import { load_reference_map } from "./GlobalFunction";
 
+export const gearVersion = '1.0.1';
+export let templateVersion = '0.0.0';
+export let validationVersion = '0.0.0';
 export function FormGear(referenceFetch, templateFetch, presetFetch, responseFetch, validationFetch, remarkFetch, config, uploadHandler, GpsHandler, offlineSearch, onlineSearch, mobileExit, setResponseMobile, setSubmitMobile, openMap) {
 
-  console.log('form-gear@1.0.0');
+  console.log('form-gear@'+gearVersion);
   // console.time('FormGear renders successfully in ');
   let timeStart = new Date();
   let stuff = {"reference" : referenceFetch, "template" : templateFetch, "preset" : presetFetch, "response" : responseFetch, "validation" : validationFetch, "remark" : remarkFetch};
@@ -58,26 +61,33 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
     const referenceList = [];
     let len = template.details.components[0].length;
 
+    templateVersion = template.details.version !== undefined ? template.details.version : '0.0.1';
+    validationVersion = validation.details.version !== undefined ? validation.details.version : '0.0.1';
+
+    const gearVersionState = template.details.version == undefined ? 1 : semverCompare(
+      gearVersion, 
+      response.details.gearVersion !== undefined ? response.details.gearVersion : '0.0.0'
+    )
+    
     const templateVersionState = template.details.version == undefined ? 1 : semverCompare(
-      template.details.version !== undefined ? template.details.version : '0.0.1', 
+      templateVersion, 
       response.details.templateVersion !== undefined ? response.details.templateVersion : '0.0.0'
     )
 
     const validationVersionState = validation.details.version == undefined ? 1 : semverCompare(
-      validation.details.version !== undefined ? validation.details.version : '0.0.1', 
+      validationVersion, 
       response.details.validationVersion !== undefined ? response.details.validationVersion : '0.0.0'
     )
 
     const sidebarLen = reference !== undefined ? referenceFetch.sidebar.length : 0
     const referenceLen = reference !== undefined ? referenceFetch.details.length : 0
-
+    
     // semverCompare(a,b) 
     // If the semver string a is greater than b, return 1. 
-    // If the semver string b is greater than a, return -1. 
+    // If the semver string b is greater than a, return 0. 
     // If a equals b, return 0;
     let runAll = 0;
-    // templateVersionState == 0 && validationVersionState == 0 && referenceLen > 0 && sidebarLen >0
-    if( templateVersionState == 0 && validationVersionState == 0 && referenceLen > 0 && sidebarLen >0 ){
+    if( gearVersionState == 0 && templateVersionState == 0 && validationVersionState == 0 && referenceLen > 0 && sidebarLen >0 ){
       console.log('Reuse reference ♻️')
       setReference(referenceFetch)
       load_reference_map()
