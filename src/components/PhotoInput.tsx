@@ -31,7 +31,7 @@ const PhotoInput: FormComponentBase = props => {
     let updatedAnswer = JSON.parse(JSON.stringify(props.value))
     updatedAnswer = [];
 
-    updatedAnswer.push({ value: event.image, label: event.label, type: event.type })
+    updatedAnswer.push({ 'value': event.image, 'label': event.label, 'type': event.type })
 
 
     props.onValueChange(updatedAnswer)
@@ -71,7 +71,7 @@ const PhotoInput: FormComponentBase = props => {
           let urlImg = URL.createObjectURL(doc)
 
           // updatedAnswer.push({ value: urlImg, label: filename })
-          updatedAnswer.push({ value: e.target.result, label: filename, type: data.target.files[0].type })
+          updatedAnswer.push({ 'value': e.target.result, 'label': filename, 'type': data.target.files[0].type })
 
           // console.log('hasilny adalah : ', updatedAnswer)
           props.onValueChange(updatedAnswer)
