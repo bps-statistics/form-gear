@@ -16,6 +16,10 @@ type Detail = {
     updatedBy: string
     createdAt: any
     updatedAt: any
+    createdAtTimezone: string
+    createdAtGMT: number
+    updatedAtTimezone: string
+    updatedAtGMT: number
     principals: PrincipalComponent[]
 }
   
@@ -35,6 +39,10 @@ export const [principal, setPrincipal] = createStore<Principals>({
         updatedBy: '',
         createdAt: '',
         updatedAt: '',
+        createdAtTimezone: '',
+        createdAtGMT: null,
+        updatedAtTimezone: '',
+        updatedAtGMT: null,
         principals: []
     }
 });
