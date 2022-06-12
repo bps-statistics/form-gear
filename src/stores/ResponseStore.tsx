@@ -18,6 +18,10 @@ type Detail = {
     updatedBy: string
     createdAt: any
     updatedAt: any
+    createdAtTimezone: string
+    createdAtGMT: number
+    updatedAtTimezone: string
+    updatedAtGMT: number
     answers: Answer[]
     summary: Summary[]
 }
@@ -40,6 +44,10 @@ export const [response, setResponse] = createStore<Response>({
         updatedBy: '',
         createdAt: '',
         updatedAt: '',
+        createdAtTimezone: '',
+        createdAtGMT: null,
+        updatedAtTimezone: '',
+        updatedAtGMT: null,
         answers: [],
         summary: [],
     }
