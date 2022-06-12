@@ -21,6 +21,10 @@ type Detail = {
     updatedBy: string
     createdAt: any
     updatedAt: any
+    createdAtTimezone: string
+    createdAtGMT: number
+    updatedAtTimezone: string
+    updatedAtGMT: number
     notes: Note[]
 }
   
@@ -41,6 +45,10 @@ export const [remark, setRemark] = createStore<Remark>({
         updatedBy: '',
         createdAt: '',
         updatedAt: '',
+        createdAtTimezone: '',
+        createdAtGMT: null,
+        updatedAtTimezone: '',
+        updatedAtGMT: null,
         notes: []
     }
 });

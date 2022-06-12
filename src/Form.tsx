@@ -21,6 +21,10 @@ import { toastInfo } from "./FormInput";
 import { referenceHistoryEnable, setReferenceHistoryEnable} from './stores/ReferenceStore';
 
 import dayjs from 'dayjs';
+import utc from  'dayjs/plugin/utc';
+import timezone from  'dayjs/plugin/timezone';
+
+
 
 export const getConfig = () => {
   const [formProps] = useForm();
@@ -311,13 +315,34 @@ const Form: Component<{
     setResponse('details', 'docState', docState());
     setResponse('details', 'summary', JSON.parse(JSON.stringify(summary)));
 
-    let now = dayjs().format('YYYY-MM-DD HH:mm:ss');
+    let now = dayjs().format('YYYY-MM-DD HH:mm:ss');    
+    var dt = new Date();
+    var s = dt.getTimezoneOffset();
+    var timeToGet = Number((s/60)*-1);
+    dayjs.extend(timezone);
+    dayjs.extend(utc);
+    let tz = dayjs.tz.guess();
+
     (response.details.createdBy === undefined || (response.details.createdBy !== undefined && response.details.createdBy === '')) ?
       setResponse('details', 'createdBy', form.formConfig.username) :
       setResponse('details', 'updatedBy', form.formConfig.username);
-    (response.details.createdAt === undefined || (response.details.createdAt !== undefined && response.details.createdAt === '')) ?
-      setResponse('details', 'createdAt', now) :
+    // (response.details.createdAt === undefined || (response.details.createdAt !== undefined && response.details.createdAt === '')) ?
+    //   setResponse('details', 'createdAt', now) :
+    //   setResponse('details', 'updatedAt', now);
+
+    if(response.details.createdAt === undefined || (response.details.createdAt !== undefined && response.details.createdAt === '')){
+      setResponse('details', 'createdAt', now) ;
+      setResponse('details', 'createdAtTimezone', tz.toString()) 
+      setResponse('details', 'createdAtGMT', timeToGet);
+    } else {
+      if(response.details.createdAtTimezone === undefined || (response.details.createdAtTimezone !== undefined && response.details.createdAtTimezone === '')){
+        setResponse('details', 'createdAtTimezone', tz.toString()) 
+        setResponse('details', 'createdAtGMT', timeToGet);
+      }
       setResponse('details', 'updatedAt', now);
+      setResponse('details', 'updatedAtTimezone', tz.toString()) 
+      setResponse('details', 'updatedAtGMT', timeToGet);
+    }
 
     //setPrincipal
     setPrincipal('details', 'principals', dataPrincipal)
@@ -328,9 +353,23 @@ const Form: Component<{
     (principal.details.createdBy === undefined || (principal.details.createdBy !== undefined && principal.details.createdBy === '')) ?
       setPrincipal('details', 'createdBy', form.formConfig.username) :
       setPrincipal('details', 'updatedBy', form.formConfig.username);
-    (principal.details.createdAt === undefined || (principal.details.createdAt !== undefined && principal.details.createdAt === '')) ?
-      setPrincipal('details', 'createdAt', now) :
+    // (principal.details.createdAt === undefined || (principal.details.createdAt !== undefined && principal.details.createdAt === '')) ?
+    //   setPrincipal('details', 'createdAt', now) :
+    //   setPrincipal('details', 'updatedAt', now);
+
+    if(principal.details.createdAt === undefined || (principal.details.createdAt !== undefined && principal.details.createdAt === '')){
+      setPrincipal('details', 'createdAt', now) ;
+      setPrincipal('details', 'createdAtTimezone', tz.toString()) 
+      setPrincipal('details', 'createdAtGMT', timeToGet);
+    } else {
+      if(principal.details.createdAtTimezone === undefined || (principal.details.createdAtTimezone !== undefined && principal.details.createdAtTimezone === '')){
+        setPrincipal('details', 'createdAtTimezone', tz.toString()) 
+        setPrincipal('details', 'createdAtGMT', timeToGet);
+      }
       setPrincipal('details', 'updatedAt', now);
+      setPrincipal('details', 'updatedAtTimezone', tz.toString()) 
+      setPrincipal('details', 'updatedAtGMT', timeToGet);
+    }
 
     //setRemark
     setRemark('details', 'notes', JSON.parse(JSON.stringify(note.details.notes)));
@@ -341,9 +380,23 @@ const Form: Component<{
     (remark.details.createdBy === undefined || (remark.details.createdBy !== undefined && remark.details.createdBy === '')) ?
       setRemark('details', 'createdBy', form.formConfig.username) :
       setRemark('details', 'updatedBy', form.formConfig.username);
-    (remark.details.createdAt === undefined || (remark.details.createdAt !== undefined && remark.details.createdAt === '')) ?
-      setRemark('details', 'createdAt', now) :
+    // (remark.details.createdAt === undefined || (remark.details.createdAt !== undefined && remark.details.createdAt === '')) ?
+    //   setRemark('details', 'createdAt', now) :
+    //   setRemark('details', 'updatedAt', now);
+
+    if(remark.details.createdAt === undefined || (remark.details.createdAt !== undefined && remark.details.createdAt === '')){
+      setRemark('details', 'createdAt', now) ;
+      setRemark('details', 'createdAtTimezone', tz.toString()) 
+      setRemark('details', 'createdAtGMT', timeToGet);
+    } else {
+      if(remark.details.createdAtTimezone === undefined || (remark.details.createdAtTimezone !== undefined && remark.details.createdAtTimezone === '')){
+        setRemark('details', 'createdAtTimezone', tz.toString()) 
+        setRemark('details', 'createdAtGMT', timeToGet);
+      }
       setRemark('details', 'updatedAt', now);
+      setRemark('details', 'updatedAtTimezone', tz.toString()) 
+      setRemark('details', 'updatedAtGMT', timeToGet);
+    }
 
     //setReference
     setReference('sidebar', sidebar.details)
