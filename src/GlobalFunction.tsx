@@ -15,6 +15,7 @@ import { getConfig } from './Form';
 
 export const default_value_enable = true
 export const default_validation_enable = true
+export var saveAnswerCount = 1
 
 export const getValue = (dataKey: string) => {
     let tmpDataKey = dataKey.split('@');
@@ -262,28 +263,30 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
     components.forEach(newComp =>{
         let value = [];
         value = (newComp.answer) ? newComp.answer : value;
-        
-        const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
-        value = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig().initialMode == 2) || (getConfig().initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : value;
-        
-        let answerIndex = response.details.answers.findIndex(obj => obj.dataKey === newComp.dataKey);
-        value = (answerIndex !== -1 && response.details.answers[answerIndex] !== undefined) ? response.details.answers[answerIndex].answer : value;
-        
-        const getRowIndex = (positionOffset:number) => {
-            let editedDataKey = newComp.dataKey.split('@');
-            let splitDataKey = editedDataKey[0].split('#');
-            let splLength = splitDataKey.length;
-            let reducer = positionOffset+1;
-            return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
-        }
-        const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-        // if(Number(newComp.type) === 4) value = eval(newComp.expression);
+       
         if(Number(newComp.type) === 4) {
+            const getRowIndex = (positionOffset:number) => {
+                let editedDataKey = newComp.dataKey.split('@');
+                let splitDataKey = editedDataKey[0].split('#');
+                let splLength = splitDataKey.length;
+                let reducer = positionOffset+1;
+                return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
+            }
+            const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
+            // if(Number(newComp.type) === 4) value = eval(newComp.expression);
             try{
                 let value_local = eval(newComp.expression)
                 value = value_local
             }catch(e){
                 value = undefined
+            }
+        }else{
+            let answerIndex = response.details.answers.findIndex(obj => obj.dataKey === newComp.dataKey);
+            value = (answerIndex !== -1 && response.details.answers[answerIndex] !== undefined) ? response.details.answers[answerIndex].answer : value;
+
+            if(answerIndex === -1){
+                const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
+                value = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig().initialMode == 2) || (getConfig().initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : value;
             }
         }
         saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null);
@@ -473,27 +476,29 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
             let value = [];
             value = (newComp.answer) ? newComp.answer : value;
             
-            const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
-            value = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig().initialMode == 2) || (getConfig().initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : value;
-            
-            let answerIndex = response.details.answers.findIndex(obj => obj.dataKey === newComp.dataKey);
-            value = (answerIndex !== -1 && response.details.answers[presetIndex] !== undefined) ? response.details.answers[presetIndex].answer : value;
-            
-            const getRowIndex = (positionOffset:number) => {
-                let editedDataKey = newComp.dataKey.split('@');
-                let splitDataKey = editedDataKey[0].split('#');
-                let splLength = splitDataKey.length;
-                let reducer = positionOffset+1;
-                return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
-            }
-            const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-            // if(Number(newComp.type) === 4) value = eval(newComp.expression);
             if(Number(newComp.type) === 4) {
+                const getRowIndex = (positionOffset:number) => {
+                    let editedDataKey = newComp.dataKey.split('@');
+                    let splitDataKey = editedDataKey[0].split('#');
+                    let splLength = splitDataKey.length;
+                    let reducer = positionOffset+1;
+                    return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
+                }
+                const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
+                // if(Number(newComp.type) === 4) value = eval(newComp.expression);
                 try{
                     let value_local = eval(newComp.expression)
                     value = value_local
                 }catch(e){
                     value = undefined
+                }
+            }else{
+                let answerIndex = response.details.answers.findIndex(obj => obj.dataKey === newComp.dataKey);
+                value = (answerIndex !== -1 && response.details.answers[answerIndex] !== undefined) ? response.details.answers[answerIndex].answer : value;
+    
+                if(answerIndex === -1){
+                    const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
+                    value = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig().initialMode == 2) || (getConfig().initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : value;
                 }
             }
             saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null);
@@ -712,10 +717,10 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
         addHistory('saveAnswer', dataKey, refPosition, attributeParam, reference.details[refPosition][attributeParam])
         setReference('details', refPosition, attributeParam, answer);
         //validate for its own dataKey 
-        runValidation(dataKey, JSON.parse(JSON.stringify(reference.details[refPosition])), activeComponentPosition);
+        if(referenceHistoryEnable()) runValidation(dataKey, JSON.parse(JSON.stringify(reference.details[refPosition])), activeComponentPosition);
 
         if(attributeParam === 'answer'){
-            if(beforeAnswer === answer){
+            if(JSON.stringify(beforeAnswer) === JSON.stringify(answer)){
                 return
             }
         }
@@ -724,7 +729,9 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 return
             }
         }
-        
+        // console.log("saveAnswerCount: "+attributeParam+" : "+dataKey+" : "+JSON.stringify(answer)+" : "+saveAnswerCount)
+        // saveAnswerCount = saveAnswerCount + 1
+
         //enabling ~ run when answer
         if(attributeParam === 'answer') {
             const hasSideCompEnable = JSON.parse(JSON.stringify(sidebar.details.filter(obj => {
@@ -762,6 +769,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
             if(hasSideCompEnable.length > 0) {//at least there is minimal 1 enable in this datakey
                 hasSideCompEnable.forEach(sidebarEnable => {
                     let sidePosition = sidebar.details.findIndex(objSide => objSide.dataKey === sidebarEnable.dataKey);
+                    let enableSideBefore = sidebar.details[sidePosition]['enable'];
                     let enableSide = eval_enable(sidebarEnable.enableCondition);
                     addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
                     setSidebar('details',sidePosition,'enable',enableSide);
@@ -772,7 +780,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                         let refPos = updatedRef.findIndex(objRef => objRef.dataKey === element.dataKey);
                         if(refPos !== -1){
                             if(updatedRef[refPos].enableCondition === undefined || updatedRef[refPos].enableCondition === '') setReference('details',refPos,'enable',enableSide);
-                            if(Number(updatedRef[refPos].type) === 4){
+                            if(Number(updatedRef[refPos].type) === 4 && enableSide !== enableSideBefore){
                                 tmpVarComp.push(updatedRef[refPos])
                                 tmpIndex.push(index)
                             }
@@ -844,54 +852,56 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
 
         if(reference.details[refPosition].enable) {
             //validating ~ run weel when answer or enable
-            const hasComponentValidation = JSON.parse(JSON.stringify(reference.details.filter(obj => {
-                let editedDataKey = obj.dataKey.split('@');
-                let newEdited = editedDataKey[0].split('#');
-                if((obj.enable) && obj.componentValidation !== undefined){
-                    if(obj.level < 2 || obj.level > 1 && newEdited[1] !== undefined){
-                        const cekInsideIndex = obj.componentValidation.findIndex(objChild => {
-                            let newKey = dataKey.split('@');//reduce or split @
-                            let newNewKey = newKey[0].split('#');//remove the row
-                            return (objChild === newNewKey[0]) ? true : false;
-                        });
-                        return (cekInsideIndex == -1) ? false : true;
+            if(referenceHistoryEnable()){
+                const hasComponentValidation = JSON.parse(JSON.stringify(reference.details.filter(obj => {
+                    let editedDataKey = obj.dataKey.split('@');
+                    let newEdited = editedDataKey[0].split('#');
+                    if((obj.enable) && obj.componentValidation !== undefined){
+                        if(obj.level < 2 || obj.level > 1 && newEdited[1] !== undefined){
+                            const cekInsideIndex = obj.componentValidation.findIndex(objChild => {
+                                let newKey = dataKey.split('@');//reduce or split @
+                                let newNewKey = newKey[0].split('#');//remove the row
+                                return (objChild === newNewKey[0]) ? true : false;
+                            });
+                            return (cekInsideIndex == -1) ? false : true;
+                        }
                     }
+                })));
+                
+                if(hasComponentValidation.length > 0) {//at least this dataKey appears in minimum 1 validation
+                    hasComponentValidation.forEach(elementVal => {
+                        runValidation(elementVal.dataKey, JSON.parse(JSON.stringify(elementVal)), activeComponentPosition);
+                    });
                 }
-            })));
-            
-            if(hasComponentValidation.length > 0) {//at least this dataKey appears in minimum 1 validation
-                hasComponentValidation.forEach(elementVal => {
-                    runValidation(elementVal.dataKey, JSON.parse(JSON.stringify(elementVal)), activeComponentPosition);
-                });
-            }
-
-            //cek opt ~ run well on answer or enable
-            const hasSourceOption = JSON.parse(JSON.stringify(reference.details.filter(obj => {
-                if((obj.enable) && obj.sourceOption !== undefined){
-                    let editedSourceOption = obj.sourceOption.split('@');
-                    return (dataKey == editedSourceOption[0]) ? true : false;
-                }
-            })));
-            
-            if(hasSourceOption.length > 0) {//at least dataKey appear in minimal 1 sourceOption
-                hasSourceOption.forEach(elementSourceOption => {
-                    if(elementSourceOption.answer){
-                        let x = [];
-                        elementSourceOption.answer.forEach(val => {
-                            answer.forEach(op => {
-                                if(val.value == op.value){
-                                    x.push(op);
-                                }
+    
+                //cek opt ~ run well on answer or enable
+                const hasSourceOption = JSON.parse(JSON.stringify(reference.details.filter(obj => {
+                    if((obj.enable) && obj.sourceOption !== undefined){
+                        let editedSourceOption = obj.sourceOption.split('@');
+                        return (dataKey == editedSourceOption[0]) ? true : false;
+                    }
+                })));
+                
+                if(hasSourceOption.length > 0) {//at least dataKey appear in minimal 1 sourceOption
+                    hasSourceOption.forEach(elementSourceOption => {
+                        if(elementSourceOption.answer){
+                            let x = [];
+                            elementSourceOption.answer.forEach(val => {
+                                answer.forEach(op => {
+                                    if(val.value == op.value){
+                                        x.push(op);
+                                    }
+                                })
                             })
-                        })
-                        // let sidebarPos = sidebar.details.findIndex((element,index) => {
-                        //     let tmpInd = element.components[0].findIndex((e,i) => (e.dataKey == elementSourceOption.dataKey))
-                        //     return (tmpInd !== -1) ? true : false
-                        // })
-                        
-                        saveAnswer(elementSourceOption.dataKey, 'answer', x, activeComponentPosition, null);
-                    }
-                });
+                            // let sidebarPos = sidebar.details.findIndex((element,index) => {
+                            //     let tmpInd = element.components[0].findIndex((e,i) => (e.dataKey == elementSourceOption.dataKey))
+                            //     return (tmpInd !== -1) ? true : false
+                            // })
+                            
+                            saveAnswer(elementSourceOption.dataKey, 'answer', x, activeComponentPosition, null);
+                        }
+                    });
+                }
             }
 
             //variabel ~ executed when enable = TRUE

@@ -15,7 +15,7 @@ import { principal, setPrincipal } from './stores/PrincipalStore';
 import { locale, setLocale } from './stores/LocaleStore';
 import { summary, setSummary } from './stores/SummaryStore';
 
-import { saveAnswer } from "./GlobalFunction";
+import { saveAnswer, runValidation, reference_index_lookup} from "./GlobalFunction";
 import { toastInfo } from "./FormInput";
 
 import { referenceHistoryEnable, setReferenceHistoryEnable} from './stores/ReferenceStore';
@@ -168,14 +168,16 @@ const Form: Component<{
     })
 
     props.response.details.answers.forEach((element, index) => {
-      let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
-      if (refPosition !== -1) {
-        let sidePosition = sidebar.details.findIndex(obj => {
-          const cekInsideIndex = obj.components[0].findIndex(objChild => objChild.dataKey === element.dataKey);
-          return (cekInsideIndex == -1) ? 0 : index;
-        });
-        let answer = (typeof element.answer === 'object') ? JSON.parse(JSON.stringify(element.answer)) : element.answer;
-        saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') });
+      if(!element.dataKey.includes("#")){
+        let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
+        if (refPosition !== -1) {
+          let sidePosition = sidebar.details.findIndex(obj => {
+            const cekInsideIndex = obj.components[0].findIndex(objChild => objChild.dataKey === element.dataKey);
+            return (cekInsideIndex == -1) ? 0 : index;
+          });
+          let answer = (typeof element.answer === 'object') ? JSON.parse(JSON.stringify(element.answer)) : element.answer;
+          saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') });
+        }
       }
     })
 
@@ -201,6 +203,36 @@ const Form: Component<{
       let enable = (evEnable === undefined) ? false : evEnable;
       saveAnswer(element.dataKey, 'enable', enable, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') });
     })
+
+    for(let index=0; index < reference.details.length; index ++){
+      let obj = reference.details[index]
+      if(obj.index[obj.index.length - 2] === 0 && obj.level > 1){
+          continue
+      }
+      if((obj.enable) && obj.componentValidation !== undefined){
+        runValidation(obj.dataKey, JSON.parse(JSON.stringify(obj)), null);
+      }
+
+      if((obj.enable) && obj.sourceOption !== undefined){
+          let sourceOptionObj = reference.details [reference_index_lookup(obj.sourceOption)]
+          if(obj.answer){
+              let x = [];
+              obj.answer.forEach(val => {
+                  sourceOptionObj.answer.forEach(op => {
+                      if(val.value == op.value){
+                          x.push(op);
+                      }
+                  })
+              })
+              // let sidebarPos = sidebar.details.findIndex((element,index) => {
+              //     let tmpInd = element.components[0].findIndex((e,i) => (e.dataKey == elementSourceOption.dataKey))
+              //     return (tmpInd !== -1) ? true : false
+              // })
+              setReference('details', index, 'answer', x);
+          }
+      }
+    }
+    setReferenceHistoryEnable(true)
     // console.timeEnd('tmpEnableComp ')
   } else {
     // let hasRemarkComp = reference.details.filter(obj => obj.hasRemark == true);
