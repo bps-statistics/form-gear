@@ -236,7 +236,6 @@ const Form: Component<{
           }
       }
     }
-    setReferenceHistoryEnable(true)
     // console.timeEnd('tmpEnableComp ')
   } else {
     // let hasRemarkComp = reference.details.filter(obj => obj.hasRemark == true);
@@ -253,6 +252,7 @@ const Form: Component<{
   }
   // console.timeEnd('response ');
   // console.timeEnd('');
+  setReferenceHistoryEnable(true)
 
   const [onMobile, setOnMobile] = createSignal(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
   const checkOnMobile = () => {
