@@ -15,7 +15,6 @@ import { getConfig } from './Form';
 
 export const default_value_enable = true
 export const default_validation_enable = true
-export var saveAnswerCount = 1
 
 export const getValue = (dataKey: string) => {
     let tmpDataKey = dataKey.split('@');
@@ -729,8 +728,6 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 return
             }
         }
-        // console.log("saveAnswerCount: "+attributeParam+" : "+dataKey+" : "+JSON.stringify(answer)+" : "+saveAnswerCount)
-        // saveAnswerCount = saveAnswerCount + 1
 
         //enabling ~ run when answer
         if(attributeParam === 'answer') {
