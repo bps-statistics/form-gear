@@ -859,11 +859,11 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 const hasComponentValidation = []
                 hasComponentValidation_data_key.forEach(element_data_key => {
                     let element_pos = reference_index_lookup(element_data_key)
-                    if(element_data_key !== -1){
+                    if(element_pos !== -1){
                         let obj = reference.details[element_pos]
                         let editedDataKey = obj.dataKey.split('@');
                         let newEdited = editedDataKey[0].split('#');
-                        if((obj.enable) && obj.componentValidation !== undefined){
+                        if(obj.enable){
                             if(obj.level < 2 || obj.level > 1 && newEdited[1] !== undefined){
                                 hasComponentValidation.push(obj)
                             }
@@ -878,12 +878,19 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 }
     
                 //cek opt ~ run well on answer or enable
-                const hasSourceOption = JSON.parse(JSON.stringify(reference.details.filter(obj => {
-                    if((obj.enable) && obj.sourceOption !== undefined){
-                        let editedSourceOption = obj.sourceOption.split('@');
-                        return (dataKey == editedSourceOption[0]) ? true : false;
-                    }
-                })));
+                const hasSourceOption = []
+                if(dataKey in compSourceOptionMap()){
+                    const hasSourceOption_data_key = compSourceOptionMap()[dataKey]
+                    hasSourceOption_data_key.forEach(element_data_key => {
+                        let element_pos = reference_index_lookup(element_data_key)
+                        if(element_pos !== -1){
+                            let obj = reference.details[element_pos]
+                            if(obj.enable){
+                                hasSourceOption.push(obj)
+                            }
+                        }
+                    });
+                }
                 
                 if(hasSourceOption.length > 0) {//at least dataKey appear in minimal 1 sourceOption
                     hasSourceOption.forEach(elementSourceOption => {
@@ -1050,11 +1057,11 @@ export function load_reference_map_pertama(reference_local = null){
                 })
             }
             if(obj.sourceOption !== undefined){
-                if(!(obj.sourceOption in compSourceOption_lokal)){
-                    compSourceOption_lokal[obj.sourceOption] = []
+                if(!(obj.sourceOption.split('@')[0] in compSourceOption_lokal)){
+                    compSourceOption_lokal[obj.sourceOption.split('@')[0]] = []
                 }
-                if(!compSourceOption_lokal[obj.sourceOption].includes(obj.dataKey)){
-                    compSourceOption_lokal[obj.sourceOption].push(obj.dataKey)
+                if(!compSourceOption_lokal[obj.sourceOption.split('@')[0]].includes(obj.dataKey)){
+                    compSourceOption_lokal[obj.sourceOption.split('@')[0]].push(obj.dataKey)
                 }
             }
             if(obj.componentVar !== undefined && obj.type === 4){
@@ -1092,7 +1099,7 @@ export function load_reference_map_pertama(reference_local = null){
 
     console.log(compEnableMap_lokal)
     console.log(compValidMap())
-    console.log(compSourceOption_lokal)
+    console.log(compSourceOptionMap())
     console.log(compVarMap())
     if(reference_local === null){
         reference_local = JSON.parse(JSON.stringify(reference.details))
@@ -1118,10 +1125,6 @@ export function get_CompValid(dataKey){
         }
     }
     return returnDataKey
-}
-
-export function get_CompSourceOption(){
-    
 }
 
 export function get_CompVar(dataKey){
