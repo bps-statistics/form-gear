@@ -1107,42 +1107,6 @@ export function load_reference_map_pertama(reference_local = null){
     load_reference_map(reference_local)
 }
 
-export function get_CompEnable(){
-
-}
-
-export function get_CompValid(dataKey){
-    let itemKeyBased = dataKey.split('@')[0].split('#')[0];
-    let returnDataKey = []
-    if(itemKeyBased in compValidMap()){
-        if(compValidMap()[itemKeyBased].length > 0){
-            compValidMap()[itemKeyBased].forEach(item => {
-                let list_key = reference_index_lookup(item, 1)
-                if(list_key){
-                    returnDataKey = returnDataKey.concat(list_key)
-                }
-            });
-        }
-    }
-    return returnDataKey
-}
-
-export function get_CompVar(dataKey){
-    let itemKeyBased = dataKey.split('@')[0].split('#')[0];
-    let returnDataKey = []
-    if(itemKeyBased in compVarMap()){
-        if(compVarMap()[itemKeyBased].length > 0){
-            compVarMap()[itemKeyBased].forEach(item => {
-                let list_key = reference_index_lookup(item, 1)
-                if(list_key){
-                    returnDataKey = returnDataKey.concat(list_key)
-                }
-            });
-        }
-    }
-    return returnDataKey
-}
-
 export function load_reference_map(reference_local = null){
     // console.log('load_reference_map')
     if(reference_local === null){
@@ -1187,6 +1151,42 @@ export function load_reference_map(reference_local = null){
     }
     // console.log(reference_map_lokal)
     setReferenceMap(reference_map_lokal)
+}
+
+export function get_CompEnable(){
+
+}
+
+export function get_CompValid(dataKey){
+    let itemKeyBased = dataKey.split('@')[0].split('#')[0];
+    let returnDataKey = []
+    if(itemKeyBased in compValidMap()){
+        if(compValidMap()[itemKeyBased].length > 0){
+            compValidMap()[itemKeyBased].forEach(item => {
+                let list_key = reference_index_lookup(item, 1)
+                if(list_key){
+                    returnDataKey = returnDataKey.concat(list_key)
+                }
+            });
+        }
+    }
+    return returnDataKey
+}
+
+export function get_CompVar(dataKey){
+    let itemKeyBased = dataKey.split('@')[0].split('#')[0];
+    let returnDataKey = []
+    if(itemKeyBased in compVarMap()){
+        if(compVarMap()[itemKeyBased].length > 0){
+            compVarMap()[itemKeyBased].forEach(item => {
+                let list_key = reference_index_lookup(item, 1)
+                if(list_key){
+                    returnDataKey = returnDataKey.concat(list_key)
+                }
+            });
+        }
+    }
+    return returnDataKey
 }
 
 export function addHistory(type, datakey, position, attributeParam, data){
