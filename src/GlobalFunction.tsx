@@ -855,20 +855,21 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
         if(reference.details[refPosition].enable) {
             //validating ~ run weel when answer or enable
             if(referenceHistoryEnable()){
-                const hasComponentValidation = JSON.parse(JSON.stringify(reference.details.filter(obj => {
-                    let editedDataKey = obj.dataKey.split('@');
-                    let newEdited = editedDataKey[0].split('#');
-                    if((obj.enable) && obj.componentValidation !== undefined){
-                        if(obj.level < 2 || obj.level > 1 && newEdited[1] !== undefined){
-                            const cekInsideIndex = obj.componentValidation.findIndex(objChild => {
-                                let newKey = dataKey.split('@');//reduce or split @
-                                let newNewKey = newKey[0].split('#');//remove the row
-                                return (objChild === newNewKey[0]) ? true : false;
-                            });
-                            return (cekInsideIndex == -1) ? false : true;
+                const hasComponentValidation_data_key = get_CompValid(dataKey)
+                const hasComponentValidation = []
+                hasComponentValidation_data_key.forEach(element_data_key => {
+                    let element_pos = reference_index_lookup(element_data_key)
+                    if(element_data_key !== -1){
+                        let obj = reference.details[element_pos]
+                        let editedDataKey = obj.dataKey.split('@');
+                        let newEdited = editedDataKey[0].split('#');
+                        if((obj.enable) && obj.componentValidation !== undefined){
+                            if(obj.level < 2 || obj.level > 1 && newEdited[1] !== undefined){
+                                hasComponentValidation.push(obj)
+                            }
                         }
                     }
-                })));
+                });
                 
                 if(hasComponentValidation.length > 0) {//at least this dataKey appears in minimum 1 validation
                     hasComponentValidation.forEach(elementVal => {
@@ -906,22 +907,8 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 }
             }
 
-            //variabel ~ executed when enable = TRUE
-            // const hasComponentVar = JSON.parse(JSON.stringify(reference.details.filter(obj => {
-            //     if(obj.componentVar !== undefined){
-            //         const cekInsideIndex = obj.componentVar.findIndex(objChild => {
-            //             let newKey = dataKey.split('@');//mereduce @
-            //             let newNewKey = newKey[0].split('#');//menghilangkan row nya
-            //             return (objChild === newNewKey[0]) ? true : false;
-            //         });
-            //         return (cekInsideIndex == -1) ? false : true;
-            //     }
-            // })));
             const hasComponentVar = get_CompVar(dataKey)
-        
             if(hasComponentVar.length > 0) {//at least dataKey appeasr in minimum 1 variable
-                // console.log(dataKey)
-                // console.log(hasComponentVar)
                 hasComponentVar.forEach(elementVar => {
                     runVariableComponent(elementVar, 0);
                 });
@@ -1104,7 +1091,7 @@ export function load_reference_map_pertama(reference_local = null){
     setCompVarMap(compVar_lokal)
 
     console.log(compEnableMap_lokal)
-    console.log(compValidMap_lokal)
+    console.log(compValidMap())
     console.log(compSourceOption_lokal)
     console.log(compVarMap())
     if(reference_local === null){
@@ -1117,8 +1104,20 @@ export function get_CompEnable(){
 
 }
 
-export function get_CompValid(){
-    
+export function get_CompValid(dataKey){
+    let itemKeyBased = dataKey.split('@')[0].split('#')[0];
+    let returnDataKey = []
+    if(itemKeyBased in compValidMap()){
+        if(compValidMap()[itemKeyBased].length > 0){
+            compValidMap()[itemKeyBased].forEach(item => {
+                let list_key = reference_index_lookup(item, 1)
+                if(list_key){
+                    returnDataKey = returnDataKey.concat(list_key)
+                }
+            });
+        }
+    }
+    return returnDataKey
 }
 
 export function get_CompSourceOption(){
@@ -1132,11 +1131,8 @@ export function get_CompVar(dataKey){
         if(compVarMap()[itemKeyBased].length > 0){
             compVarMap()[itemKeyBased].forEach(item => {
                 let list_key = reference_index_lookup(item, 1)
-                // console.log(dataKey)
-                // console.log(list_key)
                 if(list_key){
                     returnDataKey = returnDataKey.concat(list_key)
-                    // console.log(returnDataKey)
                 }
             });
         }
@@ -1145,7 +1141,7 @@ export function get_CompVar(dataKey){
 }
 
 export function load_reference_map(reference_local = null){
-    console.log('load_reference_map')
+    // console.log('load_reference_map')
     if(reference_local === null){
         reference_local = JSON.parse(JSON.stringify(reference.details))
     }
@@ -1156,6 +1152,7 @@ export function load_reference_map(reference_local = null){
             reference_map_lokal[fullDataKey] = [[],[]]
         }
         reference_map_lokal[fullDataKey][0].push(index__)
+        reference_map_lokal[fullDataKey][1].push(fullDataKey)
         
         let tmpDataKey = fullDataKey.split('@');
         if(tmpDataKey.length > 1){
@@ -1163,6 +1160,7 @@ export function load_reference_map(reference_local = null){
                 reference_map_lokal[tmpDataKey[0]] = [[],[]]
             }
             reference_map_lokal[tmpDataKey[0]][0].push(index__)
+            reference_map_lokal[tmpDataKey[0]][1].push(tmpDataKey[0])
         }
 
         let splitDataKey = tmpDataKey[0].split('#');
