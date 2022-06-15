@@ -3,6 +3,10 @@ import { referenceMap, setReferenceMap} from './stores/ReferenceStore';
 import { referenceHistoryEnable, setReferenceHistoryEnable} from './stores/ReferenceStore';
 import { referenceHistory, setReferenceeHistory} from './stores/ReferenceStore';
 import { sideBareHistory, setSideBareHistory} from './stores/ReferenceStore';
+import { compEnableMap, setCompEnableMap} from './stores/ReferenceStore';
+import { compValidMap, setCompValidMap} from './stores/ReferenceStore';
+import { compSourceOptionMap, setCompSourceOptionMap} from './stores/ReferenceStore';
+import { compVarMap, setCompVarMap} from './stores/ReferenceStore';
 import { validation, setValidation} from './stores/ValidationStore';
 import { sidebar, setSidebar} from './stores/SidebarStore';
 import { preset, setPreset, Preset } from './stores/PresetStore';
@@ -12,6 +16,7 @@ import { note, setNote} from './stores/NoteStore';
 import { createSignal } from 'solid-js';
 import { locale, setLocale} from './stores/LocaleStore';
 import { getConfig } from './Form';
+import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
 
 export const default_value_enable = true
 export const default_validation_enable = true
@@ -902,20 +907,23 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
             }
 
             //variabel ~ executed when enable = TRUE
-            const hasComponentVar = JSON.parse(JSON.stringify(reference.details.filter(obj => {
-                if(obj.componentVar !== undefined){
-                    const cekInsideIndex = obj.componentVar.findIndex(objChild => {
-                        let newKey = dataKey.split('@');//mereduce @
-                        let newNewKey = newKey[0].split('#');//menghilangkan row nya
-                        return (objChild === newNewKey[0]) ? true : false;
-                    });
-                    return (cekInsideIndex == -1) ? false : true;
-                }
-            })));
+            // const hasComponentVar = JSON.parse(JSON.stringify(reference.details.filter(obj => {
+            //     if(obj.componentVar !== undefined){
+            //         const cekInsideIndex = obj.componentVar.findIndex(objChild => {
+            //             let newKey = dataKey.split('@');//mereduce @
+            //             let newNewKey = newKey[0].split('#');//menghilangkan row nya
+            //             return (objChild === newNewKey[0]) ? true : false;
+            //         });
+            //         return (cekInsideIndex == -1) ? false : true;
+            //     }
+            // })));
+            const hasComponentVar = get_CompVar(dataKey)
         
             if(hasComponentVar.length > 0) {//at least dataKey appeasr in minimum 1 variable
+                // console.log(dataKey)
+                // console.log(hasComponentVar)
                 hasComponentVar.forEach(elementVar => {
-                    runVariableComponent(elementVar.dataKey, 0);
+                    runVariableComponent(elementVar, 0);
                 });
             }
             
@@ -988,17 +996,24 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
     }
 }
 
-export function reference_index_lookup(datakey){
+export function reference_index_lookup(datakey, index_lookup = 0){
     try{
         if(datakey in referenceMap()){
             try{
-                if(reference.details[referenceMap()[datakey]].dataKey === datakey){
-                    return referenceMap()[datakey];
+                if(reference.details[referenceMap()[datakey][0][0]].dataKey === datakey){
+                    if(index_lookup == 0){
+                        return referenceMap()[datakey][0][0];
+                    }else{
+                        return referenceMap()[datakey][1];
+                    }
                 }else{
-                    // console.log(datakey)
                     load_reference_map()
                     if(datakey in referenceMap()){
-                        return referenceMap()[datakey];
+                        if(index_lookup == 0){
+                            return referenceMap()[datakey][0][0];
+                        }else{
+                            return referenceMap()[datakey][1];
+                        }
                     }else{
                         return -1
                     }
@@ -1006,7 +1021,11 @@ export function reference_index_lookup(datakey){
             }catch(e){
                 load_reference_map()
                 if(datakey in referenceMap()){
-                    return referenceMap()[datakey];
+                    if(index_lookup == 0){
+                        return referenceMap()[datakey][0][0];
+                    }else{
+                        return referenceMap()[datakey][1];
+                    }
                 }else{
                     return -1
                 }
@@ -1019,21 +1038,154 @@ export function reference_index_lookup(datakey){
     }
 }
 
-export function load_reference_map(reference_local = null){
-    // console.log('load_reference_map')
-    if(reference_local === null){
-        let reference_map_lokal = {}
-        for (let index = 0; index < reference.details.length; index ++){
-            reference_map_lokal[reference.details[index].dataKey] = index;
+export function load_reference_map_pertama(reference_local = null){
+    let compEnableMap_lokal = {}
+    let compValidMap_lokal = {}
+    let compSourceOption_lokal = {}
+    let compVar_lokal = {}
+
+    const loopTemplate_Lokal = (element) => {
+        let el_len = element.length
+        for (let i = 0; i < el_len; i++) {
+            let obj = element[i]
+            if(obj.componentEnable !== undefined){
+                obj.componentEnable.forEach(item => {
+                    let itemKeyBased = item.split('@')[0].split('#')[0];
+                    if(!(itemKeyBased in compEnableMap_lokal)){
+                        compEnableMap_lokal[itemKeyBased] = {}
+                    }
+                    if(!(item in compEnableMap_lokal[itemKeyBased])){
+                        compEnableMap_lokal[itemKeyBased][item] = []
+                    }
+                    if(!compEnableMap_lokal[itemKeyBased][item].includes(obj.dataKey)){
+                        compEnableMap_lokal[itemKeyBased][item].push(obj.dataKey)
+                    }
+                })
+            }
+            if(obj.sourceOption !== undefined){
+                if(!(obj.sourceOption in compSourceOption_lokal)){
+                    compSourceOption_lokal[obj.sourceOption] = []
+                }
+                if(!compSourceOption_lokal[obj.sourceOption].includes(obj.dataKey)){
+                    compSourceOption_lokal[obj.sourceOption].push(obj.dataKey)
+                }
+            }
+            if(obj.componentVar !== undefined && obj.type === 4){
+                obj.componentVar.forEach(item => {
+                    if(!(item in compVar_lokal)){
+                        compVar_lokal[item] = []
+                    }
+                    if(!compVar_lokal[item].includes(obj.dataKey)){
+                        compVar_lokal[item].push(obj.dataKey)
+                    }
+                })
+            }
+          element[i].components && element[i].components.forEach((element, index) => loopTemplate_Lokal(element))
         }
-        setReferenceMap(reference_map_lokal)
-    }else{
-        let reference_map_lokal = {}
-        for (let index = 0; index < reference_local.length; index ++){
-            reference_map_lokal[reference_local[index].dataKey] = index;
+      }
+      template.details.components.forEach((element, index) => loopTemplate_Lokal(element));
+
+
+
+    for(let index=0; index<validation.details.testFunctions.length; index++){
+        let obj = validation.details.testFunctions[index]
+        if(obj.componentValidation !== undefined){
+            obj.componentValidation.forEach(item => {
+                if(!(item in compValidMap_lokal)){
+                    compValidMap_lokal[item] = []
+                }
+                compValidMap_lokal[item].push(obj.dataKey)
+            })
         }
-        setReferenceMap(reference_map_lokal)
     }
+    setCompEnableMap(compEnableMap_lokal)
+    setCompValidMap(compValidMap_lokal)
+    setCompSourceOptionMap(compSourceOption_lokal)
+    setCompVarMap(compVar_lokal)
+
+    console.log(compEnableMap_lokal)
+    console.log(compValidMap_lokal)
+    console.log(compSourceOption_lokal)
+    console.log(compVarMap())
+    if(reference_local === null){
+        reference_local = JSON.parse(JSON.stringify(reference.details))
+    }
+    load_reference_map(reference_local)
+}
+
+export function get_CompEnable(){
+
+}
+
+export function get_CompValid(){
+    
+}
+
+export function get_CompSourceOption(){
+    
+}
+
+export function get_CompVar(dataKey){
+    let itemKeyBased = dataKey.split('@')[0].split('#')[0];
+    let returnDataKey = []
+    if(itemKeyBased in compVarMap()){
+        if(compVarMap()[itemKeyBased].length > 0){
+            compVarMap()[itemKeyBased].forEach(item => {
+                let list_key = reference_index_lookup(item, 1)
+                // console.log(dataKey)
+                // console.log(list_key)
+                if(list_key){
+                    returnDataKey = returnDataKey.concat(list_key)
+                    // console.log(returnDataKey)
+                }
+            });
+        }
+    }
+    return returnDataKey
+}
+
+export function load_reference_map(reference_local = null){
+    console.log('load_reference_map')
+    if(reference_local === null){
+        reference_local = JSON.parse(JSON.stringify(reference.details))
+    }
+    let reference_map_lokal = {}
+    for (let index__ = 0; index__ < reference_local.length; index__ ++){
+        let fullDataKey = reference_local[index__].dataKey
+        if (!(fullDataKey in reference_map_lokal)){
+            reference_map_lokal[fullDataKey] = [[],[]]
+        }
+        reference_map_lokal[fullDataKey][0].push(index__)
+        
+        let tmpDataKey = fullDataKey.split('@');
+        if(tmpDataKey.length > 1){
+            if (!(tmpDataKey[0] in reference_map_lokal)){
+                reference_map_lokal[tmpDataKey[0]] = [[],[]]
+            }
+            reference_map_lokal[tmpDataKey[0]][0].push(index__)
+        }
+
+        let splitDataKey = tmpDataKey[0].split('#');
+        if(splitDataKey.length > 1){
+            let dataKeyPartNow = ''
+            for(let index_split=0; index_split < (splitDataKey.length-1); index_split ++){
+                if(index_split == 0){
+                    dataKeyPartNow = splitDataKey[index_split]
+                }else{
+                    dataKeyPartNow = dataKeyPartNow + '#' + splitDataKey[index_split]
+                }
+                if (!(dataKeyPartNow in reference_map_lokal)){
+                    reference_map_lokal[dataKeyPartNow] = [[],[]]
+                }
+                reference_map_lokal[dataKeyPartNow][1].push(fullDataKey)
+                if(tmpDataKey.length > 1){
+                    reference_map_lokal[dataKeyPartNow][1].push(tmpDataKey[0])
+                }
+            }
+        }
+    }
+    // console.log(reference_map_lokal)
+    setReferenceMap(reference_map_lokal)
 }
 
 export function addHistory(type, datakey, position, attributeParam, data){
