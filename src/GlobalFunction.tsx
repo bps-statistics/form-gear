@@ -812,42 +812,14 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                     }
                 })
             }
-
-            const hasComponentEnable = JSON.parse(JSON.stringify(reference.details.filter(obj => {
-                if(obj.componentEnable !== undefined){
-                    const cekInsideIndex = obj.componentEnable.findIndex(objChild => {
-                        let newDataKey = '';
-                        let tmpDataKey = objChild.split('@');
-                        let splitDataKey = tmpDataKey[0].split('#');
-                        let splLength = splitDataKey.length;
-                        switch(tmpDataKey[1]) {
-                            case '$ROW$': {
-                                newDataKey = tmpDataKey[0];
-                                break;
-                            }
-                            case '$ROW1$': {
-                                if(splLength > 2) splitDataKey.length = splLength - 1;
-                                newDataKey = splitDataKey.join('#');
-                                break;
-                            }
-                            case '$ROW2$': {
-                                if(splLength > 3) splitDataKey.length = splLength - 2;
-                                newDataKey = splitDataKey.join('#');
-                                break;
-                            }
-                            default: {
-                                newDataKey = objChild;
-                                break;
-                            }
-                        }
-                        return (newDataKey === dataKey) ? true : false;
-                    });
-                    return (cekInsideIndex == -1) ? false : true;
-                }
-            })));
+            const hasComponentEnable = get_CompEnable(dataKey)
             if(hasComponentEnable.length > 0) {//this datakey at least appear in minimum 1 enable
-                hasComponentEnable.forEach(elementEnable => {
-                    runEnabling(elementEnable.dataKey, activeComponentPosition, prop, elementEnable.enableCondition);
+                hasComponentEnable.forEach(elementEnableDatakey => {
+                    let element_pos = reference_index_lookup(elementEnableDatakey)
+                    if(element_pos !== -1){
+                        let elementEnable = reference.details[element_pos]
+                        runEnabling(elementEnable.dataKey, activeComponentPosition, prop, elementEnable.enableCondition);
+                    }
                 })
             }
         }
@@ -855,25 +827,20 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
         if(reference.details[refPosition].enable) {
             //validating ~ run weel when answer or enable
             if(referenceHistoryEnable()){
-                const hasComponentValidation_data_key = get_CompValid(dataKey)
-                const hasComponentValidation = []
-                hasComponentValidation_data_key.forEach(element_data_key => {
-                    let element_pos = reference_index_lookup(element_data_key)
-                    if(element_pos !== -1){
-                        let obj = reference.details[element_pos]
-                        let editedDataKey = obj.dataKey.split('@');
-                        let newEdited = editedDataKey[0].split('#');
-                        if(obj.enable){
-                            if(obj.level < 2 || obj.level > 1 && newEdited[1] !== undefined){
-                                hasComponentValidation.push(obj)
+                const hasComponentValidation = get_CompValid(dataKey)
+                if(hasComponentValidation.length > 0) {//at least this dataKey appears in minimum 1 validation
+                    hasComponentValidation.forEach(element_data_key => {
+                        let element_pos = reference_index_lookup(element_data_key)
+                        if(element_pos !== -1){
+                            let elementVal = reference.details[element_pos]
+                            let editedDataKey = elementVal.dataKey.split('@');
+                            let newEdited = editedDataKey[0].split('#');
+                            if(elementVal.enable){
+                                if(elementVal.level < 2 || elementVal.level > 1 && newEdited[1] !== undefined){
+                                    runValidation(elementVal.dataKey, JSON.parse(JSON.stringify(elementVal)), activeComponentPosition);
+                                }
                             }
                         }
-                    }
-                });
-                
-                if(hasComponentValidation.length > 0) {//at least this dataKey appears in minimum 1 validation
-                    hasComponentValidation.forEach(elementVal => {
-                        runValidation(elementVal.dataKey, JSON.parse(JSON.stringify(elementVal)), activeComponentPosition);
                     });
                 }
     
@@ -1097,7 +1064,7 @@ export function load_reference_map_pertama(reference_local = null){
     setCompSourceOptionMap(compSourceOption_lokal)
     setCompVarMap(compVar_lokal)
 
-    console.log(compEnableMap_lokal)
+    console.log(compEnableMap())
     console.log(compValidMap())
     console.log(compSourceOptionMap())
     console.log(compVarMap())
@@ -1153,8 +1120,55 @@ export function load_reference_map(reference_local = null){
     setReferenceMap(reference_map_lokal)
 }
 
-export function get_CompEnable(){
-
+export function get_CompEnable(dataKey){
+    // console.log('get_CompEnable : '+dataKey)
+    let itemKeyBased = dataKey.split('@')[0].split('#')[0];
+    let returnDataKey = []
+    if(itemKeyBased in compEnableMap()){
+        for (let key_comp in (compEnableMap()[itemKeyBased])) {
+            // console.log('Format : '+key_comp)
+            compEnableMap()[itemKeyBased][key_comp].forEach(element_item => {
+                let list_key = reference_index_lookup(element_item, 1)
+                if(list_key){
+                    list_key.forEach(objChild => {
+                        let newDataKey = '';
+                        let tmpDataKey = key_comp.split('@');
+                        let splitDataKey = objChild.split('@')[0].split('#');
+                        let splLength = splitDataKey.length;
+                        if(splLength>0){
+                            splitDataKey[0] = itemKeyBased
+                        }
+                        switch(tmpDataKey[1]) {
+                            case '$ROW$': {
+                                newDataKey = splitDataKey.join('#');
+                                break;
+                            }
+                            case '$ROW1$': {
+                                if(splLength > 2) splitDataKey.length = splLength - 1;
+                                newDataKey = splitDataKey.join('#');
+                                break;
+                            }
+                            case '$ROW2$': {
+                                if(splLength > 3) splitDataKey.length = splLength - 2;
+                                newDataKey = splitDataKey.join('#');
+                                break;
+                            }
+                            default: {
+                                newDataKey = key_comp;
+                                break;
+                            }
+                        }
+                        // console.log('newDataKey1 : '+objChild)
+                        // console.log('newDataKey2 : '+newDataKey)
+                        if(newDataKey === dataKey){
+                            returnDataKey.push(objChild)
+                        }
+                    });
+                }
+            });
+        }
+    }
+    return returnDataKey
 }
 
 export function get_CompValid(dataKey){

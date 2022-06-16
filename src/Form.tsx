@@ -251,7 +251,7 @@ const Form: Component<{
     setRenderGear('FormGear-'+gearVersion+' ♻️:')
   }
 
-  console.log(reference.details)
+  // console.log(reference.details)
   // console.timeEnd('response ');
   // console.timeEnd('');
   setReferenceHistoryEnable(true)
