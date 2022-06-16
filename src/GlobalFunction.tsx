@@ -849,13 +849,16 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 if(dataKey in compSourceOptionMap()){
                     const hasSourceOption_data_key = compSourceOptionMap()[dataKey]
                     hasSourceOption_data_key.forEach(element_data_key => {
-                        let element_pos = reference_index_lookup(element_data_key)
-                        if(element_pos !== -1){
-                            let obj = reference.details[element_pos]
-                            if(obj.enable){
-                                hasSourceOption.push(obj)
+                        let list_key = reference_index_lookup(element_data_key,1)
+                        list_key.forEach(element_key => {
+                            let element_pos = reference_index_lookup(element_key)
+                            if(element_pos !== -1){
+                                let obj = reference.details[element_pos]
+                                if(obj.enable){
+                                    hasSourceOption.push(obj)
+                                }
                             }
-                        }
+                        });
                     });
                 }
                 
@@ -1064,10 +1067,10 @@ export function load_reference_map_pertama(reference_local = null){
     setCompSourceOptionMap(compSourceOption_lokal)
     setCompVarMap(compVar_lokal)
 
-    console.log(compEnableMap())
-    console.log(compValidMap())
-    console.log(compSourceOptionMap())
-    console.log(compVarMap())
+    // console.log(compEnableMap())
+    // console.log(compValidMap())
+    // console.log(compSourceOptionMap())
+    // console.log(compVarMap())
     if(reference_local === null){
         reference_local = JSON.parse(JSON.stringify(reference.details))
     }
