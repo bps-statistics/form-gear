@@ -7,6 +7,7 @@ import { compEnableMap, setCompEnableMap} from './stores/ReferenceStore';
 import { compValidMap, setCompValidMap} from './stores/ReferenceStore';
 import { compSourceOptionMap, setCompSourceOptionMap} from './stores/ReferenceStore';
 import { compVarMap, setCompVarMap} from './stores/ReferenceStore';
+import { compSourceQuestionMap, setCompSourceQuestionMap} from './stores/ReferenceStore';
 import { validation, setValidation} from './stores/ValidationStore';
 import { sidebar, setSidebar} from './stores/SidebarStore';
 import { preset, setPreset, Preset } from './stores/PresetStore';
@@ -17,6 +18,8 @@ import { createSignal } from 'solid-js';
 import { locale, setLocale} from './stores/LocaleStore';
 import { getConfig } from './Form';
 import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
+
+import Toastify from 'toastify-js'
 
 export const default_value_enable = true
 export const default_validation_enable = true
@@ -729,7 +732,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
             }
         }
         if(attributeParam === 'enable'){
-            if((reference.details[refPosition]) &&  reference.details[refPosition]['enable'] === answer){
+            if(reference.details[refPosition]['enable'] === answer){
                 return
             }
         }
@@ -890,8 +893,19 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                     runVariableComponent(elementVar, 0);
                 });
             }
+
+            compSourceQuestionMap
             
-            const hasComponentUsing = JSON.parse(JSON.stringify(reference.details.filter(obj => (obj.type === 2 && obj.sourceQuestion == dataKey))));
+            const hasComponentUsing = [];
+            if(dataKey in compSourceQuestionMap()){
+                compSourceQuestionMap()[dataKey].forEach(element_data_key => {
+                    let element_pos = reference_index_lookup(element_data_key)
+                    if(element_pos !== -1){
+                        let elementSource = reference.details[element_pos]
+                        hasComponentUsing.push(elementSource)
+                    }
+                });
+            }
             
             if(hasComponentUsing.length > 0) {//this dataKey is used as a source in Nested at minimum 1 component
                 if(reference.details[refPosition].type === 4) beforeAnswer = [];
@@ -1007,6 +1021,7 @@ export function load_reference_map_pertama(reference_local = null){
     let compValidMap_lokal = {}
     let compSourceOption_lokal = {}
     let compVar_lokal = {}
+    let compSourceQuestion_lokal = {}
 
     const loopTemplate_Lokal = (element) => {
         let el_len = element.length
@@ -1044,6 +1059,14 @@ export function load_reference_map_pertama(reference_local = null){
                     }
                 })
             }
+            if(obj.sourceQuestion !== undefined && obj.type === 2){
+                if(!(obj.sourceQuestion in compSourceQuestion_lokal)){
+                    compSourceQuestion_lokal[obj.sourceQuestion] = []
+                }
+                if(!compSourceQuestion_lokal[obj.sourceQuestion].includes(obj.dataKey)){
+                    compSourceQuestion_lokal[obj.sourceQuestion].push(obj.dataKey)
+                }
+            }
           element[i].components && element[i].components.forEach((element, index) => loopTemplate_Lokal(element))
         }
       }
@@ -1066,11 +1089,14 @@ export function load_reference_map_pertama(reference_local = null){
     setCompValidMap(compValidMap_lokal)
     setCompSourceOptionMap(compSourceOption_lokal)
     setCompVarMap(compVar_lokal)
+    setCompSourceQuestionMap(compSourceQuestion_lokal)
 
     // console.log(compEnableMap())
     // console.log(compValidMap())
     // console.log(compSourceOptionMap())
     // console.log(compVarMap())
+    // console.log(compSourceQuestionMap())
+
     if(reference_local === null){
         reference_local = JSON.parse(JSON.stringify(reference.details))
     }
@@ -1078,7 +1104,7 @@ export function load_reference_map_pertama(reference_local = null){
 }
 
 export function load_reference_map(reference_local = null){
-    // console.log('load_reference_map')
+    // console.time('load_reference_map');
     if(reference_local === null){
         reference_local = JSON.parse(JSON.stringify(reference.details))
     }
@@ -1121,6 +1147,7 @@ export function load_reference_map(reference_local = null){
     }
     // console.log(reference_map_lokal)
     setReferenceMap(reference_map_lokal)
+    // console.timeEnd('load_reference_map');
 }
 
 export function get_CompEnable(dataKey){
@@ -1270,4 +1297,16 @@ export function reloadDataFromHistory(){
     if(sideBareHistory().length > 0){
         setSidebar('details',JSON.parse(JSON.stringify(sideBareHistory())));
     }
+    Toastify({
+        text: 'Gagal menyimpan data !',
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        stopOnFocus: true,
+        className: "bg-blue-600/80",
+        style: {
+            background: "rgba(8, 145, 178, 0.7)",
+            width: "400px"
+        }
+    }).showToast();
 }
