@@ -1116,38 +1116,13 @@ export function load_reference_map(reference_local = null){
         }
         reference_map_lokal[fullDataKey][0].push(index__)
         reference_map_lokal[fullDataKey][1].push(fullDataKey)
-        
-        // let tmpDataKey = fullDataKey.split('@');
-        // if(tmpDataKey.length > 1){
-        //     if (!(tmpDataKey[0] in reference_map_lokal)){
-        //         reference_map_lokal[tmpDataKey[0]] = [[],[]]
-        //     }
-        //     reference_map_lokal[tmpDataKey[0]][0].push(index__)
-        //     reference_map_lokal[tmpDataKey[0]][1].push(tmpDataKey[0])
-        // }
-
-        // let splitDataKey = tmpDataKey[0].split('#');
+    
         let splitDataKey = fullDataKey.split('#');
         if(splitDataKey.length > 1){
             if (!(splitDataKey[0] in reference_map_lokal)){
                 reference_map_lokal[splitDataKey[0]] = [[],[]]
             }
             reference_map_lokal[splitDataKey[0]][1].push(fullDataKey)
-            // let dataKeyPartNow = ''
-            // for(let index_split=0; index_split < (splitDataKey.length-1); index_split ++){
-            //     if(index_split == 0){
-            //         dataKeyPartNow = splitDataKey[index_split]
-            //     }else{
-            //         dataKeyPartNow = dataKeyPartNow + '#' + splitDataKey[index_split]
-            //     }
-            //     if (!(dataKeyPartNow in reference_map_lokal)){
-            //         reference_map_lokal[dataKeyPartNow] = [[],[]]
-            //     }
-            //     reference_map_lokal[dataKeyPartNow][1].push(fullDataKey)
-            //     if(tmpDataKey.length > 1){
-            //         reference_map_lokal[dataKeyPartNow][1].push(tmpDataKey[0])
-            //     }
-            // }
         }
     }
     // console.log(reference_map_lokal)
