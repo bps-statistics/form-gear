@@ -154,6 +154,7 @@ const FormInput: FormComponentBase = props => {
         setSideBareHistory([])
         saveAnswer(props.component.dataKey, 'answer', value, form.activeComponent.position, {'clientMode': form.formConfig.clientMode,'baseUrl': form.formConfig.baseUrl})
       }catch(e){
+        console.log(e)
         reloadDataFromHistory()
       }finally{
         setReferenceeHistory([])

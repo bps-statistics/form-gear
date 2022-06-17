@@ -853,15 +853,17 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                     const hasSourceOption_data_key = compSourceOptionMap()[dataKey]
                     hasSourceOption_data_key.forEach(element_data_key => {
                         let list_key = reference_index_lookup(element_data_key,1)
-                        list_key.forEach(element_key => {
-                            let element_pos = reference_index_lookup(element_key)
-                            if(element_pos !== -1){
-                                let obj = reference.details[element_pos]
-                                if(obj.enable){
-                                    hasSourceOption.push(obj)
+                        if(list_key !== -1){
+                            list_key.forEach(element_key => {
+                                let element_pos = reference_index_lookup(element_key)
+                                if(element_pos !== -1){
+                                    let obj = reference.details[element_pos]
+                                    if(obj.enable){
+                                        hasSourceOption.push(obj)
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     });
                 }
                 
@@ -1139,7 +1141,7 @@ export function get_CompEnable(dataKey){
             // console.log('Format : '+key_comp)
             compEnableMap()[itemKeyBased][key_comp].forEach(element_item => {
                 let list_key = reference_index_lookup(element_item, 1)
-                if(list_key){
+                if(list_key !== -1 && list_key){
                     list_key.forEach(objChild => {
                         let newDataKey = '';
                         let tmpDataKey = key_comp.split('@');
@@ -1188,7 +1190,7 @@ export function get_CompValid(dataKey){
         if(compValidMap()[itemKeyBased].length > 0){
             compValidMap()[itemKeyBased].forEach(item => {
                 let list_key = reference_index_lookup(item, 1)
-                if(list_key){
+                if(list_key !== -1 && list_key){
                     returnDataKey = returnDataKey.concat(list_key)
                 }
             });
@@ -1204,7 +1206,7 @@ export function get_CompVar(dataKey){
         if(compVarMap()[itemKeyBased].length > 0){
             compVarMap()[itemKeyBased].forEach(item => {
                 let list_key = reference_index_lookup(item, 1)
-                if(list_key){
+                if(list_key !== -1 && list_key){
                     returnDataKey = returnDataKey.concat(list_key)
                 }
             });
