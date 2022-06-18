@@ -336,7 +336,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
 }
 
 export const deleteSidebarArray = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey);
     let updatedRef = JSON.parse(JSON.stringify(reference.details));
     let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
 
@@ -368,7 +368,7 @@ export const deleteSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
 }
 
 export const changeSidebarArray = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey);
     let now = [];
     let nestedPositionNow = -1;
     
@@ -431,7 +431,7 @@ export const changeSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
 }
 
 export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey);
     let defaultRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
     let components = [];
     let now = (Number(beforeAnswer)+1);
@@ -550,7 +550,7 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
 }
 
 export const deleteSidebarNumber = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey);
     let updatedRef = JSON.parse(JSON.stringify(reference.details));
     let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
 
@@ -916,11 +916,11 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 hasComponentUsing.forEach(element => {
                     if(typeof answer === 'number' || typeof answer === 'string'){
                         beforeAnswer = (beforeAnswer === undefined) ? 0 : beforeAnswer;
-                        (Number(answer) > Number(beforeAnswer)) ?
+                        if(Number(answer) > Number(beforeAnswer)){
                             insertSidebarNumber(element.dataKey, answer, beforeAnswer, activeComponentPosition)
-                            :
+                        }else if(Number(answer) < Number(beforeAnswer)){
                             deleteSidebarNumber(element.dataKey, answer, beforeAnswer, activeComponentPosition)
-                            ;
+                        }
                     } else if(typeof answer === 'object'){
                         beforeAnswer = (beforeAnswer === undefined) ? [] : beforeAnswer;
                         answer = JSON.parse(JSON.stringify(answer));
