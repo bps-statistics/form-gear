@@ -1024,6 +1024,7 @@ export function reference_index_lookup(datakey, index_lookup = 0){
     }
 }
 
+// laad_reference_map, and add map for dependency for validasion, enable, componentVar, sourceOption and sourceQuestion
 export function load_reference_map_pertama(reference_local = null){
     let compEnableMap_lokal = {}
     let compValidMap_lokal = {}
@@ -1111,6 +1112,7 @@ export function load_reference_map_pertama(reference_local = null){
     load_reference_map(reference_local)
 }
 
+//make referenceMap, referenceMap is index, etc of component by datakey save as dictionary
 export function load_reference_map(reference_local = null){
     // console.time('load_reference_map');
     if(reference_local === null){
@@ -1286,7 +1288,7 @@ export function reloadDataFromHistory(){
         setSidebar('details',JSON.parse(JSON.stringify(sideBareHistory())));
     }
     Toastify({
-        text: 'Gagal menyimpan data !',
+        text: 'Failed to save data !',
         duration: 3000,
         gravity: "top",
         position: "right",
