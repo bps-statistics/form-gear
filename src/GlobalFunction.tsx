@@ -14,7 +14,7 @@ import { preset, setPreset, Preset } from './stores/PresetStore';
 import { response, setResponse, Response } from './stores/ResponseStore';
 import { remark, setRemark, Remark} from './stores/RemarkStore';
 import { note, setNote} from './stores/NoteStore';
-import { createSignal } from 'solid-js';
+import { createSignal, batch } from 'solid-js';
 import { locale, setLocale} from './stores/LocaleStore';
 import { getConfig } from './Form';
 import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
@@ -264,8 +264,10 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
         }
     })
     addHistory('insert_ref_detail', null, refPosition, null, history)
-    load_reference_map(updatedRef)
-    setReference('details',updatedRef);
+    batch(() => {
+        load_reference_map(updatedRef)
+        setReference('details',updatedRef);
+    })
     
     components.forEach(newComp =>{
         let value = [];
@@ -361,8 +363,10 @@ export const deleteSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
         }
     }
     addHistory('delete_ref_detail', null, refPosition, null, history)
-    load_reference_map(updatedRef)
-    setReference('details',updatedRef);
+    batch(() => {
+        load_reference_map(updatedRef)
+        setReference('details',updatedRef);
+    })
     addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
     setSidebar('details',updatedSidebar);
 }
@@ -477,8 +481,10 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
             }
         })
         addHistory('insert_ref_detail', null, refPosition, null, history)
-        load_reference_map(updatedRef)
-        setReference('details',updatedRef);
+        batch(() => {
+            load_reference_map(updatedRef)
+            setReference('details',updatedRef);
+        })
         components.forEach(newComp =>{
             let value = [];
             value = (newComp.answer) ? newComp.answer : value;

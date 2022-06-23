@@ -24,10 +24,10 @@ var principalGear = null;
 var referenceGear = null;
 
 //JSON Object defined template
-let reference = await fetch("../src/data/reference.json").then((res) => res.json()).catch((error : Error) => {return {}}) || []
+let reference = await fetch("../src/data/ver/reference.json").then((res) => res.json()).catch((error : Error) => {return {}}) || []
 let template = await fetch("../src/data/template.json").then((res) => res.json()).catch((error : Error) => {return {}}) || []
 let preset = await fetch("../src/data/preset.json").then((res) => res.json()).catch((error : Error) => {return {}}) || []
-let response = await fetch("../src/data/data.json").then((res) => res.json()).catch((error : Error) => {return {}}) || []
+let response = await fetch("../src/data/ver/data.json").then((res) => res.json()).catch((error : Error) => {return {}}) || []
 let validation = await fetch("../src/data/validation.json").then((res) => res.json()).catch((error : Error) => {return {}}) || []
 let remark = await fetch("../src/data/remark.json").then((res) => res.json()).catch((error : Error) => {return {}}) || []
 
