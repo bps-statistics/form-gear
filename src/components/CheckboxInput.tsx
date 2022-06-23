@@ -7,14 +7,12 @@ const CheckboxInput: FormComponentBase = props => {
     const [disableInput] = createSignal((config.formMode > 1 ) ? true : props.component.disableInput)
     let handleOnChange = (value: any, label: any, open: any) => {
         let updatedAnswer = JSON.parse(JSON.stringify(props.value))          
-
         if(props.value){
             if(props.value.some(d => d.value === value)){
                 if(open){
-                    let valueIndex = props.component.options.findIndex((item) => item.value == value);
+                    let valueIndex = options().findIndex((item) => item.value == value);
                     updatedAnswer = updatedAnswer.filter((item) => item.value != value)
-                    if(props.component.options[valueIndex].label !== label) updatedAnswer.push({value: value, label: label})
-                
+                    if(options()[valueIndex].label !== label) updatedAnswer.push({value: value, label: label, open: true})
                 }else{
                     updatedAnswer = updatedAnswer.filter((item) => item.value != value)
                 }
@@ -25,7 +23,6 @@ const CheckboxInput: FormComponentBase = props => {
             updatedAnswer = [];
             updatedAnswer.push({value: value, label: label})
         }
-        
         props.onValueChange(updatedAnswer);
     }
 
@@ -47,17 +44,17 @@ const CheckboxInput: FormComponentBase = props => {
         if(props.component.sourceOption !== undefined && props.component.typeOption === 3){
             let newSourceOption = props.component.sourceOption.split('@');
             const componentAnswerIndex = reference.details.findIndex(obj => obj.dataKey === newSourceOption[0]);
-			if( (reference.details[componentAnswerIndex].type === 21 || 22 || 23 || 26 || 27 || 29 )
-				|| (reference.details[componentAnswerIndex].type === 4 && reference.details[componentAnswerIndex].renderType === 2) ){				
-					return reference.details[componentAnswerIndex].answer
-			}
+            if( (reference.details[componentAnswerIndex].type === 21 || 22 || 23 || 26 || 27 || 29 )
+            || (reference.details[componentAnswerIndex].type === 4 && reference.details[componentAnswerIndex].renderType === 2) ){				
+                return reference.details[componentAnswerIndex].answer
+            }
         }
 		return []
 	})
 	
 	const [options] = createSignal<Option[]>(props.component.sourceOption !== undefined ? getOptions() : props.component.options );
 	
-	const [instruction, setInstruction] = createSignal(false);
+    const [instruction, setInstruction] = createSignal(false);
 	const showInstruction = () => {
 	  (instruction()) ? setInstruction(false) : setInstruction(true);
 	}

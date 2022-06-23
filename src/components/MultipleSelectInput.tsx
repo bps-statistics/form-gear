@@ -191,7 +191,8 @@ const MultipleSelectInput: FormComponentBase = props => {
             try {
                 optionsFetch = props.component.sourceOption !== undefined ? [] : JSON.parse(JSON.stringify(props.component.options));
                 if (props.component.sourceOption !== undefined) {
-                    const componentAnswerIndex = reference.details.findIndex(obj => obj.dataKey === props.component.sourceOption);
+                    let newSourceOption = props.component.sourceOption.split('@');
+                    const componentAnswerIndex = reference.details.findIndex(obj => obj.dataKey === newSourceOption[0]);
                     if ((reference.details[componentAnswerIndex].type === 21 || 22 || 23 || 26 || 27 || 29)
                         || (reference.details[componentAnswerIndex].type === 4 && reference.details[componentAnswerIndex].renderType === 2)) {
                         if (reference.details[componentAnswerIndex].answer) {
