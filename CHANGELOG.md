@@ -1,5 +1,24 @@
 # Changelog
 
+## FormGear | Ver. 1.0.2
+
+> June 24, 2022
+
+### Added
+- 
+
+
+### Changed
+- 
+
+### Fixed
+- Update ListTextInput and ListSelectInput delete modal position from the bottom to the center of the screen.
+
+
+---
+
+
+
 ## FormGear | Ver. 1.0.1
 
 > June 8, 2022
