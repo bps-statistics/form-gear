@@ -93,7 +93,7 @@ const RadioInput: FormComponentBase = props => {
 										<div class="col-span-1">
 											<label class="cursor-pointer text-sm" for={props.component.dataKey + index()}>
 												<input type="radio" checked={settedValue === item.value} 
-													class="disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
+													class="checked:disabled:bg-gray-500 checked:dark:disabled:bg-gray-300 disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
 													value={item.value} name={props.component.dataKey} id={"radio-"+props.component.dataKey + "-" + index()} 
 													disabled = { disableInput() }
 													onChange={e => handleOnChange(e.currentTarget.value, item.label)} />

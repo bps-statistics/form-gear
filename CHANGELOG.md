@@ -7,9 +7,8 @@
 ### Added
 - 
 
-
 ### Changed
-- 
+- Update to lighter colors on the checked options in RadioInput and CheckboxInput on formMode preview and close.
 
 ### Fixed
 - Update ListTextInput and ListSelectInput delete modal position from the bottom to the center of the screen.
