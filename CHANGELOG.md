@@ -12,12 +12,13 @@
 - Update disable color for SelectInput and MultipleSelectInput as the same as other.
 - Update border color on MaskingInput as the same as other.
 - Update header width divided by 6 parts.
+- Update PhotoInput value to base64
 
 ### Fixed
 - Update ListTextInput and ListSelectInput delete modal position from the bottom to the center of the screen.
 - Update handling nested questions from numeric 0 value input.
-- Update creation of nestedNumber
-
+- Update CheckboxInput to change source options to getOptions variable created by createMemo
+- Update MultipleSelectInput to fix nested sourceOption
 
 ---
 
