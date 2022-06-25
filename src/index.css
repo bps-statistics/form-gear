@@ -146,3 +146,13 @@
 .formgear-select .blur {
     --tw-blur: blur(8px);
 }
+
+.formgear-select  .solid-select-control[data-disabled=true]{
+    background-color: #e5e7eb;
+    color: #374151;
+}
+
+.dark .formgear-select  .solid-select-control[data-disabled=true]{
+    background-color: #374151;
+    color: #9ca3af;
+}

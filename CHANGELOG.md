@@ -5,13 +5,15 @@
 > June 24, 2022
 
 ### Added
-- 
+- Add Timezone and GMT attribute in principal, resonse, and remark output.
 
 ### Changed
 - Update to lighter colors on the checked options in RadioInput and CheckboxInput on formMode preview and close.
+- Update disable color for SelectInput and MultipleSelectInput as the same as other.
 
 ### Fixed
 - Update ListTextInput and ListSelectInput delete modal position from the bottom to the center of the screen.
+- Update handling nested questions from numeric 0 value input.
 
 
 ---
