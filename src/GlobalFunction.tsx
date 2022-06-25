@@ -808,11 +808,11 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 hasComponentUsing.forEach(element => {
                     if(typeof answer === 'number' || typeof answer === 'string'){
                         beforeAnswer = (beforeAnswer === undefined) ? 0 : beforeAnswer;
-                        (Number(answer) > Number(beforeAnswer)) ?
+                        if(Number(answer) > Number(beforeAnswer)){
                             insertSidebarNumber(element.dataKey, answer, beforeAnswer, activeComponentPosition)
-                            :
+                        } else if(Number(answer) < Number(beforeAnswer)){
                             deleteSidebarNumber(element.dataKey, answer, beforeAnswer, activeComponentPosition)
-                            ;
+                        };
                     } else if(typeof answer === 'object'){
                         beforeAnswer = (beforeAnswer === undefined) ? [] : beforeAnswer;
                         answer = JSON.parse(JSON.stringify(answer));

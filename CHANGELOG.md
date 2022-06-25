@@ -16,6 +16,7 @@
 ### Fixed
 - Update ListTextInput and ListSelectInput delete modal position from the bottom to the center of the screen.
 - Update handling nested questions from numeric 0 value input.
+- Update creation of nestedNumber
 
 
 ---
