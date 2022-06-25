@@ -10,6 +10,7 @@
 ### Changed
 - Update to lighter colors on the checked options in RadioInput and CheckboxInput on formMode preview and close.
 - Update disable color for SelectInput and MultipleSelectInput as the same as other.
+- Update border color on MaskingInput as the same as other.
 
 ### Fixed
 - Update ListTextInput and ListSelectInput delete modal position from the bottom to the center of the screen.
