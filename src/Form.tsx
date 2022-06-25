@@ -1233,28 +1233,6 @@ const Form: Component<{
                     </For>
                   </nav>
 
-                  {/* <nav class="space-y-1">
-                      <For each={sidebar.details}>
-                        {(item, index) => (
-                          <a href="javascript:void(0);" onClick={() => {
-                            setActiveComponent({name: item.dataKey, index: JSON.parse(JSON.stringify(item.index)), position: index()});
-                          }}
-                            classList={{
-                                'bg-blue-800 text-white': item.dataKey === form.activeComponent.name, 
-                                'indent-3 ': item.level === 1,
-                                'indent-6': item.level === 2,
-                                'indent-9': item.level === 3,
-                                'indent-12': item.level === 4,
-                              }}
-                            class="flex flex-col flex-coltext-white font-medium space-x-2 py-2.5 px-4 
-                                hover:bg-blue-700 rounded hover:text-white transition duration-200">
-                            {item.label}
-                            <div class="font-light text-xs">{item.description}</div>
-                          </a>
-                        )}
-                      </For>
-                    </nav> */}
-
                 </div>
 
                 <div class="flex items-center space-x-3 sm:mt-7 mt-4">
@@ -1299,7 +1277,7 @@ const Form: Component<{
 
                 <div class="sm:px-7 sm:pt-7 px-4 pt-4 flex flex-col w-full border-b border-gray-200 bg-white dark:bg-gray-900 dark:text-white dark:border-gray-800 xl:sticky top-0 z-10">
                   <div class="flex w-full items-center">
-                    <div class="ml-3 md:text-2xl md:text-left font-medium text-left text-base text-gray-900 dark:text-white mt-1">
+                    <div class="ml-3 w-4/6 md:text-2xl md:text-left font-medium text-left text-base text-gray-900 dark:text-white mt-1">
                       <div innerHTML={props.template.details.title} />
                       <div class="text-sm font-light md:text-lg text-gray-600 dark:text-gray-400" innerHTML={props.template.details.description}
                         classList={{
@@ -1309,7 +1287,7 @@ const Form: Component<{
                       />
                       <div class="text-xs font-light text-gray-600 "> {renderGear} &#177; {timeDiff} ms</div>
                     </div>
-                    <div class="ml-auto sm:flex items-center p-2 ">
+                    <div class="ml-auto w-1/6 sm:flex items-center p-2 ">
                       <button onClick={toggleSwitch} type="button"
                         class="button-switch relative inline-flex flex-shrink-0 bg-gray-200 dark:bg-gray-700 h-6 w-11 border-2 border-transparent rounded-full cusrsor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
 
@@ -1330,7 +1308,7 @@ const Form: Component<{
                         </span>
                       </button>
                     </div>
-                    <div class="ml-auto sm:flex md:hidden items-center">
+                    <div class="ml-auto w-1/6 sm:flex md:hidden items-center">
                       <button type="button"
                         class="p-4 mobile-menu-button focus:outline-none focus:bg-gray-200 dark:focus:bg-gray-800" onClick={sidebarCollapse}>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1430,8 +1408,6 @@ const Form: Component<{
                   </div> */}
 
               </div>
-
-
 
               <div class="grid grid-cols-6 sticky w-full justify-end bottom-6 mt-10"
                 classList={{
