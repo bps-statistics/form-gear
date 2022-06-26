@@ -621,6 +621,18 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
         //validate for its own dataKey 
         runValidation(dataKey, JSON.parse(JSON.stringify(reference.details[refPosition])), activeComponentPosition);
         
+        //do nothing if no changes, thanks to Budi's idea on pull request #5
+        if(attributeParam === 'answer'){
+            if(JSON.stringify(beforeAnswer) === JSON.stringify(answer)){
+                return
+            }
+        }
+        if(attributeParam === 'enable'){
+            if(reference.details[refPosition]['enable'] === answer){
+                return
+            }
+        }
+
         //enabling ~ run when answer
         if(attributeParam === 'answer') {
             const hasSideCompEnable = JSON.parse(JSON.stringify(sidebar.details.filter(obj => {

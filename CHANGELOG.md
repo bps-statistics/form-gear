@@ -6,19 +6,21 @@
 
 ### Added
 - Add Timezone and GMT attribute in principal, resonse, and remark output.
+- Filter condition on saveAnswer that will do nothing if no changes. Special thanks to [Budi Setiawan Akkas - @cloudwalkerid](https://github.com/cloudwalkerid) for the idea on pull request [#5](https://github.com/AdityaSetyadi/form-gear/pull/5).
 
 ### Changed
 - Update to lighter colors on the checked options in RadioInput and CheckboxInput on formMode preview and close.
 - Update disable color for SelectInput and MultipleSelectInput as the same as other.
 - Update border color on MaskingInput as the same as other.
 - Update header width divided by 6 parts.
-- Update PhotoInput value to base64
+- Update PhotoInput value to base64.
 
 ### Fixed
 - Update ListTextInput and ListSelectInput delete modal position from the bottom to the center of the screen.
 - Update handling nested questions from numeric 0 value input.
-- Update CheckboxInput to change source options to getOptions variable created by createMemo
-- Update MultipleSelectInput to fix nested sourceOption
+- Update CheckboxInput default options.
+- Fix nested sourceOption on MultipleSelectInput.
+
 
 ---
 
