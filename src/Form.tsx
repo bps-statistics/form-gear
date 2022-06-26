@@ -8,6 +8,7 @@ import { preset, setPreset, Preset } from './stores/PresetStore';
 import { response, setResponse, Response } from './stores/ResponseStore';
 import { validation, setValidation, Validation } from './stores/ValidationStore';
 import { reference, setReference } from './stores/ReferenceStore';
+import { referenceEnableFalse, setReferenceEnableFalse } from './stores/ReferenceStore';
 import { sidebar, setSidebar } from './stores/SidebarStore';
 import { remark, setRemark, Remark } from './stores/RemarkStore';
 import { note, setNote } from './stores/NoteStore';
@@ -229,7 +230,9 @@ const Form: Component<{
     setComponents(getComponents(form.activeComponent.dataKey));
     setSummary({
       answer: reference.details.filter((element) => {
-        return (element.type > 4)
+        let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
+        return enableFalse == -1 
+          && (element.type > 4)
           && (element.enable)
           && (element.answer !== undefined)
           && (element.answer !== '')
@@ -245,8 +248,10 @@ const Form: Component<{
           && !(JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0
             && element.level > 1)
       }).length,
-      error: reference.details.filter((element) => {
-        return (element.type > 4 && (element.enable) && element.validationState == 2)
+      error: 
+      reference.details.filter((element) => {
+        let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
+        return enableFalse == -1 && (element.type > 4 && (element.enable) && element.validationState == 2)
       }).length,
       remark: note.details.notes.length
     });
@@ -278,41 +283,38 @@ const Form: Component<{
     sidebar.classList.toggle("-translate-x-full");
   }
 
-  const setData = () => {
-    const dataForm = [];
-    const dataPrincipal = [];
+  const setEnableFalse = () =>{    
     const indexEnableFalse = [];
-    const indexEnableFalse_ = [];
-
+    setReferenceEnableFalse([]);
     reference.details.forEach((element) => {
       if( (element.type < 3) && !(element.enable) ) {
-        // let parentIndex = element.level == 0 ? element.index : element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
         indexEnableFalse.push({
           parentIndex: element.index,
         })
-        indexEnableFalse_.push({
-          dataKey: element.dataKey,
-          index: element.index,
-          type: element.type,
-          level: element.level,
-          // parentIndex: parentIndex,
-        })
       };
     })
-
     const indexEnableFalse_unique = indexEnableFalse.filter((object,index) => index === indexEnableFalse.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object))); 
-    console.log('false', indexEnableFalse_, indexEnableFalse_unique)
+    setReferenceEnableFalse([...indexEnableFalse_unique]);
+  }
 
-    reference.details.forEach((element) => {
+  const setData = () => {
+    const dataForm = [];
+    const dataPrincipal = [];
+
+    setEnableFalse();
+    reference.details.forEach((element, index) => {
       if (
         (element.type > 3)
         && (element.enable)
         && (element.answer !== undefined)
         && (element.answer !== '')
         && (element.answer !== null)
-      ) {
+      ) {        
+        // enableShouldTrue.push({
+        //   dataKey: element.dataKey
+        // })
         // let parentIndex = element.level == 0 ? element.index : element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
-        let enableFalse = indexEnableFalse_unique.findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
+        let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
         if (enableFalse == -1){
           dataForm.push({
             dataKey: element.dataKey,
@@ -350,9 +352,6 @@ const Form: Component<{
     (response.details.createdBy === undefined || (response.details.createdBy !== undefined && response.details.createdBy === '')) ?
       setResponse('details', 'createdBy', form.formConfig.username) :
       setResponse('details', 'updatedBy', form.formConfig.username);
-    // (response.details.createdAt === undefined || (response.details.createdAt !== undefined && response.details.createdAt === '')) ?
-    //   setResponse('details', 'createdAt', now) :
-    //   setResponse('details', 'updatedAt', now);
 
     if(response.details.createdAt === undefined || (response.details.createdAt !== undefined && response.details.createdAt === '')){
       setResponse('details', 'createdAt', now) ;
@@ -377,9 +376,6 @@ const Form: Component<{
     (principal.details.createdBy === undefined || (principal.details.createdBy !== undefined && principal.details.createdBy === '')) ?
       setPrincipal('details', 'createdBy', form.formConfig.username) :
       setPrincipal('details', 'updatedBy', form.formConfig.username);
-    // (principal.details.createdAt === undefined || (principal.details.createdAt !== undefined && principal.details.createdAt === '')) ?
-    //   setPrincipal('details', 'createdAt', now) :
-    //   setPrincipal('details', 'updatedAt', now);
 
     if(principal.details.createdAt === undefined || (principal.details.createdAt !== undefined && principal.details.createdAt === '')){
       setPrincipal('details', 'createdAt', now) ;
@@ -404,9 +400,6 @@ const Form: Component<{
     (remark.details.createdBy === undefined || (remark.details.createdBy !== undefined && remark.details.createdBy === '')) ?
       setRemark('details', 'createdBy', form.formConfig.username) :
       setRemark('details', 'updatedBy', form.formConfig.username);
-    // (remark.details.createdAt === undefined || (remark.details.createdAt !== undefined && remark.details.createdAt === '')) ?
-    //   setRemark('details', 'createdAt', now) :
-    //   setRemark('details', 'updatedAt', now);
 
     if(remark.details.createdAt === undefined || (remark.details.createdAt !== undefined && remark.details.createdAt === '')){
       setRemark('details', 'createdAt', now) ;
@@ -511,39 +504,23 @@ const Form: Component<{
     window.scrollTo({ top: 0, behavior: "smooth" });
     component.scrollTo({ top: 0, behavior: "smooth" });
   }
-
-  function checkDocState() {
-    (summary.error > 0) ? setDocState('E') : (reference.details.filter(element => Number(element.validationState) === 1).length > 0) ? setDocState('W') : setDocState('C');
-  }
-
-  function createCaptcha() {
-    let captchaStr = []
-    // const activeCaptcha = document.getElementById("captcha");
-    for (let q = 0; q < 6; q++) {
-      if (q % 2 == 0) {
-        // captchaStr[q] = String.fromCharCode(Math.floor(Math.random() * 26 + 65));
-        captchaStr[q] = Math.floor(Math.random() * 10 + 0);
-      } else {
-        captchaStr[q] = Math.floor(Math.random() * 10 + 0);
-      }
-    }
-    setCaptcha(captchaStr.join(""));
-    // activeCaptcha.innerHTML = `${theCaptcha}`;
-  }
-
+  
   const showListError = (event: MouseEvent) => {
     let filteredError = [];
     let filteredWarning = [];
 
     reference.details.forEach((element, i) => {
       // let sidebarIndex = element.index.splice(-1)
-      if (element.type > 4 && (element.enable) && element.validationState == 2) {
-        let sidebarIndex = element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
-        filteredError.push({ label: element.label, message: element.validationMessage, sideIndex: sidebarIndex, dataKey: element.dataKey })
-      }
-      if (element.type > 4 && (element.enable) && element.validationState == 1) {
-        let sidebarIndex = element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
-        filteredWarning.push({ label: element.label, message: element.validationMessage, sideIndex: sidebarIndex, dataKey: element.dataKey })
+      let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
+      if (enableFalse == -1){
+        if (element.type > 4 && (element.enable) && element.validationState == 2) {
+          let sidebarIndex = element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
+          filteredError.push({ label: element.label, message: element.validationMessage, sideIndex: sidebarIndex, dataKey: element.dataKey })
+        }
+        if (element.type > 4 && (element.enable) && element.validationState == 1) {
+          let sidebarIndex = element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
+          filteredWarning.push({ label: element.label, message: element.validationMessage, sideIndex: sidebarIndex, dataKey: element.dataKey })
+        }
       }
     });
 
@@ -631,18 +608,39 @@ const Form: Component<{
     component.scrollIntoView({ behavior: "smooth" });
   }
 
-  const confirmSubmit = (event: MouseEvent) => {
-    createCaptcha();
-    checkDocState();
-    if (docState() === 'E') {
-      toastInfo(locale.details.language[0].submitInvalid, 3000, "", "bg-pink-600/80");
-    } else {
-      reference.details.forEach((obj, ind) => {
-        let updatedRef = JSON.parse(JSON.stringify(obj));
-        let run = 0
+  function checkDocState() {
+    (summary.error > 0) ? setDocState('E') : (reference.details.filter(element => Number(element.validationState) === 1).length > 0) ? setDocState('W') : setDocState('C');
+  }
 
-        // let notePosition = note.details.notes.findIndex(elNote => elNote.dataKey === obj.dataKey);
+  function createCaptcha() {
+    let captchaStr = []
+    // const activeCaptcha = document.getElementById("captcha");
+    for (let q = 0; q < 6; q++) {
+      if (q % 2 == 0) {
+        // captchaStr[q] = String.fromCharCode(Math.floor(Math.random() * 26 + 65));
+        captchaStr[q] = Math.floor(Math.random() * 10 + 0);
+      } else {
+        captchaStr[q] = Math.floor(Math.random() * 10 + 0);
+      }
+    }
+    setCaptcha(captchaStr.join(""));
+    // activeCaptcha.innerHTML = `${theCaptcha}`;
+  }
 
+  const revalidateError = (event: MouseEvent) => {    
+    setEnableFalse();
+    // revalidateQ();
+    if (summary.error > 0) {
+      showListError(event);
+    }
+  }
+
+  const revalidateQ = () => {    
+    reference.details.forEach((object, ind) => { 
+
+      let updatedRef = JSON.parse(JSON.stringify(object));
+      let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === updatedRef.index.slice(0, -2).toString());
+      if (enableFalse == -1){
         if ((updatedRef.enable) && updatedRef.required !== undefined && (updatedRef.required)) {
           let editedDataKey = updatedRef.dataKey.split('@');
           let newEdited = editedDataKey[0].split('#');
@@ -657,14 +655,27 @@ const Form: Component<{
               typeAnswer === 'object' && !isNaN(updatedRef.answer) ||
               typeAnswer === 'number' && isNaN(updatedRef.answer) ||
               JSON.stringify(updatedRef.answer) === '[]') {
-              updatedRef.validationMessage.push(locale.details.language[0].validationRequired);
-              updatedRef.validationState = 2;
-            }
+                updatedRef.validationMessage.push(locale.details.language[0].validationRequired);
+                updatedRef.validationState = 2;
+              }
             setReference('details', ind, updatedRef);
           }
         }
-      });
+      // }else{
+      //   setReference('details', ind, 'enable', false);
+      }
 
+    })
+  }
+
+  const confirmSubmit = (event: MouseEvent) => {
+    createCaptcha();
+    checkDocState();
+    if (docState() === 'E') {
+      toastInfo(locale.details.language[0].submitInvalid, 3000, "", "bg-pink-600/80");
+    } else {      
+      setEnableFalse();
+      revalidateQ();
       if (summary.error === 0) {
         if (docState() === 'W') {
           toastInfo(locale.details.language[0].submitWarning, 3000, "", "bg-orange-600/80");
@@ -1275,20 +1286,10 @@ const Form: Component<{
                         {summary.blank}
                         <div class="font-light text-xs">{locale.details.language[0].summaryBlank}</div>
                       </div>                      
-                      <Switch>
-                        <Match when={(summary.error == 0)}>                          
-                          <div class="h-20 text-5xl text-center sm:flex flex-col flex-coltext-white font-medium xs:h-auto xs:square xl:border-b " onClick={confirmSubmit}>
-                            {summary.error}
-                            <div class="font-light text-xs">{locale.details.language[0].summaryError}</div>
-                          </div>
-                        </Match>
-                        <Match when={(summary.error > 0)}>
-                          <div class="h-20 text-5xl text-center sm:flex flex-col flex-coltext-white font-medium xs:h-auto xs:square xl:border-b " onClick={showListError}>
-                            {summary.error}
-                            <div class="font-light text-xs">{locale.details.language[0].summaryError}</div>
-                          </div>
-                        </Match>
-                      </Switch>
+                      <div class="h-20 text-5xl text-center sm:flex flex-col flex-coltext-white font-medium xs:h-auto xs:square xl:border-b " onClick={revalidateError}>
+                        {summary.error}
+                        <div class="font-light text-xs">{locale.details.language[0].summaryError}</div>
+                      </div>
                       <div class="h-20 text-5xl text-center sm:flex flex-col flex-coltext-white font-medium xs:h-auto xs:square xl:border-b " onClick={showListRemark}>
                         {summary.remark}
                         <div class="font-light text-xs">{locale.details.language[0].summaryRemark}</div>
@@ -1300,7 +1301,7 @@ const Form: Component<{
                           <button class="bg-teal-300 hover:bg-teal-200 text-teal-100 p-3 w-full rounded-md shadow font-medium" onClick={confirmSubmit}>Submit</button>
                         </Match>
                         <Match when={(summary.error > 0 && config().formMode < 3)}>
-                          <button class="bg-red-500 hover:bg-red-400 text-teal-100 p-3 w-full rounded-md shadow font-medium" onClick={showListError}>List Error</button>
+                          <button class="bg-red-500 hover:bg-red-400 text-teal-100 p-3 w-full rounded-md shadow font-medium" onClick={revalidateError}>List Error</button>
                         </Match>
                       </Switch>
                     </div>

@@ -2,6 +2,7 @@ import { createStore } from "solid-js/store";
 import { Component } from "./TemplateStore";
 import { Detail as SidebarDetail } from "./SidebarStore";
 import { LengthInput } from "../FormType";
+import { createSignal } from "solid-js";
 
 export type Validations = {
     test: string
@@ -68,3 +69,4 @@ export const [reference, setReference] = createStore<Reference>({
     sidebar: []
 });
 
+export const [referenceEnableFalse, setReferenceEnableFalse] = createSignal([])

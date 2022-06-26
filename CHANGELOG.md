@@ -8,6 +8,7 @@
 - Add Timezone and GMT attribute in principal, resonse, and remark output.
 - Filter condition on saveAnswer that will do nothing if no changes. Special thanks to [Budi Setiawan Akkas - @cloudwalkerid](https://github.com/cloudwalkerid) for the idea on pull request [#5](https://github.com/AdityaSetyadi/form-gear/pull/5).
 - Set clickable error on Summary to open ListError or even validate the whole questionnaire before submission.
+- Add referenceEnableFalse to handle reactive enable conditions for each component on trigger save, submit, or show ListError.
 
 ### Changed
 - Update to lighter colors on the checked options in RadioInput and CheckboxInput on formMode preview and close.
