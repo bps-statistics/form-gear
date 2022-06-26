@@ -1245,14 +1245,24 @@ const Form: Component<{
                         {summary.answer}
                         <div class="font-light text-xs">{locale.details.language[0].summaryAnswer}</div>
                       </div>
-                      <div class="h-20 text-5xl text-center sm:flex flex-col flex-coltext-white font-medium xs:h-auto xs:square xl:border-b "  onClick={showListBlank}>
+                      <div class="h-20 text-5xl text-center sm:flex flex-col flex-coltext-white font-medium xs:h-auto xs:square xl:border-b " onClick={showListBlank}>
                         {summary.blank}
                         <div class="font-light text-xs">{locale.details.language[0].summaryBlank}</div>
-                      </div>
-                      <div class="h-20 text-5xl text-center sm:flex flex-col flex-coltext-white font-medium xs:h-auto xs:square xl:border-b ">
-                        {summary.error}
-                        <div class="font-light text-xs">{locale.details.language[0].summaryError}</div>
-                      </div>
+                      </div>                      
+                      <Switch>
+                        <Match when={(summary.error == 0)}>                          
+                          <div class="h-20 text-5xl text-center sm:flex flex-col flex-coltext-white font-medium xs:h-auto xs:square xl:border-b " onClick={confirmSubmit}>
+                            {summary.error}
+                            <div class="font-light text-xs">{locale.details.language[0].summaryError}</div>
+                          </div>
+                        </Match>
+                        <Match when={(summary.error > 0)}>
+                          <div class="h-20 text-5xl text-center sm:flex flex-col flex-coltext-white font-medium xs:h-auto xs:square xl:border-b " onClick={showListError}>
+                            {summary.error}
+                            <div class="font-light text-xs">{locale.details.language[0].summaryError}</div>
+                          </div>
+                        </Match>
+                      </Switch>
                       <div class="h-20 text-5xl text-center sm:flex flex-col flex-coltext-white font-medium xs:h-auto xs:square xl:border-b " onClick={showListRemark}>
                         {summary.remark}
                         <div class="font-light text-xs">{locale.details.language[0].summaryRemark}</div>
