@@ -285,17 +285,17 @@ const Form: Component<{
     const indexEnableFalse_ = [];
 
     reference.details.forEach((element) => {
-      if( (element.type !== 3) && !(element.enable) ) {        
-        let parentIndex = element.level == 0 ? element.index : element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
+      if( (element.type < 3) && !(element.enable) ) {
+        // let parentIndex = element.level == 0 ? element.index : element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
         indexEnableFalse.push({
-          parentIndex: parentIndex,
+          parentIndex: element.index,
         })
         indexEnableFalse_.push({
           dataKey: element.dataKey,
           index: element.index,
           type: element.type,
           level: element.level,
-          parentIndex: parentIndex,
+          // parentIndex: parentIndex,
         })
       };
     })
@@ -311,8 +311,8 @@ const Form: Component<{
         && (element.answer !== '')
         && (element.answer !== null)
       ) {
-        let parentIndex = element.level == 0 ? element.index : element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
-        let enableFalse = indexEnableFalse_unique.findIndex(obj => obj.parentIndex.toString() === parentIndex.toString());
+        // let parentIndex = element.level == 0 ? element.index : element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
+        let enableFalse = indexEnableFalse_unique.findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
         if (enableFalse == -1){
           dataForm.push({
             dataKey: element.dataKey,
