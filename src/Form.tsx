@@ -281,6 +281,28 @@ const Form: Component<{
   const setData = () => {
     const dataForm = [];
     const dataPrincipal = [];
+    const indexEnableFalse = [];
+    const indexEnableFalse_ = [];
+
+    reference.details.forEach((element) => {
+      if( (element.type !== 3) && !(element.enable) ) {        
+        let parentIndex = element.level == 0 ? element.index : element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
+        indexEnableFalse.push({
+          parentIndex: parentIndex,
+        })
+        indexEnableFalse_.push({
+          dataKey: element.dataKey,
+          index: element.index,
+          type: element.type,
+          level: element.level,
+          parentIndex: parentIndex,
+        })
+      };
+    })
+
+    const indexEnableFalse_unique = indexEnableFalse.filter((object,index) => index === indexEnableFalse.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object))); 
+    console.log('false', indexEnableFalse_, indexEnableFalse_unique)
+
     reference.details.forEach((element) => {
       if (
         (element.type > 3)
@@ -289,17 +311,21 @@ const Form: Component<{
         && (element.answer !== '')
         && (element.answer !== null)
       ) {
-        dataForm.push({
-          dataKey: element.dataKey,
-          answer: element.answer
-        })
-        if (element.principal !== undefined) {
-          dataPrincipal.push({
+        let parentIndex = element.level == 0 ? element.index : element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
+        let enableFalse = indexEnableFalse_unique.findIndex(obj => obj.parentIndex.toString() === parentIndex.toString());
+        if (enableFalse == -1){
+          dataForm.push({
             dataKey: element.dataKey,
-            answer: element.answer,
-            principal: element.principal,
-            columnName: element.columnName
+            answer: element.answer
           })
+          if (element.principal !== undefined) {
+            dataPrincipal.push({
+              dataKey: element.dataKey,
+              answer: element.answer,
+              principal: element.principal,
+              columnName: element.columnName
+            })
+          }
         }
       }
     })

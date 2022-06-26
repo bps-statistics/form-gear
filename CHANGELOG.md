@@ -15,6 +15,7 @@
 - Update border color on MaskingInput as the same as other.
 - Update header width divided by 6 parts.
 - Update PhotoInput value to base64.
+- Update set response output with deeper filtration on enable condition on the parent of each component.
 
 ### Fixed
 - Update ListTextInput and ListSelectInput delete modal position from the bottom to the center of the screen.
