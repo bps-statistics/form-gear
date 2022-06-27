@@ -273,28 +273,33 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
     }
     let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
     if(sidebar.details.findIndex(obj => obj.dataKey === newSide.dataKey) === -1){
-        let newSideLength = newSide.index.length;
+        let newSideLength = newSide.index.length
+        let y_tmp = 0
         for(let looping = newSideLength; looping > 1; looping--){
             let loopingState = true;
             let myIndex = JSON.parse(JSON.stringify(newSide.index))
             myIndex.length = looping;
-            let sideLength = sidebar.details.length;
-            for(let y = sideLength-1; y >= sidebarPosition; y--){
-                let sidebarIndexToBeFound = JSON.parse(JSON.stringify(sidebar.details[y].index));
-                sidebarIndexToBeFound.length = looping;
-                if(JSON.stringify(sidebarIndexToBeFound) === JSON.stringify(myIndex)){
-                    let indexMe = Number(newSide.index[looping]);
-                    let indexFind = (sidebar.details[y].index[looping] == undefined) ? 0 : Number(sidebar.details[y].index[looping]);
-                    if(indexMe >= indexFind){
-                        updatedSidebar.splice(y+1, 0, newSide);
-                    } else if(indexMe < indexFind){
-                        updatedSidebar.splice(y, 0, newSide);
+            let sideLength = sidebar.details.length
+            if(y_tmp == 0){
+                for(let y = sideLength-1; y >= sidebarPosition; y--){
+                    let sidebarIndexToBeFound = JSON.parse(JSON.stringify(sidebar.details[y].index));
+                    sidebarIndexToBeFound.length = looping;
+                    if(JSON.stringify(sidebarIndexToBeFound) === JSON.stringify(myIndex)){
+                        let indexMe = Number(newSide.index[looping]);
+                        let indexFind = (sidebar.details[y].index[looping] == undefined) ? 0 : Number(sidebar.details[y].index[looping]);
+                        if(indexMe >= indexFind){
+                            updatedSidebar.splice(y+1, 0, newSide);
+                            loopingState = false;
+                            break;
+                        } else if(indexMe < indexFind){
+                            y_tmp = y;
+                        }
                     }
-                    loopingState = false;
-                    break;
                 }
+                if(!loopingState) break;
+            } else {
+                updatedSidebar.splice(y_tmp, 0, newSide);
             }
-            if(!loopingState) break;
         }
     }
     setSidebar('details',updatedSidebar);
@@ -474,27 +479,32 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
         let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
         if(sidebar.details.findIndex(obj => obj.dataKey === newSide.dataKey) === -1){
             let newSideLength = newSide.index.length
+            let y_tmp = 0
             for(let looping = newSideLength; looping > 1; looping--){
                 let loopingState = true;
                 let myIndex = JSON.parse(JSON.stringify(newSide.index))
                 myIndex.length = looping;
                 let sideLength = sidebar.details.length
-                for(let y = sideLength-1; y >= sidebarPosition; y--){
-                    let sidebarIndexToBeFound = JSON.parse(JSON.stringify(sidebar.details[y].index));
-                    sidebarIndexToBeFound.length = looping;
-                    if(JSON.stringify(sidebarIndexToBeFound) === JSON.stringify(myIndex)){
-                        let indexMe = Number(newSide.index[looping]);
-                        let indexFind = (sidebar.details[y].index[looping] == undefined) ? 0 : Number(sidebar.details[y].index[looping]);
-                        if(indexMe >= indexFind){
-                            updatedSidebar.splice(y+1, 0, newSide);
-                        } else if(indexMe < indexFind){
-                            updatedSidebar.splice(y, 0, newSide);
+                if(y_tmp == 0){
+                    for(let y = sideLength-1; y >= sidebarPosition; y--){
+                        let sidebarIndexToBeFound = JSON.parse(JSON.stringify(sidebar.details[y].index));
+                        sidebarIndexToBeFound.length = looping;
+                        if(JSON.stringify(sidebarIndexToBeFound) === JSON.stringify(myIndex)){
+                            let indexMe = Number(newSide.index[looping]);
+                            let indexFind = (sidebar.details[y].index[looping] == undefined) ? 0 : Number(sidebar.details[y].index[looping]);
+                            if(indexMe >= indexFind){
+                                updatedSidebar.splice(y+1, 0, newSide);
+                                loopingState = false;
+                                break;
+                            } else if(indexMe < indexFind){
+                                y_tmp = y;
+                            }
                         }
-                        loopingState = false;
-                        break;
                     }
+                    if(!loopingState) break;
+                } else {
+                    updatedSidebar.splice(y_tmp, 0, newSide);
                 }
-                if(!loopingState) break;
             }
         }
         setSidebar('details',updatedSidebar);
