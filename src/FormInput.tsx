@@ -13,7 +13,8 @@ import { note, setNote} from './stores/NoteStore';
 import { principal, setPrincipal} from './stores/PrincipalStore';
 import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
 import { locale, setLocale} from './stores/LocaleStore';
-import { useLoaderDispatch } from "./loader/FormLoaderProvider"
+import { useLoaderDispatch } from "./loader/FormLoaderProvider";
+import { referenceEnableFalse, setReferenceEnableFalse } from './stores/ReferenceStore';
 
 import dayjs from 'dayjs';
 import Toastify from 'toastify-js'
@@ -142,10 +143,25 @@ const FormInput: FormComponentBase = props => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     component.scrollTo({ top: 0, behavior: "smooth" });
   }
+
+  const setEnableFalse = () =>{    
+    const indexEnableFalse = [];
+    setReferenceEnableFalse([]);
+    reference.details.forEach((element) => {
+      if( (element.type < 3) && !(element.enable) ) {
+        indexEnableFalse.push({
+          parentIndex: element.index,
+        })
+      };
+    })
+    const indexEnableFalse_unique = indexEnableFalse.filter((object,index) => index === indexEnableFalse.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object))); 
+    setReferenceEnableFalse([...indexEnableFalse_unique]);
+  }
   
   const onValueChange = (value: any) => {
     setLoader({});
     setTimeout(() => saveAnswer(props.component.dataKey, 'answer', value, form.activeComponent.position, {'clientMode': form.formConfig.clientMode,'baseUrl': form.formConfig.baseUrl}), 50);
+    setTimeout(() => setEnableFalse(), 70);
   }
 
   const cn = [' border border-solid border-gray-300 ',' border-orange-500 border-4 ',' border-pink-600 border-4 ']
