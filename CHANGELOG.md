@@ -14,7 +14,7 @@
 - Update to lighter colors on the checked options in RadioInput and CheckboxInput on formMode preview and close.
 - Update disable color for SelectInput and MultipleSelectInput as the same as other.
 - Update border color on MaskingInput as the same as other.
-- Update header width divided by 6 parts.
+- Update header width divided by 6 parts, only applied on mobile.
 - Update PhotoInput value to base64.
 - Update set response output with deeper filtration on enable condition on the parent of each component.
 

@@ -1314,7 +1314,7 @@ const Form: Component<{
 
                 <div class="sm:px-7 sm:pt-7 px-4 pt-4 flex flex-col w-full border-b border-gray-200 bg-white dark:bg-gray-900 dark:text-white dark:border-gray-800 xl:sticky top-0 z-10">
                   <div class="flex w-full items-center">
-                    <div class="ml-3 w-4/6 md:text-2xl md:text-left font-medium text-left text-base text-gray-900 dark:text-white mt-1">
+                    <div class="ml-3 w-4/6 md:w-auto md:text-2xl md:text-left font-medium text-left text-base text-gray-900 dark:text-white mt-1">
                       <div innerHTML={props.template.details.title} />
                       <div class="text-sm font-light md:text-lg text-gray-600 dark:text-gray-400" innerHTML={props.template.details.description}
                         classList={{
@@ -1324,7 +1324,7 @@ const Form: Component<{
                       />
                       <div class="text-xs font-light text-gray-600 "> {renderGear} &#177; {timeDiff} ms</div>
                     </div>
-                    <div class="ml-auto w-1/6 sm:flex items-center p-2 ">
+                    <div class="ml-auto w-1/6 md:w-auto sm:flex items-center p-2 ">
                       <button onClick={toggleSwitch} type="button"
                         class="button-switch relative inline-flex flex-shrink-0 bg-gray-200 dark:bg-gray-700 h-6 w-11 border-2 border-transparent rounded-full cusrsor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
 
@@ -1345,7 +1345,7 @@ const Form: Component<{
                         </span>
                       </button>
                     </div>
-                    <div class="ml-auto w-1/6 sm:flex md:hidden items-center">
+                    <div class="ml-auto w-1/6 md:w-auto sm:flex md:hidden items-center">
                       <button type="button"
                         class="p-4 mobile-menu-button focus:outline-none focus:bg-gray-200 dark:focus:bg-gray-800" onClick={sidebarCollapse}>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
