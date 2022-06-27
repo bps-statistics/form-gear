@@ -1,5 +1,6 @@
 import { reference, setReference} from './stores/ReferenceStore';
 import { referenceMap, setReferenceMap} from './stores/ReferenceStore';
+import { sidebarIndexMap, setSidebarIndexMap} from './stores/ReferenceStore';
 import { referenceHistoryEnable, setReferenceHistoryEnable} from './stores/ReferenceStore';
 import { referenceHistory, setReferenceeHistory} from './stores/ReferenceStore';
 import { sideBareHistory, setSideBareHistory} from './stores/ReferenceStore';
@@ -778,48 +779,49 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 }
             })));
             if(hasSideCompEnable.length > 0) {//at least there is minimal 1 enable in this datakey
-                hasSideCompEnable.forEach(sidebarEnable => {
-                    let sidePosition = sidebar.details.findIndex(objSide => objSide.dataKey === sidebarEnable.dataKey);
-                    let enableSideBefore = sidebar.details[sidePosition]['enable'];
-                    let enableSide = eval_enable(sidebarEnable.enableCondition);
-                    addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
-                    setSidebar('details',sidePosition,'enable',enableSide);
-                    let updatedRef = JSON.parse(JSON.stringify(reference.details));
-                    let tmpVarComp = [];
-                    let tmpIndex = [];
-                    sidebarEnable.components[0].forEach((element, index) => {
-                        let refPos = updatedRef.findIndex(objRef => objRef.dataKey === element.dataKey);
-                        if(refPos !== -1){
-                            if(updatedRef[refPos].enableCondition === undefined || updatedRef[refPos].enableCondition === '') setReference('details',refPos,'enable',enableSide);
-                            if(Number(updatedRef[refPos].type) === 4 && enableSide !== enableSideBefore){
-                                tmpVarComp.push(updatedRef[refPos])
-                                tmpIndex.push(index)
-                            }
-                        }
-                    });
-                    if(tmpVarComp.length > 0) {
-                        const getRowIndex = (positionOffset:number) => {
-                            let editedDataKey = dataKey.split('@');
-                            let splitDataKey = editedDataKey[0].split('#');
-                            let splLength = splitDataKey.length;
-                            let reducer = positionOffset+1;
-                            return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
-                        }
-                        const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-                        tmpVarComp.forEach((e,i) => {
-                            // let evVal = eval(e.expression);
-                            // saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
-                            try{
-                                let evVal = eval(e.expression);
-                                saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
-                            }catch(e){
-                                saveAnswer(e.dataKey, 'answer', undefined, tmpIndex[i], null);
-                                // console.log(e.dataKey)
-                                // console.log(e)
-                            }
-                        })
-                    }
-                })
+                // hasSideCompEnable.forEach(sidebarEnable => {
+                //     let sidePosition = sidebar.details.findIndex(objSide => objSide.dataKey === sidebarEnable.dataKey);
+                //     let enableSideBefore = sidebar.details[sidePosition]['enable'];
+                //     let enableSide = eval_enable(sidebarEnable.enableCondition);
+                //     addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
+                //     setSidebar('details',sidePosition,'enable',enableSide);
+                //     let updatedRef = JSON.parse(JSON.stringify(reference.details));
+                //     let tmpVarComp = [];
+                //     let tmpIndex = [];
+                //     sidebarEnable.components[0].forEach((element, index) => {
+                //         let refPos = updatedRef.findIndex(objRef => objRef.dataKey === element.dataKey);
+                //         if(refPos !== -1){
+                //             if(updatedRef[refPos].enableCondition === undefined || updatedRef[refPos].enableCondition === '') setReference('details',refPos,'enable',enableSide);
+                //             if(Number(updatedRef[refPos].type) === 4 && enableSide !== enableSideBefore){
+                //                 tmpVarComp.push(updatedRef[refPos])
+                //                 tmpIndex.push(index)
+                //             }
+                //         }
+                //     });
+                //     if(tmpVarComp.length > 0) {
+                //         const getRowIndex = (positionOffset:number) => {
+                //             let editedDataKey = dataKey.split('@');
+                //             let splitDataKey = editedDataKey[0].split('#');
+                //             let splLength = splitDataKey.length;
+                //             let reducer = positionOffset+1;
+                //             return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
+                //         }
+                //         const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
+                //         tmpVarComp.forEach((e,i) => {
+                //             // let evVal = eval(e.expression);
+                //             // saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
+                //             try{
+                //                 let evVal = eval(e.expression);
+                //                 saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
+                //             }catch(e){
+                //                 saveAnswer(e.dataKey, 'answer', undefined, tmpIndex[i], null);
+                //                 // console.log(e.dataKey)
+                //                 // console.log(e)
+                //             }
+                //         })
+                //     }
+                // })
+                load_sidebar_index_map()
             }
             const hasComponentEnable = get_CompEnable(dataKey)
             if(hasComponentEnable.length > 0) {//this datakey at least appear in minimum 1 enable
@@ -901,8 +903,6 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                     runVariableComponent(elementVar, 0);
                 });
             }
-
-            compSourceQuestionMap
             
             const hasComponentUsing = [];
             if(dataKey in compSourceQuestionMap()){
@@ -971,6 +971,9 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                     }
                 });
                 console.timeEnd('Nested 🚀');
+            }
+            if(referenceHistoryEnable()){
+                load_sidebar_index_map()
             }
             }
         }
@@ -1137,6 +1140,55 @@ export function load_reference_map(reference_local = null){
     }
     // console.log(reference_map_lokal)
     setReferenceMap(reference_map_lokal)
+    // console.timeEnd('load_reference_map');
+}
+
+//make referenceMap, referenceMap is index, etc of component by datakey save as dictionary
+export function load_sidebar_index_map(){
+    // console.time('load_reference_map');
+    let local_sidebar_index_map = {};
+    let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details))
+
+    for(let index_sidebar = 0; index_sidebar < sidebar.details.length; index_sidebar ++){
+        let item_sidebar = sidebar.details[index_sidebar]
+
+        let index = item_sidebar.index.join('-')
+        let enable = item_sidebar.enable !== undefined ? item_sidebar.enable : true
+        if(enable === undefined){
+            enable = true
+        }
+        let enableCondition =  (item_sidebar.enableCondition === undefined) ? undefined : item_sidebar.enableCondition
+        if(!(enableCondition === undefined) && enableCondition !== ""){
+            try{
+                enable = eval(enableCondition)
+            }catch(err){
+
+            }
+        }
+        if(enable){
+            let index_now = JSON.parse(JSON.stringify(item_sidebar.index))
+            for(let index_index_ = (index.length - 1); index_index_ > 0; index_index_--){
+                index_now.splice((index_now.length - 1),1)
+                let index_local = index_now.join('-')
+                if(index_local != '' && index_local in local_sidebar_index_map){
+                    enable = enable && local_sidebar_index_map[index_local]
+                }
+                if(!enable){
+                    break
+                }
+            }
+        }
+        updatedSidebar[index_sidebar]['enable'] = enable
+        local_sidebar_index_map[index] = enable
+    }
+    batch(() => {
+        setSidebar('details', updatedSidebar)
+        if(JSON.stringify(sidebarIndexMap()) !== JSON.stringify(local_sidebar_index_map)){
+            setSidebarIndexMap(local_sidebar_index_map)
+        }
+        // console.log(sidebar.details)
+        // console.log(local_sidebar_index_map)
+    })
     // console.timeEnd('load_reference_map');
 }
 

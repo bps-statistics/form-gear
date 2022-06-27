@@ -70,6 +70,7 @@ export const [reference, setReference] = createStore<Reference>({
 });
 
 export const [referenceMap, setReferenceMap] = createSignal({})
+export const [sidebarIndexMap, setSidebarIndexMap] = createSignal({})
 
 export const [compEnableMap, setCompEnableMap] = createSignal({})
 export const [compValidMap, setCompValidMap] = createSignal({})

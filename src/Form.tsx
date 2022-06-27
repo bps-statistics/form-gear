@@ -8,6 +8,7 @@ import { preset, setPreset, Preset } from './stores/PresetStore';
 import { response, setResponse, Response } from './stores/ResponseStore';
 import { validation, setValidation, Validation } from './stores/ValidationStore';
 import { reference, setReference } from './stores/ReferenceStore';
+import { sidebarIndexMap, setSidebarIndexMap} from './stores/ReferenceStore';
 import { sidebar, setSidebar } from './stores/SidebarStore';
 import { remark, setRemark, Remark } from './stores/RemarkStore';
 import { note, setNote } from './stores/NoteStore';
@@ -15,7 +16,7 @@ import { principal, setPrincipal } from './stores/PrincipalStore';
 import { locale, setLocale } from './stores/LocaleStore';
 import { summary, setSummary } from './stores/SummaryStore';
 
-import { saveAnswer, runValidation, reference_index_lookup} from "./GlobalFunction";
+import { saveAnswer, runValidation, reference_index_lookup, load_sidebar_index_map} from "./GlobalFunction";
 import { toastInfo } from "./FormInput";
 
 import { referenceHistoryEnable, setReferenceHistoryEnable} from './stores/ReferenceStore';
@@ -254,6 +255,7 @@ const Form: Component<{
   // console.log(reference.details)
   // console.timeEnd('response ');
   // console.timeEnd('');
+  load_sidebar_index_map()
   setReferenceHistoryEnable(true)
 
   const [onMobile, setOnMobile] = createSignal(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
@@ -263,27 +265,49 @@ const Form: Component<{
 
   createEffect(() => {
     setComponents(getComponents(form.activeComponent.dataKey));
-    setSummary({
-      answer: reference.details.filter((element) => {
-        return (element.type > 4)
+    let count_answer= 0;
+    let count_blank = 0;
+    let count_error = 0;
+
+    reference.details.forEach(element => {
+        let enable_parent = true
+        try{
+          let index_parent = JSON.parse(JSON.stringify(element.index)).slice(0, element.index.length - 1).join('-')
+          let index_parent2 = JSON.parse(JSON.stringify(element.index)).slice(0, element.index.length - 2).join('-')
+          if(index_parent in sidebarIndexMap()){
+            enable_parent = enable_parent && sidebarIndexMap()[index_parent]
+          }
+          if(index_parent2 in sidebarIndexMap()){
+            enable_parent = enable_parent && sidebarIndexMap()[index_parent2]
+          }
+        }catch(err){
+
+        }
+        if(enable_parent && ((element.type > 4)
           && (element.enable)
           && (element.answer !== undefined)
           && (element.answer !== '')
-          && (element.answer !== null)
-      }).length,
-      blank: reference.details.filter((element) => {
-        return (element.type > 4)
+          && (element.answer !== null))){
+            count_answer++
+        }
+        if(enable_parent && ((element.type > 4)
           && (element.enable)
           && ((element.answer === undefined || element.answer === '')
             || ((element.type == 21) && element.answer.length == 1)
             || ((element.type == 22) && element.answer.length == 1)
           )
           && !(JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0
-            && element.level > 1)
-      }).length,
-      error: reference.details.filter((element) => {
-        return (element.type > 4 && (element.enable) && element.validationState == 2)
-      }).length,
+            && element.level > 1))){
+              count_blank++
+        }
+        if(enable_parent && (element.type > 4 && (element.enable) && element.validationState == 2)){
+            count_error++
+        }
+    })
+    setSummary({
+      answer: count_answer,
+      blank: count_blank,
+      error: count_error,
       remark: note.details.notes.length
     });
     const [formProps] = useForm();
@@ -318,7 +342,20 @@ const Form: Component<{
     const dataForm = [];
     const dataPrincipal = [];
     reference.details.forEach((element) => {
-      if (
+      let enable_parent = true
+      try{
+        let index_parent = JSON.parse(JSON.stringify(element.index)).slice(0, element.index.length - 1).join('-')
+        let index_parent2 = JSON.parse(JSON.stringify(element.index)).slice(0, element.index.length - 2).join('-')
+        if(index_parent in sidebarIndexMap()){
+          enable_parent = enable_parent && sidebarIndexMap()[index_parent]
+        }
+        if(index_parent2 in sidebarIndexMap()){
+          enable_parent = enable_parent && sidebarIndexMap()[index_parent2]
+        }
+      }catch(err){
+
+      }
+      if ( enable_parent &&
         (element.type > 3)
         && (element.enable)
         && (element.answer !== undefined)
@@ -546,12 +583,23 @@ const Form: Component<{
     let filteredWarning = [];
 
     reference.details.forEach((element, i) => {
+      let enable_parent = true
+      try{
+        let index_parent = JSON.parse(JSON.stringify(element.index)).slice(0, element.index.length - 1).join('-')
+        let index_parent2 = JSON.parse(JSON.stringify(element.index)).slice(0, element.index.length - 2).join('-')
+        if(index_parent in sidebarIndexMap()){
+          enable_parent = enable_parent && sidebarIndexMap()[index_parent]
+        }
+        if(index_parent2 in sidebarIndexMap()){
+          enable_parent = enable_parent && sidebarIndexMap()[index_parent2]
+        }
+      }catch(err){}
       // let sidebarIndex = element.index.splice(-1)
-      if (element.type > 4 && (element.enable) && element.validationState == 2) {
+      if (enable_parent && element.type > 4 && (element.enable) && element.validationState == 2) {
         let sidebarIndex = element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
         filteredError.push({ label: element.label, message: element.validationMessage, sideIndex: sidebarIndex, dataKey: element.dataKey })
       }
-      if (element.type > 4 && (element.enable) && element.validationState == 1) {
+      if (enable_parent && element.type > 4 && (element.enable) && element.validationState == 1) {
         let sidebarIndex = element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
         filteredWarning.push({ label: element.label, message: element.validationMessage, sideIndex: sidebarIndex, dataKey: element.dataKey })
       }
@@ -586,8 +634,19 @@ const Form: Component<{
     let blankCollection = [];
 
     reference.details.forEach((element, i) => {
+      let enable_parent = true
+      try{
+        let index_parent = JSON.parse(JSON.stringify(element.index)).slice(0, element.index.length - 1).join('-')
+        let index_parent2 = JSON.parse(JSON.stringify(element.index)).slice(0, element.index.length - 2).join('-')
+        if(index_parent in sidebarIndexMap()){
+          enable_parent = enable_parent && sidebarIndexMap()[index_parent]
+        }
+        if(index_parent2 in sidebarIndexMap()){
+          enable_parent = enable_parent && sidebarIndexMap()[index_parent2]
+        }
+      }catch(err){}
       // let sidebarIndex = element.index.splice(-1)
-      if ((element.type > 4) && (element.enable) && ((element.answer === undefined || element.answer === '')
+      if (enable_parent && (element.type > 4) && (element.enable) && ((element.answer === undefined || element.answer === '')
         || ((element.type == 21) && element.answer.length == 1) || ((element.type == 22) && element.answer.length == 1))
         && !(JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)) {
 
