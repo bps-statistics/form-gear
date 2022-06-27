@@ -283,7 +283,13 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
                 let sidebarIndexToBeFound = JSON.parse(JSON.stringify(sidebar.details[y].index));
                 sidebarIndexToBeFound.length = looping;
                 if(JSON.stringify(sidebarIndexToBeFound) === JSON.stringify(myIndex)){
-                    updatedSidebar.splice(y+1, 0, newSide);
+                    let indexMe = Number(newSide.index[looping]);
+                    let indexFind = (sidebar.details[y].index[looping] == undefined) ? 0 : Number(sidebar.details[y].index[looping]);
+                    if(indexMe >= indexFind){
+                        updatedSidebar.splice(y+1, 0, newSide);
+                    } else if(indexMe < indexFind){
+                        updatedSidebar.splice(y, 0, newSide);
+                    }
                     loopingState = false;
                     break;
                 }
@@ -477,7 +483,13 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                     let sidebarIndexToBeFound = JSON.parse(JSON.stringify(sidebar.details[y].index));
                     sidebarIndexToBeFound.length = looping;
                     if(JSON.stringify(sidebarIndexToBeFound) === JSON.stringify(myIndex)){
-                        updatedSidebar.splice(y+1, 0, newSide);
+                        let indexMe = Number(newSide.index[looping]);
+                        let indexFind = (sidebar.details[y].index[looping] == undefined) ? 0 : Number(sidebar.details[y].index[looping]);
+                        if(indexMe >= indexFind){
+                            updatedSidebar.splice(y+1, 0, newSide);
+                        } else if(indexMe < indexFind){
+                            updatedSidebar.splice(y, 0, newSide);
+                        }
                         loopingState = false;
                         break;
                     }

@@ -24,6 +24,7 @@
 - Update handling nested questions from numeric 0 value input.
 - Update CheckboxInput default options.
 - Fix nested sourceOption on MultipleSelectInput.
+- Fix sorting sidebar on insert nester child.
 
 
 ---
