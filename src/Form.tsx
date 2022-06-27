@@ -15,6 +15,7 @@ import { note, setNote } from './stores/NoteStore';
 import { principal, setPrincipal } from './stores/PrincipalStore';
 import { locale, setLocale } from './stores/LocaleStore';
 import { summary, setSummary } from './stores/SummaryStore';
+import { useLoaderDispatch } from "./loader/FormLoaderProvider"
 
 import { saveAnswer } from "./GlobalFunction";
 import { toastInfo } from "./FormInput";
@@ -70,6 +71,7 @@ const Form: Component<{
   }
   const [renderGear, setRenderGear] = createSignal('FormGear-'+gearVersion+' 🚀:');
 
+  const { setLoader, removeLoader } = useLoaderDispatch();
   const [prop, setProp] = createSignal(getProp(''));
   const [config, setConfig] = createSignal(getConfig());
   const [form, { setActiveComponent }] = useForm();
@@ -228,6 +230,7 @@ const Form: Component<{
 
   createEffect(() => {
     setComponents(getComponents(form.activeComponent.dataKey));
+    console.log('entah')
     setSummary({
       answer: reference.details.filter((element) => {
         let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
@@ -301,7 +304,9 @@ const Form: Component<{
     const dataForm = [];
     const dataPrincipal = [];
 
-    setEnableFalse();
+    setLoader({});
+    setTimeout(() => setEnableFalse(), 50);
+
     reference.details.forEach((element, index) => {
       if (
         (element.type > 3)
@@ -628,7 +633,8 @@ const Form: Component<{
   }
 
   const revalidateError = (event: MouseEvent) => {    
-    setEnableFalse();
+    setLoader({});
+    setTimeout(() => setEnableFalse(), 50);
     // revalidateQ();
     if (summary.error > 0) {
       showListError(event);
@@ -674,7 +680,8 @@ const Form: Component<{
     if (docState() === 'E') {
       toastInfo(locale.details.language[0].submitInvalid, 3000, "", "bg-pink-600/80");
     } else {      
-      setEnableFalse();
+      setLoader({});
+      setTimeout(() => setEnableFalse(), 50);
       revalidateQ();
       if (summary.error === 0) {
         if (docState() === 'W') {
