@@ -23,7 +23,7 @@ import { createSignal } from "solid-js";
 import semverCompare from "semver-compare";
 import { toastInfo } from "./FormInput";
 
-export const gearVersion = '1.0.1';
+export const gearVersion = '1.0.2';
 export let templateVersion = '0.0.0';
 export let validationVersion = '0.0.0';
 export function FormGear(referenceFetch, templateFetch, presetFetch, responseFetch, validationFetch, remarkFetch, config, uploadHandler, GpsHandler, offlineSearch, onlineSearch, mobileExit, setResponseMobile, setSubmitMobile, openMap) {
