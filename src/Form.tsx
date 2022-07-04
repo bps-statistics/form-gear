@@ -17,7 +17,7 @@ import { locale, setLocale } from './stores/LocaleStore';
 import { summary, setSummary } from './stores/SummaryStore';
 import { useLoaderDispatch } from "./loader/FormLoaderProvider"
 
-import { saveAnswer, setEnableFalse, runValidation, reference_index_lookup} from "./GlobalFunction";
+import { saveAnswer, setEnableFalse, runValidation, referenceIndexLookup, loadSidebarIndexMap} from "./GlobalFunction";
 import { toastInfo } from "./FormInput";
 
 import { referenceHistoryEnable, setReferenceHistoryEnable} from './stores/ReferenceStore';
@@ -221,7 +221,7 @@ const Form: Component<{
       }
 
       if((obj.enable) && obj.sourceOption !== undefined){
-          let sourceOptionObj = reference.details [reference_index_lookup(obj.sourceOption)]
+          let sourceOptionObj = reference.details [referenceIndexLookup(obj.sourceOption)]
           if(obj.answer){
               let x = [];
               obj.answer.forEach(val => {
@@ -231,10 +231,6 @@ const Form: Component<{
                       }
                   })
               })
-              // let sidebarPos = sidebar.details.findIndex((element,index) => {
-              //     let tmpInd = element.components[0].findIndex((e,i) => (e.dataKey == elementSourceOption.dataKey))
-              //     return (tmpInd !== -1) ? true : false
-              // })
               setReference('details', index, 'answer', x);
           }
       }
@@ -257,7 +253,7 @@ const Form: Component<{
   // console.log(reference.details)
   // console.timeEnd('response ');
   // console.timeEnd('');
-  load_sidebar_index_map()
+  loadSidebarIndexMap()
   setReferenceHistoryEnable(true)
 
   const [onMobile, setOnMobile] = createSignal(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
@@ -275,10 +271,12 @@ const Form: Component<{
           && (element.enable)
           && (element.answer !== undefined)
           && (element.answer !== '')
-          && (element.answer !== null))){
-            count_answer++
-        }
-        if(enable_parent && ((element.type > 4)
+          && (element.answer !== null)
+      }).length,
+      blank: reference.details.filter((element) => {
+        let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
+        return enableFalse == -1 
+          && (element.type > 4)
           && (element.enable)
           && ((element.answer === undefined || element.answer === '')
             || ((element.type == 21) && element.answer.length == 1)
@@ -336,11 +334,7 @@ const Form: Component<{
         && (element.answer !== undefined)
         && (element.answer !== '')
         && (element.answer !== null)
-      ) {        
-        // enableShouldTrue.push({
-        //   dataKey: element.dataKey
-        // })
-        // let parentIndex = element.level == 0 ? element.index : element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
+      ) {
         let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
         if (enableFalse == -1){
           dataForm.push({
@@ -537,18 +531,6 @@ const Form: Component<{
     let filteredWarning = [];
 
     reference.details.forEach((element, i) => {
-      let enable_parent = true
-      try{
-        let index_parent = JSON.parse(JSON.stringify(element.index)).slice(0, element.index.length - 1).join('-')
-        let index_parent2 = JSON.parse(JSON.stringify(element.index)).slice(0, element.index.length - 2).join('-')
-        if(index_parent in sidebarIndexMap()){
-          enable_parent = enable_parent && sidebarIndexMap()[index_parent]
-        }
-        if(index_parent2 in sidebarIndexMap()){
-          enable_parent = enable_parent && sidebarIndexMap()[index_parent2]
-        }
-      }catch(err){}
-      // let sidebarIndex = element.index.splice(-1)
       let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
       if (enableFalse == -1){
         if (element.type > 4 && (element.enable) && element.validationState == 2) {
@@ -591,24 +573,15 @@ const Form: Component<{
     let blankCollection = [];
 
     reference.details.forEach((element, i) => {
-      let enable_parent = true
-      try{
-        let index_parent = JSON.parse(JSON.stringify(element.index)).slice(0, element.index.length - 1).join('-')
-        let index_parent2 = JSON.parse(JSON.stringify(element.index)).slice(0, element.index.length - 2).join('-')
-        if(index_parent in sidebarIndexMap()){
-          enable_parent = enable_parent && sidebarIndexMap()[index_parent]
-        }
-        if(index_parent2 in sidebarIndexMap()){
-          enable_parent = enable_parent && sidebarIndexMap()[index_parent2]
-        }
-      }catch(err){}
-      // let sidebarIndex = element.index.splice(-1)
-      if (enable_parent && (element.type > 4) && (element.enable) && ((element.answer === undefined || element.answer === '')
-        || ((element.type == 21) && element.answer.length == 1) || ((element.type == 22) && element.answer.length == 1))
-        && !(JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)) {
+      let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
+      if (enableFalse == -1){
+        if ((element.type > 4) && (element.enable) && ((element.answer === undefined || element.answer === '')
+          || ((element.type == 21) && element.answer.length == 1) || ((element.type == 22) && element.answer.length == 1))
+          && !(JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)) {
 
-        let sidebarIndex = element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
-        blankCollection.push({ label: element.label, sideIndex: sidebarIndex, dataKey: element.dataKey })
+          let sidebarIndex = element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
+          blankCollection.push({ label: element.label, sideIndex: sidebarIndex, dataKey: element.dataKey })
+        }
       }
     });
 

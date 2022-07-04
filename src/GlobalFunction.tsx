@@ -2,8 +2,8 @@ import { reference, setReference, setReferenceEnableFalse} from './stores/Refere
 import { referenceMap, setReferenceMap} from './stores/ReferenceStore';
 import { sidebarIndexMap, setSidebarIndexMap} from './stores/ReferenceStore';
 import { referenceHistoryEnable, setReferenceHistoryEnable} from './stores/ReferenceStore';
-import { referenceHistory, setReferenceeHistory} from './stores/ReferenceStore';
-import { sideBareHistory, setSideBareHistory} from './stores/ReferenceStore';
+import { referenceHistory, setReferenceHistory} from './stores/ReferenceStore';
+import { sidebarHistory, setSidebarHistory} from './stores/ReferenceStore';
 import { compEnableMap, setCompEnableMap} from './stores/ReferenceStore';
 import { compValidMap, setCompValidMap} from './stores/ReferenceStore';
 import { compSourceOptionMap, setCompSourceOptionMap} from './stores/ReferenceStore';
@@ -22,8 +22,8 @@ import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
 
 import Toastify from 'toastify-js'
 
-export const default_value_enable = true
-export const default_validation_enable = true
+export const default_eval_enable = true
+export const default_eval_validation = true
 
 export const getValue = (dataKey: string) => {
     let tmpDataKey = dataKey.split('@');
@@ -46,7 +46,7 @@ export const getValue = (dataKey: string) => {
         }
     }
 
-    const componentIndex = reference_index_lookup(dataKey)
+    const componentIndex = referenceIndexLookup(dataKey)
     let answer = (componentIndex !== -1 && (reference.details[componentIndex].answer) && (reference.details[componentIndex].enable)) ? reference.details[componentIndex].answer : ''
     return answer;
 }
@@ -57,7 +57,7 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
             return eval(eval_text)
         }catch(e){
             console.log(e)
-            return default_value_enable
+            return default_eval_enable
         }
     }
 
@@ -220,7 +220,7 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
 }
 
 export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference_index_lookup(dataKey);
+    const refPosition = referenceIndexLookup(dataKey);
     let defaultRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
     
     let components = [];
@@ -266,7 +266,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
     })
     addHistory('insert_ref_detail', null, refPosition, null, history)
     batch(() => {
-        load_reference_map(updatedRef)
+        loadReferenceMap(updatedRef)
         setReference('details',updatedRef);
     })
     
@@ -345,12 +345,12 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
             }
         }
     }
-    addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
+    addHistory('update_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
     setSidebar('details',updatedSidebar);
 }
 
 export const deleteSidebarArray = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference_index_lookup(dataKey);
+    const refPosition = referenceIndexLookup(dataKey);
     let updatedRef = JSON.parse(JSON.stringify(reference.details));
     let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
 
@@ -376,15 +376,15 @@ export const deleteSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
     }
     addHistory('delete_ref_detail', null, refPosition, null, history)
     batch(() => {
-        load_reference_map(updatedRef)
+        loadReferenceMap(updatedRef)
         setReference('details',updatedRef);
     })
-    addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
+    addHistory('update_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
     setSidebar('details',updatedSidebar);
 }
 
 export const changeSidebarArray = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference_index_lookup(dataKey);
+    const refPosition = referenceIndexLookup(dataKey);
     let now = [];
     let nestedPositionNow = -1;
     
@@ -429,7 +429,7 @@ export const changeSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
             
             newSidebarComp.description = updatedSidebarDescription;
             newSidebarComp.components[0] = editedComp;
-            addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
+            addHistory('update_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
             setSidebar('details', sidebarPosition, newSidebarComp);
         }
     } else {
@@ -447,7 +447,7 @@ export const changeSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
 }
 
 export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference_index_lookup(dataKey);
+    const refPosition = referenceIndexLookup(dataKey);
     let defaultRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
     let components = [];
     let now = (Number(beforeAnswer)+1);
@@ -494,7 +494,7 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
         })
         addHistory('insert_ref_detail', null, refPosition, null, history)
         batch(() => {
-            load_reference_map(updatedRef)
+            loadReferenceMap(updatedRef)
             setReference('details',updatedRef);
         })
         components.forEach(newComp =>{
@@ -572,14 +572,14 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                 }
             }
         }
-        addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
+        addHistory('update_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
         setSidebar('details',updatedSidebar);
     }
     if(now < answer) insertSidebarNumber(dataKey, answer, now, sidebarPosition);    
 }
 
 export const deleteSidebarNumber = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference_index_lookup(dataKey);
+    const refPosition = referenceIndexLookup(dataKey);
     let updatedRef = JSON.parse(JSON.stringify(reference.details));
     let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
 
@@ -605,14 +605,14 @@ export const deleteSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
     }
     addHistory('delete_ref_detail', null, refPosition, null, history)
     setReference('details',updatedRef);
-    addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
+    addHistory('update_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
     setSidebar('details',updatedSidebar);
     let now = beforeAnswer-1;
     
     if(now > answer) {
         deleteSidebarNumber(dataKey, answer, now, sidebarPosition);
     }else{
-        load_reference_map()
+        loadReferenceMap()
     } 
 }
 
@@ -626,7 +626,7 @@ export const runVariableComponent = (dataKey: string, activeComponentPosition: n
     }
     const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
     // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
-    const refPosition = reference_index_lookup(dataKey)
+    const refPosition = referenceIndexLookup(dataKey)
     if(refPosition !== -1){
         let updatedRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
         // let answerVariable = eval(updatedRef.expression);
@@ -661,7 +661,7 @@ export const runEnabling = (dataKey: string, activeComponentPosition: number, pr
             return eval(eval_text)
         }catch(e){
             console.log(e)
-            return default_value_enable
+            return default_eval_enable
         }
     }
 
@@ -694,7 +694,7 @@ export const runValidation = (dataKey:string, updatedRef:any, activeComponentPos
         let biggest = 0;
         for(let i in updatedRef.validations){
             // let result = eval(updatedRef.validations[i].test);
-            let result = default_validation_enable;
+            let result = default_eval_validation;
             try{
                 result = eval(updatedRef.validations[i].test)
             }catch(e){
@@ -754,11 +754,11 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
             return eval(eval_text)
         }catch(e){
             console.log(e)
-            return default_value_enable
+            return default_eval_enable
         }
     }
 
-    let refPosition = reference_index_lookup(dataKey)
+    let refPosition = referenceIndexLookup(dataKey)
 
     if(attributeParam === 'answer' || attributeParam === 'enable'){
         
@@ -820,7 +820,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 //     let sidePosition = sidebar.details.findIndex(objSide => objSide.dataKey === sidebarEnable.dataKey);
                 //     let enableSideBefore = sidebar.details[sidePosition]['enable'];
                 //     let enableSide = eval_enable(sidebarEnable.enableCondition);
-                //     addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
+                //     addHistory('update_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
                 //     setSidebar('details',sidePosition,'enable',enableSide);
                 //     let updatedRef = JSON.parse(JSON.stringify(reference.details));
                 //     let tmpVarComp = [];
@@ -858,12 +858,12 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 //         })
                 //     }
                 // })
-                load_sidebar_index_map()
+                loadSidebarIndexMap()
             }
             const hasComponentEnable = get_CompEnable(dataKey)
             if(hasComponentEnable.length > 0) {//this datakey at least appear in minimum 1 enable
                 hasComponentEnable.forEach(elementEnableDatakey => {
-                    let element_pos = reference_index_lookup(elementEnableDatakey)
+                    let element_pos = referenceIndexLookup(elementEnableDatakey)
                     if(element_pos !== -1){
                         let elementEnable = reference.details[element_pos]
                         runEnabling(elementEnable.dataKey, activeComponentPosition, prop, elementEnable.enableCondition);
@@ -878,7 +878,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 const hasComponentValidation = get_CompValid(dataKey)
                 if(hasComponentValidation.length > 0) {//at least this dataKey appears in minimum 1 validation
                     hasComponentValidation.forEach(element_data_key => {
-                        let element_pos = reference_index_lookup(element_data_key)
+                        let element_pos = referenceIndexLookup(element_data_key)
                         if(element_pos !== -1){
                             let elementVal = reference.details[element_pos]
                             let editedDataKey = elementVal.dataKey.split('@');
@@ -897,10 +897,10 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 if(dataKey in compSourceOptionMap()){
                     const hasSourceOption_data_key = compSourceOptionMap()[dataKey]
                     hasSourceOption_data_key.forEach(element_data_key => {
-                        let list_key = reference_index_lookup(element_data_key,1)
+                        let list_key = referenceIndexLookup(element_data_key,1)
                         if(list_key !== -1){
                             list_key.forEach(element_key => {
-                                let element_pos = reference_index_lookup(element_key)
+                                let element_pos = referenceIndexLookup(element_key)
                                 if(element_pos !== -1){
                                     let obj = reference.details[element_pos]
                                     if(obj.enable){
@@ -944,7 +944,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
             const hasComponentUsing = [];
             if(dataKey in compSourceQuestionMap()){
                 compSourceQuestionMap()[dataKey].forEach(element_data_key => {
-                    let element_pos = reference_index_lookup(element_data_key)
+                    let element_pos = referenceIndexLookup(element_data_key)
                     if(element_pos !== -1){
                         let elementSource = reference.details[element_pos]
                         hasComponentUsing.push(elementSource)
@@ -1011,7 +1011,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 }
                 
                 if(referenceHistoryEnable()){
-                    load_sidebar_index_map()
+                    loadSidebarIndexMap()
                 }
             }
         }
@@ -1025,7 +1025,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
     }
 }
 
-export function reference_index_lookup(datakey, index_lookup = 0){
+export function referenceIndexLookup(datakey, index_lookup = 0){
     try{
         if(datakey in referenceMap()){
             try{
@@ -1036,7 +1036,7 @@ export function reference_index_lookup(datakey, index_lookup = 0){
                         return referenceMap()[datakey][1];
                     }
                 }else{
-                    load_reference_map()
+                    loadReferenceMap()
                     if(datakey in referenceMap()){
                         if(index_lookup == 0){
                             return referenceMap()[datakey][0][0];
@@ -1048,7 +1048,7 @@ export function reference_index_lookup(datakey, index_lookup = 0){
                     }
                 }
             }catch(e){
-                load_reference_map()
+                loadReferenceMap()
                 if(datakey in referenceMap()){
                     if(index_lookup == 0){
                         return referenceMap()[datakey][0][0];
@@ -1068,80 +1068,78 @@ export function reference_index_lookup(datakey, index_lookup = 0){
 }
 
 // laad_reference_map, and add map for dependency for validasion, enable, componentVar, sourceOption and sourceQuestion
-export function load_reference_map_pertama(reference_local = null){
-    let compEnableMap_lokal = {}
-    let compValidMap_lokal = {}
-    let compSourceOption_lokal = {}
-    let compVar_lokal = {}
-    let compSourceQuestion_lokal = {}
+export function initReferenceMap(reference_local = null){
+    let compEnableMap_local = {}
+    let compValidMap_local = {}
+    let compSourceOption_local = {}
+    let compVar_local = {}
+    let compSourceQuestion_local = {}
 
-    const loopTemplate_Lokal = (element) => {
+    const loopTemplate = (element) => {
         let el_len = element.length
         for (let i = 0; i < el_len; i++) {
             let obj = element[i]
             if(obj.componentEnable !== undefined){
                 obj.componentEnable.forEach(item => {
                     let itemKeyBased = item.split('@')[0].split('#')[0];
-                    if(!(itemKeyBased in compEnableMap_lokal)){
-                        compEnableMap_lokal[itemKeyBased] = {}
+                    if(!(itemKeyBased in compEnableMap_local)){
+                        compEnableMap_local[itemKeyBased] = {}
                     }
-                    if(!(item in compEnableMap_lokal[itemKeyBased])){
-                        compEnableMap_lokal[itemKeyBased][item] = []
+                    if(!(item in compEnableMap_local[itemKeyBased])){
+                        compEnableMap_local[itemKeyBased][item] = []
                     }
-                    if(!compEnableMap_lokal[itemKeyBased][item].includes(obj.dataKey)){
-                        compEnableMap_lokal[itemKeyBased][item].push(obj.dataKey)
+                    if(!compEnableMap_local[itemKeyBased][item].includes(obj.dataKey)){
+                        compEnableMap_local[itemKeyBased][item].push(obj.dataKey)
                     }
                 })
             }
             if(obj.sourceOption !== undefined){
-                if(!(obj.sourceOption.split('@')[0] in compSourceOption_lokal)){
-                    compSourceOption_lokal[obj.sourceOption.split('@')[0]] = []
+                if(!(obj.sourceOption.split('@')[0] in compSourceOption_local)){
+                    compSourceOption_local[obj.sourceOption.split('@')[0]] = []
                 }
-                if(!compSourceOption_lokal[obj.sourceOption.split('@')[0]].includes(obj.dataKey)){
-                    compSourceOption_lokal[obj.sourceOption.split('@')[0]].push(obj.dataKey)
+                if(!compSourceOption_local[obj.sourceOption.split('@')[0]].includes(obj.dataKey)){
+                    compSourceOption_local[obj.sourceOption.split('@')[0]].push(obj.dataKey)
                 }
             }
             if(obj.componentVar !== undefined && obj.type === 4){
                 obj.componentVar.forEach(item => {
-                    if(!(item in compVar_lokal)){
-                        compVar_lokal[item] = []
+                    if(!(item in compVar_local)){
+                        compVar_local[item] = []
                     }
-                    if(!compVar_lokal[item].includes(obj.dataKey)){
-                        compVar_lokal[item].push(obj.dataKey)
+                    if(!compVar_local[item].includes(obj.dataKey)){
+                        compVar_local[item].push(obj.dataKey)
                     }
                 })
             }
             if(obj.sourceQuestion !== undefined && obj.type === 2){
-                if(!(obj.sourceQuestion in compSourceQuestion_lokal)){
-                    compSourceQuestion_lokal[obj.sourceQuestion] = []
+                if(!(obj.sourceQuestion in compSourceQuestion_local)){
+                    compSourceQuestion_local[obj.sourceQuestion] = []
                 }
-                if(!compSourceQuestion_lokal[obj.sourceQuestion].includes(obj.dataKey)){
-                    compSourceQuestion_lokal[obj.sourceQuestion].push(obj.dataKey)
+                if(!compSourceQuestion_local[obj.sourceQuestion].includes(obj.dataKey)){
+                    compSourceQuestion_local[obj.sourceQuestion].push(obj.dataKey)
                 }
             }
-          element[i].components && element[i].components.forEach((element, index) => loopTemplate_Lokal(element))
+          element[i].components && element[i].components.forEach((element, index) => loopTemplate(element))
         }
-      }
-      template.details.components.forEach((element, index) => loopTemplate_Lokal(element));
-
-
+    }
+    template.details.components.forEach((element, index) => loopTemplate(element));
 
     for(let index=0; index<validation.details.testFunctions.length; index++){
         let obj = validation.details.testFunctions[index]
         if(obj.componentValidation !== undefined){
             obj.componentValidation.forEach(item => {
-                if(!(item in compValidMap_lokal)){
-                    compValidMap_lokal[item] = []
+                if(!(item in compValidMap_local)){
+                    compValidMap_local[item] = []
                 }
-                compValidMap_lokal[item].push(obj.dataKey)
+                compValidMap_local[item].push(obj.dataKey)
             })
         }
     }
-    setCompEnableMap(compEnableMap_lokal)
-    setCompValidMap(compValidMap_lokal)
-    setCompSourceOptionMap(compSourceOption_lokal)
-    setCompVarMap(compVar_lokal)
-    setCompSourceQuestionMap(compSourceQuestion_lokal)
+    setCompEnableMap(compEnableMap_local)
+    setCompValidMap(compValidMap_local)
+    setCompSourceOptionMap(compSourceOption_local)
+    setCompVarMap(compVar_local)
+    setCompSourceQuestionMap(compSourceQuestion_local)
 
     // console.log(compEnableMap())
     // console.log(compValidMap())
@@ -1152,40 +1150,40 @@ export function load_reference_map_pertama(reference_local = null){
     if(reference_local === null){
         reference_local = JSON.parse(JSON.stringify(reference.details))
     }
-    load_reference_map(reference_local)
+    loadReferenceMap(reference_local)
 }
 
 //make referenceMap, referenceMap is index, etc of component by datakey save as dictionary
-export function load_reference_map(reference_local = null){
-    // console.time('load_reference_map');
+export function loadReferenceMap(reference_local = null){
+    // console.time('loadReferenceMap');
     if(reference_local === null){
         reference_local = JSON.parse(JSON.stringify(reference.details))
     }
-    let reference_map_lokal = {}
+    let reference_map_local = {}
     for (let index__ = 0; index__ < reference_local.length; index__ ++){
         let fullDataKey = reference_local[index__].dataKey
-        if (!(fullDataKey in reference_map_lokal)){
-            reference_map_lokal[fullDataKey] = [[],[]]
+        if (!(fullDataKey in reference_map_local)){
+            reference_map_local[fullDataKey] = [[],[]]
         }
-        reference_map_lokal[fullDataKey][0].push(index__)
-        reference_map_lokal[fullDataKey][1].push(fullDataKey)
+        reference_map_local[fullDataKey][0].push(index__)
+        reference_map_local[fullDataKey][1].push(fullDataKey)
     
         let splitDataKey = fullDataKey.split('#');
         if(splitDataKey.length > 1){
-            if (!(splitDataKey[0] in reference_map_lokal)){
-                reference_map_lokal[splitDataKey[0]] = [[],[]]
+            if (!(splitDataKey[0] in reference_map_local)){
+                reference_map_local[splitDataKey[0]] = [[],[]]
             }
-            reference_map_lokal[splitDataKey[0]][1].push(fullDataKey)
+            reference_map_local[splitDataKey[0]][1].push(fullDataKey)
         }
     }
-    // console.log(reference_map_lokal)
-    setReferenceMap(reference_map_lokal)
-    // console.timeEnd('load_reference_map');
+    // console.log(reference_map_local)
+    setReferenceMap(reference_map_local)
+    // console.timeEnd('loadReferenceMap');
 }
 
 //make referenceMap, referenceMap is index, etc of component by datakey save as dictionary
-export function load_sidebar_index_map(){
-    // console.time('load_reference_map');
+export function loadSidebarIndexMap(){
+    // console.time('loadReferenceMap');
     let local_sidebar_index_map = {};
     let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details))
 
@@ -1229,7 +1227,7 @@ export function load_sidebar_index_map(){
         // console.log(sidebar.details)
         // console.log(local_sidebar_index_map)
     })
-    // console.timeEnd('load_reference_map');
+    // console.timeEnd('loadReferenceMap');
 }
 
 export function get_CompEnable(dataKey){
@@ -1240,7 +1238,7 @@ export function get_CompEnable(dataKey){
         for (let key_comp in (compEnableMap()[itemKeyBased])) {
             // console.log('Format : '+key_comp)
             compEnableMap()[itemKeyBased][key_comp].forEach(element_item => {
-                let list_key = reference_index_lookup(element_item, 1)
+                let list_key = referenceIndexLookup(element_item, 1)
                 if(list_key !== -1 && list_key){
                     list_key.forEach(objChild => {
                         let newDataKey = '';
@@ -1289,7 +1287,7 @@ export function get_CompValid(dataKey){
     if(itemKeyBased in compValidMap()){
         if(compValidMap()[itemKeyBased].length > 0){
             compValidMap()[itemKeyBased].forEach(item => {
-                let list_key = reference_index_lookup(item, 1)
+                let list_key = referenceIndexLookup(item, 1)
                 if(list_key !== -1 && list_key){
                     returnDataKey = returnDataKey.concat(list_key)
                 }
@@ -1305,7 +1303,7 @@ export function get_CompVar(dataKey){
     if(itemKeyBased in compVarMap()){
         if(compVarMap()[itemKeyBased].length > 0){
             compVarMap()[itemKeyBased].forEach(item => {
-                let list_key = reference_index_lookup(item, 1)
+                let list_key = referenceIndexLookup(item, 1)
                 if(list_key !== -1 && list_key){
                     returnDataKey = returnDataKey.concat(list_key)
                 }
@@ -1319,12 +1317,12 @@ export function addHistory(type, datakey, position, attributeParam, data){
     if(!referenceHistoryEnable()){
         return
     }
-    if(type === "change_sidebar"){
-        if(sideBareHistory().length === 0){
-            setSideBareHistory(data)
+    if(type === "update_sidebar"){
+        if(sidebarHistory().length === 0){
+            setSidebarHistory(data)
         }
     }else{
-        setReferenceeHistory([...referenceHistory(), { 'type': type, 'datakey': datakey, 'position': position, 'attributeParam' : attributeParam, 'data': data }]);
+        setReferenceHistory([...referenceHistory(), { 'type': type, 'datakey': datakey, 'position': position, 'attributeParam' : attributeParam, 'data': data }]);
     }
 }
 
@@ -1338,11 +1336,11 @@ export function reloadDataFromHistory(){
         let data = referenceHistory()[index_history]['data']
         
         if(type === "insert_ref_detail"){
-            for(let index_lokal = data.length - 1; index_lokal >= 0; index_lokal --){
-                let item_post = data[index_lokal]['pos']
-                if(detail_local[data[index_lokal]['pos']].dataKey !== data[index_lokal]['data']){
+            for(let index_local = data.length - 1; index_local >= 0; index_local --){
+                let item_post = data[index_local]['pos']
+                if(detail_local[data[index_local]['pos']].dataKey !== data[index_local]['data']){
                     let refPostion = detail_local.findIndex((element) => {
-                        element.dataKey === data[index_lokal]['data']
+                        element.dataKey === data[index_local]['data']
                     })
                     item_post = refPostion
                 }
@@ -1351,9 +1349,9 @@ export function reloadDataFromHistory(){
                 }
             }
         }else if(type === "delete_ref_detail"){
-            for(let index_lokal = data.length - 1; index_lokal >= 0; index_lokal --){
-                let item_post = data[index_lokal]['pos']
-                detail_local.splice(item_post, 0, JSON.parse(JSON.stringify(data[index_lokal]['data'])))
+            for(let index_local = data.length - 1; index_local >= 0; index_local --){
+                let item_post = data[index_local]['pos']
+                detail_local.splice(item_post, 0, JSON.parse(JSON.stringify(data[index_local]['data'])))
             }
         }else if(type === 'saveAnswer'){
             if(detail_local[position].dataKey !== datakey){
@@ -1374,10 +1372,10 @@ export function reloadDataFromHistory(){
             }
         }
     }
-    load_reference_map(detail_local)
+    loadReferenceMap(detail_local)
     setReference('details', detail_local)
-    if(sideBareHistory().length > 0){
-        setSidebar('details',JSON.parse(JSON.stringify(sideBareHistory())));
+    if(sidebarHistory().length > 0){
+        setSidebar('details',JSON.parse(JSON.stringify(sidebarHistory())));
     }
     Toastify({
         text: 'Failed to save data !',

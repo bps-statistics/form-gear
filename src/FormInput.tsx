@@ -21,8 +21,8 @@ import Toastify from 'toastify-js'
 
 import { getValue, saveAnswer , setEnableFalse, reloadDataFromHistory} from './GlobalFunction'
 
-import { setReferenceeHistory} from './stores/ReferenceStore';
-import { setSideBareHistory} from './stores/ReferenceStore';
+import { setReferenceHistory} from './stores/ReferenceStore';
+import { setSidebarHistory} from './stores/ReferenceStore';
 
 export const getEnable = (dataKey: string) => {
   const componentIndex = reference.details.findIndex(obj => obj.dataKey === dataKey);
@@ -151,15 +151,15 @@ const FormInput: FormComponentBase = props => {
     setLoader({});
     setTimeout(() => {
       try{
-        setReferenceeHistory([])
-        setSideBareHistory([])
+        setReferenceHistory([])
+        setSidebarHistory([])
         saveAnswer(props.component.dataKey, 'answer', value, form.activeComponent.position, {'clientMode': form.formConfig.clientMode,'baseUrl': form.formConfig.baseUrl})
       }catch(e){
         console.log(e)
         reloadDataFromHistory()
       }finally{
-        setReferenceeHistory([])
-        setSideBareHistory([])
+        setReferenceHistory([])
+        setSidebarHistory([])
       }
     }, 50);
   }

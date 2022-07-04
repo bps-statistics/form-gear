@@ -79,6 +79,6 @@ export const [compVarMap, setCompVarMap] = createSignal({})
 export const [compSourceQuestionMap, setCompSourceQuestionMap] = createSignal({})
 
 export const [referenceHistoryEnable, setReferenceHistoryEnable] = createSignal(false)
-export const [referenceHistory, setReferenceeHistory] = createSignal([])
-export const [sideBareHistory, setSideBareHistory] = createSignal([])
+export const [referenceHistory, setReferenceHistory] = createSignal([])
+export const [sidebarHistory, setSidebarHistory] = createSignal([])
 export const [referenceEnableFalse, setReferenceEnableFalse] = createSignal([])

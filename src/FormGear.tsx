@@ -23,7 +23,7 @@ import { createSignal } from "solid-js";
 import semverCompare from "semver-compare";
 import { toastInfo } from "./FormInput";
 
-import { load_reference_map_pertama } from "./GlobalFunction";
+import { initReferenceMap } from "./GlobalFunction";
 
 export const gearVersion = '1.0.2';
 export let templateVersion = '0.0.0';
@@ -90,7 +90,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
     if( gearVersionState == 0 && templateVersionState == 0 && validationVersionState == 0 && referenceLen > 0 && sidebarLen >0 ){
       console.log('Reuse reference ♻️')
       setReference(referenceFetch)
-      load_reference_map_pertama()
+      initReferenceMap()
       setSidebar('details',referenceFetch.sidebar)
       runAll = 1;
       
@@ -423,7 +423,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
             }
           }
           
-          load_reference_map_pertama(referenceList)
+          initReferenceMap(referenceList)
           setReference('details', referenceList)
           setSidebar('details', sidebarList)
 
