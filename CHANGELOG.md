@@ -1,8 +1,18 @@
 # Changelog
 
+## FormGear | Ver. 1.0.3
+
+> July 04, 2022
+
+### Changed
+- Redeploy setEnabeleFalse on value change to after saving answer
+
+---
+
+
 ## FormGear | Ver. 1.0.2
 
-> June 24, 2022
+> June 27, 2022
 
 ### Added
 - Add Timezone and GMT attribute in principal, resonse, and remark output.

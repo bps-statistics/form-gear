@@ -17,7 +17,7 @@ import { locale, setLocale } from './stores/LocaleStore';
 import { summary, setSummary } from './stores/SummaryStore';
 import { useLoaderDispatch } from "./loader/FormLoaderProvider"
 
-import { saveAnswer } from "./GlobalFunction";
+import { saveAnswer, setEnableFalse } from "./GlobalFunction";
 import { toastInfo } from "./FormInput";
 
 import dayjs from 'dayjs';
@@ -284,20 +284,6 @@ const Form: Component<{
   const sidebarCollapse = (event: MouseEvent) => {
     var sidebar = document.querySelector(".sidebar-span");
     sidebar.classList.toggle("-translate-x-full");
-  }
-
-  const setEnableFalse = () =>{    
-    const indexEnableFalse = [];
-    setReferenceEnableFalse([]);
-    reference.details.forEach((element) => {
-      if( (element.type < 3) && !(element.enable) ) {
-        indexEnableFalse.push({
-          parentIndex: element.index,
-        })
-      };
-    })
-    const indexEnableFalse_unique = indexEnableFalse.filter((object,index) => index === indexEnableFalse.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object))); 
-    setReferenceEnableFalse([...indexEnableFalse_unique]);
   }
 
   const setData = () => {

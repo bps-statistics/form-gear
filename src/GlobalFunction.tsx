@@ -1,4 +1,4 @@
-import { reference, setReference} from './stores/ReferenceStore';
+import { reference, setReference, setReferenceEnableFalse} from './stores/ReferenceStore';
 import { validation, setValidation} from './stores/ValidationStore';
 import { sidebar, setSidebar} from './stores/SidebarStore';
 import { preset, setPreset, Preset } from './stores/PresetStore';
@@ -633,6 +633,20 @@ export const runValidation = (dataKey:string, updatedRef:any, activeComponentPos
     saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null);
 }
 
+export const setEnableFalse = () =>{    
+    const indexEnableFalse = [];
+    setReferenceEnableFalse([]);
+    reference.details.forEach((element) => {
+      if( (element.type < 3) && !(element.enable) ) {
+        indexEnableFalse.push({
+          parentIndex: element.index,
+        })
+      };
+    })
+    const indexEnableFalse_unique = indexEnableFalse.filter((object,index) => index === indexEnableFalse.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object))); 
+    setReferenceEnableFalse([...indexEnableFalse_unique]);
+}
+
 export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, activeComponentPosition: number, prop:any | null) => {
     const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
     if(attributeParam === 'answer' || attributeParam === 'enable'){
@@ -838,62 +852,64 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
             if(hasComponentUsing.length > 0) {//this dataKey is used as a source in Nested at minimum 1 component
                 if(reference.details[refPosition].type === 4) beforeAnswer = [];
                 if(typeof answer !== 'boolean') {
-                console.time('Nested 🚀');
-                hasComponentUsing.forEach(element => {
-                    if(typeof answer === 'number' || typeof answer === 'string'){
-                        beforeAnswer = (beforeAnswer === undefined) ? 0 : beforeAnswer;
-                        if(Number(answer) > Number(beforeAnswer)){
-                            insertSidebarNumber(element.dataKey, answer, beforeAnswer, activeComponentPosition)
-                        } else if(Number(answer) < Number(beforeAnswer)){
-                            deleteSidebarNumber(element.dataKey, answer, beforeAnswer, activeComponentPosition)
-                        };
-                    } else if(typeof answer === 'object'){
-                        beforeAnswer = (beforeAnswer === undefined) ? [] : beforeAnswer;
-                        answer = JSON.parse(JSON.stringify(answer));
-                        beforeAnswer = JSON.parse(JSON.stringify(beforeAnswer));
-                        
-                        if(answer.length > 0){
-                            let tmp_index = answer.findIndex(obj => Number(obj.value) === 0);
-                            if(tmp_index !== -1){
-                                let tmp_label = answer[tmp_index].label.split('#');
-                                if(tmp_label[1]) answer.splice(tmp_index, 1);
-                            }
-                        }
-                        if(beforeAnswer.length > 0){
-                            let tmp_index = beforeAnswer.findIndex(obj => Number(obj.value) === 0);
-                            if(tmp_index !== -1){
-                                let tmp_label = beforeAnswer[tmp_index].label.split('#');
-                                if(tmp_label[1]) beforeAnswer.splice(tmp_index, 1);
-                            }
-                        }
-                        let answerLength = answer.length;
-                        let beforeAnswerLength = beforeAnswer.length;
-                        if(answerLength > beforeAnswerLength){
-                            answer.forEach(componentAnswer => {
-                                let checked = element.dataKey+'#'+Number(componentAnswer.value);
-                                if(sidebar.details.findIndex(obj => obj.dataKey === checked) === -1){
-                                    insertSidebarArray(element.dataKey, componentAnswer, [], activeComponentPosition);
+                    console.time('Nested 🚀');
+                    hasComponentUsing.forEach(element => {
+                        if(typeof answer === 'number' || typeof answer === 'string'){
+                            beforeAnswer = (beforeAnswer === undefined) ? 0 : beforeAnswer;
+                            if(Number(answer) > Number(beforeAnswer)){
+                                insertSidebarNumber(element.dataKey, answer, beforeAnswer, activeComponentPosition)
+                            } else if(Number(answer) < Number(beforeAnswer)){
+                                deleteSidebarNumber(element.dataKey, answer, beforeAnswer, activeComponentPosition)
+                            };
+                        } else if(typeof answer === 'object'){
+                            beforeAnswer = (beforeAnswer === undefined) ? [] : beforeAnswer;
+                            answer = JSON.parse(JSON.stringify(answer));
+                            beforeAnswer = JSON.parse(JSON.stringify(beforeAnswer));
+                            
+                            if(answer.length > 0){
+                                let tmp_index = answer.findIndex(obj => Number(obj.value) === 0);
+                                if(tmp_index !== -1){
+                                    let tmp_label = answer[tmp_index].label.split('#');
+                                    if(tmp_label[1]) answer.splice(tmp_index, 1);
                                 }
-                            });
-                        } else if(answerLength < beforeAnswerLength){
-                            if(answer.length > 0) {
-                                beforeAnswer.forEach(component => {
-                                    if(answer.findIndex(obj => Number(obj.value) === Number(component.value)) === -1) {
-                                        deleteSidebarArray(element.dataKey, [], component, activeComponentPosition);
-                                    }
-                                })
-                            } else {
-                                deleteSidebarArray(element.dataKey, [], beforeAnswer[0], activeComponentPosition);
                             }
-                        } else if(answerLength === beforeAnswerLength){
-                            answerLength > 0 && changeSidebarArray(element.dataKey, answer, beforeAnswer, activeComponentPosition);
+                            if(beforeAnswer.length > 0){
+                                let tmp_index = beforeAnswer.findIndex(obj => Number(obj.value) === 0);
+                                if(tmp_index !== -1){
+                                    let tmp_label = beforeAnswer[tmp_index].label.split('#');
+                                    if(tmp_label[1]) beforeAnswer.splice(tmp_index, 1);
+                                }
+                            }
+                            let answerLength = answer.length;
+                            let beforeAnswerLength = beforeAnswer.length;
+                            if(answerLength > beforeAnswerLength){
+                                answer.forEach(componentAnswer => {
+                                    let checked = element.dataKey+'#'+Number(componentAnswer.value);
+                                    if(sidebar.details.findIndex(obj => obj.dataKey === checked) === -1){
+                                        insertSidebarArray(element.dataKey, componentAnswer, [], activeComponentPosition);
+                                    }
+                                });
+                            } else if(answerLength < beforeAnswerLength){
+                                if(answer.length > 0) {
+                                    beforeAnswer.forEach(component => {
+                                        if(answer.findIndex(obj => Number(obj.value) === Number(component.value)) === -1) {
+                                            deleteSidebarArray(element.dataKey, [], component, activeComponentPosition);
+                                        }
+                                    })
+                                } else {
+                                    deleteSidebarArray(element.dataKey, [], beforeAnswer[0], activeComponentPosition);
+                                }
+                            } else if(answerLength === beforeAnswerLength){
+                                answerLength > 0 && changeSidebarArray(element.dataKey, answer, beforeAnswer, activeComponentPosition);
+                            }
                         }
-                    }
-                });
-                console.timeEnd('Nested 🚀');
-            }
+                    });
+                    console.timeEnd('Nested 🚀');
+                }
             }
         }
+        
+        setEnableFalse();
     } else if(attributeParam === 'validate'){
         setReference('details', refPosition, answer);
     }
