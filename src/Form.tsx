@@ -17,7 +17,7 @@ import { locale, setLocale } from './stores/LocaleStore';
 import { summary, setSummary } from './stores/SummaryStore';
 import { useLoaderDispatch } from "./loader/FormLoaderProvider"
 
-import { saveAnswer, setEnableFalse, runValidation, referenceIndexLookup, loadSidebarIndexMap} from "./GlobalFunction";
+import { saveAnswer, setEnableFalse, runValidation, referenceIndexLookup} from "./GlobalFunction";
 import { toastInfo } from "./FormInput";
 
 import { referenceHistoryEnable, setReferenceHistoryEnable} from './stores/ReferenceStore';
@@ -253,7 +253,7 @@ const Form: Component<{
   // console.log(reference.details)
   // console.timeEnd('response ');
   // console.timeEnd('');
-  loadSidebarIndexMap()
+  // loadSidebarIndexMap()
   setReferenceHistoryEnable(true)
 
   const [onMobile, setOnMobile] = createSignal(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
