@@ -69,4 +69,16 @@ export const [reference, setReference] = createStore<Reference>({
     sidebar: []
 });
 
+export const [referenceMap, setReferenceMap] = createSignal({})
+export const [sidebarIndexMap, setSidebarIndexMap] = createSignal({})
+
+export const [compEnableMap, setCompEnableMap] = createSignal({})
+export const [compValidMap, setCompValidMap] = createSignal({})
+export const [compSourceOptionMap, setCompSourceOptionMap] = createSignal({})
+export const [compVarMap, setCompVarMap] = createSignal({})
+export const [compSourceQuestionMap, setCompSourceQuestionMap] = createSignal({})
+
+export const [referenceHistoryEnable, setReferenceHistoryEnable] = createSignal(false)
+export const [referenceHistory, setReferenceeHistory] = createSignal([])
+export const [sideBareHistory, setSideBareHistory] = createSignal([])
 export const [referenceEnableFalse, setReferenceEnableFalse] = createSignal([])

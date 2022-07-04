@@ -1,13 +1,29 @@
 import { reference, setReference, setReferenceEnableFalse} from './stores/ReferenceStore';
+import { referenceMap, setReferenceMap} from './stores/ReferenceStore';
+import { sidebarIndexMap, setSidebarIndexMap} from './stores/ReferenceStore';
+import { referenceHistoryEnable, setReferenceHistoryEnable} from './stores/ReferenceStore';
+import { referenceHistory, setReferenceeHistory} from './stores/ReferenceStore';
+import { sideBareHistory, setSideBareHistory} from './stores/ReferenceStore';
+import { compEnableMap, setCompEnableMap} from './stores/ReferenceStore';
+import { compValidMap, setCompValidMap} from './stores/ReferenceStore';
+import { compSourceOptionMap, setCompSourceOptionMap} from './stores/ReferenceStore';
+import { compVarMap, setCompVarMap} from './stores/ReferenceStore';
+import { compSourceQuestionMap, setCompSourceQuestionMap} from './stores/ReferenceStore';
 import { validation, setValidation} from './stores/ValidationStore';
 import { sidebar, setSidebar} from './stores/SidebarStore';
 import { preset, setPreset, Preset } from './stores/PresetStore';
 import { response, setResponse, Response } from './stores/ResponseStore';
 import { remark, setRemark, Remark} from './stores/RemarkStore';
 import { note, setNote} from './stores/NoteStore';
-import { createSignal } from 'solid-js';
+import { createSignal, batch } from 'solid-js';
 import { locale, setLocale} from './stores/LocaleStore';
 import { getConfig } from './Form';
+import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
+
+import Toastify from 'toastify-js'
+
+export const default_value_enable = true
+export const default_validation_enable = true
 
 export const getValue = (dataKey: string) => {
     let tmpDataKey = dataKey.split('@');
@@ -29,12 +45,22 @@ export const getValue = (dataKey: string) => {
             break;
         }
     }
-    const componentIndex = reference.details.findIndex(obj => obj.dataKey === dataKey);
+
+    const componentIndex = reference_index_lookup(dataKey)
     let answer = (componentIndex !== -1 && (reference.details[componentIndex].answer) && (reference.details[componentIndex].enable)) ? reference.details[componentIndex].answer : ''
     return answer;
 }
 
 export const createComponent = (dataKey: string, nestedPosition: number, componentPosition: number, sidebarPosition: number, components: any, parentIndex: number[], parentName: string) => {
+    const eval_enable = (eval_text) => {
+        try{
+            return eval(eval_text)
+        }catch(e){
+            console.log(e)
+            return default_value_enable
+        }
+    }
+
     let dataKeySplit = dataKey.split('#');
     const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKeySplit[0]);
     
@@ -150,7 +176,7 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
     } else {
         newComp.enableCondition = undefined
     }
-    newComp.enable = (newComp.enableCondition === undefined || newComp.enableCondition === '') ? true : eval(newComp.enableCondition);
+    newComp.enable = (newComp.enableCondition === undefined || newComp.enableCondition === '') ? true : eval_enable(newComp.enableCondition);
     //
     newComp.enableRemark = newComp.enableRemark !== undefined ? newComp.enableRemark : true;
     newComp.client = newComp.client !== undefined ? newComp.client : true;
@@ -194,7 +220,7 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
 }
 
 export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey);
     let defaultRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
     
     let components = [];
@@ -229,33 +255,50 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
         }
         if(!loopingState) break;
     }
+    let history = []
     components.forEach(el =>{
-        if(reference.details.findIndex(obj => obj.dataKey === el.dataKey) === -1){
+        // reference.details.findIndex(obj => obj.dataKey === el.dataKey) === -1
+        if(!(el.dataKey in referenceMap())){
             updatedRef.splice(startPosition, 0, el);
+            history.push({'pos': startPosition, 'data': JSON.parse(JSON.stringify(el.dataKey))})
             startPosition += 1
         }
     })
-    setReference('details',updatedRef);
+    addHistory('insert_ref_detail', null, refPosition, null, history)
+    batch(() => {
+        load_reference_map(updatedRef)
+        setReference('details',updatedRef);
+    })
     
     components.forEach(newComp =>{
         let value = [];
         value = (newComp.answer) ? newComp.answer : value;
-        
-        const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
-        value = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig().initialMode == 2) || (getConfig().initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : value;
-        
-        let answerIndex = response.details.answers.findIndex(obj => obj.dataKey === newComp.dataKey);
-        value = (answerIndex !== -1 && response.details.answers[answerIndex] !== undefined) ? response.details.answers[answerIndex].answer : value;
-        
-        const getRowIndex = (positionOffset:number) => {
-            let editedDataKey = newComp.dataKey.split('@');
-            let splitDataKey = editedDataKey[0].split('#');
-            let splLength = splitDataKey.length;
-            let reducer = positionOffset+1;
-            return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
+       
+        if(Number(newComp.type) === 4) {
+            const getRowIndex = (positionOffset:number) => {
+                let editedDataKey = newComp.dataKey.split('@');
+                let splitDataKey = editedDataKey[0].split('#');
+                let splLength = splitDataKey.length;
+                let reducer = positionOffset+1;
+                return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
+            }
+            const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
+            // if(Number(newComp.type) === 4) value = eval(newComp.expression);
+            try{
+                let value_local = eval(newComp.expression)
+                value = value_local
+            }catch(e){
+                value = undefined
+            }
+        }else{
+            let answerIndex = response.details.answers.findIndex(obj => obj.dataKey === newComp.dataKey);
+            value = (answerIndex !== -1 && response.details.answers[answerIndex] !== undefined) ? response.details.answers[answerIndex].answer : value;
+
+            if(answerIndex === -1){
+                const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
+                value = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig().initialMode == 2) || (getConfig().initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : value;
+            }
         }
-        const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-        if(Number(newComp.type) === 4) value = eval(newComp.expression);
         saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null);
     })
     
@@ -302,23 +345,25 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
             }
         }
     }
+    addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
     setSidebar('details',updatedSidebar);
 }
 
 export const deleteSidebarArray = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey);
     let updatedRef = JSON.parse(JSON.stringify(reference.details));
     let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
 
     let componentForeignIndexRef = JSON.parse(JSON.stringify(reference.details[refPosition].index));
     let newComponentForeignIndexRef = [...componentForeignIndexRef, Number(beforeAnswer.value)];
-    
+    let history = []
     let refLength = reference.details.length
     for(let j= refLength-1; j > refPosition; j--){
         let tmpChildIndex = JSON.parse(JSON.stringify(reference.details[j].index));
         tmpChildIndex.length = newComponentForeignIndexRef.length;
         if(JSON.stringify(tmpChildIndex) === JSON.stringify(newComponentForeignIndexRef)){
             updatedRef.splice(j, 1);
+            history.push({'pos': j, 'data': JSON.parse(JSON.stringify(reference.details[j]))})
         }
     }
     let sideLength = sidebar.details.length;
@@ -329,13 +374,17 @@ export const deleteSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
             updatedSidebar.splice(x, 1);
         }
     }
-    
-    setReference('details',updatedRef);
+    addHistory('delete_ref_detail', null, refPosition, null, history)
+    batch(() => {
+        load_reference_map(updatedRef)
+        setReference('details',updatedRef);
+    })
+    addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
     setSidebar('details',updatedSidebar);
 }
 
 export const changeSidebarArray = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey);
     let now = [];
     let nestedPositionNow = -1;
     
@@ -380,7 +429,7 @@ export const changeSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
             
             newSidebarComp.description = updatedSidebarDescription;
             newSidebarComp.components[0] = editedComp;
-            
+            addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
             setSidebar('details', sidebarPosition, newSidebarComp);
         }
     } else {
@@ -398,7 +447,7 @@ export const changeSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
 }
 
 export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey);
     let defaultRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
     let components = [];
     let now = (Number(beforeAnswer)+1);
@@ -434,33 +483,49 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
             }
             if(!loopingState) break;
         }
+        let history = []
         components.forEach(el =>{
-            if(reference.details.findIndex(obj => obj.dataKey === el.dataKey) === -1){
+            // reference.details.findIndex(obj => obj.dataKey === el.dataKey) === -1
+            if(!(el.dataKey in referenceMap())){
                 updatedRef.splice(startPosition, 0, el);
+                history.push({'pos': startPosition, 'data': JSON.parse(JSON.stringify(el.dataKey))})
                 startPosition += 1
             }
         })
-        setReference('details',updatedRef);
-        
+        addHistory('insert_ref_detail', null, refPosition, null, history)
+        batch(() => {
+            load_reference_map(updatedRef)
+            setReference('details',updatedRef);
+        })
         components.forEach(newComp =>{
             let value = [];
             value = (newComp.answer) ? newComp.answer : value;
             
-            const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
-            value = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig().initialMode == 2) || (getConfig().initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : value;
-            
-            let answerIndex = response.details.answers.findIndex(obj => obj.dataKey === newComp.dataKey);
-            value = (answerIndex !== -1 && response.details.answers[presetIndex] !== undefined) ? response.details.answers[presetIndex].answer : value;
-            
-            const getRowIndex = (positionOffset:number) => {
-                let editedDataKey = newComp.dataKey.split('@');
-                let splitDataKey = editedDataKey[0].split('#');
-                let splLength = splitDataKey.length;
-                let reducer = positionOffset+1;
-                return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
+            if(Number(newComp.type) === 4) {
+                const getRowIndex = (positionOffset:number) => {
+                    let editedDataKey = newComp.dataKey.split('@');
+                    let splitDataKey = editedDataKey[0].split('#');
+                    let splLength = splitDataKey.length;
+                    let reducer = positionOffset+1;
+                    return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
+                }
+                const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
+                // if(Number(newComp.type) === 4) value = eval(newComp.expression);
+                try{
+                    let value_local = eval(newComp.expression)
+                    value = value_local
+                }catch(e){
+                    value = undefined
+                }
+            }else{
+                let answerIndex = response.details.answers.findIndex(obj => obj.dataKey === newComp.dataKey);
+                value = (answerIndex !== -1 && response.details.answers[answerIndex] !== undefined) ? response.details.answers[answerIndex].answer : value;
+    
+                if(answerIndex === -1){
+                    const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
+                    value = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig().initialMode == 2) || (getConfig().initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : value;
+                }
             }
-            const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-            if(Number(newComp.type) === 4) value = eval(newComp.expression);
             saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null);
         })
 
@@ -507,25 +572,27 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                 }
             }
         }
+        addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
         setSidebar('details',updatedSidebar);
     }
     if(now < answer) insertSidebarNumber(dataKey, answer, now, sidebarPosition);    
 }
 
 export const deleteSidebarNumber = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey);
     let updatedRef = JSON.parse(JSON.stringify(reference.details));
     let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
 
     let componentForeignIndexRef = JSON.parse(JSON.stringify(reference.details[refPosition].index));
     let newComponentForeignIndexRef = [...componentForeignIndexRef, Number(beforeAnswer)];
-    
+    let history = []
     let refLength = reference.details.length;
     for(let j=refLength-1; j > refPosition; j--){
         let tmpChildIndex = JSON.parse(JSON.stringify(reference.details[j].index));
         tmpChildIndex.length = newComponentForeignIndexRef.length;
         if(JSON.stringify(tmpChildIndex) === JSON.stringify(newComponentForeignIndexRef)){
             updatedRef.splice(j, 1);
+            history.push({'pos': j, 'data': JSON.parse(JSON.stringify(reference.details[j]))})
         }
     }
     let sideLength = sidebar.details.length
@@ -536,12 +603,17 @@ export const deleteSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
             updatedSidebar.splice(x, 1);
         }
     }
-    
+    addHistory('delete_ref_detail', null, refPosition, null, history)
     setReference('details',updatedRef);
+    addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
     setSidebar('details',updatedSidebar);
     let now = beforeAnswer-1;
     
-    if(now > answer) deleteSidebarNumber(dataKey, answer, now, sidebarPosition);
+    if(now > answer) {
+        deleteSidebarNumber(dataKey, answer, now, sidebarPosition);
+    }else{
+        load_reference_map()
+    } 
 }
 
 export const runVariableComponent = (dataKey: string, activeComponentPosition: number) => {
@@ -553,11 +625,22 @@ export const runVariableComponent = (dataKey: string, activeComponentPosition: n
         return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
     }
     const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    // const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const refPosition = reference_index_lookup(dataKey)
     if(refPosition !== -1){
         let updatedRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
-        let answerVariable = eval(updatedRef.expression);
-        saveAnswer(dataKey, 'answer', answerVariable, activeComponentPosition, null);
+        // let answerVariable = eval(updatedRef.expression);
+        // saveAnswer(dataKey, 'answer', answerVariable, activeComponentPosition, null);
+        try{
+            let answerVariable = eval(updatedRef.expression);
+            saveAnswer(dataKey, 'answer', answerVariable, activeComponentPosition, null);
+        }catch(e){
+            saveAnswer(dataKey, 'answer', undefined, activeComponentPosition, null);
+            // console.log(dataKey)
+            // console.log(updatedRef.expression)
+            // console.log(e)
+        }
+        
     }
 }
 
@@ -572,6 +655,16 @@ export const runEnabling = (dataKey: string, activeComponentPosition: number, pr
             }
         }
     }
+
+    const eval_enable = (eval_text) => {
+        try{
+            return eval(eval_text)
+        }catch(e){
+            console.log(e)
+            return default_value_enable
+        }
+    }
+
     const getRowIndex = (positionOffset:number) => {
         let editedDataKey = dataKey.split('@');
         let splitDataKey = editedDataKey[0].split('#');
@@ -581,7 +674,7 @@ export const runEnabling = (dataKey: string, activeComponentPosition: number, pr
     }
     const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
 
-    let enable = eval(enableCondition);
+    let enable = eval_enable(enableCondition);
     saveAnswer(dataKey, 'enable', enable, activeComponentPosition, null);
 }
 
@@ -600,7 +693,15 @@ export const runValidation = (dataKey:string, updatedRef:any, activeComponentPos
     if(!updatedRef.hasRemark){
         let biggest = 0;
         for(let i in updatedRef.validations){
-            let result = eval(updatedRef.validations[i].test);
+            // let result = eval(updatedRef.validations[i].test);
+            let result = default_validation_enable;
+            try{
+                result = eval(updatedRef.validations[i].test)
+            }catch(e){
+                // console.log(dataKey)
+                // console.log(updatedRef.validations[i].test)
+                // console.log(e)
+            }
             if(result){
                 updatedRef.validationMessage.push(updatedRef.validations[i].message);
                 biggest = (biggest < updatedRef.validations[i].type) ? updatedRef.validations[i].type : biggest;
@@ -648,14 +749,25 @@ export const setEnableFalse = () =>{
 }
 
 export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, activeComponentPosition: number, prop:any | null) => {
-    const refPosition = reference.details.findIndex(obj => obj.dataKey === dataKey);
+    const eval_enable = (eval_text) => {
+        try{
+            return eval(eval_text)
+        }catch(e){
+            console.log(e)
+            return default_value_enable
+        }
+    }
+
+    let refPosition = reference_index_lookup(dataKey)
+
     if(attributeParam === 'answer' || attributeParam === 'enable'){
         
         let beforeAnswer = (typeof answer === 'number' || typeof answer === 'string') ? 0 : [];
         beforeAnswer = (reference.details[refPosition]) ? reference.details[refPosition].answer : beforeAnswer;
+        addHistory('saveAnswer', dataKey, refPosition, attributeParam, reference.details[refPosition][attributeParam])
         setReference('details', refPosition, attributeParam, answer);
         //validate for its own dataKey 
-        runValidation(dataKey, JSON.parse(JSON.stringify(reference.details[refPosition])), activeComponentPosition);
+        if(referenceHistoryEnable()) runValidation(dataKey, JSON.parse(JSON.stringify(reference.details[refPosition])), activeComponentPosition);
         
         //do nothing if no changes, thanks to Budi's idea on pull request #5
         if(attributeParam === 'answer'){
@@ -704,150 +816,141 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 }
             })));
             if(hasSideCompEnable.length > 0) {//at least there is minimal 1 enable in this datakey
-                hasSideCompEnable.forEach(sidebarEnable => {
-                    let sidePosition = sidebar.details.findIndex(objSide => objSide.dataKey === sidebarEnable.dataKey);
-                    let enableSide = eval(sidebarEnable.enableCondition);
-                    setSidebar('details',sidePosition,'enable',enableSide);
-                    let updatedRef = JSON.parse(JSON.stringify(reference.details));
-                    let tmpVarComp = [];
-                    let tmpIndex = [];
-                    sidebarEnable.components[0].forEach((element, index) => {
-                        let refPos = updatedRef.findIndex(objRef => objRef.dataKey === element.dataKey);
-                        if(refPos !== -1){
-                            if(updatedRef[refPos].enableCondition === undefined || updatedRef[refPos].enableCondition === '') setReference('details',refPos,'enable',enableSide);
-                            if(Number(updatedRef[refPos].type) === 4){
-                                tmpVarComp.push(updatedRef[refPos])
-                                tmpIndex.push(index)
-                            }
-                        }
-                    });
-                    if(tmpVarComp.length > 0) {
-                        const getRowIndex = (positionOffset:number) => {
-                            let editedDataKey = dataKey.split('@');
-                            let splitDataKey = editedDataKey[0].split('#');
-                            let splLength = splitDataKey.length;
-                            let reducer = positionOffset+1;
-                            return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
-                        }
-                        const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-                        tmpVarComp.forEach((e,i) => {
-                            let evVal = eval(e.expression);
-                            saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
-                        })
-                    }
-                })
+                // hasSideCompEnable.forEach(sidebarEnable => {
+                //     let sidePosition = sidebar.details.findIndex(objSide => objSide.dataKey === sidebarEnable.dataKey);
+                //     let enableSideBefore = sidebar.details[sidePosition]['enable'];
+                //     let enableSide = eval_enable(sidebarEnable.enableCondition);
+                //     addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
+                //     setSidebar('details',sidePosition,'enable',enableSide);
+                //     let updatedRef = JSON.parse(JSON.stringify(reference.details));
+                //     let tmpVarComp = [];
+                //     let tmpIndex = [];
+                //     sidebarEnable.components[0].forEach((element, index) => {
+                //         let refPos = updatedRef.findIndex(objRef => objRef.dataKey === element.dataKey);
+                //         if(refPos !== -1){
+                //             if(updatedRef[refPos].enableCondition === undefined || updatedRef[refPos].enableCondition === '') setReference('details',refPos,'enable',enableSide);
+                //             if(Number(updatedRef[refPos].type) === 4 && enableSide !== enableSideBefore){
+                //                 tmpVarComp.push(updatedRef[refPos])
+                //                 tmpIndex.push(index)
+                //             }
+                //         }
+                //     });
+                //     if(tmpVarComp.length > 0) {
+                //         const getRowIndex = (positionOffset:number) => {
+                //             let editedDataKey = dataKey.split('@');
+                //             let splitDataKey = editedDataKey[0].split('#');
+                //             let splLength = splitDataKey.length;
+                //             let reducer = positionOffset+1;
+                //             return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
+                //         }
+                //         const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
+                //         tmpVarComp.forEach((e,i) => {
+                //             // let evVal = eval(e.expression);
+                //             // saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
+                //             try{
+                //                 let evVal = eval(e.expression);
+                //                 saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
+                //             }catch(e){
+                //                 saveAnswer(e.dataKey, 'answer', undefined, tmpIndex[i], null);
+                //                 // console.log(e.dataKey)
+                //                 // console.log(e)
+                //             }
+                //         })
+                //     }
+                // })
+                load_sidebar_index_map()
             }
-
-            const hasComponentEnable = JSON.parse(JSON.stringify(reference.details.filter(obj => {
-                if(obj.componentEnable !== undefined){
-                    const cekInsideIndex = obj.componentEnable.findIndex(objChild => {
-                        let newDataKey = '';
-                        let tmpDataKey = objChild.split('@');
-                        let splitDataKey = tmpDataKey[0].split('#');
-                        let splLength = splitDataKey.length;
-                        switch(tmpDataKey[1]) {
-                            case '$ROW$': {
-                                newDataKey = tmpDataKey[0];
-                                break;
-                            }
-                            case '$ROW1$': {
-                                if(splLength > 2) splitDataKey.length = splLength - 1;
-                                newDataKey = splitDataKey.join('#');
-                                break;
-                            }
-                            case '$ROW2$': {
-                                if(splLength > 3) splitDataKey.length = splLength - 2;
-                                newDataKey = splitDataKey.join('#');
-                                break;
-                            }
-                            default: {
-                                newDataKey = objChild;
-                                break;
-                            }
-                        }
-                        return (newDataKey === dataKey) ? true : false;
-                    });
-                    return (cekInsideIndex == -1) ? false : true;
-                }
-            })));
+            const hasComponentEnable = get_CompEnable(dataKey)
             if(hasComponentEnable.length > 0) {//this datakey at least appear in minimum 1 enable
-                hasComponentEnable.forEach(elementEnable => {
-                    runEnabling(elementEnable.dataKey, activeComponentPosition, prop, elementEnable.enableCondition);
+                hasComponentEnable.forEach(elementEnableDatakey => {
+                    let element_pos = reference_index_lookup(elementEnableDatakey)
+                    if(element_pos !== -1){
+                        let elementEnable = reference.details[element_pos]
+                        runEnabling(elementEnable.dataKey, activeComponentPosition, prop, elementEnable.enableCondition);
+                    }
                 })
             }
         }
 
         if(reference.details[refPosition].enable) {
             //validating ~ run weel when answer or enable
-            const hasComponentValidation = JSON.parse(JSON.stringify(reference.details.filter(obj => {
-                let editedDataKey = obj.dataKey.split('@');
-                let newEdited = editedDataKey[0].split('#');
-                if((obj.enable) && obj.componentValidation !== undefined){
-                    if(obj.level < 2 || obj.level > 1 && newEdited[1] !== undefined){
-                        const cekInsideIndex = obj.componentValidation.findIndex(objChild => {
-                            let newKey = dataKey.split('@');//reduce or split @
-                            let newNewKey = newKey[0].split('#');//remove the row
-                            return (objChild === newNewKey[0]) ? true : false;
-                        });
-                        return (cekInsideIndex == -1) ? false : true;
-                    }
-                }
-            })));
-            
-            if(hasComponentValidation.length > 0) {//at least this dataKey appears in minimum 1 validation
-                hasComponentValidation.forEach(elementVal => {
-                    runValidation(elementVal.dataKey, JSON.parse(JSON.stringify(elementVal)), activeComponentPosition);
-                });
-            }
-
-            //cek opt ~ run well on answer or enable
-            const hasSourceOption = JSON.parse(JSON.stringify(reference.details.filter(obj => {
-                if((obj.enable) && obj.sourceOption !== undefined){
-                    let editedSourceOption = obj.sourceOption.split('@');
-                    return (dataKey == editedSourceOption[0]) ? true : false;
-                }
-            })));
-            
-            if(hasSourceOption.length > 0) {//at least dataKey appear in minimal 1 sourceOption
-                hasSourceOption.forEach(elementSourceOption => {
-                    if(elementSourceOption.answer){
-                        let x = [];
-                        elementSourceOption.answer.forEach(val => {
-                            answer.forEach(op => {
-                                if(val.value == op.value){
-                                    x.push(op);
+            if(referenceHistoryEnable()){
+                const hasComponentValidation = get_CompValid(dataKey)
+                if(hasComponentValidation.length > 0) {//at least this dataKey appears in minimum 1 validation
+                    hasComponentValidation.forEach(element_data_key => {
+                        let element_pos = reference_index_lookup(element_data_key)
+                        if(element_pos !== -1){
+                            let elementVal = reference.details[element_pos]
+                            let editedDataKey = elementVal.dataKey.split('@');
+                            let newEdited = editedDataKey[0].split('#');
+                            if(elementVal.enable){
+                                if(elementVal.level < 2 || elementVal.level > 1 && newEdited[1] !== undefined){
+                                    runValidation(elementVal.dataKey, JSON.parse(JSON.stringify(elementVal)), activeComponentPosition);
                                 }
+                            }
+                        }
+                    });
+                }
+    
+                //cek opt ~ run well on answer or enable
+                const hasSourceOption = []
+                if(dataKey in compSourceOptionMap()){
+                    const hasSourceOption_data_key = compSourceOptionMap()[dataKey]
+                    hasSourceOption_data_key.forEach(element_data_key => {
+                        let list_key = reference_index_lookup(element_data_key,1)
+                        if(list_key !== -1){
+                            list_key.forEach(element_key => {
+                                let element_pos = reference_index_lookup(element_key)
+                                if(element_pos !== -1){
+                                    let obj = reference.details[element_pos]
+                                    if(obj.enable){
+                                        hasSourceOption.push(obj)
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+                
+                if(hasSourceOption.length > 0) {//at least dataKey appear in minimal 1 sourceOption
+                    hasSourceOption.forEach(elementSourceOption => {
+                        if(elementSourceOption.answer){
+                            let x = [];
+                            elementSourceOption.answer.forEach(val => {
+                                answer.forEach(op => {
+                                    if(val.value == op.value){
+                                        x.push(op);
+                                    }
+                                })
                             })
-                        })
-                        // let sidebarPos = sidebar.details.findIndex((element,index) => {
-                        //     let tmpInd = element.components[0].findIndex((e,i) => (e.dataKey == elementSourceOption.dataKey))
-                        //     return (tmpInd !== -1) ? true : false
-                        // })
-                        
-                        saveAnswer(elementSourceOption.dataKey, 'answer', x, activeComponentPosition, null);
-                    }
-                });
+                            // let sidebarPos = sidebar.details.findIndex((element,index) => {
+                            //     let tmpInd = element.components[0].findIndex((e,i) => (e.dataKey == elementSourceOption.dataKey))
+                            //     return (tmpInd !== -1) ? true : false
+                            // })
+                            
+                            saveAnswer(elementSourceOption.dataKey, 'answer', x, activeComponentPosition, null);
+                        }
+                    });
+                }
             }
 
-            //variabel ~ executed when enable = TRUE
-            const hasComponentVar = JSON.parse(JSON.stringify(reference.details.filter(obj => {
-                if(obj.componentVar !== undefined){
-                    const cekInsideIndex = obj.componentVar.findIndex(objChild => {
-                        let newKey = dataKey.split('@');//mereduce @
-                        let newNewKey = newKey[0].split('#');//menghilangkan row nya
-                        return (objChild === newNewKey[0]) ? true : false;
-                    });
-                    return (cekInsideIndex == -1) ? false : true;
-                }
-            })));
-        
+            const hasComponentVar = get_CompVar(dataKey)
             if(hasComponentVar.length > 0) {//at least dataKey appeasr in minimum 1 variable
                 hasComponentVar.forEach(elementVar => {
-                    runVariableComponent(elementVar.dataKey, 0);
+                    runVariableComponent(elementVar, 0);
                 });
             }
             
-            const hasComponentUsing = JSON.parse(JSON.stringify(reference.details.filter(obj => (obj.type === 2 && obj.sourceQuestion == dataKey))));
+            const hasComponentUsing = [];
+            if(dataKey in compSourceQuestionMap()){
+                compSourceQuestionMap()[dataKey].forEach(element_data_key => {
+                    let element_pos = reference_index_lookup(element_data_key)
+                    if(element_pos !== -1){
+                        let elementSource = reference.details[element_pos]
+                        hasComponentUsing.push(elementSource)
+                    }
+                });
+            }
             
             if(hasComponentUsing.length > 0) {//this dataKey is used as a source in Nested at minimum 1 component
                 if(reference.details[refPosition].type === 4) beforeAnswer = [];
@@ -906,11 +1009,386 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                     });
                     console.timeEnd('Nested 🚀');
                 }
+                
+                if(referenceHistoryEnable()){
+                    load_sidebar_index_map()
+                }
             }
         }
         
         setEnableFalse();
     } else if(attributeParam === 'validate'){
+        let item_refff = JSON.parse(JSON.stringify(reference.details[refPosition]))
+        addHistory('saveAnswer', dataKey, refPosition, attributeParam
+            , {'validationState': item_refff.validationState, 'validationMessage': item_refff.validationMessage})
         setReference('details', refPosition, answer);
     }
+}
+
+export function reference_index_lookup(datakey, index_lookup = 0){
+    try{
+        if(datakey in referenceMap()){
+            try{
+                if(reference.details[referenceMap()[datakey][0][0]].dataKey === datakey){
+                    if(index_lookup == 0){
+                        return referenceMap()[datakey][0][0];
+                    }else{
+                        return referenceMap()[datakey][1];
+                    }
+                }else{
+                    load_reference_map()
+                    if(datakey in referenceMap()){
+                        if(index_lookup == 0){
+                            return referenceMap()[datakey][0][0];
+                        }else{
+                            return referenceMap()[datakey][1];
+                        }
+                    }else{
+                        return -1
+                    }
+                }
+            }catch(e){
+                load_reference_map()
+                if(datakey in referenceMap()){
+                    if(index_lookup == 0){
+                        return referenceMap()[datakey][0][0];
+                    }else{
+                        return referenceMap()[datakey][1];
+                    }
+                }else{
+                    return -1
+                }
+            }
+        }else{
+            return -1
+        }
+    }catch(ex){
+        return -1
+    }
+}
+
+// laad_reference_map, and add map for dependency for validasion, enable, componentVar, sourceOption and sourceQuestion
+export function load_reference_map_pertama(reference_local = null){
+    let compEnableMap_lokal = {}
+    let compValidMap_lokal = {}
+    let compSourceOption_lokal = {}
+    let compVar_lokal = {}
+    let compSourceQuestion_lokal = {}
+
+    const loopTemplate_Lokal = (element) => {
+        let el_len = element.length
+        for (let i = 0; i < el_len; i++) {
+            let obj = element[i]
+            if(obj.componentEnable !== undefined){
+                obj.componentEnable.forEach(item => {
+                    let itemKeyBased = item.split('@')[0].split('#')[0];
+                    if(!(itemKeyBased in compEnableMap_lokal)){
+                        compEnableMap_lokal[itemKeyBased] = {}
+                    }
+                    if(!(item in compEnableMap_lokal[itemKeyBased])){
+                        compEnableMap_lokal[itemKeyBased][item] = []
+                    }
+                    if(!compEnableMap_lokal[itemKeyBased][item].includes(obj.dataKey)){
+                        compEnableMap_lokal[itemKeyBased][item].push(obj.dataKey)
+                    }
+                })
+            }
+            if(obj.sourceOption !== undefined){
+                if(!(obj.sourceOption.split('@')[0] in compSourceOption_lokal)){
+                    compSourceOption_lokal[obj.sourceOption.split('@')[0]] = []
+                }
+                if(!compSourceOption_lokal[obj.sourceOption.split('@')[0]].includes(obj.dataKey)){
+                    compSourceOption_lokal[obj.sourceOption.split('@')[0]].push(obj.dataKey)
+                }
+            }
+            if(obj.componentVar !== undefined && obj.type === 4){
+                obj.componentVar.forEach(item => {
+                    if(!(item in compVar_lokal)){
+                        compVar_lokal[item] = []
+                    }
+                    if(!compVar_lokal[item].includes(obj.dataKey)){
+                        compVar_lokal[item].push(obj.dataKey)
+                    }
+                })
+            }
+            if(obj.sourceQuestion !== undefined && obj.type === 2){
+                if(!(obj.sourceQuestion in compSourceQuestion_lokal)){
+                    compSourceQuestion_lokal[obj.sourceQuestion] = []
+                }
+                if(!compSourceQuestion_lokal[obj.sourceQuestion].includes(obj.dataKey)){
+                    compSourceQuestion_lokal[obj.sourceQuestion].push(obj.dataKey)
+                }
+            }
+          element[i].components && element[i].components.forEach((element, index) => loopTemplate_Lokal(element))
+        }
+      }
+      template.details.components.forEach((element, index) => loopTemplate_Lokal(element));
+
+
+
+    for(let index=0; index<validation.details.testFunctions.length; index++){
+        let obj = validation.details.testFunctions[index]
+        if(obj.componentValidation !== undefined){
+            obj.componentValidation.forEach(item => {
+                if(!(item in compValidMap_lokal)){
+                    compValidMap_lokal[item] = []
+                }
+                compValidMap_lokal[item].push(obj.dataKey)
+            })
+        }
+    }
+    setCompEnableMap(compEnableMap_lokal)
+    setCompValidMap(compValidMap_lokal)
+    setCompSourceOptionMap(compSourceOption_lokal)
+    setCompVarMap(compVar_lokal)
+    setCompSourceQuestionMap(compSourceQuestion_lokal)
+
+    // console.log(compEnableMap())
+    // console.log(compValidMap())
+    // console.log(compSourceOptionMap())
+    // console.log(compVarMap())
+    // console.log(compSourceQuestionMap())
+
+    if(reference_local === null){
+        reference_local = JSON.parse(JSON.stringify(reference.details))
+    }
+    load_reference_map(reference_local)
+}
+
+//make referenceMap, referenceMap is index, etc of component by datakey save as dictionary
+export function load_reference_map(reference_local = null){
+    // console.time('load_reference_map');
+    if(reference_local === null){
+        reference_local = JSON.parse(JSON.stringify(reference.details))
+    }
+    let reference_map_lokal = {}
+    for (let index__ = 0; index__ < reference_local.length; index__ ++){
+        let fullDataKey = reference_local[index__].dataKey
+        if (!(fullDataKey in reference_map_lokal)){
+            reference_map_lokal[fullDataKey] = [[],[]]
+        }
+        reference_map_lokal[fullDataKey][0].push(index__)
+        reference_map_lokal[fullDataKey][1].push(fullDataKey)
+    
+        let splitDataKey = fullDataKey.split('#');
+        if(splitDataKey.length > 1){
+            if (!(splitDataKey[0] in reference_map_lokal)){
+                reference_map_lokal[splitDataKey[0]] = [[],[]]
+            }
+            reference_map_lokal[splitDataKey[0]][1].push(fullDataKey)
+        }
+    }
+    // console.log(reference_map_lokal)
+    setReferenceMap(reference_map_lokal)
+    // console.timeEnd('load_reference_map');
+}
+
+//make referenceMap, referenceMap is index, etc of component by datakey save as dictionary
+export function load_sidebar_index_map(){
+    // console.time('load_reference_map');
+    let local_sidebar_index_map = {};
+    let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details))
+
+    for(let index_sidebar = 0; index_sidebar < sidebar.details.length; index_sidebar ++){
+        let item_sidebar = sidebar.details[index_sidebar]
+
+        let index = item_sidebar.index.join('-')
+        let enable = item_sidebar.enable !== undefined ? item_sidebar.enable : true
+        if(enable === undefined){
+            enable = true
+        }
+        let enableCondition =  (item_sidebar.enableCondition === undefined) ? undefined : item_sidebar.enableCondition
+        if(!(enableCondition === undefined) && enableCondition !== ""){
+            try{
+                enable = eval(enableCondition)
+            }catch(err){
+
+            }
+        }
+        if(enable){
+            let index_now = JSON.parse(JSON.stringify(item_sidebar.index))
+            for(let index_index_ = (index.length - 1); index_index_ > 0; index_index_--){
+                index_now.splice((index_now.length - 1),1)
+                let index_local = index_now.join('-')
+                if(index_local != '' && index_local in local_sidebar_index_map){
+                    enable = enable && local_sidebar_index_map[index_local]
+                }
+                if(!enable){
+                    break
+                }
+            }
+        }
+        updatedSidebar[index_sidebar]['enable'] = enable
+        local_sidebar_index_map[index] = enable
+    }
+    batch(() => {
+        setSidebar('details', updatedSidebar)
+        if(JSON.stringify(sidebarIndexMap()) !== JSON.stringify(local_sidebar_index_map)){
+            setSidebarIndexMap(local_sidebar_index_map)
+        }
+        // console.log(sidebar.details)
+        // console.log(local_sidebar_index_map)
+    })
+    // console.timeEnd('load_reference_map');
+}
+
+export function get_CompEnable(dataKey){
+    // console.log('get_CompEnable : '+dataKey)
+    let itemKeyBased = dataKey.split('@')[0].split('#')[0];
+    let returnDataKey = []
+    if(itemKeyBased in compEnableMap()){
+        for (let key_comp in (compEnableMap()[itemKeyBased])) {
+            // console.log('Format : '+key_comp)
+            compEnableMap()[itemKeyBased][key_comp].forEach(element_item => {
+                let list_key = reference_index_lookup(element_item, 1)
+                if(list_key !== -1 && list_key){
+                    list_key.forEach(objChild => {
+                        let newDataKey = '';
+                        let tmpDataKey = key_comp.split('@');
+                        let splitDataKey = objChild.split('@')[0].split('#');
+                        let splLength = splitDataKey.length;
+                        if(splLength>0){
+                            splitDataKey[0] = itemKeyBased
+                        }
+                        switch(tmpDataKey[1]) {
+                            case '$ROW$': {
+                                newDataKey = splitDataKey.join('#');
+                                break;
+                            }
+                            case '$ROW1$': {
+                                if(splLength > 2) splitDataKey.length = splLength - 1;
+                                newDataKey = splitDataKey.join('#');
+                                break;
+                            }
+                            case '$ROW2$': {
+                                if(splLength > 3) splitDataKey.length = splLength - 2;
+                                newDataKey = splitDataKey.join('#');
+                                break;
+                            }
+                            default: {
+                                newDataKey = key_comp;
+                                break;
+                            }
+                        }
+                        // console.log('newDataKey1 : '+objChild)
+                        // console.log('newDataKey2 : '+newDataKey)
+                        if(newDataKey === dataKey){
+                            returnDataKey.push(objChild)
+                        }
+                    });
+                }
+            });
+        }
+    }
+    return returnDataKey
+}
+
+export function get_CompValid(dataKey){
+    let itemKeyBased = dataKey.split('@')[0].split('#')[0];
+    let returnDataKey = []
+    if(itemKeyBased in compValidMap()){
+        if(compValidMap()[itemKeyBased].length > 0){
+            compValidMap()[itemKeyBased].forEach(item => {
+                let list_key = reference_index_lookup(item, 1)
+                if(list_key !== -1 && list_key){
+                    returnDataKey = returnDataKey.concat(list_key)
+                }
+            });
+        }
+    }
+    return returnDataKey
+}
+
+export function get_CompVar(dataKey){
+    let itemKeyBased = dataKey.split('@')[0].split('#')[0];
+    let returnDataKey = []
+    if(itemKeyBased in compVarMap()){
+        if(compVarMap()[itemKeyBased].length > 0){
+            compVarMap()[itemKeyBased].forEach(item => {
+                let list_key = reference_index_lookup(item, 1)
+                if(list_key !== -1 && list_key){
+                    returnDataKey = returnDataKey.concat(list_key)
+                }
+            });
+        }
+    }
+    return returnDataKey
+}
+
+export function addHistory(type, datakey, position, attributeParam, data){
+    if(!referenceHistoryEnable()){
+        return
+    }
+    if(type === "change_sidebar"){
+        if(sideBareHistory().length === 0){
+            setSideBareHistory(data)
+        }
+    }else{
+        setReferenceeHistory([...referenceHistory(), { 'type': type, 'datakey': datakey, 'position': position, 'attributeParam' : attributeParam, 'data': data }]);
+    }
+}
+
+export function reloadDataFromHistory(){
+    let detail_local = JSON.parse(JSON.stringify(reference.details))
+    for(let index_history = referenceHistory().length -1 ; index_history >=0 ; index_history --){
+        let type = referenceHistory()[index_history]['type']
+        let datakey = referenceHistory()[index_history]['datakey']
+        let position = referenceHistory()[index_history]['position']
+        let attributeParam = referenceHistory()[index_history]['attributeParam']
+        let data = referenceHistory()[index_history]['data']
+        
+        if(type === "insert_ref_detail"){
+            for(let index_lokal = data.length - 1; index_lokal >= 0; index_lokal --){
+                let item_post = data[index_lokal]['pos']
+                if(detail_local[data[index_lokal]['pos']].dataKey !== data[index_lokal]['data']){
+                    let refPostion = detail_local.findIndex((element) => {
+                        element.dataKey === data[index_lokal]['data']
+                    })
+                    item_post = refPostion
+                }
+                if(item_post !== -1){
+                    detail_local.splice(item_post, 1)
+                }
+            }
+        }else if(type === "delete_ref_detail"){
+            for(let index_lokal = data.length - 1; index_lokal >= 0; index_lokal --){
+                let item_post = data[index_lokal]['pos']
+                detail_local.splice(item_post, 0, JSON.parse(JSON.stringify(data[index_lokal]['data'])))
+            }
+        }else if(type === 'saveAnswer'){
+            if(detail_local[position].dataKey !== datakey){
+                let refPostion = detail_local.findIndex((element) => {
+                    element.dataKey === datakey
+                })
+                position = refPostion
+            }
+            if(position !== -1){
+                if(attributeParam === 'answer'){
+                    detail_local[position][attributeParam] = data
+                }else if(attributeParam === 'enable'){
+                    detail_local[position][attributeParam] = data
+                }else if(attributeParam === 'validate'){
+                    detail_local[position]['validationState'] = data['validationState']
+                    detail_local[position]['validationMessage'] = JSON.parse(JSON.stringify(data['validationMessage']))
+                }
+            }
+        }
+    }
+    load_reference_map(detail_local)
+    setReference('details', detail_local)
+    if(sideBareHistory().length > 0){
+        setSidebar('details',JSON.parse(JSON.stringify(sideBareHistory())));
+    }
+    Toastify({
+        text: 'Failed to save data !',
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        stopOnFocus: true,
+        className: "bg-blue-600/80",
+        style: {
+            background: "rgba(8, 145, 178, 0.7)",
+            width: "400px"
+        }
+    }).showToast();
 }

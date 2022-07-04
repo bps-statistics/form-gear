@@ -19,7 +19,10 @@ import { referenceEnableFalse, setReferenceEnableFalse } from './stores/Referenc
 import dayjs from 'dayjs';
 import Toastify from 'toastify-js'
 
-import { getValue, saveAnswer, setEnableFalse } from './GlobalFunction'
+import { getValue, saveAnswer , setEnableFalse, reloadDataFromHistory} from './GlobalFunction'
+
+import { setReferenceeHistory} from './stores/ReferenceStore';
+import { setSideBareHistory} from './stores/ReferenceStore';
 
 export const getEnable = (dataKey: string) => {
   const componentIndex = reference.details.findIndex(obj => obj.dataKey === dataKey);
@@ -146,13 +149,19 @@ const FormInput: FormComponentBase = props => {
   
   const onValueChange = (value: any) => {
     setLoader({});
-    setTimeout(() => 
-      {
-        saveAnswer(props.component.dataKey, 'answer', value, form.activeComponent.position, {'clientMode': form.formConfig.clientMode,'baseUrl': form.formConfig.baseUrl});
-        // setEnableFalse();
+    setTimeout(() => {
+      try{
+        setReferenceeHistory([])
+        setSideBareHistory([])
+        saveAnswer(props.component.dataKey, 'answer', value, form.activeComponent.position, {'clientMode': form.formConfig.clientMode,'baseUrl': form.formConfig.baseUrl})
+      }catch(e){
+        console.log(e)
+        reloadDataFromHistory()
+      }finally{
+        setReferenceeHistory([])
+        setSideBareHistory([])
       }
-    , 50);
-    // setTimeout(() => setEnableFalse(), 70);
+    }, 50);
   }
 
   const cn = [' border border-solid border-gray-300 ',' border-orange-500 border-4 ',' border-pink-600 border-4 ']

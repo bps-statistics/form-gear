@@ -17,8 +17,10 @@ import { locale, setLocale } from './stores/LocaleStore';
 import { summary, setSummary } from './stores/SummaryStore';
 import { useLoaderDispatch } from "./loader/FormLoaderProvider"
 
-import { saveAnswer, setEnableFalse } from "./GlobalFunction";
+import { saveAnswer, setEnableFalse, runValidation, reference_index_lookup} from "./GlobalFunction";
 import { toastInfo } from "./FormInput";
+
+import { referenceHistoryEnable, setReferenceHistoryEnable} from './stores/ReferenceStore';
 
 import dayjs from 'dayjs';
 import utc from  'dayjs/plugin/utc';
@@ -173,14 +175,16 @@ const Form: Component<{
     })
 
     props.response.details.answers.forEach((element, index) => {
-      let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
-      if (refPosition !== -1) {
-        let sidePosition = sidebar.details.findIndex(obj => {
-          const cekInsideIndex = obj.components[0].findIndex(objChild => objChild.dataKey === element.dataKey);
-          return (cekInsideIndex == -1) ? 0 : index;
-        });
-        let answer = (typeof element.answer === 'object') ? JSON.parse(JSON.stringify(element.answer)) : element.answer;
-        saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') });
+      if(!element.dataKey.includes("#")){
+        let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
+        if (refPosition !== -1) {
+          let sidePosition = sidebar.details.findIndex(obj => {
+            const cekInsideIndex = obj.components[0].findIndex(objChild => objChild.dataKey === element.dataKey);
+            return (cekInsideIndex == -1) ? 0 : index;
+          });
+          let answer = (typeof element.answer === 'object') ? JSON.parse(JSON.stringify(element.answer)) : element.answer;
+          saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') });
+        }
       }
     })
 
@@ -206,6 +210,35 @@ const Form: Component<{
       let enable = (evEnable === undefined) ? false : evEnable;
       saveAnswer(element.dataKey, 'enable', enable, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') });
     })
+
+    for(let index=0; index < reference.details.length; index ++){
+      let obj = reference.details[index]
+      if(obj.index[obj.index.length - 2] === 0 && obj.level > 1){
+          continue
+      }
+      if((obj.enable) && obj.componentValidation !== undefined){
+        runValidation(obj.dataKey, JSON.parse(JSON.stringify(obj)), null);
+      }
+
+      if((obj.enable) && obj.sourceOption !== undefined){
+          let sourceOptionObj = reference.details [reference_index_lookup(obj.sourceOption)]
+          if(obj.answer){
+              let x = [];
+              obj.answer.forEach(val => {
+                  sourceOptionObj.answer.forEach(op => {
+                      if(val.value == op.value){
+                          x.push(op);
+                      }
+                  })
+              })
+              // let sidebarPos = sidebar.details.findIndex((element,index) => {
+              //     let tmpInd = element.components[0].findIndex((e,i) => (e.dataKey == elementSourceOption.dataKey))
+              //     return (tmpInd !== -1) ? true : false
+              // })
+              setReference('details', index, 'answer', x);
+          }
+      }
+    }
     // console.timeEnd('tmpEnableComp ')
   } else {
     // let hasRemarkComp = reference.details.filter(obj => obj.hasRemark == true);
@@ -220,8 +253,12 @@ const Form: Component<{
     })
     setRenderGear('FormGear-'+gearVersion+' ♻️:')
   }
+
+  // console.log(reference.details)
   // console.timeEnd('response ');
   // console.timeEnd('');
+  load_sidebar_index_map()
+  setReferenceHistoryEnable(true)
 
   const [onMobile, setOnMobile] = createSignal(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
   const checkOnMobile = () => {
@@ -230,7 +267,6 @@ const Form: Component<{
 
   createEffect(() => {
     setComponents(getComponents(form.activeComponent.dataKey));
-    console.log('entah')
     setSummary({
       answer: reference.details.filter((element) => {
         let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
@@ -239,10 +275,10 @@ const Form: Component<{
           && (element.enable)
           && (element.answer !== undefined)
           && (element.answer !== '')
-          && (element.answer !== null)
-      }).length,
-      blank: reference.details.filter((element) => {
-        return (element.type > 4)
+          && (element.answer !== null))){
+            count_answer++
+        }
+        if(enable_parent && ((element.type > 4)
           && (element.enable)
           && ((element.answer === undefined || element.answer === '')
             || ((element.type == 21) && element.answer.length == 1)
@@ -501,6 +537,17 @@ const Form: Component<{
     let filteredWarning = [];
 
     reference.details.forEach((element, i) => {
+      let enable_parent = true
+      try{
+        let index_parent = JSON.parse(JSON.stringify(element.index)).slice(0, element.index.length - 1).join('-')
+        let index_parent2 = JSON.parse(JSON.stringify(element.index)).slice(0, element.index.length - 2).join('-')
+        if(index_parent in sidebarIndexMap()){
+          enable_parent = enable_parent && sidebarIndexMap()[index_parent]
+        }
+        if(index_parent2 in sidebarIndexMap()){
+          enable_parent = enable_parent && sidebarIndexMap()[index_parent2]
+        }
+      }catch(err){}
       // let sidebarIndex = element.index.splice(-1)
       let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
       if (enableFalse == -1){
@@ -544,8 +591,19 @@ const Form: Component<{
     let blankCollection = [];
 
     reference.details.forEach((element, i) => {
+      let enable_parent = true
+      try{
+        let index_parent = JSON.parse(JSON.stringify(element.index)).slice(0, element.index.length - 1).join('-')
+        let index_parent2 = JSON.parse(JSON.stringify(element.index)).slice(0, element.index.length - 2).join('-')
+        if(index_parent in sidebarIndexMap()){
+          enable_parent = enable_parent && sidebarIndexMap()[index_parent]
+        }
+        if(index_parent2 in sidebarIndexMap()){
+          enable_parent = enable_parent && sidebarIndexMap()[index_parent2]
+        }
+      }catch(err){}
       // let sidebarIndex = element.index.splice(-1)
-      if ((element.type > 4) && (element.enable) && ((element.answer === undefined || element.answer === '')
+      if (enable_parent && (element.type > 4) && (element.enable) && ((element.answer === undefined || element.answer === '')
         || ((element.type == 21) && element.answer.length == 1) || ((element.type == 22) && element.answer.length == 1))
         && !(JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)) {
 
