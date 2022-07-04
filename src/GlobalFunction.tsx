@@ -1,4 +1,4 @@
-import { reference, setReference} from './stores/ReferenceStore';
+import { reference, setReference, setReferenceEnableFalse} from './stores/ReferenceStore';
 import { referenceMap, setReferenceMap} from './stores/ReferenceStore';
 import { sidebarIndexMap, setSidebarIndexMap} from './stores/ReferenceStore';
 import { referenceHistoryEnable, setReferenceHistoryEnable} from './stores/ReferenceStore';
@@ -316,22 +316,33 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
     }
     let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
     if(sidebar.details.findIndex(obj => obj.dataKey === newSide.dataKey) === -1){
-        let newSideLength = newSide.index.length;
+        let newSideLength = newSide.index.length
+        let y_tmp = 0
         for(let looping = newSideLength; looping > 1; looping--){
             let loopingState = true;
             let myIndex = JSON.parse(JSON.stringify(newSide.index))
             myIndex.length = looping;
-            let sideLength = sidebar.details.length;
-            for(let y = sideLength-1; y >= sidebarPosition; y--){
-                let sidebarIndexToBeFound = JSON.parse(JSON.stringify(sidebar.details[y].index));
-                sidebarIndexToBeFound.length = looping;
-                if(JSON.stringify(sidebarIndexToBeFound) === JSON.stringify(myIndex)){
-                    updatedSidebar.splice(y+1, 0, newSide);
-                    loopingState = false;
-                    break;
+            let sideLength = sidebar.details.length
+            if(y_tmp == 0){
+                for(let y = sideLength-1; y >= sidebarPosition; y--){
+                    let sidebarIndexToBeFound = JSON.parse(JSON.stringify(sidebar.details[y].index));
+                    sidebarIndexToBeFound.length = looping;
+                    if(JSON.stringify(sidebarIndexToBeFound) === JSON.stringify(myIndex)){
+                        let indexMe = Number(newSide.index[looping]);
+                        let indexFind = (sidebar.details[y].index[looping] == undefined) ? 0 : Number(sidebar.details[y].index[looping]);
+                        if(indexMe >= indexFind){
+                            updatedSidebar.splice(y+1, 0, newSide);
+                            loopingState = false;
+                            break;
+                        } else if(indexMe < indexFind){
+                            y_tmp = y;
+                        }
+                    }
                 }
+                if(!loopingState) break;
+            } else {
+                updatedSidebar.splice(y_tmp, 0, newSide);
             }
-            if(!loopingState) break;
         }
     }
     addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
@@ -533,21 +544,32 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
         let updatedSidebar = JSON.parse(JSON.stringify(sidebar.details));
         if(sidebar.details.findIndex(obj => obj.dataKey === newSide.dataKey) === -1){
             let newSideLength = newSide.index.length
+            let y_tmp = 0
             for(let looping = newSideLength; looping > 1; looping--){
                 let loopingState = true;
                 let myIndex = JSON.parse(JSON.stringify(newSide.index))
                 myIndex.length = looping;
                 let sideLength = sidebar.details.length
-                for(let y = sideLength-1; y >= sidebarPosition; y--){
-                    let sidebarIndexToBeFound = JSON.parse(JSON.stringify(sidebar.details[y].index));
-                    sidebarIndexToBeFound.length = looping;
-                    if(JSON.stringify(sidebarIndexToBeFound) === JSON.stringify(myIndex)){
-                        updatedSidebar.splice(y+1, 0, newSide);
-                        loopingState = false;
-                        break;
+                if(y_tmp == 0){
+                    for(let y = sideLength-1; y >= sidebarPosition; y--){
+                        let sidebarIndexToBeFound = JSON.parse(JSON.stringify(sidebar.details[y].index));
+                        sidebarIndexToBeFound.length = looping;
+                        if(JSON.stringify(sidebarIndexToBeFound) === JSON.stringify(myIndex)){
+                            let indexMe = Number(newSide.index[looping]);
+                            let indexFind = (sidebar.details[y].index[looping] == undefined) ? 0 : Number(sidebar.details[y].index[looping]);
+                            if(indexMe >= indexFind){
+                                updatedSidebar.splice(y+1, 0, newSide);
+                                loopingState = false;
+                                break;
+                            } else if(indexMe < indexFind){
+                                y_tmp = y;
+                            }
+                        }
                     }
+                    if(!loopingState) break;
+                } else {
+                    updatedSidebar.splice(y_tmp, 0, newSide);
                 }
-                if(!loopingState) break;
             }
         }
         addHistory('change_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
@@ -712,6 +734,20 @@ export const runValidation = (dataKey:string, updatedRef:any, activeComponentPos
     saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null);
 }
 
+export const setEnableFalse = () =>{    
+    const indexEnableFalse = [];
+    setReferenceEnableFalse([]);
+    reference.details.forEach((element) => {
+      if( (element.type < 3) && !(element.enable) ) {
+        indexEnableFalse.push({
+          parentIndex: element.index,
+        })
+      };
+    })
+    const indexEnableFalse_unique = indexEnableFalse.filter((object,index) => index === indexEnableFalse.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object))); 
+    setReferenceEnableFalse([...indexEnableFalse_unique]);
+}
+
 export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, activeComponentPosition: number, prop:any | null) => {
     const eval_enable = (eval_text) => {
         try{
@@ -732,7 +768,8 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
         setReference('details', refPosition, attributeParam, answer);
         //validate for its own dataKey 
         if(referenceHistoryEnable()) runValidation(dataKey, JSON.parse(JSON.stringify(reference.details[refPosition])), activeComponentPosition);
-
+        
+        //do nothing if no changes, thanks to Budi's idea on pull request #5
         if(attributeParam === 'answer'){
             if(JSON.stringify(beforeAnswer) === JSON.stringify(answer)){
                 return
@@ -918,65 +955,68 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
             if(hasComponentUsing.length > 0) {//this dataKey is used as a source in Nested at minimum 1 component
                 if(reference.details[refPosition].type === 4) beforeAnswer = [];
                 if(typeof answer !== 'boolean') {
-                console.time('Nested 🚀');
-                hasComponentUsing.forEach(element => {
-                    if(typeof answer === 'number' || typeof answer === 'string'){
-                        beforeAnswer = (beforeAnswer === undefined) ? 0 : beforeAnswer;
-                        if(Number(answer) > Number(beforeAnswer)){
-                            insertSidebarNumber(element.dataKey, answer, beforeAnswer, activeComponentPosition)
-                        }else if(Number(answer) < Number(beforeAnswer)){
-                            deleteSidebarNumber(element.dataKey, answer, beforeAnswer, activeComponentPosition)
-                        }
-                    } else if(typeof answer === 'object'){
-                        beforeAnswer = (beforeAnswer === undefined) ? [] : beforeAnswer;
-                        answer = JSON.parse(JSON.stringify(answer));
-                        beforeAnswer = JSON.parse(JSON.stringify(beforeAnswer));
-                        
-                        if(answer.length > 0){
-                            let tmp_index = answer.findIndex(obj => Number(obj.value) === 0);
-                            if(tmp_index !== -1){
-                                let tmp_label = answer[tmp_index].label.split('#');
-                                if(tmp_label[1]) answer.splice(tmp_index, 1);
-                            }
-                        }
-                        if(beforeAnswer.length > 0){
-                            let tmp_index = beforeAnswer.findIndex(obj => Number(obj.value) === 0);
-                            if(tmp_index !== -1){
-                                let tmp_label = beforeAnswer[tmp_index].label.split('#');
-                                if(tmp_label[1]) beforeAnswer.splice(tmp_index, 1);
-                            }
-                        }
-                        let answerLength = answer.length;
-                        let beforeAnswerLength = beforeAnswer.length;
-                        if(answerLength > beforeAnswerLength){
-                            answer.forEach(componentAnswer => {
-                                let checked = element.dataKey+'#'+Number(componentAnswer.value);
-                                if(sidebar.details.findIndex(obj => obj.dataKey === checked) === -1){
-                                    insertSidebarArray(element.dataKey, componentAnswer, [], activeComponentPosition);
+                    console.time('Nested 🚀');
+                    hasComponentUsing.forEach(element => {
+                        if(typeof answer === 'number' || typeof answer === 'string'){
+                            beforeAnswer = (beforeAnswer === undefined) ? 0 : beforeAnswer;
+                            if(Number(answer) > Number(beforeAnswer)){
+                                insertSidebarNumber(element.dataKey, answer, beforeAnswer, activeComponentPosition)
+                            } else if(Number(answer) < Number(beforeAnswer)){
+                                deleteSidebarNumber(element.dataKey, answer, beforeAnswer, activeComponentPosition)
+                            };
+                        } else if(typeof answer === 'object'){
+                            beforeAnswer = (beforeAnswer === undefined) ? [] : beforeAnswer;
+                            answer = JSON.parse(JSON.stringify(answer));
+                            beforeAnswer = JSON.parse(JSON.stringify(beforeAnswer));
+                            
+                            if(answer.length > 0){
+                                let tmp_index = answer.findIndex(obj => Number(obj.value) === 0);
+                                if(tmp_index !== -1){
+                                    let tmp_label = answer[tmp_index].label.split('#');
+                                    if(tmp_label[1]) answer.splice(tmp_index, 1);
                                 }
-                            });
-                        } else if(answerLength < beforeAnswerLength){
-                            if(answer.length > 0) {
-                                beforeAnswer.forEach(component => {
-                                    if(answer.findIndex(obj => Number(obj.value) === Number(component.value)) === -1) {
-                                        deleteSidebarArray(element.dataKey, [], component, activeComponentPosition);
-                                    }
-                                })
-                            } else {
-                                deleteSidebarArray(element.dataKey, [], beforeAnswer[0], activeComponentPosition);
                             }
-                        } else if(answerLength === beforeAnswerLength){
-                            answerLength > 0 && changeSidebarArray(element.dataKey, answer, beforeAnswer, activeComponentPosition);
+                            if(beforeAnswer.length > 0){
+                                let tmp_index = beforeAnswer.findIndex(obj => Number(obj.value) === 0);
+                                if(tmp_index !== -1){
+                                    let tmp_label = beforeAnswer[tmp_index].label.split('#');
+                                    if(tmp_label[1]) beforeAnswer.splice(tmp_index, 1);
+                                }
+                            }
+                            let answerLength = answer.length;
+                            let beforeAnswerLength = beforeAnswer.length;
+                            if(answerLength > beforeAnswerLength){
+                                answer.forEach(componentAnswer => {
+                                    let checked = element.dataKey+'#'+Number(componentAnswer.value);
+                                    if(sidebar.details.findIndex(obj => obj.dataKey === checked) === -1){
+                                        insertSidebarArray(element.dataKey, componentAnswer, [], activeComponentPosition);
+                                    }
+                                });
+                            } else if(answerLength < beforeAnswerLength){
+                                if(answer.length > 0) {
+                                    beforeAnswer.forEach(component => {
+                                        if(answer.findIndex(obj => Number(obj.value) === Number(component.value)) === -1) {
+                                            deleteSidebarArray(element.dataKey, [], component, activeComponentPosition);
+                                        }
+                                    })
+                                } else {
+                                    deleteSidebarArray(element.dataKey, [], beforeAnswer[0], activeComponentPosition);
+                                }
+                            } else if(answerLength === beforeAnswerLength){
+                                answerLength > 0 && changeSidebarArray(element.dataKey, answer, beforeAnswer, activeComponentPosition);
+                            }
                         }
-                    }
-                });
-                console.timeEnd('Nested 🚀');
-            }
-            if(referenceHistoryEnable()){
-                load_sidebar_index_map()
-            }
+                    });
+                    console.timeEnd('Nested 🚀');
+                }
+                
+                if(referenceHistoryEnable()){
+                    load_sidebar_index_map()
+                }
             }
         }
+        
+        setEnableFalse();
     } else if(attributeParam === 'validate'){
         let item_refff = JSON.parse(JSON.stringify(reference.details[refPosition]))
         addHistory('saveAnswer', dataKey, refPosition, attributeParam

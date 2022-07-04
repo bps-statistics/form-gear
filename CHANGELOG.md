@@ -1,5 +1,46 @@
 # Changelog
 
+## FormGear | Ver. 1.0.3
+
+> July 04, 2022
+
+### Changed
+- Redeploy setEnabeleFalse on value change to after saving answer
+
+---
+
+
+## FormGear | Ver. 1.0.2
+
+> June 27, 2022
+
+### Added
+- Add Timezone and GMT attribute in principal, resonse, and remark output.
+- Filter condition on saveAnswer that will do nothing if no changes. Special thanks to [Budi Setiawan Akkas - @cloudwalkerid](https://github.com/cloudwalkerid) for the idea on pull request [#5](https://github.com/AdityaSetyadi/form-gear/pull/5).
+- Set clickable error on Summary to open ListError or even validate the whole questionnaire before submission.
+- Add referenceEnableFalse to handle reactive enable conditions for each component on trigger save, submit, or show ListError.
+- Add load spinner while running setReferenceEnableFalse
+
+### Changed
+- Update to lighter colors on the checked options in RadioInput and CheckboxInput on formMode preview and close.
+- Update disable color for SelectInput and MultipleSelectInput as the same as other.
+- Update border color on MaskingInput as the same as other.
+- Update header width divided by 6 parts, only applied on mobile.
+- Update PhotoInput value to base64.
+- Update set response output with deeper filtration on enable condition on the parent of each component.
+
+### Fixed
+- Update ListTextInput and ListSelectInput delete modal position from the bottom to the center of the screen.
+- Update handling nested questions from numeric 0 value input.
+- Update CheckboxInput default options.
+- Fix nested sourceOption on MultipleSelectInput.
+- Fix sorting sidebar on insert nester child.
+
+
+---
+
+
+
 ## FormGear | Ver. 1.0.1
 
 > June 8, 2022

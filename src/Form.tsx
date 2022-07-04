@@ -8,15 +8,16 @@ import { preset, setPreset, Preset } from './stores/PresetStore';
 import { response, setResponse, Response } from './stores/ResponseStore';
 import { validation, setValidation, Validation } from './stores/ValidationStore';
 import { reference, setReference } from './stores/ReferenceStore';
-import { sidebarIndexMap, setSidebarIndexMap} from './stores/ReferenceStore';
+import { referenceEnableFalse, setReferenceEnableFalse } from './stores/ReferenceStore';
 import { sidebar, setSidebar } from './stores/SidebarStore';
 import { remark, setRemark, Remark } from './stores/RemarkStore';
 import { note, setNote } from './stores/NoteStore';
 import { principal, setPrincipal } from './stores/PrincipalStore';
 import { locale, setLocale } from './stores/LocaleStore';
 import { summary, setSummary } from './stores/SummaryStore';
+import { useLoaderDispatch } from "./loader/FormLoaderProvider"
 
-import { saveAnswer, runValidation, reference_index_lookup, load_sidebar_index_map} from "./GlobalFunction";
+import { saveAnswer, setEnableFalse, runValidation, reference_index_lookup} from "./GlobalFunction";
 import { toastInfo } from "./FormInput";
 
 import { referenceHistoryEnable, setReferenceHistoryEnable} from './stores/ReferenceStore';
@@ -72,6 +73,7 @@ const Form: Component<{
   }
   const [renderGear, setRenderGear] = createSignal('FormGear-'+gearVersion+' 🚀:');
 
+  const { setLoader, removeLoader } = useLoaderDispatch();
   const [prop, setProp] = createSignal(getProp(''));
   const [config, setConfig] = createSignal(getConfig());
   const [form, { setActiveComponent }] = useForm();
@@ -265,25 +267,11 @@ const Form: Component<{
 
   createEffect(() => {
     setComponents(getComponents(form.activeComponent.dataKey));
-    let count_answer= 0;
-    let count_blank = 0;
-    let count_error = 0;
-
-    reference.details.forEach(element => {
-        let enable_parent = true
-        try{
-          let index_parent = JSON.parse(JSON.stringify(element.index)).slice(0, element.index.length - 1).join('-')
-          let index_parent2 = JSON.parse(JSON.stringify(element.index)).slice(0, element.index.length - 2).join('-')
-          if(index_parent in sidebarIndexMap()){
-            enable_parent = enable_parent && sidebarIndexMap()[index_parent]
-          }
-          if(index_parent2 in sidebarIndexMap()){
-            enable_parent = enable_parent && sidebarIndexMap()[index_parent2]
-          }
-        }catch(err){
-
-        }
-        if(enable_parent && ((element.type > 4)
+    setSummary({
+      answer: reference.details.filter((element) => {
+        let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
+        return enableFalse == -1 
+          && (element.type > 4)
           && (element.enable)
           && (element.answer !== undefined)
           && (element.answer !== '')
@@ -297,17 +285,13 @@ const Form: Component<{
             || ((element.type == 22) && element.answer.length == 1)
           )
           && !(JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0
-            && element.level > 1))){
-              count_blank++
-        }
-        if(enable_parent && (element.type > 4 && (element.enable) && element.validationState == 2)){
-            count_error++
-        }
-    })
-    setSummary({
-      answer: count_answer,
-      blank: count_blank,
-      error: count_error,
+            && element.level > 1)
+      }).length,
+      error: 
+      reference.details.filter((element) => {
+        let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
+        return enableFalse == -1 && (element.type > 4 && (element.enable) && element.validationState == 2)
+      }).length,
       remark: note.details.notes.length
     });
     const [formProps] = useForm();
@@ -341,38 +325,36 @@ const Form: Component<{
   const setData = () => {
     const dataForm = [];
     const dataPrincipal = [];
-    reference.details.forEach((element) => {
-      let enable_parent = true
-      try{
-        let index_parent = JSON.parse(JSON.stringify(element.index)).slice(0, element.index.length - 1).join('-')
-        let index_parent2 = JSON.parse(JSON.stringify(element.index)).slice(0, element.index.length - 2).join('-')
-        if(index_parent in sidebarIndexMap()){
-          enable_parent = enable_parent && sidebarIndexMap()[index_parent]
-        }
-        if(index_parent2 in sidebarIndexMap()){
-          enable_parent = enable_parent && sidebarIndexMap()[index_parent2]
-        }
-      }catch(err){
 
-      }
-      if ( enable_parent &&
+    setLoader({});
+    setTimeout(() => setEnableFalse(), 50);
+
+    reference.details.forEach((element, index) => {
+      if (
         (element.type > 3)
         && (element.enable)
         && (element.answer !== undefined)
         && (element.answer !== '')
         && (element.answer !== null)
-      ) {
-        dataForm.push({
-          dataKey: element.dataKey,
-          answer: element.answer
-        })
-        if (element.principal !== undefined) {
-          dataPrincipal.push({
+      ) {        
+        // enableShouldTrue.push({
+        //   dataKey: element.dataKey
+        // })
+        // let parentIndex = element.level == 0 ? element.index : element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
+        let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
+        if (enableFalse == -1){
+          dataForm.push({
             dataKey: element.dataKey,
-            answer: element.answer,
-            principal: element.principal,
-            columnName: element.columnName
+            answer: element.answer
           })
+          if (element.principal !== undefined) {
+            dataPrincipal.push({
+              dataKey: element.dataKey,
+              answer: element.answer,
+              principal: element.principal,
+              columnName: element.columnName
+            })
+          }
         }
       }
     })
@@ -397,9 +379,6 @@ const Form: Component<{
     (response.details.createdBy === undefined || (response.details.createdBy !== undefined && response.details.createdBy === '')) ?
       setResponse('details', 'createdBy', form.formConfig.username) :
       setResponse('details', 'updatedBy', form.formConfig.username);
-    // (response.details.createdAt === undefined || (response.details.createdAt !== undefined && response.details.createdAt === '')) ?
-    //   setResponse('details', 'createdAt', now) :
-    //   setResponse('details', 'updatedAt', now);
 
     if(response.details.createdAt === undefined || (response.details.createdAt !== undefined && response.details.createdAt === '')){
       setResponse('details', 'createdAt', now) ;
@@ -424,9 +403,6 @@ const Form: Component<{
     (principal.details.createdBy === undefined || (principal.details.createdBy !== undefined && principal.details.createdBy === '')) ?
       setPrincipal('details', 'createdBy', form.formConfig.username) :
       setPrincipal('details', 'updatedBy', form.formConfig.username);
-    // (principal.details.createdAt === undefined || (principal.details.createdAt !== undefined && principal.details.createdAt === '')) ?
-    //   setPrincipal('details', 'createdAt', now) :
-    //   setPrincipal('details', 'updatedAt', now);
 
     if(principal.details.createdAt === undefined || (principal.details.createdAt !== undefined && principal.details.createdAt === '')){
       setPrincipal('details', 'createdAt', now) ;
@@ -451,9 +427,6 @@ const Form: Component<{
     (remark.details.createdBy === undefined || (remark.details.createdBy !== undefined && remark.details.createdBy === '')) ?
       setRemark('details', 'createdBy', form.formConfig.username) :
       setRemark('details', 'updatedBy', form.formConfig.username);
-    // (remark.details.createdAt === undefined || (remark.details.createdAt !== undefined && remark.details.createdAt === '')) ?
-    //   setRemark('details', 'createdAt', now) :
-    //   setRemark('details', 'updatedAt', now);
 
     if(remark.details.createdAt === undefined || (remark.details.createdAt !== undefined && remark.details.createdAt === '')){
       setRemark('details', 'createdAt', now) ;
@@ -558,26 +531,7 @@ const Form: Component<{
     window.scrollTo({ top: 0, behavior: "smooth" });
     component.scrollTo({ top: 0, behavior: "smooth" });
   }
-
-  function checkDocState() {
-    (summary.error > 0) ? setDocState('E') : (reference.details.filter(element => Number(element.validationState) === 1).length > 0) ? setDocState('W') : setDocState('C');
-  }
-
-  function createCaptcha() {
-    let captchaStr = []
-    // const activeCaptcha = document.getElementById("captcha");
-    for (let q = 0; q < 6; q++) {
-      if (q % 2 == 0) {
-        // captchaStr[q] = String.fromCharCode(Math.floor(Math.random() * 26 + 65));
-        captchaStr[q] = Math.floor(Math.random() * 10 + 0);
-      } else {
-        captchaStr[q] = Math.floor(Math.random() * 10 + 0);
-      }
-    }
-    setCaptcha(captchaStr.join(""));
-    // activeCaptcha.innerHTML = `${theCaptcha}`;
-  }
-
+  
   const showListError = (event: MouseEvent) => {
     let filteredError = [];
     let filteredWarning = [];
@@ -595,13 +549,16 @@ const Form: Component<{
         }
       }catch(err){}
       // let sidebarIndex = element.index.splice(-1)
-      if (enable_parent && element.type > 4 && (element.enable) && element.validationState == 2) {
-        let sidebarIndex = element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
-        filteredError.push({ label: element.label, message: element.validationMessage, sideIndex: sidebarIndex, dataKey: element.dataKey })
-      }
-      if (enable_parent && element.type > 4 && (element.enable) && element.validationState == 1) {
-        let sidebarIndex = element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
-        filteredWarning.push({ label: element.label, message: element.validationMessage, sideIndex: sidebarIndex, dataKey: element.dataKey })
+      let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
+      if (enableFalse == -1){
+        if (element.type > 4 && (element.enable) && element.validationState == 2) {
+          let sidebarIndex = element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
+          filteredError.push({ label: element.label, message: element.validationMessage, sideIndex: sidebarIndex, dataKey: element.dataKey })
+        }
+        if (element.type > 4 && (element.enable) && element.validationState == 1) {
+          let sidebarIndex = element.level > 1 ? element.index.slice(0, -1) : element.index.slice(0, -2)
+          filteredWarning.push({ label: element.label, message: element.validationMessage, sideIndex: sidebarIndex, dataKey: element.dataKey })
+        }
       }
     });
 
@@ -700,18 +657,40 @@ const Form: Component<{
     component.scrollIntoView({ behavior: "smooth" });
   }
 
-  const confirmSubmit = (event: MouseEvent) => {
-    createCaptcha();
-    checkDocState();
-    if (docState() === 'E') {
-      toastInfo(locale.details.language[0].submitInvalid, 3000, "", "bg-pink-600/80");
-    } else {
-      reference.details.forEach((obj, ind) => {
-        let updatedRef = JSON.parse(JSON.stringify(obj));
-        let run = 0
+  function checkDocState() {
+    (summary.error > 0) ? setDocState('E') : (reference.details.filter(element => Number(element.validationState) === 1).length > 0) ? setDocState('W') : setDocState('C');
+  }
 
-        // let notePosition = note.details.notes.findIndex(elNote => elNote.dataKey === obj.dataKey);
+  function createCaptcha() {
+    let captchaStr = []
+    // const activeCaptcha = document.getElementById("captcha");
+    for (let q = 0; q < 6; q++) {
+      if (q % 2 == 0) {
+        // captchaStr[q] = String.fromCharCode(Math.floor(Math.random() * 26 + 65));
+        captchaStr[q] = Math.floor(Math.random() * 10 + 0);
+      } else {
+        captchaStr[q] = Math.floor(Math.random() * 10 + 0);
+      }
+    }
+    setCaptcha(captchaStr.join(""));
+    // activeCaptcha.innerHTML = `${theCaptcha}`;
+  }
 
+  const revalidateError = (event: MouseEvent) => {    
+    setLoader({});
+    setTimeout(() => setEnableFalse(), 50);
+    // revalidateQ();
+    if (summary.error > 0) {
+      showListError(event);
+    }
+  }
+
+  const revalidateQ = () => {    
+    reference.details.forEach((object, ind) => { 
+
+      let updatedRef = JSON.parse(JSON.stringify(object));
+      let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === updatedRef.index.slice(0, -2).toString());
+      if (enableFalse == -1){
         if ((updatedRef.enable) && updatedRef.required !== undefined && (updatedRef.required)) {
           let editedDataKey = updatedRef.dataKey.split('@');
           let newEdited = editedDataKey[0].split('#');
@@ -726,14 +705,28 @@ const Form: Component<{
               typeAnswer === 'object' && !isNaN(updatedRef.answer) ||
               typeAnswer === 'number' && isNaN(updatedRef.answer) ||
               JSON.stringify(updatedRef.answer) === '[]') {
-              updatedRef.validationMessage.push(locale.details.language[0].validationRequired);
-              updatedRef.validationState = 2;
-            }
+                updatedRef.validationMessage.push(locale.details.language[0].validationRequired);
+                updatedRef.validationState = 2;
+              }
             setReference('details', ind, updatedRef);
           }
         }
-      });
+      // }else{
+      //   setReference('details', ind, 'enable', false);
+      }
 
+    })
+  }
+
+  const confirmSubmit = (event: MouseEvent) => {
+    createCaptcha();
+    checkDocState();
+    if (docState() === 'E') {
+      toastInfo(locale.details.language[0].submitInvalid, 3000, "", "bg-pink-600/80");
+    } else {      
+      setLoader({});
+      setTimeout(() => setEnableFalse(), 50);
+      revalidateQ();
       if (summary.error === 0) {
         if (docState() === 'W') {
           toastInfo(locale.details.language[0].submitWarning, 3000, "", "bg-orange-600/80");
@@ -1328,28 +1321,6 @@ const Form: Component<{
                     </For>
                   </nav>
 
-                  {/* <nav class="space-y-1">
-                      <For each={sidebar.details}>
-                        {(item, index) => (
-                          <a href="javascript:void(0);" onClick={() => {
-                            setActiveComponent({name: item.dataKey, index: JSON.parse(JSON.stringify(item.index)), position: index()});
-                          }}
-                            classList={{
-                                'bg-blue-800 text-white': item.dataKey === form.activeComponent.name, 
-                                'indent-3 ': item.level === 1,
-                                'indent-6': item.level === 2,
-                                'indent-9': item.level === 3,
-                                'indent-12': item.level === 4,
-                              }}
-                            class="flex flex-col flex-coltext-white font-medium space-x-2 py-2.5 px-4 
-                                hover:bg-blue-700 rounded hover:text-white transition duration-200">
-                            {item.label}
-                            <div class="font-light text-xs">{item.description}</div>
-                          </a>
-                        )}
-                      </For>
-                    </nav> */}
-
                 </div>
 
                 <div class="flex items-center space-x-3 sm:mt-7 mt-4">
@@ -1362,11 +1333,11 @@ const Form: Component<{
                         {summary.answer}
                         <div class="font-light text-xs">{locale.details.language[0].summaryAnswer}</div>
                       </div>
-                      <div class="h-20 text-5xl text-center sm:flex flex-col flex-coltext-white font-medium xs:h-auto xs:square xl:border-b "  onClick={showListBlank}>
+                      <div class="h-20 text-5xl text-center sm:flex flex-col flex-coltext-white font-medium xs:h-auto xs:square xl:border-b " onClick={showListBlank}>
                         {summary.blank}
                         <div class="font-light text-xs">{locale.details.language[0].summaryBlank}</div>
-                      </div>
-                      <div class="h-20 text-5xl text-center sm:flex flex-col flex-coltext-white font-medium xs:h-auto xs:square xl:border-b ">
+                      </div>                      
+                      <div class="h-20 text-5xl text-center sm:flex flex-col flex-coltext-white font-medium xs:h-auto xs:square xl:border-b " onClick={revalidateError}>
                         {summary.error}
                         <div class="font-light text-xs">{locale.details.language[0].summaryError}</div>
                       </div>
@@ -1381,7 +1352,7 @@ const Form: Component<{
                           <button class="bg-teal-300 hover:bg-teal-200 text-teal-100 p-3 w-full rounded-md shadow font-medium" onClick={confirmSubmit}>Submit</button>
                         </Match>
                         <Match when={(summary.error > 0 && config().formMode < 3)}>
-                          <button class="bg-red-500 hover:bg-red-400 text-teal-100 p-3 w-full rounded-md shadow font-medium" onClick={showListError}>List Error</button>
+                          <button class="bg-red-500 hover:bg-red-400 text-teal-100 p-3 w-full rounded-md shadow font-medium" onClick={revalidateError}>List Error</button>
                         </Match>
                       </Switch>
                     </div>
@@ -1394,7 +1365,7 @@ const Form: Component<{
 
                 <div class="sm:px-7 sm:pt-7 px-4 pt-4 flex flex-col w-full border-b border-gray-200 bg-white dark:bg-gray-900 dark:text-white dark:border-gray-800 xl:sticky top-0 z-10">
                   <div class="flex w-full items-center">
-                    <div class="ml-3 md:text-2xl md:text-left font-medium text-left text-base text-gray-900 dark:text-white mt-1">
+                    <div class="ml-3 w-4/6 md:w-auto md:text-2xl md:text-left font-medium text-left text-base text-gray-900 dark:text-white mt-1">
                       <div innerHTML={props.template.details.title} />
                       <div class="text-sm font-light md:text-lg text-gray-600 dark:text-gray-400" innerHTML={props.template.details.description}
                         classList={{
@@ -1404,7 +1375,7 @@ const Form: Component<{
                       />
                       <div class="text-xs font-light text-gray-600 "> {renderGear} &#177; {timeDiff} ms</div>
                     </div>
-                    <div class="ml-auto sm:flex items-center p-2 ">
+                    <div class="ml-auto w-1/6 md:w-auto sm:flex items-center p-2 ">
                       <button onClick={toggleSwitch} type="button"
                         class="button-switch relative inline-flex flex-shrink-0 bg-gray-200 dark:bg-gray-700 h-6 w-11 border-2 border-transparent rounded-full cusrsor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
 
@@ -1425,7 +1396,7 @@ const Form: Component<{
                         </span>
                       </button>
                     </div>
-                    <div class="ml-auto sm:flex md:hidden items-center">
+                    <div class="ml-auto w-1/6 md:w-auto sm:flex md:hidden items-center">
                       <button type="button"
                         class="p-4 mobile-menu-button focus:outline-none focus:bg-gray-200 dark:focus:bg-gray-800" onClick={sidebarCollapse}>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1525,8 +1496,6 @@ const Form: Component<{
                   </div> */}
 
               </div>
-
-
 
               <div class="grid grid-cols-6 sticky w-full justify-end bottom-6 mt-10"
                 classList={{

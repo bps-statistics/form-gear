@@ -13,12 +13,13 @@ import { note, setNote} from './stores/NoteStore';
 import { principal, setPrincipal} from './stores/PrincipalStore';
 import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
 import { locale, setLocale} from './stores/LocaleStore';
-import { useLoaderDispatch } from "./loader/FormLoaderProvider"
+import { useLoaderDispatch } from "./loader/FormLoaderProvider";
+import { referenceEnableFalse, setReferenceEnableFalse } from './stores/ReferenceStore';
 
 import dayjs from 'dayjs';
 import Toastify from 'toastify-js'
 
-import { getValue, saveAnswer , reloadDataFromHistory} from './GlobalFunction'
+import { getValue, saveAnswer , setEnableFalse, reloadDataFromHistory} from './GlobalFunction'
 
 import { setReferenceeHistory} from './stores/ReferenceStore';
 import { setSideBareHistory} from './stores/ReferenceStore';

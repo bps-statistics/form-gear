@@ -153,6 +153,7 @@ const CheckboxInput: FormComponentBase = props => {
                                                                 checked:bg-blue-600 checked:border-blue-600 
                                                                 focus:outline-none transition duration-200 mt-1 align-top 
                                                                 bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer
+                                                                checked:disabled:bg-gray-500 checked:dark:disabled:bg-gray-300 
                                                                 disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400" 
                                                                 type="checkbox" 
                                                                 disabled = { disableInput() }
