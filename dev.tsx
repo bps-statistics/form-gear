@@ -159,17 +159,23 @@ let onlineSearch = async (url) =>
   }).then((res: any) => {
     /*the return format must in object of 
       {
-        success: false, => true or false
-        data: {}, --> the data property must in format array of object [{value: {value}, label : {label}}, ...]
+        success: false,
+        data: {}, --> the data property must in format array of object [{key: {key}, value : {value}}, ...]
         message: status (200, 400 ,500 , etc )
       }
     }*/
-  return {
-    success: true,
-    data: [{}],
-    message: 200
-  }
-
+    if (res.status === 200) {
+      let temp = res.json();
+      return temp;
+    } else {
+      return {
+        success: false,
+        data: {},
+        message: res.status
+      }
+    }
+  }).then((res: any) => {
+    return res;
   }));
 
 //function to get response, remark, principal and reference
