@@ -263,35 +263,60 @@ const Form: Component<{
 
   createEffect(() => {
     setComponents(getComponents(form.activeComponent.dataKey));
+    let _answer = 0;
+    let _error = 0;
+    let _blank = 0;
+    reference.details.forEach((element, index) => {
+      let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
+      if(enableFalse == -1 && element.type > 4 && element.enable){
+        if((element.answer !== undefined) && (element.answer !== '') && (element.answer !== null)) {
+            _answer += 1;
+        }
+        if(((element.answer === undefined || element.answer === '') || ((element.type == 21) && element.answer.length == 1) || ((element.type == 22) && element.answer.length == 1))  && !(JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)) {
+            _blank += 1;
+        }
+        if(element.validationState == 2) {
+          _error += 1;
+        }
+      }
+    })
+
     setSummary({
-      answer: reference.details.filter((element) => {
-        let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
-        return enableFalse == -1 
-          && (element.type > 4)
-          && (element.enable)
-          && (element.answer !== undefined)
-          && (element.answer !== '')
-          && (element.answer !== null)
-      }).length,
-      blank: reference.details.filter((element) => {
-        let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
-        return enableFalse == -1 
-          && (element.type > 4)
-          && (element.enable)
-          && ((element.answer === undefined || element.answer === '')
-            || ((element.type == 21) && element.answer.length == 1)
-            || ((element.type == 22) && element.answer.length == 1)
-          )
-          && !(JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0
-            && element.level > 1)
-      }).length,
-      error: 
-      reference.details.filter((element) => {
-        let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
-        return enableFalse == -1 && (element.type > 4 && (element.enable) && element.validationState == 2)
-      }).length,
+      answer: _answer,
+      blank: _blank,
+      error: _error,
       remark: note.details.notes.length
     });
+
+    // setSummary({
+    //   answer: reference.details.filter((element) => {
+    //     let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
+    //     return enableFalse == -1 
+    //       && (element.type > 4)
+    //       && (element.enable)
+    //       && (element.answer !== undefined)
+    //       && (element.answer !== '')
+    //       && (element.answer !== null)
+    //   }).length,
+    //   blank: reference.details.filter((element) => {
+    //     let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
+    //     return enableFalse == -1 
+    //       && (element.type > 4)
+    //       && (element.enable)
+    //       && ((element.answer === undefined || element.answer === '')
+    //         || ((element.type == 21) && element.answer.length == 1)
+    //         || ((element.type == 22) && element.answer.length == 1)
+    //       )
+    //       && !(JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0
+    //         && element.level > 1)
+    //   }).length,
+    //   error: 
+    //   reference.details.filter((element) => {
+    //     let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
+    //     return enableFalse == -1 && (element.type > 4 && (element.enable) && element.validationState == 2)
+    //   }).length,
+    //   remark: note.details.notes.length
+    // });
     const [formProps] = useForm();
 
     if (formProps.formConfig.clientMode != 2) {
