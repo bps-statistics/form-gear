@@ -6,6 +6,10 @@
 
 ### Changed
 - Redeploy setEnabeleFalse on value change to after saving answer
+- Recode setSummary to be more efficient
+
+### Fixed
+- Fix enablingSidebar including section and nested
 
 ---
 

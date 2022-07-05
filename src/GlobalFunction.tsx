@@ -1,4 +1,4 @@
-import { reference, setReference, setReferenceEnableFalse} from './stores/ReferenceStore';
+import { reference, referenceEnableFalse, setReference, setReferenceEnableFalse} from './stores/ReferenceStore';
 import { referenceMap, setReferenceMap} from './stores/ReferenceStore';
 import { sidebarIndexMap, setSidebarIndexMap} from './stores/ReferenceStore';
 import { referenceHistoryEnable, setReferenceHistoryEnable} from './stores/ReferenceStore';
@@ -636,8 +636,6 @@ export const runVariableComponent = (dataKey: string, activeComponentPosition: n
             saveAnswer(dataKey, 'answer', answerVariable, activeComponentPosition, null);
         }catch(e){
             saveAnswer(dataKey, 'answer', undefined, activeComponentPosition, null);
-            // console.log(dataKey)
-            // console.log(updatedRef.expression)
             // console.log(e)
         }
         
@@ -693,13 +691,10 @@ export const runValidation = (dataKey:string, updatedRef:any, activeComponentPos
     if(!updatedRef.hasRemark){
         let biggest = 0;
         for(let i in updatedRef.validations){
-            // let result = eval(updatedRef.validations[i].test);
             let result = default_eval_validation;
             try{
                 result = eval(updatedRef.validations[i].test)
             }catch(e){
-                // console.log(dataKey)
-                // console.log(updatedRef.validations[i].test)
                 // console.log(e)
             }
             if(result){
@@ -737,15 +732,26 @@ export const runValidation = (dataKey:string, updatedRef:any, activeComponentPos
 export const setEnableFalse = () =>{    
     const indexEnableFalse = [];
     setReferenceEnableFalse([]);
-    reference.details.forEach((element) => {
-      if( (element.type < 3) && !(element.enable) ) {
-        indexEnableFalse.push({
-          parentIndex: element.index,
-        })
-      };
+    // reference.details.forEach((element) => {
+    //   if( (element.type < 3) && !(element.enable) ) {
+    //     indexEnableFalse.push({
+    //       parentIndex: element.index,
+    //     })
+    //   };
+    // })
+    sidebar.details.forEach((element) => {
+        if(!element.enable) 
+            {let idx = JSON.parse(JSON.stringify(element.index))
+                idx.length = idx.length;
+                indexEnableFalse.push({
+                    parentIndex: idx,
+                });
+            }
     })
-    const indexEnableFalse_unique = indexEnableFalse.filter((object,index) => index === indexEnableFalse.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object))); 
-    setReferenceEnableFalse([...indexEnableFalse_unique]);
+    setReferenceEnableFalse(JSON.parse(JSON.stringify(indexEnableFalse)));
+    // const indexEnableFalse_unique = indexEnableFalse.filter((object,index) => index === indexEnableFalse.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object))); 
+    // setReferenceEnableFalse([...indexEnableFalse_unique]);
+    // console.log('refEnableFalse', referenceEnableFalse())
 }
 
 export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, activeComponentPosition: number, prop:any | null) => {
@@ -825,14 +831,26 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                     setSidebar('details',sidePosition,'enable',enableSide);
                     let updatedRef = JSON.parse(JSON.stringify(reference.details));
                     let tmpVarComp = [];
+                    let tmpEnableComp = [];
                     let tmpIndex = [];
                     sidebarEnable.components[0].forEach((element, index) => {
                         let refPos = updatedRef.findIndex(objRef => objRef.dataKey === element.dataKey);
                         if(refPos !== -1){
-                            if(updatedRef[refPos].enableCondition === undefined || updatedRef[refPos].enableCondition === '') setReference('details',refPos,'enable',enableSide);
+                            // if(updatedRef[refPos].enableCondition === undefined || updatedRef[refPos].enableCondition === '') setReference('details',refPos,'enable',enableSide);
                             if(Number(updatedRef[refPos].type) === 4 && enableSide !== enableSideBefore){
                                 tmpVarComp.push(updatedRef[refPos])
                                 tmpIndex.push(index)
+                            }
+                            if(!enableSide){
+                                setReference('details',refPos,'enable',enableSide);
+                            } else {
+                                let newEnab = true;
+                                if(updatedRef[refPos].enableCondition === undefined || updatedRef[refPos].enableCondition === ''){
+                                    newEnab = true;
+                                } else {
+                                    newEnab = eval_enable(updatedRef[refPos].enableCondition)
+                                }
+                                setReference('details',refPos,'enable',newEnab);
                             }
                         }
                     });
@@ -1207,8 +1225,6 @@ export function get_CompEnable(dataKey){
                                 break;
                             }
                         }
-                        // console.log('newDataKey1 : '+objChild)
-                        // console.log('newDataKey2 : '+newDataKey)
                         if(newDataKey === dataKey){
                             returnDataKey.push(objChild)
                         }
