@@ -8,7 +8,7 @@ const CheckboxInput: FormComponentBase = props => {
     let handleOnChange = (value: any, label: any, open: any) => {
         let updatedAnswer = JSON.parse(JSON.stringify(props.value))          
         if(props.value){
-            if(props.value.some(d => d.value === value)){
+            if(props.value.some(d => String(d.value) === String(value))){
                 if(open){
                     let valueIndex = options().findIndex((item) => item.value == value);
                     updatedAnswer = updatedAnswer.filter((item) => item.value != value)
@@ -32,11 +32,11 @@ const CheckboxInput: FormComponentBase = props => {
     }
     
     let tick = (value:string) : boolean => {
-        return (props.value) ? (props.value.some(d => d.value === value) ? true : false) : false;
+        return (props.value) ? (props.value.some(d => String(d.value) === String(value)) ? true : false) : false;
     }
     
     let optionLabel = (value:string)  => {
-        let optionIndex = props.value.findIndex(d => d.value === value)
+        let optionIndex = props.value.findIndex(d => String(d.value) === String(value))
         return props.value[optionIndex].label
     }
     
