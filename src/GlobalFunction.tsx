@@ -831,50 +831,55 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                     setSidebar('details',sidePosition,'enable',enableSide);
                     let updatedRef = JSON.parse(JSON.stringify(reference.details));
                     let tmpVarComp = [];
-                    let tmpEnableComp = [];
                     let tmpIndex = [];
-                    sidebarEnable.components[0].forEach((element, index) => {
-                        let refPos = updatedRef.findIndex(objRef => objRef.dataKey === element.dataKey);
-                        if(refPos !== -1){
-                            // if(updatedRef[refPos].enableCondition === undefined || updatedRef[refPos].enableCondition === '') setReference('details',refPos,'enable',enableSide);
-                            if(Number(updatedRef[refPos].type) === 4 && enableSide !== enableSideBefore){
-                                tmpVarComp.push(updatedRef[refPos])
-                                tmpIndex.push(index)
-                            }
-                            if(!enableSide){
-                                setReference('details',refPos,'enable',enableSide);
-                            } else {
-                                let newEnab = true;
-                                if(updatedRef[refPos].enableCondition === undefined || updatedRef[refPos].enableCondition === ''){
-                                    newEnab = true;
+                    if(enableSide !== enableSideBefore){
+                        sidebarEnable.components[0].forEach((element, index) => {
+                            let refPos = updatedRef.findIndex(objRef => objRef.dataKey === element.dataKey);
+                            if(refPos !== -1){
+                                // if(updatedRef[refPos].enableCondition === undefined || updatedRef[refPos].enableCondition === '') setReference('details',refPos,'enable',enableSide);
+                                // if(Number(updatedRef[refPos].type) === 4 && enableSide !== enableSideBefore){
+                                //     tmpVarComp.push(updatedRef[refPos])
+                                //     tmpIndex.push(index)
+                                // }
+                                if(!enableSide){
+                                    setReference('details',refPos,'enable',enableSide);
                                 } else {
-                                    newEnab = eval_enable(updatedRef[refPos].enableCondition)
+                                    if(Number(updatedRef[refPos].type) === 4){
+                                        tmpVarComp.push(updatedRef[refPos])
+                                        tmpIndex.push(index)
+                                    }
+                                    let newEnab = true;
+                                    if(updatedRef[refPos].enableCondition === undefined || updatedRef[refPos].enableCondition === ''){
+                                        newEnab = true;
+                                    } else {
+                                        newEnab = eval_enable(updatedRef[refPos].enableCondition)
+                                    }
+                                    setReference('details',refPos,'enable',newEnab);
                                 }
-                                setReference('details',refPos,'enable',newEnab);
                             }
-                        }
-                    });
-                    if(tmpVarComp.length > 0) {
-                        const getRowIndex = (positionOffset:number) => {
-                            let editedDataKey = dataKey.split('@');
-                            let splitDataKey = editedDataKey[0].split('#');
-                            let splLength = splitDataKey.length;
-                            let reducer = positionOffset+1;
-                            return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
-                        }
-                        const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-                        tmpVarComp.forEach((e,i) => {
-                            // let evVal = eval(e.expression);
-                            // saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
-                            try{
-                                let evVal = eval(e.expression);
-                                saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
-                            }catch(e){
-                                saveAnswer(e.dataKey, 'answer', undefined, tmpIndex[i], null);
-                                // console.log(e.dataKey)
-                                // console.log(e)
+                        });
+                        if(tmpVarComp.length > 0) {
+                            const getRowIndex = (positionOffset:number) => {
+                                let editedDataKey = dataKey.split('@');
+                                let splitDataKey = editedDataKey[0].split('#');
+                                let splLength = splitDataKey.length;
+                                let reducer = positionOffset+1;
+                                return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength-reducer]);
                             }
-                        })
+                            const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
+                            tmpVarComp.forEach((e,i) => {
+                                // let evVal = eval(e.expression);
+                                // saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
+                                try{
+                                    let evVal = eval(e.expression);
+                                    saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
+                                }catch(e){
+                                    saveAnswer(e.dataKey, 'answer', undefined, tmpIndex[i], null);
+                                    // console.log(e.dataKey)
+                                    // console.log(e)
+                                }
+                            })
+                        }
                     }
                 })
             }
@@ -944,7 +949,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
 
             //variabel ~ executed when enable = TRUE
             const hasComponentVar = JSON.parse(JSON.stringify(reference.details.filter(obj => {
-                if(obj.componentVar !== undefined){
+                if((obj.enable) && obj.componentVar !== undefined){
                     const cekInsideIndex = obj.componentVar.findIndex(objChild => {
                         let newKey = dataKey.split('@');//mereduce @
                         let newNewKey = newKey[0].split('#');//menghilangkan row nya

@@ -216,7 +216,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                   if((el_type == 21 || el_type == 22)){
                     answer = JSON.parse(JSON.stringify(answer));
                   } else if(el_type == 4){
-                    (answer == undefined ) && tmpVarComp.push(JSON.parse(JSON.stringify(element[i]))) ;
+                    (answer == undefined ) && (!sideEnable) && tmpVarComp.push(JSON.parse(JSON.stringify(element[i]))) ;
                   }
 
                   let components
@@ -249,6 +249,11 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                           componentEnable: element[i].componentEnable !== undefined ? element[i].componentEnable : []
                       }
                   }
+                  // if((el_type == 21 || el_type == 22)){
+                  //   answer = JSON.parse(JSON.stringify(answer));
+                  // } else if(el_type == 4){
+                  //   (answer == undefined ) && (!sideEnable) && tmpVarComp.push(JSON.parse(JSON.stringify(element[i]))) ;
+                  // }
 
                   if(el_type > 2 && element[i].enableCondition !== undefined && !sideEnable) tmpEnableComp.push(JSON.parse(JSON.stringify(element[i])));
 

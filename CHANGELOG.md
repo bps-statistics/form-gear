@@ -6,7 +6,8 @@
 
 ### Changed
 - Redeploy setEnabeleFalse on value change to after saving answer
-- Recode setSummary to be more efficient
+- Rewrite code for setSummary to be more efficient
+- Rewrite code for filtering components with expression or / and validation to be more efficient. So, when they are disable, we don't have to run their validation or expression 
 
 ### Fixed
 - Fix enablingSidebar including section and nested
