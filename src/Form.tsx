@@ -488,12 +488,14 @@ const Form: Component<{
     let sidebarPrevLength = sidebarPrev.length;
 
     const sidebarPrevIndex = sidebar.details.findIndex(obj => obj.dataKey === sidebarPrev[sidebarPrevLength - 1].dataKey);
-    setActiveComponent({
+    setLoader({});
+    setTimeout(() => setActiveComponent({
       dataKey: sidebarPrev[sidebarPrevLength - 1].dataKey,
       label: sidebarPrev[sidebarPrevLength - 1].label,
       index: JSON.parse(JSON.stringify(sidebarPrev[sidebarPrevLength - 1].index)),
       position: sidebarPrevIndex
-    });
+    }), 50);
+
     window.scrollTo({ top: 0, behavior: "smooth" });
     component.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -509,12 +511,14 @@ const Form: Component<{
     const sidebarNext = sidebar.details.filter((obj, i) => (obj.enable) && (i > form.activeComponent.position));
     const sidebarNextIndex = sidebar.details.findIndex(obj => obj.dataKey === sidebarNext[0].dataKey);
 
-    setActiveComponent({
+    setLoader({});
+    setTimeout(() => setActiveComponent({
       dataKey: sidebarNext[0].dataKey,
       label: sidebarNext[0].label,
       index: JSON.parse(JSON.stringify(sidebarNext[0].index)),
       position: sidebarNextIndex
-    });
+    }), 50);
+
     window.scrollTo({ top: 0, behavior: "smooth" });
     component.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -650,7 +654,8 @@ const Form: Component<{
     setShowRemark(false);
     setShowBlank(false);
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && sidebarCollapse(e);
-    setActiveComponent({ dataKey: sidebarInto.dataKey, label: sidebarInto.label, index: JSON.parse(JSON.stringify(sidebarInto.index)), position: sidebarIntoIndex });
+    setLoader({});
+    setTimeout(() => setActiveComponent({ dataKey: sidebarInto.dataKey, label: sidebarInto.label, index: JSON.parse(JSON.stringify(sidebarInto.index)), position: sidebarIntoIndex }), 50);
     var component = document.getElementById(dataKey + "___scrollView");
     component.scrollIntoView({ behavior: "smooth" });
   }
@@ -1192,7 +1197,8 @@ const Form: Component<{
                                   component.scrollTo({ top: 0, behavior: "smooth" });
                                   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && sidebarCollapse(e);
                                   form.formConfig.clientMode === 2 && writeResponse();
-                                  setActiveComponent({ dataKey: item_0.dataKey, label: item_0.label, index: JSON.parse(JSON.stringify(item_0.index)), position: index() });
+                                  setLoader({});
+                                  setTimeout(() => setActiveComponent({ dataKey: item_0.dataKey, label: item_0.label, index: JSON.parse(JSON.stringify(item_0.index)), position: index() }), 50);
                                 }}
                               >
                                 {item_0.label}
@@ -1221,7 +1227,8 @@ const Form: Component<{
                                             component.scrollTo({ top: 0, behavior: "smooth" });
                                             /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && sidebarCollapse(e);
                                             form.formConfig.clientMode === 2 && writeResponse();
-                                            setActiveComponent({ dataKey: item_1.dataKey, label: item_1.label, index: JSON.parse(JSON.stringify(item_1.index)), position: index() });
+                                            setLoader({});
+                                            setTimeout(() => setActiveComponent({ dataKey: item_1.dataKey, label: item_1.label, index: JSON.parse(JSON.stringify(item_1.index)), position: index() }), 50);
                                           }}
                                         >
                                           {item_1.label}
@@ -1254,7 +1261,8 @@ const Form: Component<{
                                                       component.scrollTo({ top: 0, behavior: "smooth" });
                                                       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && sidebarCollapse(e);
                                                       form.formConfig.clientMode === 2 && writeResponse();
-                                                      setActiveComponent({ dataKey: item_2.dataKey, label: item_2.label, index: JSON.parse(JSON.stringify(item_2.index)), position: index() });
+                                                      setLoader({});
+                                                      setTimeout(() => setActiveComponent({ dataKey: item_2.dataKey, label: item_2.label, index: JSON.parse(JSON.stringify(item_2.index)), position: index() }), 50);
                                                     }}
                                                   >
                                                     {item_2.label}
@@ -1288,7 +1296,8 @@ const Form: Component<{
                                                                 component.scrollTo({ top: 0, behavior: "smooth" });
                                                                 /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && sidebarCollapse(e);
                                                                 form.formConfig.clientMode === 2 && writeResponse();
-                                                                setActiveComponent({ dataKey: item_3.dataKey, label: item_3.label, index: JSON.parse(JSON.stringify(item_3.index)), position: index() });
+                                                                setLoader({});
+                                                                setTimeout(() => setActiveComponent({ dataKey: item_3.dataKey, label: item_3.label, index: JSON.parse(JSON.stringify(item_3.index)), position: index() }), 50);
                                                               }}
                                                             >
                                                               {item_3.label}
