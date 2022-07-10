@@ -11,6 +11,7 @@
 
 ### Fixed
 - Fix enablingSidebar including section and nested
+- Fix duplicate sidebar when creating nested
 
 ---
 

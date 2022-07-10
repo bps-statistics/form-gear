@@ -341,7 +341,8 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
                 }
                 if(!loopingState) break;
             } else {
-                updatedSidebar.splice(y_tmp, 0, newSide);
+                updatedSidebar.splice(y_tmp, 0, newSide)
+                break;
             }
         }
     }
@@ -568,7 +569,8 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                     }
                     if(!loopingState) break;
                 } else {
-                    updatedSidebar.splice(y_tmp, 0, newSide);
+                    updatedSidebar.splice(y_tmp, 0, newSide)
+                    break;
                 }
             }
         }
