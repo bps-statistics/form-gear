@@ -281,6 +281,7 @@ const Form: Component<{
       }
     })
 
+    //setSummary counter
     setSummary({
       answer: _answer,
       blank: _blank,

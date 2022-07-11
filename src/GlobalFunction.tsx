@@ -257,6 +257,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
     }
     let history = []
     components.forEach(el =>{
+        // no longer used
         // reference.details.findIndex(obj => obj.dataKey === el.dataKey) === -1
         if(!(el.dataKey in referenceMap())){
             updatedRef.splice(startPosition, 0, el);

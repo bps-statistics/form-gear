@@ -19,7 +19,7 @@ import { referenceEnableFalse, setReferenceEnableFalse } from './stores/Referenc
 import dayjs from 'dayjs';
 import Toastify from 'toastify-js'
 
-import { getValue, saveAnswer , setEnableFalse, reloadDataFromHistory} from './GlobalFunction'
+import { getValue, saveAnswer, reloadDataFromHistory} from './GlobalFunction'
 
 import { setReferenceHistory} from './stores/ReferenceStore';
 import { setSidebarHistory} from './stores/ReferenceStore';

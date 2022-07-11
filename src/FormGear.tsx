@@ -249,6 +249,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                           componentEnable: element[i].componentEnable !== undefined ? element[i].componentEnable : []
                       }
                   }
+                  //old logic
                   // if((el_type == 21 || el_type == 22)){
                   //   answer = JSON.parse(JSON.stringify(answer));
                   // } else if(el_type == 4){
