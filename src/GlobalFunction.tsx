@@ -257,7 +257,6 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
     }
     let history = []
     components.forEach(el =>{
-        // no longer used
         // reference.details.findIndex(obj => obj.dataKey === el.dataKey) === -1
         if(!(el.dataKey in referenceMap())){
             updatedRef.splice(startPosition, 0, el);
@@ -331,7 +330,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
                     if(JSON.stringify(sidebarIndexToBeFound) === JSON.stringify(myIndex)){
                         let indexMe = Number(newSide.index[looping]);
                         let indexFind = (sidebar.details[y].index[looping] == undefined) ? 0 : Number(sidebar.details[y].index[looping]);
-                        if(indexMe >= indexFind){
+                        if(looping == newSideLength-1 || indexMe >= indexFind){
                             updatedSidebar.splice(y+1, 0, newSide);
                             loopingState = false;
                             break;
@@ -559,7 +558,7 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                         if(JSON.stringify(sidebarIndexToBeFound) === JSON.stringify(myIndex)){
                             let indexMe = Number(newSide.index[looping]);
                             let indexFind = (sidebar.details[y].index[looping] == undefined) ? 0 : Number(sidebar.details[y].index[looping]);
-                            if(indexMe >= indexFind){
+                            if(looping == newSideLength-1 || indexMe >= indexFind){
                                 updatedSidebar.splice(y+1, 0, newSide);
                                 loopingState = false;
                                 break;
