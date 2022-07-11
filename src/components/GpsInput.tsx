@@ -42,6 +42,9 @@ const GpsInput: FormComponentBase = props => {
 
     toastInfo(locale.details.language[0].locationAcquired)
     updatedAnswer.push({ value: { 'latitude': event.coordinat.latitude, 'longitude': event.coordinat.longitude }, label: source })
+    updatedAnswer.push({ label : 'map', value : source})
+    updatedAnswer.push({ label : 'latitude', value : event.coordinat.latitude})
+    updatedAnswer.push({ label : 'longitude', value : event.coordinat.longitude})
 
     props.onValueChange(updatedAnswer)
   }
@@ -67,6 +70,9 @@ const GpsInput: FormComponentBase = props => {
         setLocation(source)
 
         updatedAnswer.push({ value: { 'latitude': pos.coords.latitude, 'longitude': pos.coords.longitude }, label: source })
+        updatedAnswer.push({ label : 'map', value : source})
+        updatedAnswer.push({ label : 'latitude', value : pos.coords.latitude})
+        updatedAnswer.push({ label : 'longitude', value : pos.coords.longitude})
         toastInfo(locale.details.language[0].locationAcquired)
 
         props.onValueChange(updatedAnswer)
