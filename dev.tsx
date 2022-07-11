@@ -6,9 +6,9 @@ let config = {
   clientMode: 1, // 1 => CAWI ; 2 => CAPI ;
   //both token and baseUrl are used for data lookup from the api (for selectInput, multiselect Input, and listSelectInput)
   token: ``, //for authentication such as bearer token 
-  baseUrl: `https://jsonplaceholder.typicode.com/users/`, // endpoint to fetch
-  lookupKey: `key%5B%5D`, //optional 
-  lookupValue: `value%5B%5D`, //optional
+  baseUrl : ``,
+  lookupKey: `keys`, //optional
+  lookupValue: `values`, //optional
   lookupMode : 1, // 1 => ONLINE ; 2 => OFFLINE
   username: 'AdityaSetyadi', //
   formMode: 1, // 1 => OPEN ; 2 => REVIEW ; 3 => CLOSE ;
