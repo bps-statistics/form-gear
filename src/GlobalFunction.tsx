@@ -958,7 +958,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
 
             //variabel ~ executed when enable = TRUE
             const hasComponentVar = JSON.parse(JSON.stringify(reference.details.filter(obj => {
-                if((obj.enable) && obj.componentVar !== undefined){
+                if(obj.componentVar !== undefined){
                     const cekInsideIndex = obj.componentVar.findIndex(objChild => {
                         let newKey = dataKey.split('@');//mereduce @
                         let newNewKey = newKey[0].split('#');//menghilangkan row nya
