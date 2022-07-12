@@ -725,6 +725,13 @@ export const runValidation = (dataKey:string, updatedRef:any, activeComponentPos
                 biggest = 2;
             }
         }
+        if(updatedRef.type == 31 && updatedRef.answer !== undefined && typeof updatedRef.answer !== 'object'){
+            let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            if ( !re.test(updatedRef.answer) ) {
+                updatedRef.validationMessage.push(locale.details.language[0].validationEmail);
+                biggest = 2;
+            }
+        }
         updatedRef.validationState = biggest;
     }
     
