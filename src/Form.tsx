@@ -1336,7 +1336,7 @@ const Form: Component<{
 
                 <div class="relative h-2/6">
                   <div class="bg-white p-3 w-full flex flex-col  space-y-4 rounded-md dark:bg-gray-800 shadow absolute bottom-0 left-0">
-                    <div class="max-w-5xl grid grid-cols-2 gap-2">
+                    <div class="cursor-pointer max-w-5xl grid grid-cols-2 gap-2">
                       <div class="h-20 text-5xl text-center sm:flex flex-col flex-coltext-white font-medium xs:h-auto xs:square xl:border-b ">
                         {summary.answer}
                         <div class="font-light text-xs">{locale.details.language[0].summaryAnswer}</div>

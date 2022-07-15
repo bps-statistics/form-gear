@@ -2,7 +2,10 @@
 
 ## FormGear | Ver. 1.0.3
 
-> July 04, 2022
+> July 15, 2022
+
+### Added
+- Add cursor pointer on summary
 
 ### Changed
 - Redeploy setEnabeleFalse on value change to after saving answer
