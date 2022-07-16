@@ -2,10 +2,19 @@
 
 ## FormGear | Ver. 1.0.3
 
-> July 15, 2022
+> July 16, 2022
 
 ### Added
 - Add cursor pointer on summary
+- Add signature input
+	```json
+	[
+		"label":"Signature",
+		"dataKey":"signa",
+		"required":true,
+		"type":36
+	]
+	```
 
 ### Changed
 - Redeploy setEnabeleFalse on value change to after saving answer

@@ -27,6 +27,7 @@ import PhotoInput from "./components/PhotoInput"
 import GpsInput from "./components/GpsInput"
 import CsvInput from "./components/CsvInput"
 import NowInput from "./components/NowInput"
+import SignatureInput from "./components/SignatureInput"
 
 export enum ControlType {
   Section = 1,
@@ -57,7 +58,8 @@ export enum ControlType {
   PhotoInput = 32,
   GpsInput = 33,
   CsvInput = 34,
-  NowInput = 35
+  NowInput = 35,
+  SignatureInput = 36
 }
 
 export type Option =  {
@@ -175,5 +177,6 @@ export const CONTROL_MAP = new Map<ControlType, FormComponentBase>([
   [ControlType.PhotoInput, PhotoInput],
   [ControlType.GpsInput, GpsInput],
   [ControlType.CsvInput, CsvInput],
-  [ControlType.NowInput, NowInput]
+  [ControlType.NowInput, NowInput],
+  [ControlType.SignatureInput, SignatureInput]
 ]);

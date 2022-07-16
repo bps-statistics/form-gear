@@ -53,6 +53,12 @@
                      "type":33
                   },
                   {
+                     "label":"Signature",
+                     "dataKey":"signa",
+                     "required":true,
+                     "type":36
+                  },
+                  {
                      "label":"Address",
                      "dataKey":"address",
                      "type":30,
