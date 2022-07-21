@@ -266,6 +266,7 @@ const Form: Component<{
     let _answer = 0;
     let _error = 0;
     let _blank = 0;
+    let _clean = 0;
     reference.details.forEach((element, index) => {
       let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
       if(enableFalse == -1 && element.type > 4 && element.enable){
@@ -278,6 +279,9 @@ const Form: Component<{
         if(element.validationState == 2) {
           _error += 1;
         }
+        if((element.answer !== undefined) && (element.answer !== '') && (element.answer !== null) && (element.validationState != 1 && element.validationState != 2)) {
+          _clean += 1;
+        }
       }
     })
 
@@ -286,7 +290,8 @@ const Form: Component<{
       answer: _answer,
       blank: _blank,
       error: _error,
-      remark: note.details.notes.length
+      remark: note.details.notes.length,
+      clean : _clean
     });
 
     // setSummary({
