@@ -147,6 +147,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                 rows : e.rows,
                 cols : e.cols,
                 sourceQuestion : e.sourceQuestion,
+                urlValidation : e.urlValidation,
                 currency : e.currency,
                 source : e.source,
                 urlPath : e.urlPath,
@@ -249,7 +250,6 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                           componentEnable: element[i].componentEnable !== undefined ? element[i].componentEnable : []
                       }
                   }
-                  //old logic
                   // if((el_type == 21 || el_type == 22)){
                   //   answer = JSON.parse(JSON.stringify(answer));
                   // } else if(el_type == 4){
@@ -291,6 +291,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                       options: (element[i].options) ? element[i].options : undefined,
                       components: components,
                       sourceQuestion: element[i].sourceQuestion !== undefined ? element[i].sourceQuestion : undefined,
+                      urlValidation: element[i].urlValidation !== undefined ? element[i].urlValidation : undefined,
                       currency: element[i].currency !== undefined ? element[i].currency : undefined,
                       source: element[i].source !== undefined ? element[i].source : undefined,
                       urlPath: element[i].path !== undefined ? element[i].path : undefined,
@@ -366,6 +367,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                 options: (element[j].options) ? element[j].options : undefined,
                 components: components,
                 sourceQuestion: element[j].sourceQuestion !== undefined ? element[j].sourceQuestion : undefined,
+                urlValidation: element[j].urlValidation !== undefined ? element[j].urlValidation : undefined,
                 currency: element[j].currency !== undefined ? element[j].currency : undefined,
                 source: element[j].source !== undefined ? element[j].source : undefined,
                 urlPath: element[j].path !== undefined ? element[j].path : undefined,

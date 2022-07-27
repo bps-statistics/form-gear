@@ -24,6 +24,7 @@ type Detail = {
     rows?: number,                 
     cols?: number,
     sourceQuestion?: string,
+    urlValidation?: string,
     currency?: string,
     source?: string,
     urlPath?: string,

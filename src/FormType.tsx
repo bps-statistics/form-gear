@@ -127,6 +127,8 @@ export type ComponentType = {
   contentModalConfirmation: string
   required: boolean
   disableInitial?: boolean
+  urlValidation?: string       //all
+
 }
 
 export interface FormComponentBase extends Component<{

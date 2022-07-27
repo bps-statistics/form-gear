@@ -29,6 +29,7 @@ export type Language = {
     verificationInvalid: string
     verificationSubmitted: string
     validationEmail : string
+    validationApi : string
 }
 
 export type Locale = {
@@ -72,7 +73,9 @@ export const [locale, setLocale] = createStore<Questionnaire>({
                 validationRequired: "Required",
                 verificationInvalid: "Please provide verification correctly",
                 verificationSubmitted: "The data is now being submitted. Thank you!",
-                validationEmail: "Email is not correct"
+                validationEmail: "Email is not correct",
+                validationApi: "Invalid input from api response"
+
             }
         ]
     }
