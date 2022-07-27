@@ -325,17 +325,19 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
             let sideLength = sidebar.details.length
             if (y_tmp == 0) {
                 for (let y = sideLength - 1; y >= sidebarPosition; y--) {
-                    let sidebarIndexToBeFound = JSON.parse(JSON.stringify(sidebar.details[y].index));
-                    sidebarIndexToBeFound.length = looping;
-                    if (JSON.stringify(sidebarIndexToBeFound) === JSON.stringify(myIndex)) {
-                        let indexMe = Number(newSide.index[looping]);
-                        let indexFind = (sidebar.details[y].index[looping] == undefined) ? 0 : Number(sidebar.details[y].index[looping]);
-                        if (looping == newSideLength - 1 || indexMe >= indexFind) {
-                            updatedSidebar.splice(y + 1, 0, newSide);
-                            loopingState = false;
-                            break;
-                        } else if (indexMe < indexFind) {
-                            y_tmp = y;
+                    if(sidebar.details[y] !== undefined){
+                        let sidebarIndexToBeFound = JSON.parse(JSON.stringify(sidebar.details[y].index));
+                        sidebarIndexToBeFound.length = looping;
+                        if (JSON.stringify(sidebarIndexToBeFound) === JSON.stringify(myIndex)) {
+                            let indexMe = Number(newSide.index[looping]);
+                            let indexFind = (sidebar.details[y].index[looping] == undefined) ? 0 : Number(sidebar.details[y].index[looping]);
+                            if (looping == newSideLength - 1 || indexMe >= indexFind) {
+                                updatedSidebar.splice(y + 1, 0, newSide);
+                                loopingState = false;
+                                break;
+                            } else if (indexMe < indexFind) {
+                                y_tmp = y;
+                            }
                         }
                     }
                 }

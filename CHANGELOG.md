@@ -2,7 +2,7 @@
 
 ## FormGear | Ver. 1.0.3
 
-> July 16, 2022
+> July 27, 2022
 
 ### Added
 - Add cursor pointer on summary
@@ -25,6 +25,7 @@
 - Fix enablingSidebar including section and nested
 - Fix duplicate sidebar when creating nested
 - Fix sidebar sorting
+- Handle get undefined sidebar
 
 ---
 
