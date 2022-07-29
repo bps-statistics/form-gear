@@ -95,7 +95,7 @@ const SelectInput: FormComponentBase = props => {
                                 let tobeLookup = reference.details.find(obj => obj.dataKey == newParams[0])
                                 if (tobeLookup.answer) {
                                     if (tobeLookup.answer.length > 0) {
-                                        let parentValue = tobeLookup.answer[tobeLookup.answer.length - 1].value
+                                        let parentValue = encodeURI(tobeLookup.answer[tobeLookup.answer.length - 1].value)
                                         url = `${config.lookupKey}=${item.key}&${config.lookupValue}=${parentValue}`
                                     }
                                 } else {
