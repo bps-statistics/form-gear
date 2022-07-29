@@ -15,17 +15,23 @@
 		"type":36
 	]
 	```
+- Add loader when page change
+- Add email validation
+- Add api validation
 
 ### Changed
 - Redeploy setEnabeleFalse on value change to after saving answer
 - Rewrite code for setSummary to be more efficient
 - Rewrite code for filtering components with expression or / and validation to be more efficient. So, when they are disable, we don't have to run their validation or expression for the first time
+- Update Gps value response
+- Update URL encode for online lookup
 
 ### Fixed
 - Fix enablingSidebar including section and nested
 - Fix duplicate sidebar when creating nested
 - Fix sidebar sorting
 - Handle get undefined sidebar
+- Fix checkbox options to type string
 
 ---
 
