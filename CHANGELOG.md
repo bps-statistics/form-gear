@@ -5,7 +5,7 @@
 > July 29, 2022
 
 ### Added
-- Add cursor pointer on summary
+- Add cursor pointer on summary, radio, checkbox, and nested button
 - Add signature input
 	```json
 	[

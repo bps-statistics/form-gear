@@ -92,7 +92,7 @@ const CheckboxInput: FormComponentBase = props => {
 						'col-span-11 lg:-mr-4' : enableRemark(),
 						'col-span-12' : !(enableRemark()),
 					}}  >
-					<div					
+					<div class="cursor-pointer"					
 						classList={{
 							' border-b border-orange-500 pb-3 ' : props.classValidation === 1,
 							' border-b border-pink-600 pb-3 ' : props.classValidation === 2,

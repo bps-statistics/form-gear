@@ -133,7 +133,7 @@
     /* background-color: rgba(243, 244, 246, var(--tw-bg-opacity)); */
 }
 .formgear-select .solid-select-option {
-    cursor: default;
+    cursor: pointer !important;
     padding-left: 1rem;
     padding-right: 1rem;
     padding-top: 0.5rem;
