@@ -2,7 +2,7 @@
 
 ## FormGear | Ver. 1.0.3
 
-> July 27, 2022
+> July 29, 2022
 
 ### Added
 - Add cursor pointer on summary
@@ -20,6 +20,7 @@
 - Add api validation
 
 ### Changed
+- Update view
 - Redeploy setEnabeleFalse on value change to after saving answer
 - Rewrite code for setSummary to be more efficient
 - Rewrite code for filtering components with expression or / and validation to be more efficient. So, when they are disable, we don't have to run their validation or expression for the first time

@@ -17,10 +17,10 @@ const FormComponent: Component<{
 }> = props => {
 
   return (
-    <div class="flex-grow bg-white dark:bg-gray-900 overflow-y-auto">
+    <div class="flex-grow bg-white dark:bg-gray-900 overflow-y-auto mb-20">
       <div class="space-y-3 sm:p-7 p-3">
         <For each={props.components}
-          children={(component, index) => 
+          children={(component:any, index) => 
             FormInput({ 
                 onMobile: props.onMobile,
                 component, 
