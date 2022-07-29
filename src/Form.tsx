@@ -1162,8 +1162,8 @@ const Form: Component<{
         </div>
       </Show>
 
-      <div class="rounded-xl xl:max-w-[120rem] mx-auto xl:p-5 overflow-hidden">
-        <div class="bg-gray-50 dark:bg-gray-900 dark:text-white xl:h-[44rem] h-screen shadow-xl text-gray-600 flex overflow-hidden text-sm font-montserrat rounded-lg  dark:shadow-gray-800">
+      <div class="xl:max-w-[120rem] mx-auto xl:p-5 overflow-hidden">
+        <div class="bg-gray-50 dark:bg-gray-900 dark:text-white xl:h-[44rem] h-screen shadow-xl text-gray-600 flex overflow-hidden text-sm font-montserrat xl:rounded-xl dark:shadow-gray-800">
           <div class="mobile-component-div flex-grow overflow-y-auto h-full flex flex-col overflow-x-hidden bg-white dark:bg-gray-900 z-0" onScroll={checkScrollTopMobile} >
             
             <div class="relative h-screen xl:h-[44rem] md:flex sm:overflow-hidden  ">
