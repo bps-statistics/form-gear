@@ -1,4 +1,4 @@
-import { createSignal, For, Match, Show, Switch } from "solid-js"
+import { createMemo, createSignal, For, Match, Show, Switch } from "solid-js"
 import { FormComponentBase } from "../FormType"
 
 const DateTimeLocalInput: FormComponentBase = props => {
@@ -15,6 +15,27 @@ const DateTimeLocalInput: FormComponentBase = props => {
   const [disableClickRemark] = createSignal((config.formMode > 2  && props.comments == 0 ) ? true : false);
   const [enableRemark] = createSignal(props.component.enableRemark !== undefined ? props.component.enableRemark : true );
 
+  let today = new Date();
+  let dd = String(today.getDate());
+  let mm = String(today.getMonth() + 1); //January is 0!
+  let yyyy = String(today.getFullYear());
+  if(Number(dd) < 10){
+      dd = '0' + dd
+  } 
+  if(Number(mm) < 10){
+      mm = '0' + mm
+  } 
+  
+  let todayDate = yyyy + '-' + mm + '-' + dd;
+
+  let minDate : any, maxDate: any;
+  createMemo(() => {
+    if(props.component.rangeInput){
+      minDate = (props.component.rangeInput[0].min !== undefined ) ? (props.component.rangeInput[0].min === 'today') ? todayDate : props.component.rangeInput[0].min : '';
+      maxDate = (props.component.rangeInput[0].max !== undefined ) ? (props.component.rangeInput[0].max === 'today') ? todayDate : props.component.rangeInput[0].max : '';
+    }
+  })
+  
   return (
 		<div class="md:grid md:grid-cols-3 border-b border-gray-300/[.40] dark:border-gray-200/[.10] p-2">
       <div class="font-light text-sm space-y-2 py-2.5 px-2">        
@@ -57,6 +78,8 @@ const DateTimeLocalInput: FormComponentBase = props => {
                 onChange={(e) => {
                   props.onValueChange(e.currentTarget.value);
                 } }
+                min = {minDate+'T00:00'}    
+                max = {maxDate+'T23:59'}
           />
           <Show when={props.validationMessage.length > 0}>
             <For each={props.validationMessage}>

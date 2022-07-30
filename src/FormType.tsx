@@ -69,8 +69,8 @@ export type Option =  {
 }
 
 export type RangeInput =  {
-  min: number
-  max: number
+  min: number | string
+  max: number | string
   step?: number
 }
 

@@ -2,7 +2,7 @@
 
 ## FormGear | Ver. 1.0.3
 
-> July 29, 2022
+> July 30, 2022
 
 ### Added
 - Add cursor pointer on summary, radio, checkbox, and nested button
@@ -18,6 +18,15 @@
 - Add loader when page change
 - Add email validation
 - Add api validation
+- Add input range for `DateInput` and `DateTimeLocalInput`
+	```json
+	"rangeInput": [
+		{
+			"min": "2022-01-25",
+			"max": "today"
+		}
+	]
+	```
 
 ### Changed
 - Update view
