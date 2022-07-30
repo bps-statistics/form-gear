@@ -17,7 +17,13 @@
 	```
 - Add loader when page change
 - Add email validation
-- Add api validation
+- Add api validation for type string or number input by add urlValidation property to the component
+	```json
+	"label":"Email",
+	"dataKey":"email",
+	"urlValidation": "http://localhost:8000/validate/email/",
+	"type":31
+	```
 - Add input range for `DateInput` and `DateTimeLocalInput`
 	```json
 	"rangeInput": [

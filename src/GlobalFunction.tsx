@@ -325,7 +325,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
             let sideLength = sidebar.details.length
             if (y_tmp == 0) {
                 for (let y = sideLength - 1; y >= sidebarPosition; y--) {
-                    if(sidebar.details[y] !== undefined){
+                    if (sidebar.details[y] !== undefined) {
                         let sidebarIndexToBeFound = JSON.parse(JSON.stringify(sidebar.details[y].index));
                         sidebarIndexToBeFound.length = looping;
                         if (JSON.stringify(sidebarIndexToBeFound) === JSON.stringify(myIndex)) {
@@ -706,50 +706,55 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
             }
         }
 
-        if (updatedRef.urlValidation) {
+        if (updatedRef.urlValidation && (updatedRef.type == 24 || updatedRef.type == 25 || updatedRef.type == 28 || updatedRef.type == 30 || updatedRef.type == 31)) {
             let resultTest = false
             let fetchStatus
-            let url = `${updatedRef.urlValidation}${updatedRef.answer}`
+            let url = `${updatedRef.urlValidation}`
             let onlineValidation = async (url) =>
-            (await fetch(url)
-                .catch((error: any) => {
+            (await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ answer: updatedRef.answer })
+            }).catch((error: any) => {
+                let temp = {
+                    result: false
+                }
+                fetchStatus = false;
+                resultTest = temp.result
+                if (!resultTest || !fetchStatus) {
+                    let validationMessage = locale.details.language[0].validationApi
+                    updatedRef.validationMessage.push(validationMessage);
+                    biggest = 2;
+                    updatedRef.validationState = biggest;
+                    saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null);
+                }
+            }).then((res: any) => {
+                if (res.status === 200) {
+                    let temp = res.json();
+                    fetchStatus = true
+                    return temp;
+                } else {
                     let temp = {
                         result: false
                     }
                     fetchStatus = false;
-                    resultTest = temp.result
-                    if (!resultTest || !fetchStatus) {
-                        let validationMessage = locale.details.language[0].validationApi
-                        updatedRef.validationMessage.push(validationMessage);
-                        biggest = 2;
-                        updatedRef.validationState = biggest;
-                        saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null);
+                    return temp
+                }
+            }).then((res: any) => {
+                resultTest = res.result
+                if (!resultTest || !fetchStatus) {
+                    let validationMessage = locale.details.language[0].validationApi
+                    if (res.message && (res.message != '' || res.message != undefined)) {
+                        validationMessage = res.message
                     }
-                }).then((res: any) => {
-                    if (res.status === 200) {
-                        let temp = res.json();
-                        fetchStatus = true
-                        return temp;
-                    } else {
-                        let temp = {
-                            result: false
-                        }
-                        fetchStatus = false;
-                        return temp
-                    }
-                }).then((res: any) => {
-                    resultTest = res.result
-                    if (!resultTest || !fetchStatus) {
-                        let validationMessage = locale.details.language[0].validationApi
-                        if (res.message && (res.message != '' || res.message != undefined)) {
-                            validationMessage = res.message
-                        }
-                        updatedRef.validationMessage.push(validationMessage);
-                        biggest = 2;
-                        updatedRef.validationState = biggest;
-                        saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null);
-                    }
-                }));
+                    updatedRef.validationMessage.push(validationMessage);
+                    biggest = 2;
+                    updatedRef.validationState = biggest;
+                    saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null);
+                }
+            }));
             onlineValidation(url);
         }
 
