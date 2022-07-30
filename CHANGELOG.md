@@ -8,12 +8,10 @@
 - Add cursor pointer on summary, radio, checkbox, and nested button
 - Add signature input
 	```json
-	[
-		"label":"Signature",
-		"dataKey":"signa",
-		"required":true,
-		"type":36
-	]
+	"label":"Signature",
+	"dataKey":"signa",
+	"required":true,
+	"type":36
 	```
 - Add loader when page change
 - Add email validation
@@ -26,12 +24,13 @@
 	```
 - Add input range for `DateInput` and `DateTimeLocalInput`
 	```json
-	"rangeInput": [
-		{
-			"min": "2022-01-25",
-			"max": "today"
-		}
-	]
+	"rangeInput": 
+		[
+			{
+				"min": "2022-01-25",
+				"max": "today"
+			}
+		]
 	```
 
 ### Changed
