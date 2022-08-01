@@ -30,6 +30,10 @@ export type Language = {
     verificationSubmitted: string
     validationEmail : string
     validationApi : string
+    errorSaving: string
+    errorExpression: string
+    errorEnableExpression: string
+    errorValidationExpression: string
 }
 
 export type Locale = {
@@ -74,8 +78,11 @@ export const [locale, setLocale] = createStore<Questionnaire>({
                 verificationInvalid: "Please provide verification correctly",
                 verificationSubmitted: "The data is now being submitted. Thank you!",
                 validationEmail: "Email is not correct",
-                validationApi: "Invalid input from api response"
-
+                validationApi: "Invalid input from api response",
+                errorSaving: "Something went wrong while saving on component ",
+                errorExpression: "Something went wrong while evaluating expression on component ",
+                errorEnableExpression: "Something went wrong while evaluating enable on component ",
+                errorValidationExpression: "Something went wrong while evaluating validation expression on component "
             }
         ]
     }

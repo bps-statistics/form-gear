@@ -2,10 +2,9 @@
 
 ## FormGear | Ver. 1.0.3
 
-> July 30, 2022
+> August 1, 2022
 
 ### Added
-- Add cursor pointer on summary, radio, checkbox, and nested button
 - Add signature input
 	```json
 	"label":"Signature",
@@ -13,8 +12,6 @@
 	"required":true,
 	"type":36
 	```
-- Add loader when page change
-- Add email validation
 - Add api validation for type string or number input by add urlValidation property to the component
 	```json
 	"label":"Email",
@@ -32,6 +29,10 @@
 			}
 		]
 	```
+- Add loader on page change
+- Add cursor pointer on summary, radio, checkbox, and nested button
+- Add email validation
+- Add error message toast on evaluate expression failure
 
 ### Changed
 - Update view

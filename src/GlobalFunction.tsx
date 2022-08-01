@@ -52,11 +52,12 @@ export const getValue = (dataKey: string) => {
 }
 
 export const createComponent = (dataKey: string, nestedPosition: number, componentPosition: number, sidebarPosition: number, components: any, parentIndex: number[], parentName: string) => {
-    const eval_enable = (eval_text) => {
+    const eval_enable = (eval_text, dataKey) => {
         try {
             return eval(eval_text)
         } catch (e) {
             console.log(e)
+            toastInfo(locale.details.language[0].errorEnableExpression + dataKey, 3000, "", "bg-pink-600/80");
             return default_eval_enable
         }
     }
@@ -176,7 +177,7 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
     } else {
         newComp.enableCondition = undefined
     }
-    newComp.enable = (newComp.enableCondition === undefined || newComp.enableCondition === '') ? true : eval_enable(newComp.enableCondition);
+    newComp.enable = (newComp.enableCondition === undefined || newComp.enableCondition === '') ? true : eval_enable(newComp.enableCondition, newComp.dataKey);
     //
     newComp.enableRemark = newComp.enableRemark !== undefined ? newComp.enableRemark : true;
     newComp.client = newComp.client !== undefined ? newComp.client : true;
@@ -289,6 +290,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
                 value = value_local
             } catch (e) {
                 value = undefined
+                toastInfo(locale.details.language[0].errorExpression + newComp.dataKey, 3000, "", "bg-pink-600/80");
             }
         } else {
             let answerIndex = response.details.answers.findIndex(obj => obj.dataKey === newComp.dataKey);
@@ -519,6 +521,7 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                     value = value_local
                 } catch (e) {
                     value = undefined
+                    toastInfo(locale.details.language[0].errorExpression + newComp.dataKey, 3000, "", "bg-pink-600/80");
                 }
             } else {
                 let answerIndex = response.details.answers.findIndex(obj => obj.dataKey === newComp.dataKey);
@@ -639,6 +642,7 @@ export const runVariableComponent = (dataKey: string, activeComponentPosition: n
             let answerVariable = eval(updatedRef.expression);
             saveAnswer(dataKey, 'answer', answerVariable, activeComponentPosition, null);
         } catch (e) {
+            toastInfo(locale.details.language[0].errorExpression + dataKey, 3000, "", "bg-pink-600/80");
             saveAnswer(dataKey, 'answer', undefined, activeComponentPosition, null);
             // console.log(e)
         }
@@ -658,11 +662,12 @@ export const runEnabling = (dataKey: string, activeComponentPosition: number, pr
         }
     }
 
-    const eval_enable = (eval_text) => {
+    const eval_enable = (eval_text, dataKey) => {
         try {
             return eval(eval_text)
         } catch (e) {
             console.log(e)
+            toastInfo(locale.details.language[0].errorEnableExpression + dataKey, 3000, "", "bg-pink-600/80");
             return default_eval_enable
         }
     }
@@ -676,7 +681,7 @@ export const runEnabling = (dataKey: string, activeComponentPosition: number, pr
     }
     const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
 
-    let enable = eval_enable(enableCondition);
+    let enable = eval_enable(enableCondition, dataKey);
     saveAnswer(dataKey, 'enable', enable, activeComponentPosition, null);
 }
 
@@ -698,6 +703,7 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
             try {
                 result = eval(updatedRef.validations[i].test)
             } catch (e) {
+                toastInfo(locale.details.language[0].errorValidationExpression + updatedRef.dataKey, 3000, "", "bg-pink-600/80");
                 // console.log(e)
             }
             if (result) {
@@ -817,11 +823,12 @@ export const setEnableFalse = () => {
 }
 
 export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, activeComponentPosition: number, prop: any | null) => {
-    const eval_enable = (eval_text) => {
+    const eval_enable = (eval_text, dataKey) => {
         try {
             return eval(eval_text)
         } catch (e) {
             console.log(e)
+            toastInfo(locale.details.language[0].errorEnableExpression + dataKey, 3000, "", "bg-pink-600/80");
             return default_eval_enable
         }
     }
@@ -888,7 +895,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 hasSideCompEnable.forEach(sidebarEnable => {
                     let sidePosition = sidebar.details.findIndex(objSide => objSide.dataKey === sidebarEnable.dataKey);
                     let enableSideBefore = sidebar.details[sidePosition]['enable'];
-                    let enableSide = eval_enable(sidebarEnable.enableCondition);
+                    let enableSide = eval_enable(sidebarEnable.enableCondition, sidebarEnable.dataKey);
                     addHistory('update_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
                     setSidebar('details', sidePosition, 'enable', enableSide);
                     let updatedRef = JSON.parse(JSON.stringify(reference.details));
@@ -914,7 +921,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                                     if (updatedRef[refPos].enableCondition === undefined || updatedRef[refPos].enableCondition === '') {
                                         newEnab = true;
                                     } else {
-                                        newEnab = eval_enable(updatedRef[refPos].enableCondition)
+                                        newEnab = eval_enable(updatedRef[refPos].enableCondition, updatedRef[refPos].dataKey)
                                     }
                                     setReference('details', refPos, 'enable', newEnab);
                                 }
@@ -929,13 +936,14 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                                 return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength - reducer]);
                             }
                             const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-                            tmpVarComp.forEach((e, i) => {
+                            tmpVarComp.forEach((t, i) => {
                                 // let evVal = eval(e.expression);
                                 // saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
                                 try {
-                                    let evVal = eval(e.expression);
-                                    saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
+                                    let evVal = eval(t.expression);
+                                    saveAnswer(t.dataKey, 'answer', evVal, tmpIndex[i], null);
                                 } catch (e) {
+                                    toastInfo(locale.details.language[0].errorExpression + t.dataKey, 3000, "", "bg-pink-600/80");
                                     saveAnswer(e.dataKey, 'answer', undefined, tmpIndex[i], null);
                                     // console.log(e.dataKey)
                                     // console.log(e)
@@ -1399,16 +1407,19 @@ export function reloadDataFromHistory() {
     if (sidebarHistory().length > 0) {
         setSidebar('details', JSON.parse(JSON.stringify(sidebarHistory())));
     }
+}
+
+export const toastInfo = (text:string, duration:number, position:string, bgColor:string) => {
     Toastify({
-        text: 'Failed to save data !',
-        duration: 3000,
-        gravity: "top",
-        position: "right",
-        stopOnFocus: true,
-        className: "bg-blue-600/80",
-        style: {
-            background: "rgba(8, 145, 178, 0.7)",
-            width: "400px"
-        }
+      text: (text == '') ? locale.details.language[0].componentDeleted : text,
+      duration: (duration >= 0) ? duration : 500,
+      gravity: "top", 
+      position: (position == '') ? "right" : position, 
+      stopOnFocus: true, 
+      className: (bgColor == '') ? "bg-blue-600/80" : bgColor,
+      style: {
+        background: "rgba(8, 145, 178, 0.7)",
+        width: "400px"
+      }
     }).showToast();
 }
