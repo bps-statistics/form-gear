@@ -4,6 +4,11 @@
 
 > August 1, 2022
 
+### Optimized Performance
+- Redeploy set enable from on value change to after saving answer
+- Reengineer code for setSummary 
+- Reengineer code to filter components which not run any expression on disabled components
+
 ### Added
 - Add signature input
 	```json
@@ -36,10 +41,30 @@
 
 ### Changed
 - Update view
-- Redeploy setEnabeleFalse on value change to after saving answer
-- Rewrite code for setSummary to be more efficient
-- Rewrite code for filtering components with expression or / and validation to be more efficient. So, when they are disable, we don't have to run their validation or expression for the first time
 - Update Gps value response
+	```json
+	[
+		{
+			"value": {
+				"latitude": -6.165237,
+				"longitude": 106.8376027
+			},
+			"label": "https://maps.google.com/maps?q=-6.165237,106.8376027&output=embed"
+		},
+		{
+			"label": "map",
+			"value": "https://maps.google.com/maps?q=-6.165237,106.8376027&output=embed"
+		},
+		{
+			"label": "latitude",
+			"value": -6.165237
+		},
+		{
+			"label": "longitude",
+			"value": 106.8376027
+		}
+	]
+	```
 - Update URL encode for online lookup
 
 ### Fixed
