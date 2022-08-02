@@ -1,5 +1,14 @@
 # Changelog
 
+## FormGear | Ver. 1.0.4
+
+> August 2, 2022
+
+### Fixed
+- Fix cannot read property of null canvas on SignatureInput
+
+---
+
 ## FormGear | Ver. 1.0.3
 
 > August 1, 2022

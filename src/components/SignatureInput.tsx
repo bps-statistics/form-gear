@@ -59,20 +59,22 @@ const SignatureInput: FormComponentBase = props => {
   const resizeCanvas = () => {
     createEffect(() =>{
       const canvas = document.querySelector("canvas");
-      var ratio = Math.max(window.devicePixelRatio || 1, 1);
-      canvas.width = canvas.offsetWidth * ratio;
-      canvas.height = canvas.width * (window.innerWidth < 720 ? 0.28 : 0.18);
-      canvas.getContext("2d").scale(ratio, ratio);
+      let ratio = Math.max(window.devicePixelRatio || 1, 1);
+      if (canvas) {       
+        canvas.width = canvas.offsetWidth  * ratio;
+        canvas.height = canvas.width * (window.innerWidth < 720 ? 0.28 : 0.18);
+        canvas.getContext("2d").scale(ratio, ratio); 
           
-      if (props.value[0]) {
-        setSaveBtn(false) 
-        let imgSrc = props.value[0].value
-        let signatureSrc = props.value[0].signature
-        const signaturePad = new SignaturePad(canvas);
-        signaturePad.clear();
-        signaturePad.fromData(signatureSrc);
-        // signaturePad.fromDataURL(imgSrc);
-        setFileSource(imgSrc)
+        if (props.value[0]) {
+          setSaveBtn(false) 
+          let imgSrc = props.value[0].value
+          let signatureSrc = props.value[0].signature
+          const signaturePad = new SignaturePad(canvas);
+          signaturePad.clear();
+          signaturePad.fromData(signatureSrc);
+          // signaturePad.fromDataURL(imgSrc);
+          setFileSource(imgSrc)
+        }
       }
     })
   }  
