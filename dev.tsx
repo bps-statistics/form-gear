@@ -6,10 +6,10 @@ let config = {
   clientMode: 1, // 1 => CAWI ; 2 => CAPI ;
   //both token and baseUrl are used for data lookup from the api (for selectInput, multiselect Input, and listSelectInput)
   token: ``, //for authentication such as bearer token 
-  baseUrl : ``,
+  baseUrl: ``,
   lookupKey: `keys`, //optional
   lookupValue: `values`, //optional
-  lookupMode : 1, // 1 => ONLINE ; 2 => OFFLINE
+  lookupMode: 1, // 1 => ONLINE ; 2 => OFFLINE
   username: 'AdityaSetyadi', //
   formMode: 1, // 1 => OPEN ; 2 => REVIEW ; 3 => CLOSE ;
   initialMode: 2 // 1=> INITIAL ; 2 => ASSIGN
@@ -24,12 +24,12 @@ var principalGear = null;
 var referenceGear = null;
 
 //JSON Object defined template
-let reference = await fetch("../src/data/reference.json").then((res) => res.json()).catch((error : Error) => {return {}}) || []
-let template = await fetch("../src/data/template.json").then((res) => res.json()).catch((error : Error) => {return {}}) || []
-let preset = await fetch("../src/data/preset.json").then((res) => res.json()).catch((error : Error) => {return {}}) || []
-let response = await fetch("../src/data/response.json").then((res) => res.json()).catch((error : Error) => {return {}}) || []
-let validation = await fetch("../src/data/validation.json").then((res) => res.json()).catch((error : Error) => {return {}}) || []
-let remark = await fetch("../src/data/remark.json").then((res) => res.json()).catch((error : Error) => {return {}}) || []
+let reference = await fetch("../src/data/reference.json").then((res) => res.json()).catch((error: Error) => { return {} }) || []
+let template = await fetch("../src/data/template.json").then((res) => res.json()).catch((error: Error) => { return {} }) || []
+let preset = await fetch("../src/data/preset.json").then((res) => res.json()).catch((error: Error) => { return {} }) || []
+let response = await fetch("../src/data/response.json").then((res) => res.json()).catch((error: Error) => { return {} }) || []
+let validation = await fetch("../src/data/validation.json").then((res) => res.json()).catch((error: Error) => { return {} }) || []
+let remark = await fetch("../src/data/remark.json").then((res) => res.json()).catch((error: Error) => { return {} }) || []
 
 //function to open camera on mobile  CAPI
 function openCamera() {
@@ -100,7 +100,7 @@ let uploadHandler = function (setter) {
 }
 
 let offlineSearch = function (id, version, dataJson, setter) {
-  
+
   let condition = JSON.stringify(dataJson)
 
   //here we use jquery to retrieve data from the local device
@@ -110,15 +110,15 @@ let offlineSearch = function (id, version, dataJson, setter) {
     crossDomain: true,
     dataType: "json",
     data: null,
-    success: function(d) {
-        console.log(d.hasil)
-        setter(d)
+    success: function (d) {
+      console.log(d.hasil)
+      setter(d)
 
-        },
-    error: function(XMLHttpRequest, textStatus, errorThrown) {
+    },
+    error: function (XMLHttpRequest, textStatus, errorThrown) {
 
     }
-});
+  });
 
 }
 
@@ -135,8 +135,7 @@ const setBearer = () => {
   return ({
     method: 'GET',
     headers: {
-      "Content-Type": "application/json",
-      // "Authorization": "Bearer " + config.token
+      "Content-Type": "application/json"
     }
   })
 }
@@ -198,7 +197,7 @@ let setSubmitMobile = function (res, rem, princ, ref) {
   remarkGear = rem
   principalGear = princ
   referenceGear = ref
-  
+
   console.log('----------', new Date(), '----------');
 
   console.log('response', responseGear)

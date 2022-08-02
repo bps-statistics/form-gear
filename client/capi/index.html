@@ -137,13 +137,10 @@
 
   let config = {
     clientMode : 2,
-    token : `eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJpZFwiOlwiOUUwMDY1QUUtQ0M4RS00QUYxLTlEOTktMTJBMjI2NDYwRDc2XCIsXCJ1c2VybmFtZVwiOlwid2lsdXR5YXNcIixcImZ1bGxuYW1lXCI6XCJXaWx1eWFuaW5ndHlhcyBXaWpheWFudGlcIixcImVtYWlsXCI6XCJ3aWx1dHlhc0BicHMuZ28uaWRcIixcInJvbGVJZFwiOlwiNTJDMzRENzMtRURDQS00N0IwLTgwOTYtM0NEMEExNkVBMjM2XCIsXCJyb2xlTmFtZVwiOlwiQURNSU4gUklcIixcInByb3ZpbmNlSWRcIjpudWxsLFwicHJvdmluY2VOYW1lXCI6bnVsbCxcInJlZ2VuY3lJZFwiOm51bGwsXCJyZWdlbmN5TmFtZVwiOm51bGwsXCJ3b3JrVW5pdElkXCI6XCJDMzhDNTY2Ny0zQkIwLTQ0M0MtQTQzNS0xRUVDRDdDNkRGQTJcIixcIndvcmtVbml0TmFtZVwiOlwiQkFEQU4gUFVTQVQgU1RBVElTVElLXCJ9IiwiYXVkIjoibm9uLWNhd2kiLCJleHAiOjE2NTIzMjkyNjEsInJvbCI6IkFETUlOIFJJIn0.TyAE6fCLQvDOi_7YPiJm9TrWDy3AcpZEgfn_Dy0q-R_cO2gtISnDepd4G2p5qowjPLEXVHsRcNm-Zpz4WJn20A`,
-    // baseUrl: `https://api-survey.bps.go.id/designer/api/lookup-data/json`,
-    baseUrl : `https://fasih-survey-dev.bps.go.id/lookup/api/v1/collections`,
+    token : ``,
+    baseUrl : ``,
     lookupKey: `keys`,
-    lookupValue: `values`,
-    // lookupKey : `key%5B%5D`,
-    // lookupValue : `value%5B%5D`,    
+    lookupValue: `values`,  
     lookupMode : 2, // 1 => ONLINE ; 2 => OFFLINE
     // username : Android.getUserName(),
     username : 'styd',
@@ -218,8 +215,7 @@
     return ({
         method: 'GET',
         headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + config.token
+            "Content-Type": "application/json"
         }
     })
   }

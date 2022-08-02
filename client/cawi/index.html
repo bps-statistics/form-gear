@@ -131,13 +131,10 @@
       import { FormGear } from './data/form-gear.es.js'
       let config = {
         clientMode: 1, // 1 => CAWI ; 2 => CAPI ;
-        token: `eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJpZFwiOlwiQjhERkI2ODUtRTg1NS00NDczLTg0MDItNzlGQzhEQzM4OUMyXCIsXCJ1c2VybmFtZVwiOlwiYXJkaWFuLnNhcHV0cmFcIixcImZ1bGxuYW1lXCI6XCJBcmRpYW4gU2FwdXRyYSBIYXNpYnVhblwiLFwiZW1haWxcIjpcImFyZGlhbi5zYXB1dHJhQGJwcy5nby5pZFwiLFwicm9sZUlkXCI6XCI1MkMzNEQ3My1FRENBLTQ3QjAtODA5Ni0zQ0QwQTE2RUEyMzZcIixcInJvbGVOYW1lXCI6XCJBRE1JTiBSSVwiLFwicHJvdmluY2VJZFwiOm51bGwsXCJwcm92aW5jZU5hbWVcIjpudWxsLFwicmVnZW5jeUlkXCI6bnVsbCxcInJlZ2VuY3lOYW1lXCI6bnVsbCxcIndvcmtVbml0SWRcIjpcIkMzOEM1NjY3LTNCQjAtNDQzQy1BNDM1LTFFRUNEN0M2REZBMlwiLFwid29ya1VuaXROYW1lXCI6XCJCQURBTiBQVVNBVCBTVEFUSVNUSUtcIn0iLCJhdWQiOiJub24tY2F3aSIsImV4cCI6MTY1NTUwODUyMSwicm9sIjoiQURNSU4gUkkifQ.sX88qUPlcAV2oKPhE_bAgBM7Xa3Dwc0Md3gTwSdrg_Ir_9RsL0G1stBa9kkGoOc54r5Rd6amx9VtUFlj8XlDhg`,
-        // baseUrl: `https://api-survey.bps.go.id/designer/api/lookup-data/json`,
-        baseUrl : `https://fasih-survey-dev.bps.go.id/lookup/api/v1/collections`,
+        token: ``,
+        baseUrl : ``,
         lookupKey: `keys`,
         lookupValue: `values`,
-        // lookupKey : `key%5B%5D`,
-        // lookupValue : `value%5B%5D`,
         lookupMode : 1, // 1 => ONLINE ; 2 => OFFLINE
         username: 'adty',
         formMode: 1, // 1 => OPEN ; 2 => REVIEW ; 3 => CLOSE ;
@@ -254,8 +251,7 @@
         return ({
             method: 'GET',
             headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + config.token
+                "Content-Type": "application/json"
             }
         })
       }
