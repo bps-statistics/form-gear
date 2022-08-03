@@ -96,8 +96,8 @@ const FormInput: FormComponentBase = props => {
 
     let now = dayjs().format('YYYY-MM-DD HH:mm:ss');
     (response.details.createdBy === undefined || (response.details.createdBy !== undefined && response.details.createdBy === '')) ?
-      setResponse('details', 'createdBy', form.formConfig.username) :
-      setResponse('details', 'updatedBy', form.formConfig.username);
+      setResponse('details', 'createdBy', props.config.username) :
+      setResponse('details', 'updatedBy', props.config.username);
     (response.details.createdAt === undefined || (response.details.createdAt !== undefined && response.details.createdAt === '')) ?
       setResponse('details', 'createdAt', now) :
       setResponse('details', 'updatedAt', now);
@@ -109,8 +109,8 @@ const FormInput: FormComponentBase = props => {
     setPrincipal('details', 'templateVersion', templateVersion)
     setPrincipal('details', 'validationVersion', validationVersion);
     (principal.details.createdBy === undefined || (principal.details.createdBy !== undefined && principal.details.createdBy === '')) ?
-      setPrincipal('details', 'createdBy', form.formConfig.username) :
-      setPrincipal('details', 'updatedBy', form.formConfig.username);
+      setPrincipal('details', 'createdBy', props.config.username) :
+      setPrincipal('details', 'updatedBy', props.config.username);
     (principal.details.createdAt === undefined || (principal.details.createdAt !== undefined && principal.details.createdAt === '')) ?
       setPrincipal('details', 'createdAt', now) :
       setPrincipal('details', 'updatedAt', now);
@@ -122,8 +122,8 @@ const FormInput: FormComponentBase = props => {
     setRemark('details', 'templateVersion', templateVersion);
     setRemark('details', 'validationVersion', validationVersion);
     (remark.details.createdBy === undefined || (remark.details.createdBy !== undefined && remark.details.createdBy === '')) ?
-      setRemark('details', 'createdBy', form.formConfig.username) :
-      setRemark('details', 'updatedBy', form.formConfig.username);
+      setRemark('details', 'createdBy', props.config.username) :
+      setRemark('details', 'updatedBy', props.config.username);
     (remark.details.createdAt === undefined || (remark.details.createdAt !== undefined && remark.details.createdAt === '')) ?
       setRemark('details', 'createdAt', now) :
       setRemark('details', 'updatedAt', now);
@@ -153,7 +153,7 @@ const FormInput: FormComponentBase = props => {
       try{
         setReferenceHistory([])
         setSidebarHistory([])
-        saveAnswer(props.component.dataKey, 'answer', value, form.activeComponent.position, {'clientMode': form.formConfig.clientMode,'baseUrl': form.formConfig.baseUrl})
+        saveAnswer(props.component.dataKey, 'answer', value, form.activeComponent.position, {'clientMode': props.config.clientMode,'baseUrl': props.config.baseUrl})
       }catch(e){
         console.log(e)
         toastInfo(locale.details.language[0].errorSaving + props.component.dataKey, 3000, "", "bg-pink-600/80");
@@ -181,7 +181,7 @@ const FormInput: FormComponentBase = props => {
     if(tmpComment().length !== 0){
       let commentRemark = []
       commentRemark.push({
-        sender: form.formConfig.username, 
+        sender: props.config.username, 
         datetime: dayjs().format('YYYY-MM-DD HH:mm:ss'), 
         comment: tmpComment()
       })

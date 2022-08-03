@@ -17,13 +17,16 @@ import { remark, setRemark, Remark } from './stores/RemarkStore';
 import { note, setNote } from './stores/NoteStore';
 import { createSignal, batch } from 'solid-js';
 import { locale, setLocale } from './stores/LocaleStore';
-import { getConfig } from './Form';
 import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
 
 import Toastify from 'toastify-js'
 
 export const default_eval_enable = true
 export const default_eval_validation = true
+var getConfig;
+export const globalConfig = (config: any) => {
+    getConfig = config
+}
 
 export const getValue = (dataKey: string) => {
     let tmpDataKey = dataKey.split('@');
@@ -298,7 +301,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
 
             if (answerIndex === -1) {
                 const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
-                value = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig().initialMode == 2) || (getConfig().initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : value;
+                value = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig.initialMode == 2) || (getConfig.initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : value;
             }
         }
         saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null);
@@ -529,7 +532,7 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
 
                 if (answerIndex === -1) {
                     const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
-                    value = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig().initialMode == 2) || (getConfig().initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : value;
+                    value = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig.initialMode == 2) || (getConfig.initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : value;
                 }
             }
             saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null);

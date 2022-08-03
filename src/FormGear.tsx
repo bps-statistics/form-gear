@@ -95,9 +95,9 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
       runAll = 1;
       
       render(() => (
-        <FormProvider config={config}>
+        <FormProvider>
           <FormLoaderProvider>
-            <Form timeStart={timeStart} runAll={runAll} tmpEnableComp={tmpEnableComp} tmpVarComp={tmpVarComp} template={template} preset={preset} response={response} validation={validation} remark={remark} uploadHandler={uploadHandler} GpsHandler={GpsHandler} offlineSearch={offlineSearch} onlineSearch={onlineSearch} mobileExit={mobileExit} setResponseMobile={setResponseMobile} setSubmitMobile={setSubmitMobile} openMap={openMap}/>
+            <Form config={config} timeStart={timeStart} runAll={runAll} tmpEnableComp={tmpEnableComp} tmpVarComp={tmpVarComp} template={template} preset={preset} response={response} validation={validation} remark={remark} uploadHandler={uploadHandler} GpsHandler={GpsHandler} offlineSearch={offlineSearch} onlineSearch={onlineSearch} mobileExit={mobileExit} setResponseMobile={setResponseMobile} setSubmitMobile={setSubmitMobile} openMap={openMap}/>
             <Loader />
           </FormLoaderProvider>
         </FormProvider>
@@ -436,9 +436,9 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
           setSidebar('details', sidebarList)
 
           render(() => (
-            <FormProvider config={config}>
+            <FormProvider>
               <FormLoaderProvider>
-                <Form timeStart={timeStart} runAll={runAll} tmpEnableComp={tmpEnableComp} tmpVarComp={tmpVarComp} template={template} preset={preset} response={response} validation={validation} remark={remark} uploadHandler={uploadHandler} GpsHandler={GpsHandler} offlineSearch={offlineSearch} onlineSearch={onlineSearch} mobileExit={mobileExit} setResponseMobile={setResponseMobile} setSubmitMobile={setSubmitMobile} openMap={openMap}/>
+                <Form config={config} timeStart={timeStart} runAll={runAll} tmpEnableComp={tmpEnableComp} tmpVarComp={tmpVarComp} template={template} preset={preset} response={response} validation={validation} remark={remark} uploadHandler={uploadHandler} GpsHandler={GpsHandler} offlineSearch={offlineSearch} onlineSearch={onlineSearch} mobileExit={mobileExit} setResponseMobile={setResponseMobile} setSubmitMobile={setSubmitMobile} openMap={openMap}/>
                 <Loader />
               </FormLoaderProvider>
             </FormProvider>

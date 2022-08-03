@@ -17,7 +17,7 @@ import { locale, setLocale } from './stores/LocaleStore';
 import { summary, setSummary } from './stores/SummaryStore';
 import { useLoaderDispatch } from "./loader/FormLoaderProvider"
 
-import { saveAnswer, setEnableFalse, runValidation, referenceIndexLookup} from "./GlobalFunction";
+import { saveAnswer, setEnableFalse, runValidation, referenceIndexLookup, globalConfig} from "./GlobalFunction";
 import { toastInfo } from "./FormInput";
 
 import { referenceHistoryEnable, setReferenceHistoryEnable} from './stores/ReferenceStore';
@@ -27,26 +27,8 @@ import utc from  'dayjs/plugin/utc';
 import timezone from  'dayjs/plugin/timezone';
 
 
-
-export const getConfig = () => {
-  const [formProps] = useForm();
-  return formProps.formConfig
-}
-
-export const getProp = (config: string) => {
-  const [formProps] = useForm();
-
-  switch (config) {
-    case 'clientMode': {
-      return formProps.formConfig.clientMode;
-    }
-    case 'baseUrl': {
-      return formProps.formConfig.baseUrl;
-    }
-  }
-}
-
 const Form: Component<{
+  config: any
   timeStart: any
   runAll: number
   tmpEnableComp: [] | any
@@ -70,6 +52,23 @@ const Form: Component<{
     let answer = '';
     if (componentIndex !== -1 && (reference.details[componentIndex].answer) && (reference.details[componentIndex].enable)) answer = reference.details[componentIndex].answer;
     return answer;
+  }
+
+  const getConfig = () => {
+    return props.config
+  }
+
+  globalConfig(props.config)
+
+  const getProp = (config: string) => {
+    switch (config) {
+      case 'clientMode': {
+        return props.config.clientMode;
+      }
+      case 'baseUrl': {
+        return props.config.baseUrl;
+      }
+    }
   }
   const [renderGear, setRenderGear] = createSignal('FormGear-'+gearVersion+' 🚀:');
 
@@ -323,9 +322,8 @@ const Form: Component<{
     //   }).length,
     //   remark: note.details.notes.length
     // });
-    const [formProps] = useForm();
 
-    if (formProps.formConfig.clientMode != 2) {
+    if (getConfig().clientMode != 2) {
       window.addEventListener('resize', checkOnMobile);
     }
 
@@ -402,8 +400,8 @@ const Form: Component<{
     let tz = dayjs.tz.guess();
 
     (response.details.createdBy === undefined || (response.details.createdBy !== undefined && response.details.createdBy === '')) ?
-      setResponse('details', 'createdBy', form.formConfig.username) :
-      setResponse('details', 'updatedBy', form.formConfig.username);
+      setResponse('details', 'createdBy', getConfig().username) :
+      setResponse('details', 'updatedBy', getConfig().username);
 
     if(response.details.createdAt === undefined || (response.details.createdAt !== undefined && response.details.createdAt === '')){
       setResponse('details', 'createdAt', now) ;
@@ -426,8 +424,8 @@ const Form: Component<{
     setPrincipal('details', 'templateVersion', templateVersion)
     setPrincipal('details', 'validationVersion', validationVersion);
     (principal.details.createdBy === undefined || (principal.details.createdBy !== undefined && principal.details.createdBy === '')) ?
-      setPrincipal('details', 'createdBy', form.formConfig.username) :
-      setPrincipal('details', 'updatedBy', form.formConfig.username);
+      setPrincipal('details', 'createdBy', getConfig().username) :
+      setPrincipal('details', 'updatedBy', getConfig().username);
 
     if(principal.details.createdAt === undefined || (principal.details.createdAt !== undefined && principal.details.createdAt === '')){
       setPrincipal('details', 'createdAt', now) ;
@@ -450,8 +448,8 @@ const Form: Component<{
     setRemark('details', 'templateVersion', templateVersion);
     setRemark('details', 'validationVersion', validationVersion);
     (remark.details.createdBy === undefined || (remark.details.createdBy !== undefined && remark.details.createdBy === '')) ?
-      setRemark('details', 'createdBy', form.formConfig.username) :
-      setRemark('details', 'updatedBy', form.formConfig.username);
+      setRemark('details', 'createdBy', getConfig().username) :
+      setRemark('details', 'updatedBy', getConfig().username);
 
     if(remark.details.createdAt === undefined || (remark.details.createdAt !== undefined && remark.details.createdAt === '')){
       setRemark('details', 'createdAt', now) ;
@@ -485,7 +483,7 @@ const Form: Component<{
 
   const previousPage = (event: MouseEvent) => {
     writeResponse();
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || form.formConfig.clientMode === 2) {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || getConfig().clientMode === 2) {
       var component = document.querySelector(".mobile-component-div");
     } else {
       var component = document.querySelector(".component-div");
@@ -508,7 +506,7 @@ const Form: Component<{
 
   const nextPage = (event: MouseEvent) => {
     writeResponse();
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || form.formConfig.clientMode === 2) {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || getConfig().clientMode === 2) {
       var component = document.querySelector(".mobile-component-div");
     } else {
       var component = document.querySelector(".component-div");
@@ -1205,7 +1203,7 @@ const Form: Component<{
                                         window.scrollTo({ top: 0, behavior: "smooth" });
                                         component.scrollTo({ top: 0, behavior: "smooth" });
                                         /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && sidebarCollapse(e);
-                                        form.formConfig.clientMode === 2 && writeResponse();
+                                        getConfig().clientMode === 2 && writeResponse();
                                         setLoader({});
                                         setTimeout(() => setActiveComponent({ dataKey: item_0.dataKey, label: item_0.label, index: JSON.parse(JSON.stringify(item_0.index)), position: index() }), 50);
                                       }}
@@ -1235,7 +1233,7 @@ const Form: Component<{
                                                   window.scrollTo({ top: 0, behavior: "smooth" });
                                                   component.scrollTo({ top: 0, behavior: "smooth" });
                                                   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && sidebarCollapse(e);
-                                                  form.formConfig.clientMode === 2 && writeResponse();
+                                                  getConfig().clientMode === 2 && writeResponse();
                                                   setLoader({});
                                                   setTimeout(() => setActiveComponent({ dataKey: item_1.dataKey, label: item_1.label, index: JSON.parse(JSON.stringify(item_1.index)), position: index() }), 50);
                                                 }}
@@ -1269,7 +1267,7 @@ const Form: Component<{
                                                             window.scrollTo({ top: 0, behavior: "smooth" });
                                                             component.scrollTo({ top: 0, behavior: "smooth" });
                                                             /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && sidebarCollapse(e);
-                                                            form.formConfig.clientMode === 2 && writeResponse();
+                                                            getConfig().clientMode === 2 && writeResponse();
                                                             setLoader({});
                                                             setTimeout(() => setActiveComponent({ dataKey: item_2.dataKey, label: item_2.label, index: JSON.parse(JSON.stringify(item_2.index)), position: index() }), 50);
                                                           }}
@@ -1304,7 +1302,7 @@ const Form: Component<{
                                                                       window.scrollTo({ top: 0, behavior: "smooth" });
                                                                       component.scrollTo({ top: 0, behavior: "smooth" });
                                                                       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && sidebarCollapse(e);
-                                                                      form.formConfig.clientMode === 2 && writeResponse();
+                                                                      getConfig().clientMode === 2 && writeResponse();
                                                                       setLoader({});
                                                                       setTimeout(() => setActiveComponent({ dataKey: item_3.dataKey, label: item_3.label, index: JSON.parse(JSON.stringify(item_3.index)), position: index() }), 50);
                                                                     }}
@@ -1444,7 +1442,7 @@ const Form: Component<{
                   classList={{
                     'flex': onMobile() === false,
                     'hidden': onMobile() === true,
-                    'sticky': form.formConfig.clientMode < 3
+                    'sticky': getConfig().clientMode < 3
                   }}>
                   <div class=" flex justify-center items-center space-x-10 mx-10 col-start-2 col-end-6 py-2 rounded-full bg-gray-200/80 dark:bg-gray-800/90">
                     <button class="bg-blue-700  text-white p-2 rounded-full  focus:outline-none items-center h-10 w-10 hover:bg-blue-600 group inline-flex justify-center text-xs"

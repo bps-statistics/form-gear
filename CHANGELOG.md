@@ -7,6 +7,9 @@
 ### Fixed
 - Fix cannot read property of null canvas on SignatureInput
 
+### Changed
+- Update to move global variables into props instead of formprovider context
+
 ---
 
 ## FormGear | Ver. 1.0.3
