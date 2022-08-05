@@ -1,14 +1,22 @@
 # Changelog
 
+## FormGear | Ver. 1.1.0
+
+> August 5, 2022
+
+### Fixed
+- Fix cannot delete nestedNumber
+
+### Changed
+- Change the way to combine validation in nested component
+
+
 ## FormGear | Ver. 1.0.4
 
 > August 2, 2022
 
 ### Fixed
 - Fix cannot read property of null canvas on SignatureInput
-
-### Changed
-- Update to move global variables into props instead of formprovider context
 
 ---
 
