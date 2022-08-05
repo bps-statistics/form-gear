@@ -1160,11 +1160,11 @@ const Form: Component<{
         </div>
       </Show>
 
-      <div class="xl:max-w-[120rem] mx-auto xl:p-5 overflow-hidden">
-        <div class="bg-gray-50 dark:bg-gray-900 dark:text-white xl:h-[44rem] h-screen shadow-xl text-gray-600 flex overflow-hidden text-sm font-montserrat xl:rounded-xl dark:shadow-gray-800">
+      <div class=" overflow-hidden">
+        <div class="bg-gray-50 dark:bg-gray-900 dark:text-white h-screen shadow-xl text-gray-600 flex overflow-hidden text-sm font-montserrat xl:rounded-xl dark:shadow-gray-800">
           <div class="mobile-component-div flex-grow overflow-y-auto h-full flex flex-col overflow-x-hidden bg-white dark:bg-gray-900 z-0" onScroll={checkScrollTopMobile} >
             
-            <div class="relative h-screen xl:h-[44rem] md:flex sm:overflow-hidden  ">
+            <div class="relative h-screen md:flex sm:overflow-hidden  ">
               {/* <div class="absolute pt-1 z-20 h-8 w-36 left-0 -ml-8 top-5 bg-teal-600/70 -rotate-45 text-white font-semibold text-center"  >&#946;eta 🤖</div> */}
               
               <div class="bg-white dark:bg-gray-900 w-72  flex-shrink-0 border-r border-gray-200 dark:border-gray-800 max-h-screen p-5 
@@ -1438,7 +1438,7 @@ const Form: Component<{
                   setResponseMobile={props.setResponseMobile}
                 />
 
-                <div class="grid grid-cols-6 w-full justify-end items-end xl:bottom-14 bottom-5 right-0"
+                <div class="grid grid-cols-6 w-full justify-end items-end bottom-4 right-0"
                   classList={{
                     'flex': onMobile() === false,
                     'hidden': onMobile() === true,
@@ -1513,7 +1513,7 @@ const Form: Component<{
 
               </div>
 
-              <div class="grid grid-cols-6 sticky w-full justify-end bottom-6 mt-10"
+              <div class="grid grid-cols-6 sticky w-full justify-end bottom-4 mt-10"
                 classList={{
                   'flex': onMobile() === true,
                   'hidden': onMobile() === false,
