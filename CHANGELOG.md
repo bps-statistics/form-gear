@@ -2,21 +2,38 @@
 
 ## FormGear | Ver. 1.1.0
 
-> August 5, 2022
+> August 8, 2022
+
+### Optimized Performance
+- Reuse `Auxiliary` type from ResponseStore in RemarkStore, PrincipalStore, and MediaStore
+
+### Added
+- Add media to store all media response, eg.: `PhotoInput` and `SignatureInput`
+
+	<p align="center"> <img src="src/assets/FormGear-flow-3.jpg"></p>
+
+- Handle default json for media
+	```json
+	{
+		"dataKey": "",
+		"media": []
+	}
+	```
+- Handle default json for reference
+	```json
+	{
+		"details": [],
+		"sidebar": []
+	}
+	```
 
 ### Fixed
 - Fix cannot delete nestedNumber
+- Fix cannot read property of null canvas on SignatureInput
 
 ### Changed
 - Change the way to combine validation in nested component
 
-
-## FormGear | Ver. 1.0.4
-
-> August 2, 2022
-
-### Fixed
-- Fix cannot read property of null canvas on SignatureInput
 
 ---
 

@@ -1,6 +1,7 @@
 import { createStore } from "solid-js/store";
+import { Auxiliary } from "./ResponseStore";
 
-type PrincipalComponent = {
+type Principal = {
     dataKey: string
     answer: any
     principal: number //start with 1
@@ -8,41 +9,17 @@ type PrincipalComponent = {
 }
 
 type Detail = {
-    templateDataKey: string
-    gearVersion: string
-    templateVersion: string
-    validationVersion: string
-    createdBy: string
-    updatedBy: string
-    createdAt: any
-    updatedAt: any
-    createdAtTimezone: string
-    createdAtGMT: number
-    updatedAtTimezone: string
-    updatedAtGMT: number
-    principals: PrincipalComponent[]
+    principals: Principal[]
 }
   
 export interface Principals{
     status: number,
-    details: Detail
+    details: Detail & Auxiliary
 }
 
 export const [principal, setPrincipal] = createStore<Principals>({
     status: 1,
     details: {
-        templateDataKey: '',
-        gearVersion: '',
-        templateVersion: '',
-        validationVersion: '',
-        createdBy: '',
-        updatedBy: '',
-        createdAt: '',
-        updatedAt: '',
-        createdAtTimezone: '',
-        createdAtGMT: null,
-        updatedAtTimezone: '',
-        updatedAtGMT: null,
         principals: []
     }
 });

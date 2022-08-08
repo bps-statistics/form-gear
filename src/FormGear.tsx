@@ -11,6 +11,7 @@ import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
 import { preset, setPreset, Preset } from './stores/PresetStore';
 import { response, setResponse, Response } from './stores/ResponseStore';
 import { validation, setValidation, Validation } from './stores/ValidationStore';
+import { media, setMedia } from "./stores/MediaStore";
 import { remark, setRemark, Remark } from './stores/RemarkStore';
 import { note, setNote } from './stores/NoteStore';
 
@@ -23,17 +24,28 @@ import { createSignal } from "solid-js";
 import semverCompare from "semver-compare";
 import { toastInfo } from "./FormInput";
 
+import mediaJSON from './data/default/media.json';
+import referenceJSON from './data/default/reference.json';
+
 import { initReferenceMap } from "./GlobalFunction";
 
-export const gearVersion = '1.0.2';
+export const gearVersion = '1.1.0-rc';
 export let templateVersion = '0.0.0';
 export let validationVersion = '0.0.0';
-export function FormGear(referenceFetch, templateFetch, presetFetch, responseFetch, validationFetch, remarkFetch, config, uploadHandler, GpsHandler, offlineSearch, onlineSearch, mobileExit, setResponseMobile, setSubmitMobile, openMap) {
+export function FormGear(referenceFetch, templateFetch, presetFetch, responseFetch, validationFetch, mediaFetch, remarkFetch, config, uploadHandler, GpsHandler, offlineSearch, onlineSearch, mobileExit, setResponseMobile, setSubmitMobile, openMap) {
 
   console.log('form-gear@'+gearVersion);
   // console.time('FormGear renders successfully in ');
   let timeStart = new Date();
-  let stuff = {"reference" : referenceFetch, "template" : templateFetch, "preset" : presetFetch, "response" : responseFetch, "validation" : validationFetch, "remark" : remarkFetch};
+  let stuff = {
+    "reference" : referenceFetch, 
+    "template" : templateFetch, 
+    "preset" : presetFetch, 
+    "response" : responseFetch, 
+    "validation" : validationFetch, 
+    "media" : mediaFetch,
+    "remark" : remarkFetch
+  };
 
   let checkJson = (json : string, message : string) => {
     if(Object.keys(json).length == 0){
@@ -50,6 +62,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
     setPreset({details: presetFetch});
     setResponse({details: responseFetch});
     setValidation({details: validationFetch});
+    (Object.keys(mediaFetch).length > 0) ? setMedia({details: mediaFetch}) : setMedia({details: JSON.parse(JSON.stringify(mediaJSON))});
     setRemark({details: remarkFetch});
 
     const tmpVarComp = [];
@@ -67,28 +80,32 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
     const gearVersionState = template.details.version == undefined ? 1 : semverCompare(
       gearVersion, 
       response.details.gearVersion !== undefined ? response.details.gearVersion : '0.0.0'
-    )
+    );
     
     const templateVersionState = template.details.version == undefined ? 1 : semverCompare(
       templateVersion, 
       response.details.templateVersion !== undefined ? response.details.templateVersion : '0.0.0'
-    )
+    );
 
     const validationVersionState = validation.details.version == undefined ? 1 : semverCompare(
       validationVersion, 
       response.details.validationVersion !== undefined ? response.details.validationVersion : '0.0.0'
-    )
+    );    
 
-    const sidebarLen = reference !== undefined ? referenceFetch.sidebar.length : 0
-    const referenceLen = reference !== undefined ? referenceFetch.details.length : 0
+    (Object.keys(referenceFetch).length > 0) ? setReference(referenceFetch) : setReference(JSON.parse(JSON.stringify(referenceJSON)));
+    const sidebarLen = reference.sidebar.length;
+    const referenceLen = reference.details.length;
+
+    // const sidebarLen = reference !== undefined ? referenceFetch.sidebar.length : 0;
+    // const referenceLen = reference !== undefined ? referenceFetch.details.length : 0;
     
     // semverCompare(a,b) 
     // If the semver string a is greater than b, return 1. 
     // If the semver string b is greater than a, return 0. 
     // If a equals b, return 0;
     let runAll = 0;
-    if( gearVersionState == 0 && templateVersionState == 0 && validationVersionState == 0 && referenceLen > 0 && sidebarLen >0 ){
-      console.log('Reuse reference ♻️')
+    if( gearVersionState == 0 && templateVersionState == 0 && validationVersionState == 0 && referenceLen > 0 && sidebarLen > 0 ){
+      console.log('Reuse reference ♻️');      
       setReference(referenceFetch)
       initReferenceMap()
       setSidebar('details',referenceFetch.sidebar)

@@ -25,6 +25,8 @@ import { referenceHistoryEnable, setReferenceHistoryEnable} from './stores/Refer
 import dayjs from 'dayjs';
 import utc from  'dayjs/plugin/utc';
 import timezone from  'dayjs/plugin/timezone';
+import { media, setMedia } from "./stores/MediaStore";
+import { type } from "os";
 
 
 const Form: Component<{
@@ -249,6 +251,19 @@ const Form: Component<{
     setRenderGear('FormGear-'+gearVersion+' ♻️:')
   }
 
+  // uncomment when media.json implementation is ready for production
+  // media.details.media.forEach( (element, index) =>{
+  //   let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
+  //   if (refPosition !== -1) {
+  //     let sidePosition = sidebar.details.findIndex(obj => {
+  //       const cekInsideIndex = obj.components[0].findIndex(objChild => objChild.dataKey === element.dataKey);
+  //       return (cekInsideIndex == -1) ? 0 : index;
+  //     });
+  //     let answer = (typeof element.answer === 'object') ? JSON.parse(JSON.stringify(element.answer)) : element.answer;
+  //     saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') });
+  //   }
+  // })
+
   // console.log(reference.details)
   // console.timeEnd('response ');
   // console.timeEnd('');
@@ -272,14 +287,24 @@ const Form: Component<{
         if((element.answer !== undefined) && (element.answer !== '') && (element.answer !== null)) {
             _answer += 1;
         }
-        if(((element.answer === undefined || element.answer === '') || ((element.type == 21) && element.answer.length == 1) || ((element.type == 22) && element.answer.length == 1))  && !(JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)) {
+        if((
+              (element.answer === undefined || element.answer === '') || 
+              ((element.type == 21) && element.answer.length == 1) || 
+              ((element.type == 22) && element.answer.length == 1)
+            )  
+          && !(JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)) {
             _blank += 1;
         }
         if(element.validationState == 2) {
-          _error += 1;
+            _error += 1;
         }
-        if((element.answer !== undefined) && (element.answer !== '') && (element.answer !== null) && (element.validationState != 1 && element.validationState != 2)) {
-          _clean += 1;
+        if(
+            (element.answer !== undefined) && 
+            (element.answer !== '') && 
+            (element.answer !== null) && 
+            (element.validationState != 1 && element.validationState != 2)
+          ) {
+            _clean += 1;
         }
       }
     })
@@ -351,6 +376,7 @@ const Form: Component<{
 
   const setData = () => {
     const dataForm = [];
+    const dataMedia = [];
     const dataPrincipal = [];
 
     setLoader({});
@@ -365,11 +391,36 @@ const Form: Component<{
         && (element.answer !== null)
       ) {
         let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
-        if (enableFalse == -1){
-          dataForm.push({
-            dataKey: element.dataKey,
-            answer: element.answer
-          })
+        if (enableFalse == -1){      
+          (element.type == 32 || element.type == 36) && dataMedia.push({ dataKey: element.dataKey, answer: element.answer });
+          
+          dataForm.push({ dataKey: element.dataKey, answer: element.answer })
+          
+          // uncomment when media.json implementation is ready for production
+          // if(element.type == 32){
+          //   dataMedia.push({ dataKey: element.dataKey, answer: element.answer });
+          //   dataForm.push({
+          //     dataKey: element.dataKey,
+          //     answer: [{
+          //       value: true,
+          //       type: (element.answer[0] != undefined) ? element.answer[0].type : '',
+          //       label: (element.answer[0] != undefined) ? element.answer[0].label : ''
+          //     }]
+          //   });
+          // }else if(element.type == 36 ){
+          //   dataMedia.push({ dataKey: element.dataKey, answer: element.answer });
+          //   dataForm.push({
+          //     dataKey: element.dataKey,
+          //     answer: [{
+          //       value: true,
+          //       type: (element.answer[0] != undefined) ? element.answer[0].type : '',
+          //       signature: (element.answer[0] != undefined) ? element.answer[0].signature : ''
+          //     }]
+          //   });
+          // }else{
+          //   dataForm.push({ dataKey: element.dataKey, answer: element.answer })
+          // }
+
           if (element.principal !== undefined) {
             dataPrincipal.push({
               dataKey: element.dataKey,
@@ -392,9 +443,9 @@ const Form: Component<{
     setResponse('details', 'summary', JSON.parse(JSON.stringify(summary)));
 
     let now = dayjs().format('YYYY-MM-DD HH:mm:ss');    
-    var dt = new Date();
-    var s = dt.getTimezoneOffset();
-    var timeToGet = Number((s/60)*-1);
+    let dt = new Date();
+    let s = dt.getTimezoneOffset();
+    let timeToGet = Number((s/60)*-1);
     dayjs.extend(timezone);
     dayjs.extend(utc);
     let tz = dayjs.tz.guess();
@@ -415,6 +466,30 @@ const Form: Component<{
       setResponse('details', 'updatedAt', now);
       setResponse('details', 'updatedAtTimezone', tz.toString()) 
       setResponse('details', 'updatedAtGMT', timeToGet);
+    }
+
+    //setMedia
+    setMedia('details', 'media', dataMedia);
+    setMedia('details', 'templateDataKey', template.details.dataKey)
+    setMedia('details', 'gearVersion', gearVersion)
+    setMedia('details', 'templateVersion', templateVersion)
+    setMedia('details', 'validationVersion', validationVersion);
+    (principal.details.createdBy === undefined || (principal.details.createdBy !== undefined && principal.details.createdBy === '')) ?
+      setMedia('details', 'createdBy', getConfig().username) :
+      setMedia('details', 'updatedBy', getConfig().username);
+
+    if(principal.details.createdAt === undefined || (principal.details.createdAt !== undefined && principal.details.createdAt === '')){
+      setMedia('details', 'createdAt', now) ;
+      setMedia('details', 'createdAtTimezone', tz.toString()) 
+      setMedia('details', 'createdAtGMT', timeToGet);
+    } else {
+      if(principal.details.createdAtTimezone === undefined || (principal.details.createdAtTimezone !== undefined && principal.details.createdAtTimezone === '')){
+        setMedia('details', 'createdAtTimezone', tz.toString()) 
+        setMedia('details', 'createdAtGMT', timeToGet);
+      }
+      setMedia('details', 'updatedAt', now);
+      setMedia('details', 'updatedAtTimezone', tz.toString()) 
+      setMedia('details', 'updatedAtGMT', timeToGet);
     }
 
     //setPrincipal
@@ -471,14 +546,14 @@ const Form: Component<{
 
   const writeResponse = () => {
     setData();
-    props.setResponseMobile(response.details, remark.details, principal.details, reference);
+    props.setResponseMobile(response.details, media.details, remark.details, principal.details, reference);
   }
 
   props.mobileExit(writeResponse)
 
   const writeSubmitResponse = () => {
     setData();
-    props.setSubmitMobile(response.details, remark.details, principal.details, reference);
+    props.setSubmitMobile(response.details, media.details, remark.details, principal.details, reference);
   }
 
   const previousPage = (event: MouseEvent) => {

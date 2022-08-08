@@ -55,11 +55,11 @@ export enum ControlType {
   CheckboxInput = 29,
   TextAreaInput = 30,
   EmailInput = 31,
-  PhotoInput = 32,
+  PhotoInput = 32, // Media
   GpsInput = 33,
   CsvInput = 34,
   NowInput = 35,
-  SignatureInput = 36
+  SignatureInput = 36 // Media
 }
 
 export type Option =  {

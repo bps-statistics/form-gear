@@ -18,7 +18,9 @@ let config = {
 //some variables initiation
 var cameraFunction = null;
 var cameraGPSFunction = null;
+
 var responseGear = null;
+var mediaGear = null;
 var remarkGear = null;
 var principalGear = null;
 var referenceGear = null;
@@ -26,9 +28,10 @@ var referenceGear = null;
 //JSON Object defined template
 let reference = await fetch("../src/data/reference.json").then((res) => res.json()).catch((error: Error) => { return {} }) || []
 let template = await fetch("../src/data/template.json").then((res) => res.json()).catch((error: Error) => { return {} }) || []
-let preset = await fetch("../src/data/preset.json").then((res) => res.json()).catch((error: Error) => { return {} }) || []
+let preset = await fetch("../src/data/ec/preset.json").then((res) => res.json()).catch((error: Error) => { return {} }) || []
 let response = await fetch("../src/data/response.json").then((res) => res.json()).catch((error: Error) => { return {} }) || []
 let validation = await fetch("../src/data/validation.json").then((res) => res.json()).catch((error: Error) => { return {} }) || []
+let media = await fetch("../src/data/media.json").then((res) => res.json()).catch((error: Error) => { return {} }) || []
 let remark = await fetch("../src/data/remark.json").then((res) => res.json()).catch((error: Error) => { return {} }) || []
 
 //function to open camera on mobile  CAPI
@@ -178,8 +181,9 @@ let onlineSearch = async (url) =>
   }));
 
 //function to get response, remark, principal and reference
-let setResponseMobile = function (res, rem, princ, ref) {
+let setResponseMobile = function (res, med, rem, princ, ref) {
   responseGear = res
+  mediaGear = med
   remarkGear = rem
   principalGear = princ
   referenceGear = ref
@@ -187,13 +191,15 @@ let setResponseMobile = function (res, rem, princ, ref) {
   console.log('----------', new Date(), '----------');
 
   console.log('response', responseGear)
+  console.log('media', mediaGear)
   console.log('remark', remarkGear)
   console.log('principal', principalGear)
   console.log('reference', referenceGear)
 }
 
-let setSubmitMobile = function (res, rem, princ, ref) {
+let setSubmitMobile = function (res, med, rem, princ, ref) {
   responseGear = res
+  mediaGear = med
   remarkGear = rem
   principalGear = princ
   referenceGear = ref
@@ -201,6 +207,7 @@ let setSubmitMobile = function (res, rem, princ, ref) {
   console.log('----------', new Date(), '----------');
 
   console.log('response', responseGear)
+  console.log('media', mediaGear)
   console.log('remark', remarkGear)
   console.log('principal', principalGear)
   console.log('reference', referenceGear)
@@ -212,4 +219,4 @@ let openMap = function (koordinat) {
 }
 
 
-FormGear(reference, template, preset, response, validation, remark, config, uploadHandler, GpsHandler, offlineSearch, onlineSearch, mobileExit, setResponseMobile, setSubmitMobile, openMap);
+FormGear(reference, template, preset, response, validation, media, remark, config, uploadHandler, GpsHandler, offlineSearch, onlineSearch, mobileExit, setResponseMobile, setSubmitMobile, openMap);
