@@ -2,7 +2,7 @@
 
 ## FormGear | Ver. 1.1.0
 
-> August 8, 2022
+> August 9, 2022
 
 ### Optimized Performance
 - Reuse `Auxiliary` type from ResponseStore in RemarkStore, PrincipalStore, and MediaStore
@@ -12,18 +12,47 @@
 
 	<p align="center"> <img src="src/assets/FormGear-flow-3.jpg"></p>
 
-- Handle default json for media
-	```json
-	{
-		"dataKey": "",
-		"media": []
-	}
-	```
-- Handle default json for reference
+- Handle default json 
+  
+	reference
 	```json
 	{
 		"details": [],
 		"sidebar": []
+	}
+	```
+
+	preset
+	```json
+	{
+		"description": "",
+		"dataKey": "",
+		"predata": []
+	}
+	```
+
+	response
+	```json
+	{
+		"description": "",
+		"dataKey": "",
+		"answers": []
+	}
+	```
+	
+	remark
+	```json
+	{
+		"dataKey": "",
+		"notes": []
+	}
+	```
+	
+	media
+	```json
+	{
+		"dataKey": "",
+		"media": []
 	}
 	```
 

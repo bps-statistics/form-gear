@@ -24,8 +24,11 @@ import { createSignal } from "solid-js";
 import semverCompare from "semver-compare";
 import { toastInfo } from "./FormInput";
 
-import mediaJSON from './data/default/media.json';
+import presetJSON from './data/default/preset.json';
+import responseJSON from './data/default/response.json';
 import referenceJSON from './data/default/reference.json';
+import mediaJSON from './data/default/media.json';
+import remarkJSON from './data/default/remark.json';
 
 import { initReferenceMap } from "./GlobalFunction";
 
@@ -59,11 +62,12 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
   
   try{
     setTemplate({details: templateFetch});
-    setPreset({details: presetFetch});
-    setResponse({details: responseFetch});
     setValidation({details: validationFetch});
+    
+    (Object.keys(presetFetch).length > 0) ? setPreset({details: presetFetch}) : setPreset({details: JSON.parse(JSON.stringify(presetJSON))});
+    (Object.keys(responseFetch).length > 0) ? setResponse({details: responseFetch}) : setResponse({details: JSON.parse(JSON.stringify(responseJSON))});
     (Object.keys(mediaFetch).length > 0) ? setMedia({details: mediaFetch}) : setMedia({details: JSON.parse(JSON.stringify(mediaJSON))});
-    setRemark({details: remarkFetch});
+    (Object.keys(remarkFetch).length > 0) ? setRemark({details: remarkFetch}) : setRemark({details: JSON.parse(JSON.stringify(remarkJSON))});
 
     const tmpVarComp = [];
     const tmpEnableComp = [];
@@ -466,7 +470,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
 
     // console.timeEnd('FormGear renders successfully in ')
   } catch (e: unknown) {
-    toastInfo("Failed to render the questionnaire", 30000, "", "bg-pink-600/80");
+    toastInfo("Failed to render the questionnaire", 5000, "", "bg-pink-600/80");
   };  
   
 }
