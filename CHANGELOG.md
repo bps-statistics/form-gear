@@ -2,10 +2,12 @@
 
 ## FormGear | Ver. 1.1.0
 
-> August 9, 2022
+> August 10, 2022
 
 ### Optimized Performance
 - Reuse `Auxiliary` type from ResponseStore in RemarkStore, PrincipalStore, and MediaStore
+- Reduce item in reference.json
+- Change the logic for creating components on nested
 
 ### Added
 - Add media to store all media response, eg.: `PhotoInput` and `SignatureInput`

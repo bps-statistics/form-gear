@@ -75,7 +75,8 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
     const refList = [];
     const sideList = [];
     const sidebarList = [];
-    const referenceList = [];
+    let referenceList = [];
+    const nestedList = [];
     let len = template.details.components[0].length;
 
     templateVersion = template.details.version !== undefined ? template.details.version : '0.0.1';
@@ -219,7 +220,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
         }
       }
       template.details.components.forEach((element, index) => loopValidation(element, index, [0], 0));
-      setNested('details',nestComp)
+      // setNested('details',nestComp)
       
       const [components , setComponents] = createSignal([]);
 
@@ -271,11 +272,22 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                           componentEnable: element[i].componentEnable !== undefined ? element[i].componentEnable : []
                       }
                   }
-                  // if((el_type == 21 || el_type == 22)){
-                  //   answer = JSON.parse(JSON.stringify(answer));
-                  // } else if(el_type == 4){
-                  //   (answer == undefined ) && (!sideEnable) && tmpVarComp.push(JSON.parse(JSON.stringify(element[i]))) ;
-                  // }
+                  if(el_type == 2){
+                    let nestedLen = nestedList.length
+                    nestedList[nestedLen] = []
+                    nestedList[nestedLen][0] = {
+                        dataKey: element[i].dataKey,
+                        label: element[i].label,
+                        description: element[i].description,
+                        level: level,
+                        index: parent.concat(i),
+                        components: components,
+                        sourceQuestion: element[i].sourceQuestion !== undefined ? element[i].sourceQuestion : '',
+                        enable: sideEnable,
+                        enableCondition: element[i].enableCondition !== undefined ? element[i].enableCondition : '',
+                        componentEnable: element[i].componentEnable !== undefined ? element[i].componentEnable : []
+                    }
+                  }
 
                   if(el_type > 2 && element[i].enableCondition !== undefined && !sideEnable) tmpEnableComp.push(JSON.parse(JSON.stringify(element[i])));
 
@@ -310,7 +322,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                       index: parent.concat(i),
                       level: level,
                       options: (element[i].options) ? element[i].options : undefined,
-                      components: components,
+                      // components: components,
                       sourceQuestion: element[i].sourceQuestion !== undefined ? element[i].sourceQuestion : undefined,
                       urlValidation: element[i].urlValidation !== undefined ? element[i].urlValidation : undefined,
                       currency: element[i].currency !== undefined ? element[i].currency : undefined,
@@ -386,7 +398,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                 index: [0, j],
                 level: 0,
                 options: (element[j].options) ? element[j].options : undefined,
-                components: components,
+                // components: components,
                 sourceQuestion: element[j].sourceQuestion !== undefined ? element[j].sourceQuestion : undefined,
                 urlValidation: element[j].urlValidation !== undefined ? element[j].urlValidation : undefined,
                 currency: element[j].currency !== undefined ? element[j].currency : undefined,
@@ -451,7 +463,42 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
               referenceList.push(refList[j][k])
             }
           }
+          let arrIndex = []
+          let newData = {}
+          //mulai di loop
+          function loopnested(dataKey, len, level, z){
+              let nestedPos = referenceList.findIndex(obj => obj.dataKey == dataKey)
+              let newSetComp = []
+              let counter = 0
+              for(let x = Number(nestedPos)+1; x <= referenceList.length; x++){
+                if(level == referenceList[x].level-1){
+                  if(referenceList[x].type > 2 && !arrIndex.includes(Number(x))){
+                    arrIndex.push(Number(x))
+                    newData[Number(x)] = referenceList[x].dataKey
+                  }
+                  newSetComp.push(referenceList[x])
+                  counter++
+                }
+                if(counter == len) break;
+              }
+              
+              let newRef = JSON.parse(JSON.stringify(referenceList))
+              newRef[nestedPos].components = []
+              newRef[nestedPos].components.push(JSON.parse(JSON.stringify(newSetComp)))
+              referenceList = JSON.parse(JSON.stringify(newRef))
+              
+          }
+          for(let z = (nestedList.length-1); z >= 0; z--){
+              loopnested(nestedList[z][0].dataKey, Number(nestedList[z][0].components[0].length), nestedList[z][0].level, z)
+          }
           
+          let newIn = Object.keys(newData)
+          let arrIndexLen = Object.keys(newData).length
+          for(let counter = arrIndexLen-1;counter >= 0;counter--){
+            // console.log('hapus', Number(newIn[counter]))
+            referenceList.splice(Number(newIn[counter]), 1)
+          }
+
           initReferenceMap(referenceList)
           setReference('details', referenceList)
           setSidebar('details', sidebarList)
