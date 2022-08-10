@@ -14,28 +14,23 @@
 
 	<p align="center"> <img src="src/assets/FormGear-flow-3.jpg"></p>
 
-- Add new component UnitInput with form type = 37
-
-	template
+- Add UnitInput with form type = 37
 	```json
+	"label": "Height :",
+	"dataKey": "height",
+	"type": 37,
+	"typeOption" : 1,
+	"options": [
 	{
-		"label": "Height :",
-		"dataKey": "height",
-		"type": 37,
-		"typeOption" : 1,
-		"options": [
-		{
-			"label": "centimeter",
-			"value": "cm"
-		},
-		{
-			"label": "meter",
-			"value": "meter"
-		}
-		]
+		"label": "centimeter",
+		"value": "cm"
 	},
-	```
-	
+	{
+		"label": "meter",
+		"value": "meter"
+	}
+	]
+	```	
 - Handle default json 
   
 	reference
@@ -100,7 +95,7 @@
 - Reengineer code to filter components which not run any expression on disabled components
 
 ### Added
-- Add signature input
+- Add SignatureInput
 	```json
 	"label":"Signature",
 	"dataKey":"signa",

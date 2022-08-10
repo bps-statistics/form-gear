@@ -161,6 +161,22 @@
               ]
             },
             {
+              "label": "Height :",
+              "dataKey": "height",
+              "type": 37,
+              "typeOption": 1,
+              "options": [
+                {
+                  "label": "centimeter",
+                  "value": "cm"
+                },
+                {
+                  "label": "meter",
+                  "value": "meter"
+                }
+              ]
+            },
+            {
               "label": "Income per month",
               "dataKey": "income",
               "currency": "USD",

@@ -4,6 +4,7 @@ import { Select, createOptions } from "@thisbeyond/solid-select"
 import { reference } from '../stores/ReferenceStore'
 import Toastify from 'toastify-js'
 import { locale } from '../stores/LocaleStore'
+import { FiChevronDown } from 'solid-icons/fi'
 
 const UnitInput: FormComponentBase = props => {
     const config = props.config
@@ -339,21 +340,22 @@ const UnitInput: FormComponentBase = props => {
                 </div>
             </div>
             <div class="font-light text-sm space-x-2 py-2.5 px-2 md:col-span-2 grid grid-cols-12">
-                <div class=""
+                <div 
+                    class="relative"
                     classList={{
-                        'col-span-5 lg:mr-1': enableRemark(),
-                        'col-span-5 mr-1': !(enableRemark()),
+                    'col-span-11 lg:-mr-4' : enableRemark(),
+                    'col-span-12' : !(enableRemark()),
                     }}  >
                     <Show when={props.component.lengthInput === undefined}>
                         <input value={props.value != undefined ? props.value != '' ? props.value[0].value : '' : ''} type="number"
                             name={props.component.dataKey}
-                            class={classInput}
+                            class={classInput + 'block pr-20'}
                             classList={{
                                 ' border border-solid border-gray-300 ': props.classValidation === 0,
                                 ' border-orange-500 dark:bg-orange-100 ': props.classValidation === 1,
                                 ' border-pink-600 dark:bg-pink-100 ': props.classValidation === 2,
                             }}
-                            placeholder="Value"
+                            placeholder=""
                             disabled={disableInput()}
                             onChange={(e) => {
                                 handleOnChange(e ? e.currentTarget.value : '', props.value != undefined && props.value != '' ? props.value[0].unit ? props.value[0].unit : { value: '', label: '' } : { value: '', label: '' }, 1)
@@ -363,13 +365,13 @@ const UnitInput: FormComponentBase = props => {
                     <Show when={props.component.lengthInput !== undefined && props.component.lengthInput.length > 0}>
                         <input value={props.value != undefined ? props.value != '' ? props.value[0].value : '' : ''} type="number"
                             name={props.component.dataKey}
-                            class={classInput}
+                            class={classInput + 'block pr-20'}
                             classList={{
                                 ' border border-solid border-gray-300 ': props.classValidation === 0,
                                 ' border-orange-500 dark:bg-orange-100 ': props.classValidation === 1,
                                 ' border-pink-600 dark:bg-pink-100 ': props.classValidation === 2,
                             }}
-                            placeholder="Value"
+                            placeholder=""
                             disabled={disableInput()}
                             onChange={(e) => {
                                 handleOnChange(e ? e.currentTarget.value : '', props.value != undefined && props.value != '' ? props.value[0].unit ? props.value[0].unit : { value: '', label: '' } : { value: '', label: '' }, 1)
@@ -413,21 +415,20 @@ const UnitInput: FormComponentBase = props => {
                             )}
                         </For>
                     </Show>
-                </div>
-                <div class=""
-                    classList={{
-                        'col-span-6 lg:-mr-2': enableRemark(),
-                        'col-span-6': !(enableRemark()),
-                    }}  >
+                    <div class="absolute inset-y-0 right-0 flex items-center">
+                        
                     <Select
-                        class="formgear-select w-full rounded font-light text-sm text-gray-700 bg-white bg-clip-padding transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-0 border-transparent focus:outline-none  disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
+                        class="formgear-select-unit  w-full rounded font-light text-sm text-gray-700 bg-white bg-clip-padding transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-0 border-transparent focus:outline-none  disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
                         {...createOptions(
                             options() || [],
                             { key: "label", filterable: true })}
                         disabled={disableInput()} placeholder="Unit"
                         onChange={(e) => handleOnChange(props.value != undefined ? props.value != '' ? props.value[0].value : '' : '', { value: e ? e.value : '', label: e ? e.label : '' }, 2)}
                         initialValue={{ value: props.value ? props.value != '' ? props.value[0].unit ? props.value[0].unit.value ? props.value[0].unit.value != '' ? props.value[0].unit.value : '' : '' : '' : '' : '', label: selectedOption }} />
+                        <FiChevronDown size={20} class="text-gray-400  mr-3"/>
+                    </div>
                 </div>
+
                 <Show when={enableRemark()}>
                     <div class=" flex justify-end ">
                         <button class="relative inline-block bg-white p-2 h-10 w-10 text-gray-500 rounded-full  hover:bg-yellow-100 hover:text-yellow-400 hover:border-yellow-100 border-2 border-gray-300 disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
