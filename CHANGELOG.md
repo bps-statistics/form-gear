@@ -12,6 +12,28 @@
 
 	<p align="center"> <img src="src/assets/FormGear-flow-3.jpg"></p>
 
+- Add new component UnitInput with form type = 37
+
+	template
+	```json
+	{
+		"label": "Height :",
+		"dataKey": "height",
+		"type": 37,
+		"typeOption" : 1,
+		"options": [
+		{
+			"label": "centimeter",
+			"value": "cm"
+		},
+		{
+			"label": "meter",
+			"value": "meter"
+		}
+		]
+	},
+	```
+	
 - Handle default json 
   
 	reference

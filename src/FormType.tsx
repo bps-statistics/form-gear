@@ -28,6 +28,7 @@ import GpsInput from "./components/GpsInput"
 import CsvInput from "./components/CsvInput"
 import NowInput from "./components/NowInput"
 import SignatureInput from "./components/SignatureInput"
+import UnitInput from "./components/UnitInput"
 
 export enum ControlType {
   Section = 1,
@@ -59,7 +60,8 @@ export enum ControlType {
   GpsInput = 33,
   CsvInput = 34,
   NowInput = 35,
-  SignatureInput = 36 // Media
+  SignatureInput = 36,
+  UnitInput = 37
 }
 
 export type Option =  {
@@ -180,5 +182,6 @@ export const CONTROL_MAP = new Map<ControlType, FormComponentBase>([
   [ControlType.GpsInput, GpsInput],
   [ControlType.CsvInput, CsvInput],
   [ControlType.NowInput, NowInput],
-  [ControlType.SignatureInput, SignatureInput]
+  [ControlType.SignatureInput, SignatureInput],
+  [ControlType.UnitInput, UnitInput]
 ]);
