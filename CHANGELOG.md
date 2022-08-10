@@ -74,6 +74,7 @@
 		"media": []
 	}
 	```
+- Add name atribut for every dataKey
 
 ### Fixed
 - Fix cannot delete nestedNumber

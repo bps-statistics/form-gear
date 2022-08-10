@@ -15,6 +15,7 @@ import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
 import { locale, setLocale} from './stores/LocaleStore';
 import { useLoaderDispatch } from "./loader/FormLoaderProvider";
 import { referenceEnableFalse, setReferenceEnableFalse } from './stores/ReferenceStore';
+import { media, setMedia } from "./stores/MediaStore";
 
 import dayjs from 'dayjs';
 import Toastify from 'toastify-js'
@@ -61,7 +62,9 @@ const FormInput: FormComponentBase = props => {
 
   const setData = () => {
     const dataForm = [];
+    const dataMedia = [];
     const dataPrincipal = [];
+
     reference.details.forEach((element) => {
       if(
         (element.type > 3)
@@ -70,17 +73,21 @@ const FormInput: FormComponentBase = props => {
         && ( element.answer !== '') 
         && ( element.answer !== null)
       ) {
-        dataForm.push({
-          dataKey: element.dataKey,
-          answer: element.answer
-        })
-        if(element.principal !== undefined){
-          dataPrincipal.push({
-            dataKey: element.dataKey,
-            answer: element.answer,
-            principal: element.principal,
-            columnName: element.columnName
-          })
+        let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
+        if (enableFalse == -1){      
+          (element.type == 32 || element.type == 36) && dataMedia.push({ dataKey: element.dataKey, name: element.name, answer: element.answer });
+          
+          dataForm.push({ dataKey: element.dataKey, name: element.name, answer: element.answer })
+
+          if (element.principal !== undefined) {
+            dataPrincipal.push({
+              dataKey: element.dataKey,
+              name: element.name,
+              answer: element.answer,
+              principal: element.principal,
+              columnName: element.columnName
+            })
+          }
         }
       }
     })      

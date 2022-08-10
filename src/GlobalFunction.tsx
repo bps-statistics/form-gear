@@ -67,6 +67,7 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
 
     let newComp = JSON.parse(JSON.stringify(components));
     newComp.dataKey = newComp.dataKey + '#' + nestedPosition;
+    newComp.name = newComp.name + '#' + nestedPosition;
 
     let tmp_type = newComp.type;
     newComp.answer = (tmp_type === 21 || tmp_type === 22) ? [{ "label": "lastId#0", "value": 0 }] : newComp.answer ? newComp.answer : ''

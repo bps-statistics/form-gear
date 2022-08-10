@@ -2,8 +2,9 @@ import { createStore } from "solid-js/store";
 import { Summary } from "./SummaryStore";
 
 export type Answer = {
-    dataKey: string;
-    answer: any;
+    dataKey: string
+    name: string
+    answer: any
 }
 
 export type Auxiliary = {    

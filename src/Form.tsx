@@ -392,9 +392,9 @@ const Form: Component<{
       ) {
         let enableFalse = referenceEnableFalse().findIndex(obj => obj.parentIndex.toString() === element.index.slice(0, -2).toString());
         if (enableFalse == -1){      
-          (element.type == 32 || element.type == 36) && dataMedia.push({ dataKey: element.dataKey, answer: element.answer });
+          (element.type == 32 || element.type == 36) && dataMedia.push({ dataKey: element.dataKey, name: element.name, answer: element.answer });
           
-          dataForm.push({ dataKey: element.dataKey, answer: element.answer })
+          dataForm.push({ dataKey: element.dataKey, name: element.name, answer: element.answer })
           
           // uncomment when media.json implementation is ready for production
           // if(element.type == 32){
@@ -424,6 +424,7 @@ const Form: Component<{
           if (element.principal !== undefined) {
             dataPrincipal.push({
               dataKey: element.dataKey,
+              name: element.name,
               answer: element.answer,
               principal: element.principal,
               columnName: element.columnName

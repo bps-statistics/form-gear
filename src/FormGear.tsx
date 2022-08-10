@@ -261,6 +261,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                       let sideListLen = sideList[j].length;
                       sideList[j][sideListLen] = {
                           dataKey: element[i].dataKey,
+                          name: element[i].name,
                           label: element[i].label,
                           description: element[i].description,
                           level: level,
@@ -277,6 +278,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                     nestedList[nestedLen] = []
                     nestedList[nestedLen][0] = {
                         dataKey: element[i].dataKey,
+                        name: element[i].name,
                         label: element[i].label,
                         description: element[i].description,
                         level: level,
@@ -314,6 +316,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                   let refListLen = refList[j].length;
                   refList[j][refListLen] = {         
                       dataKey: element[i].dataKey,
+                      name: element[i].name,
                       label: element[i].label,
                       hint: (element[i].hint) ? element[i].hint : '',
                       description: element[i].description !== undefined ? element[i].description : undefined,
@@ -377,6 +380,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
               
               sideList[j][0] = {
                   dataKey: element[j].dataKey,
+                  name: element[j].name,
                   label: element[j].label,
                   description: element[j].description,
                   level: 0,
@@ -391,6 +395,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
               // insert section
               refList[j][0] = {         
                 dataKey: element[j].dataKey,
+                name: element[j].name,
                 label: element[j].label,
                 hint: (element[j].hint) ? element[j].hint : '',
                 description: element[j].description !== undefined ? element[j].description : undefined,

@@ -9,6 +9,7 @@ type Comment = {
 
 type Note = {
     dataKey: string
+    name: string
     comments: Comment[]
 }
 

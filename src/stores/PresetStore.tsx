@@ -2,6 +2,7 @@ import { createStore } from "solid-js/store";
 
 type Predata = {
     dataKey: string;
+    name: string
     answer: any;
 }
 

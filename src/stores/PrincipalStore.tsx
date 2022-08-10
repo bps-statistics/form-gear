@@ -3,6 +3,7 @@ import { Auxiliary } from "./ResponseStore";
 
 type Principal = {
     dataKey: string
+    name: string
     answer: any
     principal: number //start with 1
     columnName: string

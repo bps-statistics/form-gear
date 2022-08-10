@@ -3,6 +3,7 @@ import { Validations } from "./ReferenceStore";
 
 type TestFunction = {
     dataKey: string;
+    name: string
     validations?: Validations[]
     componentValidation?: string[]
 }

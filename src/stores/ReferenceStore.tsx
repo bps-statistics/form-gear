@@ -12,6 +12,7 @@ export type Validations = {
 
 type Detail = {
     dataKey: string
+    name: string
     label: string
     hint: string
     description: string

@@ -6,6 +6,7 @@ import { Language } from "./LocaleStore";
 export type Component = {
     label: string
     dataKey: string
+    name: string
     type: string
     currency?: string
     source?: string

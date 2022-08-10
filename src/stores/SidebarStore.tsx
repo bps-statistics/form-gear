@@ -3,6 +3,7 @@ import { Component } from "./TemplateStore";
 
 export type Detail = {
     dataKey: string
+    name: string
     label: string
     description: string
     level: number,
