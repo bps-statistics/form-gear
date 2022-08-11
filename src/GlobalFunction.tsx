@@ -1,25 +1,17 @@
-import { reference, referenceEnableFalse, setReference, setReferenceEnableFalse } from './stores/ReferenceStore';
-import { referenceMap, setReferenceMap } from './stores/ReferenceStore';
+import { reference, referenceMap, setReference, setReferenceEnableFalse, setReferenceMap } from './stores/ReferenceStore';
 // import { sidebarIndexMap, setSidebarIndexMap } from './stores/ReferenceStore';
-import { referenceHistoryEnable, setReferenceHistoryEnable } from './stores/ReferenceStore';
-import { referenceHistory, setReferenceHistory } from './stores/ReferenceStore';
-import { sidebarHistory, setSidebarHistory } from './stores/ReferenceStore';
-import { compEnableMap, setCompEnableMap } from './stores/ReferenceStore';
-import { compValidMap, setCompValidMap } from './stores/ReferenceStore';
-import { compSourceOptionMap, setCompSourceOptionMap } from './stores/ReferenceStore';
-import { compVarMap, setCompVarMap } from './stores/ReferenceStore';
-import { compSourceQuestionMap, setCompSourceQuestionMap } from './stores/ReferenceStore';
-import { validation, setValidation } from './stores/ValidationStore';
-import { sidebar, setSidebar } from './stores/SidebarStore';
-import { preset, setPreset, Preset } from './stores/PresetStore';
-import { response, setResponse, Response } from './stores/ResponseStore';
-import { remark, setRemark, Remark } from './stores/RemarkStore';
+import { batch, createSignal } from 'solid-js';
+import { locale } from './stores/LocaleStore';
 import { note, setNote } from './stores/NoteStore';
-import { createSignal, batch } from 'solid-js';
-import { locale, setLocale } from './stores/LocaleStore';
-import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
+import { preset } from './stores/PresetStore';
+import { compEnableMap, compValidMap, compVarMap, referenceHistory, referenceHistoryEnable, setCompEnableMap, setCompSourceOptionMap, setCompSourceQuestionMap, setCompValidMap, setCompVarMap, setReferenceHistory, setSidebarHistory, sidebarHistory } from './stores/ReferenceStore';
+import { remark } from './stores/RemarkStore';
+import { response } from './stores/ResponseStore';
+import { setSidebar, sidebar } from './stores/SidebarStore';
+import { template } from './stores/TemplateStore';
+import { validation } from './stores/ValidationStore';
 
-import Toastify from 'toastify-js'
+import Toastify from 'toastify-js';
 
 export const default_eval_enable = true
 export const default_eval_validation = true
