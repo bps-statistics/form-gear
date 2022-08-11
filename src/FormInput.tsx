@@ -1,29 +1,25 @@
+import { createMemo, createSignal, For, Match, Show, Switch } from 'solid-js';
+import { gearVersion, templateVersion, validationVersion } from "./FormGear";
 import { useForm } from "./FormProvider";
 import { CONTROL_MAP, FormComponentBase } from "./FormType";
-import { Switch, For, Match, createSignal, createMemo, Show } from 'solid-js'
-import { gearVersion, templateVersion, validationVersion } from "./FormGear"
 
-import { reference, setReference} from './stores/ReferenceStore';
-import { sidebar, setSidebar} from './stores/SidebarStore';
-import { response, setResponse} from './stores/ResponseStore';
-import { summary } from './stores/SummaryStore';
-import { validation, setValidation, Validation } from './stores/ValidationStore';
-import { remark, setRemark} from './stores/RemarkStore';
-import { note, setNote} from './stores/NoteStore';
-import { principal, setPrincipal} from './stores/PrincipalStore';
-import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
-import { locale, setLocale} from './stores/LocaleStore';
 import { useLoaderDispatch } from "./loader/FormLoaderProvider";
-import { referenceEnableFalse, setReferenceEnableFalse } from './stores/ReferenceStore';
-import { media, setMedia } from "./stores/MediaStore";
+import { locale } from './stores/LocaleStore';
+import { note, setNote } from './stores/NoteStore';
+import { principal, setPrincipal } from './stores/PrincipalStore';
+import { reference, referenceEnableFalse, setReference } from './stores/ReferenceStore';
+import { remark, setRemark } from './stores/RemarkStore';
+import { response, setResponse } from './stores/ResponseStore';
+import { sidebar } from './stores/SidebarStore';
+import { summary } from './stores/SummaryStore';
+import { template } from './stores/TemplateStore';
 
 import dayjs from 'dayjs';
-import Toastify from 'toastify-js'
+import Toastify from 'toastify-js';
 
-import { getValue, saveAnswer, reloadDataFromHistory} from './GlobalFunction'
+import { getValue, reloadDataFromHistory, saveAnswer } from './GlobalFunction';
 
-import { setReferenceHistory} from './stores/ReferenceStore';
-import { setSidebarHistory} from './stores/ReferenceStore';
+import { setReferenceHistory, setSidebarHistory } from './stores/ReferenceStore';
 
 export const getEnable = (dataKey: string) => {
   const componentIndex = reference.details.findIndex(obj => obj.dataKey === dataKey);

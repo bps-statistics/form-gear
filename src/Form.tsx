@@ -1,32 +1,30 @@
-import { createSignal, createEffect, Component, For, Show, Switch, Match } from "solid-js";
-import { useForm } from "./FormProvider";
+import { Component, createEffect, createSignal, For, Match, Show, Switch } from "solid-js";
 import FormComponent from './FormComponent';
-import { gearVersion, templateVersion, validationVersion } from "./FormGear"
+import { gearVersion, templateVersion, validationVersion } from "./FormGear";
+import { useForm } from "./FormProvider";
 
-import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
-import { preset, setPreset, Preset } from './stores/PresetStore';
-import { response, setResponse, Response } from './stores/ResponseStore';
-import { validation, setValidation, Validation } from './stores/ValidationStore';
-import { reference, setReference } from './stores/ReferenceStore';
-import { referenceEnableFalse, setReferenceEnableFalse } from './stores/ReferenceStore';
-import { sidebar, setSidebar } from './stores/SidebarStore';
-import { remark, setRemark, Remark } from './stores/RemarkStore';
-import { note, setNote } from './stores/NoteStore';
-import { principal, setPrincipal } from './stores/PrincipalStore';
+import { useLoaderDispatch } from "./loader/FormLoaderProvider";
 import { locale, setLocale } from './stores/LocaleStore';
-import { summary, setSummary } from './stores/SummaryStore';
-import { useLoaderDispatch } from "./loader/FormLoaderProvider"
+import { note, setNote } from './stores/NoteStore';
+import { Preset } from './stores/PresetStore';
+import { principal, setPrincipal } from './stores/PrincipalStore';
+import { reference, referenceEnableFalse, setReference } from './stores/ReferenceStore';
+import { remark, Remark, setRemark } from './stores/RemarkStore';
+import { response, Response, setResponse } from './stores/ResponseStore';
+import { sidebar } from './stores/SidebarStore';
+import { setSummary, summary } from './stores/SummaryStore';
+import { Questionnaire, template } from './stores/TemplateStore';
+import { Validation } from './stores/ValidationStore';
 
-import { saveAnswer, setEnableFalse, runValidation, referenceIndexLookup, globalConfig} from "./GlobalFunction";
 import { toastInfo } from "./FormInput";
+import { globalConfig, referenceIndexLookup, runValidation, saveAnswer, setEnableFalse } from "./GlobalFunction";
 
-import { referenceHistoryEnable, setReferenceHistoryEnable} from './stores/ReferenceStore';
+import { setReferenceHistoryEnable } from './stores/ReferenceStore';
 
 import dayjs from 'dayjs';
-import utc from  'dayjs/plugin/utc';
-import timezone from  'dayjs/plugin/timezone';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import { media, setMedia } from "./stores/MediaStore";
-import { type } from "os";
 
 
 const Form: Component<{
