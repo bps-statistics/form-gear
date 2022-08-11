@@ -2,7 +2,7 @@
 
 ## FormGear | Ver. 1.1.0
 
-> August 10, 2022
+> August 11, 2022
 
 ### Optimized Performance
 - Reuse `Auxiliary` type from ResponseStore in RemarkStore, PrincipalStore, and MediaStore
@@ -75,6 +75,7 @@
 	}
 	```
 - Add name atribut for every dataKey
+- Add console.log FormGear version
 
 ### Fixed
 - Fix cannot delete nestedNumber

@@ -32,12 +32,20 @@ import remarkJSON from './data/default/remark.json';
 
 import { initReferenceMap } from "./GlobalFunction";
 
-export const gearVersion = '1.1.0-rc';
+export const gearVersion = '1.1.0';
 export let templateVersion = '0.0.0';
 export let validationVersion = '0.0.0';
 export function FormGear(referenceFetch, templateFetch, presetFetch, responseFetch, validationFetch, mediaFetch, remarkFetch, config, uploadHandler, GpsHandler, offlineSearch, onlineSearch, mobileExit, setResponseMobile, setSubmitMobile, openMap) {
-
-  console.log('form-gear@'+gearVersion);
+  
+  
+  console.log("   _____               _____            ");
+  console.log("  /  __/__  ______ _  / ___/__ ___ _____");
+  console.log(" /  _// _ \\/ __/  ' \\/ (_ / -_) _ `/ __/");
+  console.log("/__/  \\___/_/ /_/_/_/\\___/\\__/\\_,_/_/   %c@"+gearVersion,' font-family:system-ui; font-weight: bold; color: #14b8a6;');
+  
+  // console.log('%cform-gear@'+gearVersion, ' font-family:system-ui; font-weight: bold; color: #14b8a6;');
+  // console.log('form-gear@'+gearVersion);
+  
   // console.time('FormGear renders successfully in ');
   let timeStart = new Date();
   let stuff = {
