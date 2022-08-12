@@ -69,7 +69,7 @@ FormGear uses a defined JSON object template, thus is easy to build, use, and ef
     * Repo : https://github.com/AdityaSetyadi/angular-form-gear
 - [Vue.js](https://vuejs.org/)
     * Demo : https://vue-form-gear.vercel.app/
-    * Code Example : https://codesandbox.io/s/vue-form-gear-sfilvp
+    * Code Example : https://codesandbox.io/s/vue-form-gear-bhzyji
     * Repo : https://github.com/AdityaSetyadi/vue-form-gear
     
 
