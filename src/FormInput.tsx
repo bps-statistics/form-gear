@@ -160,7 +160,7 @@ const FormInput: FormComponentBase = props => {
       try{
         setReferenceHistory([])
         setSidebarHistory([])
-        saveAnswer(props.component.dataKey, 'answer', value, form.activeComponent.position, {'clientMode': props.config.clientMode,'baseUrl': props.config.baseUrl})
+        saveAnswer(props.component.dataKey, 'answer', value, form.activeComponent.position, {'clientMode': props.config.clientMode,'baseUrl': props.config.baseUrl}, 0)
       }catch(e){
         console.log(e)
         toastInfo(locale.details.language[0].errorSaving + props.component.dataKey, 3000, "", "bg-pink-600/80");

@@ -155,7 +155,7 @@ const Form: Component<{
       const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
 
       let answer = eval(element.expression);
-      saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') });
+      saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') }, 0);
     })
     // console.timeEnd('tmpVarComp ')
 
@@ -170,7 +170,7 @@ const Form: Component<{
             return (cekInsideIndex == -1) ? 0 : index;
           });
           let answer = (typeof element.answer === 'object') ? JSON.parse(JSON.stringify(element.answer)) : element.answer;
-          saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') });
+          saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') }, 0);
         }
       }
     })
@@ -184,7 +184,7 @@ const Form: Component<{
             return (cekInsideIndex == -1) ? 0 : index;
           });
           let answer = (typeof element.answer === 'object') ? JSON.parse(JSON.stringify(element.answer)) : element.answer;
-          saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') });
+          saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') }, 0);
         }
       }
     })
@@ -209,7 +209,7 @@ const Form: Component<{
       const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
       let evEnable = eval(element.enableCondition);
       let enable = (evEnable === undefined) ? false : evEnable;
-      saveAnswer(element.dataKey, 'enable', enable, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') });
+      saveAnswer(element.dataKey, 'enable', enable, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl')}, 0);
     })
 
     for(let index=0; index < reference.details.length; index ++){

@@ -228,6 +228,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
     })
 
     components.forEach(newComp => {
+        let initial = 0;
         let value = [];
         value = (newComp.answer) ? newComp.answer : value;
 
@@ -240,7 +241,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
                 return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength - reducer]);
             }
             const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-            // if(Number(newComp.type) === 4) value = eval(newComp.expression);
+            initial = 1
             try {
                 let value_local = eval(newComp.expression)
                 value = value_local
@@ -253,11 +254,19 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
             value = (answerIndex !== -1 && response.details.answers[answerIndex] !== undefined) ? response.details.answers[answerIndex].answer : value;
 
             if (answerIndex === -1) {
+                initial = 1;
                 const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
-                value = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig.initialMode == 2) || (getConfig.initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : value;
+                // value = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig.initialMode == 2) || (getConfig.initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : value;
+                if(presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig.initialMode == 2) || (getConfig.initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))){
+                    value = preset.details.predata[presetIndex].answer
+                    initial = 0
+                } else {
+                    initial = 1
+                }
             }
         }
-        saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null);
+        
+        saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null, initial);
     })
 
     let newSide = {
@@ -451,6 +460,7 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
             setReference('details', updatedRef);
         })
         components.forEach(newComp => {
+            let initial = 0;
             let value = [];
             value = (newComp.answer) ? newComp.answer : value;
 
@@ -463,6 +473,7 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                     return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength - reducer]);
                 }
                 const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
+                initial = 1
                 try {
                     let value_local = eval(newComp.expression)
                     value = value_local
@@ -475,11 +486,17 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                 value = (answerIndex !== -1 && response.details.answers[answerIndex] !== undefined) ? response.details.answers[answerIndex].answer : value;
 
                 if (answerIndex === -1) {
+                    initial = 1
                     const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
-                    value = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig.initialMode == 2) || (getConfig.initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : value;
+                    if(presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig.initialMode == 2) || (getConfig.initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))){
+                        value = preset.details.predata[presetIndex].answer
+                        initial = 0
+                    } else {
+                        initial = 1
+                    }
                 }
             }
-            saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null);
+            saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null, initial);
         })
 
         let newSide = {
@@ -570,7 +587,7 @@ export const deleteSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
     }
 }
 
-export const runVariableComponent = (dataKey: string, activeComponentPosition: number) => {
+export const runVariableComponent = (dataKey: string, activeComponentPosition: number, initial: number) => {
     const getRowIndex = (positionOffset: number) => {
         let editedDataKey = dataKey.split('@');
         let splitDataKey = editedDataKey[0].split('#');
@@ -582,13 +599,13 @@ export const runVariableComponent = (dataKey: string, activeComponentPosition: n
     const refPosition = referenceIndexLookup(dataKey)
     if (refPosition !== -1) {
         let updatedRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
-        
         try {
             let answerVariable = eval(updatedRef.expression);
-            saveAnswer(dataKey, 'answer', answerVariable, activeComponentPosition, null);
+            let init = (initial == 1) ? 1 : (answerVariable == undefined || (answerVariable != undefined && answerVariable.length == 0)) ? 1 : 0
+            saveAnswer(dataKey, 'answer', answerVariable, activeComponentPosition, null, init);
         } catch (e) {
             toastInfo(locale.details.language[0].errorExpression + dataKey, 3000, "", "bg-pink-600/80");
-            saveAnswer(dataKey, 'answer', undefined, activeComponentPosition, null);
+            saveAnswer(dataKey, 'answer', undefined, activeComponentPosition, null, 1);
         }
 
     }
@@ -626,7 +643,7 @@ export const runEnabling = (dataKey: string, activeComponentPosition: number, pr
     const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
 
     let enable = eval_enable(enableCondition, dataKey);
-    saveAnswer(dataKey, 'enable', enable, activeComponentPosition, null);
+    saveAnswer(dataKey, 'enable', enable, activeComponentPosition, null, 0);
 }
 
 export const runValidation = (dataKey: string, updatedRef: any, activeComponentPosition: number) => {
@@ -677,7 +694,7 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
                     updatedRef.validationMessage.push(validationMessage);
                     biggest = 2;
                     updatedRef.validationState = biggest;
-                    saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null);
+                    saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null, 0);
                 }
             }).then((res: any) => {
                 if (res.status === 200) {
@@ -701,7 +718,7 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
                     updatedRef.validationMessage.push(validationMessage);
                     biggest = 2;
                     updatedRef.validationState = biggest;
-                    saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null);
+                    saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null, 0);
                 }
             }));
             onlineValidation(url);
@@ -737,19 +754,12 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
         updatedRef.validationState = biggest;
     }
 
-    saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null);
+    saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null, 0);
 }
 
 export const setEnableFalse = () => {
     const indexEnableFalse = [];
     setReferenceEnableFalse([]);
-    // reference.details.forEach((element) => {
-    //   if( (element.type < 3) && !(element.enable) ) {
-    //     indexEnableFalse.push({
-    //       parentIndex: element.index,
-    //     })
-    //   };
-    // })
     sidebar.details.forEach((element) => {
         if (!element.enable) {
             let idx = JSON.parse(JSON.stringify(element.index))
@@ -760,12 +770,9 @@ export const setEnableFalse = () => {
         }
     })
     setReferenceEnableFalse(JSON.parse(JSON.stringify(indexEnableFalse)));
-    // const indexEnableFalse_unique = indexEnableFalse.filter((object,index) => index === indexEnableFalse.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object))); 
-    // setReferenceEnableFalse([...indexEnableFalse_unique]);
-    // console.log('refEnableFalse', referenceEnableFalse())
 }
 
-export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, activeComponentPosition: number, prop: any | null) => {
+export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, activeComponentPosition: number, prop: any | null, initial: number) => {
     const eval_enable = (eval_text, dataKey) => {
         try {
             return eval(eval_text)
@@ -784,7 +791,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
         addHistory('saveAnswer', dataKey, refPosition, attributeParam, reference.details[refPosition][attributeParam])
         setReference('details', refPosition, attributeParam, answer);
         //validate for its own dataKey 
-        if (referenceHistoryEnable()) runValidation(dataKey, JSON.parse(JSON.stringify(reference.details[refPosition])), activeComponentPosition);
+        if (referenceHistoryEnable() && reference.details[refPosition].validations !== undefined && initial == 0) runValidation(dataKey, JSON.parse(JSON.stringify(reference.details[refPosition])), activeComponentPosition);
 
         //do nothing if no changes, thanks to Budi's idea on pull request #5
         if (attributeParam === 'answer') {
@@ -846,11 +853,6 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                         sidebarEnable.components[0].forEach((element, index) => {
                             let refPos = updatedRef.findIndex(objRef => objRef.dataKey === element.dataKey);
                             if (refPos !== -1) {
-                                // if(updatedRef[refPos].enableCondition === undefined || updatedRef[refPos].enableCondition === '') setReference('details',refPos,'enable',enableSide);
-                                // if(Number(updatedRef[refPos].type) === 4 && enableSide !== enableSideBefore){
-                                //     tmpVarComp.push(updatedRef[refPos])
-                                //     tmpIndex.push(index)
-                                // }
                                 if (!enableSide) {
                                     setReference('details', refPos, 'enable', enableSide);
                                 } else {
@@ -878,14 +880,12 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                             }
                             const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
                             tmpVarComp.forEach((t, i) => {
-                                // let evVal = eval(e.expression);
-                                // saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
                                 try {
                                     let evVal = eval(t.expression);
-                                    saveAnswer(t.dataKey, 'answer', evVal, tmpIndex[i], null);
+                                    saveAnswer(t.dataKey, 'answer', evVal, tmpIndex[i], null, 0);
                                 } catch (e) {
                                     toastInfo(locale.details.language[0].errorExpression + t.dataKey, 3000, "", "bg-pink-600/80");
-                                    saveAnswer(e.dataKey, 'answer', undefined, tmpIndex[i], null);
+                                    saveAnswer(e.dataKey, 'answer', undefined, tmpIndex[i], null, 1);
                                 }
                             })
                         }
@@ -906,24 +906,26 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
 
         if (reference.details[refPosition].enable) {
             //validating ~ run weel when answer or enable
-            const hasComponentValidation = JSON.parse(JSON.stringify(reference.details.filter(obj => {
-                let editedDataKey = obj.dataKey.split('@');
-                let newEdited = editedDataKey[0].split('#');
-                if ((obj.enable) && obj.componentValidation !== undefined) {
-                    if (obj.level < 2 || obj.level > 1 && newEdited[1] !== undefined) {
-                        const cekInsideIndex = obj.componentValidation.findIndex(objChild => {
-                            let newKey = dataKey.split('@');//reduce or split @
-                            let newNewKey = newKey[0].split('#');//remove the row
-                            return (objChild === newNewKey[0]) ? true : false;
-                        });
-                        return (cekInsideIndex == -1) ? false : true;
+            if(initial == 0){
+                const hasComponentValidation = JSON.parse(JSON.stringify(reference.details.filter(obj => {
+                    let editedDataKey = obj.dataKey.split('@');
+                    let newEdited = editedDataKey[0].split('#');
+                    if ((obj.enable) && obj.componentValidation !== undefined) {
+                        if (obj.level < 2 || obj.level > 1 && newEdited[1] !== undefined) {
+                            const cekInsideIndex = obj.componentValidation.findIndex(objChild => {
+                                let newKey = dataKey.split('@');//reduce or split @
+                                let newNewKey = newKey[0].split('#');//remove the row
+                                return (objChild === newNewKey[0]) ? true : false;
+                            });
+                            return (cekInsideIndex == -1) ? false : true;
+                        }
                     }
+                })));
+                if (hasComponentValidation.length > 0) {//at least this dataKey appears in minimum 1 validation
+                    hasComponentValidation.forEach(elementVal => {
+                        runValidation(elementVal.dataKey, JSON.parse(JSON.stringify(elementVal)), activeComponentPosition);
+                    });
                 }
-            })));
-            if (hasComponentValidation.length > 0) {//at least this dataKey appears in minimum 1 validation
-                hasComponentValidation.forEach(elementVal => {
-                    runValidation(elementVal.dataKey, JSON.parse(JSON.stringify(elementVal)), activeComponentPosition);
-                });
             }
 
             //cek opt ~ run well on answer or enable
@@ -945,12 +947,8 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                                 }
                             })
                         })
-                        // let sidebarPos = sidebar.details.findIndex((element,index) => {
-                        //     let tmpInd = element.components[0].findIndex((e,i) => (e.dataKey == elementSourceOption.dataKey))
-                        //     return (tmpInd !== -1) ? true : false
-                        // })
 
-                        saveAnswer(elementSourceOption.dataKey, 'answer', x, activeComponentPosition, null);
+                        saveAnswer(elementSourceOption.dataKey, 'answer', x, activeComponentPosition, null, 0);
                     }
                 });
             }
@@ -969,7 +967,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
 
             if (hasComponentVar.length > 0) {//at least dataKey appeasr in minimum 1 variable
                 hasComponentVar.forEach(elementVar => {
-                    runVariableComponent(elementVar.dataKey, 0);
+                    runVariableComponent(elementVar.dataKey, 0, initial);
                 });
             }
 
@@ -1199,12 +1197,10 @@ export function loadReferenceMap(reference_local = null) {
 }
 
 export function get_CompEnable(dataKey) {
-    // console.log('get_CompEnable : '+dataKey)
     let itemKeyBased = dataKey.split('@')[0].split('#')[0];
     let returnDataKey = []
     if (itemKeyBased in compEnableMap()) {
         for (let key_comp in (compEnableMap()[itemKeyBased])) {
-            // console.log('Format : '+key_comp)
             compEnableMap()[itemKeyBased][key_comp].forEach(element_item => {
                 let list_key = referenceIndexLookup(element_item, 1)
                 if (list_key !== -1 && list_key) {

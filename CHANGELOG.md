@@ -1,5 +1,13 @@
 # Changelog
 
+
+## FormGear | Ver. 1.1.1
+
+> August 12, 2022
+
+### Optimized Performance
+- Only run validation when it is needed (stop when the component doesn't have any validations or when creating new nested)
+
 ## FormGear | Ver. 1.1.0
 
 > August 11, 2022
