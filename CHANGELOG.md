@@ -11,6 +11,8 @@
 ### Fixed
 - Fix absolute bootstrap css (on Client) overwriting Checkbox and SingleCheck Input
 
+### Added
+- Add validation to check duplicate datakey
 
 ---
 
