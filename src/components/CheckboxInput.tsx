@@ -114,7 +114,7 @@ const CheckboxInput: FormComponentBase = props => {
                                             <div class="font-light text-sm space-x-2 py-2.5 px-4 grid grid-cols-12">
                                                 <div class="col-span-1">
                                                     <label class="cursor-pointer text-sm" for={"chexbox" + index()}>
-                                                    <input class="form-check-input appearance-none h-4 w-4 border 
+                                                    <input class="appearance-none h-4 w-4 border 
                                                             border-gray-300 rounded-sm bg-white 
                                                             checked:bg-blue-600 checked:border-blue-600 
                                                             focus:outline-none transition duration-200 align-top 
@@ -148,7 +148,7 @@ const CheckboxInput: FormComponentBase = props => {
                                             <div class="font-light text-sm space-x-2 py-2.5 px-4 grid grid-cols-12" onClick={e => handleLabelClick(index())}>
                                                 <div class="col-span-1">
                                                     <label class="cursor-pointer text-sm">
-                                                        <input class="form-check-input appearance-none h-4 w-4 border 
+                                                        <input class=" appearance-none h-4 w-4 border 
                                                                 border-gray-300 rounded-sm bg-white 
                                                                 checked:bg-blue-600 checked:border-blue-600 
                                                                 focus:outline-none transition duration-200 mt-1 align-top 

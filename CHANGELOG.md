@@ -8,6 +8,13 @@
 ### Optimized Performance
 - Only run validation when it is needed (stop when the component doesn't have any validations or when creating new nested)
 
+### Fixed
+- Fix absolute bootstrap css (on Client) overwriting Checkbox and SingleCheck Input
+
+
+---
+
+
 ## FormGear | Ver. 1.1.0
 
 > August 11, 2022

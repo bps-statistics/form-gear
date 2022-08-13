@@ -19,7 +19,7 @@ const SingleCheckInput: FormComponentBase = props => {
     return (
         <div class="grid grid-cols-12 border-b border-gray-300/[.50] dark:border-gray-200/[.10] p-2">
             <div class="font-light text-sm space-x-2 py-2.5 px-2  form-check">
-                <input class="form-check-input appearance-none h-4 w-4 border 
+                <input class=" appearance-none h-4 w-4 border 
                     border-gray-300 rounded-sm bg-white 
                     checked:bg-blue-600 checked:border-blue-600 
                     focus:outline-none transition duration-200 mt-1 align-top 
