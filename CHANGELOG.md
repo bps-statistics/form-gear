@@ -3,16 +3,16 @@
 
 ## FormGear | Ver. 1.1.1
 
-> August 12, 2022
+> August 15, 2022
 
 ### Optimized Performance
 - Only run validation when it is needed (stop when the component doesn't have any validations or when creating new nested)
+- remove unnecesary copied variable
+- change declaration from {} to new Object()
 
 ### Fixed
 - Fix absolute bootstrap css (on Client) overwriting Checkbox and SingleCheck Input
 
-### Added
-- Add validation to check duplicate datakey
 
 ---
 

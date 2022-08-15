@@ -63,7 +63,7 @@ type Detail = {
 
 export interface Reference {
     details: Detail[]
-    sidebar: SidebarDetail[]
+    sidebar?: SidebarDetail[]
 }
 
 export const [reference, setReference] = createStore<Reference>({

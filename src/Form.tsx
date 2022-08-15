@@ -375,9 +375,9 @@ const Form: Component<{
   }
 
   const setData = () => {
-    const dataForm = [];
-    const dataMedia = [];
-    const dataPrincipal = [];
+    const dataForm = []
+    const dataMedia = []
+    const dataPrincipal = []
 
     setLoader({});
     setTimeout(() => setEnableFalse(), 50);
