@@ -9,6 +9,8 @@
 - Only run validation when it is needed (stop when the component doesn't have any validations or when creating new nested)
 - Remove unnecesary copied variable
 - Change declaration from {} to new Object()
+- Change for ... in with forEach on running validation
+- Use get_compValid filtering
 
 ### Fixed
 - Fix absolute bootstrap css (on Client) overwriting Checkbox and SingleCheck Input

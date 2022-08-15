@@ -657,19 +657,21 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
     updatedRef.validationMessage = []
     updatedRef.validationState = 0;
     if (!updatedRef.hasRemark) {
-        for (let i in updatedRef.validations) {
+        // for (let i in updatedRef.validations) {
+        updatedRef.validations?.forEach((el,i) => {
             let result = default_eval_validation;
             try {
-                result = eval(updatedRef.validations[i].test)
+                result = eval(el.test)
             } catch (e) {
-                console.log(e, updatedRef.dataKey, updatedRef.validations[i].test)
+                console.log(e, updatedRef.dataKey, el.test)
                 toastInfo(locale.details.language[0].errorValidationExpression + updatedRef.dataKey, 3000, "", "bg-pink-600/80");
             }
             if (result) {
-                updatedRef.validationMessage.push(updatedRef.validations[i].message);
-                updatedRef.validationState = (updatedRef.validationState < updatedRef.validations[i].type) ? updatedRef.validations[i].type : updatedRef.validationState;
+                updatedRef.validationMessage.push(el.message);
+                updatedRef.validationState = (updatedRef.validationState < el.type) ? el.type : updatedRef.validationState;
             }
-        }
+        // }
+        })
 
         if (updatedRef.urlValidation && (updatedRef.type == 24 || updatedRef.type == 25 || updatedRef.type == 28 || updatedRef.type == 30 || updatedRef.type == 31)) {
             let resultTest = false
@@ -903,23 +905,28 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
         if (reference.details[refPosition].enable) {
             //validating ~ run weel when answer or enable
             if(initial == 0){
-                const hasComponentValidation = JSON.parse(JSON.stringify(reference.details.filter(obj => {
-                    let editedDataKey = obj.dataKey.split('@');
-                    let newEdited = editedDataKey[0].split('#');
-                    if ((obj.enable) && obj.componentValidation !== undefined) {
-                        if (obj.level < 2 || obj.level > 1 && newEdited[1] !== undefined) {
-                            const cekInsideIndex = obj.componentValidation.findIndex(objChild => {
-                                let newKey = dataKey.split('@');//reduce or split @
-                                let newNewKey = newKey[0].split('#');//remove the row
-                                return (objChild === newNewKey[0]) ? true : false;
-                            });
-                            return (cekInsideIndex == -1) ? false : true;
-                        }
-                    }
-                })));
+                // const hasComponentValidation = JSON.parse(JSON.stringify(reference.details.filter(obj => {
+                //     let editedDataKey = obj.dataKey.split('@');
+                //     let newEdited = editedDataKey[0].split('#');
+                //     if ((obj.enable) && obj.componentValidation !== undefined) {
+                //         if (obj.level < 2 || obj.level > 1 && newEdited[1] !== undefined) {
+                //             const cekInsideIndex = obj.componentValidation.findIndex(objChild => {
+                //                 let newKey = dataKey.split('@');//reduce or split @
+                //                 let newNewKey = newKey[0].split('#');//remove the row
+                //                 return (objChild === newNewKey[0]) ? true : false;
+                //             });
+                //             return (cekInsideIndex == -1) ? false : true;
+                //         }
+                //     }
+                // })));
+                const hasComponentValidation = get_CompValid(dataKey)
+                // console.log('---', dataKey)
                 if (hasComponentValidation.length > 0) {//at least this dataKey appears in minimum 1 validation
                     hasComponentValidation.forEach(elementVal => {
-                        runValidation(elementVal.dataKey, JSON.parse(JSON.stringify(elementVal)), activeComponentPosition);
+                        let componentIndex = referenceIndexLookup(elementVal)
+                        if(reference.details[componentIndex].enable)
+                            runValidation(elementVal, JSON.parse(JSON.stringify(reference.details[componentIndex])), activeComponentPosition);
+                        // runValidation(elementVal.dataKey, JSON.parse(JSON.stringify(elementVal)), activeComponentPosition);
                     });
                 }
             }
