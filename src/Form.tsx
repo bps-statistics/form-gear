@@ -1247,9 +1247,13 @@ const Form: Component<{
                   sidebar-span absolute inset-y-0 left-0 transform -translate-x-full transition-transform duration-500 ease-in-out md:relative md:translate-x-0 z-10">
                   
                   <div class="sm:min-h-[7rem] py-3 text-gray-400 tracking-wider flex justify-between">
-                    <div class="text-lg block px-4 py-3 text-gray-600 dark:text-white font-bold sm:text-xl" innerHTML={props.template.details.acronym
-                      + '<div class="text-xs font-light text-gray-600 ">🚀' + gearVersion + ' 📋' + templateVersion + ' ✔️' + validationVersion + ' </div>  '} />
-
+                    <Switch fallback={<div class="text-lg block px-4 py-3 text-gray-600 dark:text-white font-bold sm:text-xl" innerHTML={props.template.details.acronym
+                      + '<div class="text-xs font-light text-gray-600 ">🚀' + gearVersion + ' 📋' + templateVersion + ' ✔️' + validationVersion + ' </div>  '} />}>
+                      <Match when={getConfig().clientMode == 1}>
+                        <div class="text-lg block px-4 py-3 text-gray-600 dark:text-white font-bold sm:text-xl" innerHTML={props.template.details.acronym} />
+                      </Match>
+                    </Switch>
+                    
                     <button type="button"
                       class="md:hidden p-2 mobile-menu-button " onClick={sidebarCollapse}>
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1464,7 +1468,12 @@ const Form: Component<{
                           'hidden': onMobile() === true,
                         }}
                       />
-                      <div class="text-xs font-light text-gray-600 "> {renderGear} &#177; {timeDiff} ms</div>
+                      <Switch>
+                        <Match when={getConfig().clientMode == 2}>
+                          <div class="text-xs font-light text-gray-600 "> {renderGear} &#177; {timeDiff} ms</div>
+                        </Match>
+                      </Switch>
+                      
                     </div>
                     <div class="ml-auto w-1/6 md:w-auto sm:flex items-center p-2 ">
                       <button onClick={toggleSwitch} type="button"
