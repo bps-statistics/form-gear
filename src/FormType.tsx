@@ -31,6 +31,7 @@ import SignatureInput from "./components/SignatureInput"
 import UnitInput from "./components/UnitInput"
 
 import {
+  PAPINumberInput,
   PAPIRadioInput,
   PAPITextInput
 }
@@ -192,35 +193,42 @@ export const CONTROL_MAP = new Map<ControlType, FormComponentBase>([
   [ControlType.UnitInput, UnitInput]
 ]);
 
-export const CONTROL_MAP_PAPI = new Map<ControlType, FormComponentBase>([
-  [ControlType.NestedInput, NestedInput],
-  [ControlType.TextInput, PAPITextInput],
-  [ControlType.RadioInput, PAPIRadioInput],
-  [ControlType.SelectInput, SelectInput],
-  [ControlType.NumberInput, NumberInput],
-  [ControlType.CheckboxInput, CheckboxInput],
-  [ControlType.TextAreaInput, TextAreaInput],
-  [ControlType.EmailInput, EmailInput],
-  [ControlType.UrlInput, UrlInput],
-  [ControlType.DateInput, DateInput],
-  [ControlType.DateTimeLocalInput, DateTimeLocalInput],
-  [ControlType.TimeInput, TimeInput],
-  [ControlType.MonthInput, MonthInput],
-  [ControlType.WeekInput, WeekInput],
-  [ControlType.SingleCheckInput, SingleCheckInput],
-  [ControlType.ToggleInput, ToggleInput],
-  [ControlType.RangeSliderInput, RangeSliderInput],
-  [ControlType.InnerHTML, InnerHTML],
-  [ControlType.CurrencyInput, CurrencyInput],
-  [ControlType.ListTextInputRepeat, ListTextInputRepeat],
-  [ControlType.ListSelectInputRepeat, ListSelectInputRepeat],
-  [ControlType.MultipleSelectInput, MultipleSelectInput],
-  [ControlType.MaskingInput, MaskingInput],
-  [ControlType.VariableInput, VariableInput],
-  [ControlType.PhotoInput, PhotoInput],
-  [ControlType.GpsInput, GpsInput],
-  [ControlType.CsvInput, CsvInput],
-  [ControlType.NowInput, NowInput],
-  [ControlType.SignatureInput, SignatureInput],
-  [ControlType.UnitInput, UnitInput]
-]);
+const CONTROL_MAP_PAPI = CONTROL_MAP
+CONTROL_MAP_PAPI.set(ControlType.TextInput, PAPITextInput)
+CONTROL_MAP_PAPI.set(ControlType.NumberInput, PAPINumberInput)
+CONTROL_MAP_PAPI.set(ControlType.RadioInput, PAPIRadioInput)
+
+export { CONTROL_MAP_PAPI }
+
+// export const CONTROL_MAP_PAPI_ = new Map<ControlType, FormComponentBase>([
+//   [ControlType.NestedInput, NestedInput],
+//   [ControlType.TextInput, PAPITextInput],
+//   [ControlType.RadioInput, PAPIRadioInput],
+//   [ControlType.SelectInput, SelectInput],
+//   [ControlType.NumberInput, PAPINumberInput],
+//   [ControlType.CheckboxInput, CheckboxInput],
+//   [ControlType.TextAreaInput, TextAreaInput],
+//   [ControlType.EmailInput, EmailInput],
+//   [ControlType.UrlInput, UrlInput],
+//   [ControlType.DateInput, DateInput],
+//   [ControlType.DateTimeLocalInput, DateTimeLocalInput],
+//   [ControlType.TimeInput, TimeInput],
+//   [ControlType.MonthInput, MonthInput],
+//   [ControlType.WeekInput, WeekInput],
+//   [ControlType.SingleCheckInput, SingleCheckInput],
+//   [ControlType.ToggleInput, ToggleInput],
+//   [ControlType.RangeSliderInput, RangeSliderInput],
+//   [ControlType.InnerHTML, InnerHTML],
+//   [ControlType.CurrencyInput, CurrencyInput],
+//   [ControlType.ListTextInputRepeat, ListTextInputRepeat],
+//   [ControlType.ListSelectInputRepeat, ListSelectInputRepeat],
+//   [ControlType.MultipleSelectInput, MultipleSelectInput],
+//   [ControlType.MaskingInput, MaskingInput],
+//   [ControlType.VariableInput, VariableInput],
+//   [ControlType.PhotoInput, PhotoInput],
+//   [ControlType.GpsInput, GpsInput],
+//   [ControlType.CsvInput, CsvInput],
+//   [ControlType.NowInput, NowInput],
+//   [ControlType.SignatureInput, SignatureInput],
+//   [ControlType.UnitInput, UnitInput]
+// ]);
