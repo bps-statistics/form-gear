@@ -248,7 +248,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
             if (answerIndex === -1) {
                 initial = 1;
                 const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
-                if(presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig.initialMode == 2) || (getConfig.initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))){
+                if (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig.initialMode == 2) || (getConfig.initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) {
                     value = preset.details.predata[presetIndex].answer
                     initial = 0
                 } else {
@@ -256,7 +256,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
                 }
             }
         }
-        
+
         saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null, initial);
     })
 
@@ -479,7 +479,7 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                 if (answerIndex === -1) {
                     initial = 1
                     const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
-                    if(presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig.initialMode == 2) || (getConfig.initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))){
+                    if (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig.initialMode == 2) || (getConfig.initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) {
                         value = preset.details.predata[presetIndex].answer
                         initial = 0
                     } else {
@@ -651,7 +651,7 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
     updatedRef.validationState = 0;
     if (!updatedRef.hasRemark) {
         // for (let i in updatedRef.validations) {
-        updatedRef.validations?.forEach((el,i) => {
+        updatedRef.validations?.forEach((el, i) => {
             let result = default_eval_validation;
             try {
                 result = eval(el.test)
@@ -663,7 +663,7 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
                 updatedRef.validationMessage.push(el.message);
                 updatedRef.validationState = (updatedRef.validationState < el.type) ? el.type : updatedRef.validationState;
             }
-        // }
+            // }
         })
 
         if (updatedRef.urlValidation && (updatedRef.type == 24 || updatedRef.type == 25 || updatedRef.type == 28 || updatedRef.type == 30 || updatedRef.type == 31)) {
@@ -897,7 +897,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
 
         if (reference.details[refPosition].enable) {
             //validating ~ run weel when answer or enable
-            if(initial == 0){
+            if (initial == 0) {
                 // const hasComponentValidation = JSON.parse(JSON.stringify(reference.details.filter(obj => {
                 //     let editedDataKey = obj.dataKey.split('@');
                 //     let newEdited = editedDataKey[0].split('#');
@@ -916,7 +916,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 if (hasComponentValidation.length > 0) {//at least this dataKey appears in minimum 1 validation
                     hasComponentValidation.forEach(elementVal => {
                         let componentIndex = referenceIndexLookup(elementVal)
-                        if(reference.details[componentIndex].enable)
+                        if (reference.details[componentIndex].enable)
                             runValidation(elementVal, JSON.parse(JSON.stringify(reference.details[componentIndex])), activeComponentPosition);
                         // runValidation(elementVal.dataKey, JSON.parse(JSON.stringify(elementVal)), activeComponentPosition);
                     });
@@ -1384,4 +1384,20 @@ export const scrollCenterInput = (elem: HTMLElement, container?: HTMLElement) =>
     if (left > middle || top > center) {
         container.scrollTo({ top: top - center, left: left - middle, behavior: "smooth" });
     }
+}
+
+export const cleanLabel = (label: String) => {
+    if (label.includes("-")) {
+        var splitchar = "-"
+    } else if (label.includes(".")) {
+        var splitchar = "."
+    }
+
+    if (splitchar) {
+        const splitted = label.split(splitchar)
+        splitted.shift()
+        return splitted.join(splitchar).trim()
+    }
+
+    return label
 }

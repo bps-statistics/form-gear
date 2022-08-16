@@ -27,6 +27,9 @@ const InputContainer = props => {
                     <Show when={instruction()}>
                         <div class="italic text-xs font-extralight text-zinc-400 " innerHTML={props.component.hint} />
                     </Show>
+
+                    {props.optionSection}
+
                 </div>
             </div>
             <div class="font-light text-sm space-x-2 py-2.5 px-2 md:col-span-1 grid grid-cols-12">

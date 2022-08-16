@@ -1,5 +1,7 @@
+import RadioInput from "./RadioInput";
 import TextInput from "./TextInput";
 
 export {
-    TextInput
+    TextInput as PAPITextInput,
+    RadioInput as PAPIRadioInput
 }

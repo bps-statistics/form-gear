@@ -31,7 +31,8 @@ import SignatureInput from "./components/SignatureInput"
 import UnitInput from "./components/UnitInput"
 
 import {
-  TextInput as PAPITextInput
+  PAPIRadioInput,
+  PAPITextInput
 }
   from "./components/PAPI"
 
@@ -191,12 +192,10 @@ export const CONTROL_MAP = new Map<ControlType, FormComponentBase>([
   [ControlType.UnitInput, UnitInput]
 ]);
 
-CONTROL_MAP.get()
-
 export const CONTROL_MAP_PAPI = new Map<ControlType, FormComponentBase>([
   [ControlType.NestedInput, NestedInput],
   [ControlType.TextInput, PAPITextInput],
-  [ControlType.RadioInput, RadioInput],
+  [ControlType.RadioInput, PAPIRadioInput],
   [ControlType.SelectInput, SelectInput],
   [ControlType.NumberInput, NumberInput],
   [ControlType.CheckboxInput, CheckboxInput],
