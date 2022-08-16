@@ -783,7 +783,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
 
     let refPosition = referenceIndexLookup(dataKey)
 
-    if (attributeParam === 'answer' || attributeParam === 'enable') {
+    if (refPosition > -1 && (attributeParam === 'answer' || attributeParam === 'enable')) {
         let beforeAnswer = (typeof answer === 'number' || typeof answer === 'string') ? 0 : [];
         beforeAnswer = (reference.details[refPosition].answer !== undefined && reference.details[refPosition].answer !== '') ? reference.details[refPosition].answer : beforeAnswer;
         addHistory('saveAnswer', dataKey, refPosition, attributeParam, reference.details[refPosition][attributeParam])
@@ -920,7 +920,6 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 //     }
                 // })));
                 const hasComponentValidation = get_CompValid(dataKey)
-                // console.log('---', dataKey)
                 if (hasComponentValidation.length > 0) {//at least this dataKey appears in minimum 1 validation
                     hasComponentValidation.forEach(elementVal => {
                         let componentIndex = referenceIndexLookup(elementVal)
@@ -976,7 +975,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
             const hasComponentUsing = JSON.parse(JSON.stringify(reference.details.filter(obj => (obj.type === 2 && obj.sourceQuestion == dataKey))));
             if (hasComponentUsing.length > 0) {//this dataKey is used as a source in Nested at minimum 1 component
                 if (reference.details[refPosition].answer == undefined && reference.details[refPosition].type === 4) beforeAnswer = [];
-                if (typeof answer !== 'boolean') {
+                if (typeof answer !== 'boolean' && !(answer == undefined && JSON.stringify(beforeAnswer) == '[]')) {
                     console.time('Nested 🚀');
                     hasComponentUsing.forEach(element => {
                         if (typeof answer === 'number' || typeof answer === 'string') {

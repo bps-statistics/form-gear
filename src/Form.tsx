@@ -162,7 +162,6 @@ const Form: Component<{
     // console.time('response ');
     props.preset.details.predata.forEach((element, index) => {
       let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
-      let run = 0;
       if (refPosition !== -1) {
         if ((config().initialMode == 1 && reference.details[refPosition].presetMaster !== undefined && (reference.details[refPosition].presetMaster)) || (config().initialMode == 2)) {
           let sidePosition = sidebar.details.findIndex(obj => {

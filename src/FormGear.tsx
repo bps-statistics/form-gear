@@ -248,7 +248,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                     let el_type = element[i].type
                     if((el_type == 21 || el_type == 22)){
                       answer = JSON.parse(JSON.stringify(answer));
-                    } else if(el_type == 4){
+                    } else if(el_type == 4 && level < 2){
                       (answer == undefined ) && (!sideEnable) && tmpVarComp.push(JSON.parse(JSON.stringify(element[i]))) ;
                     }
   
