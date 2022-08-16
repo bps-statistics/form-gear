@@ -25,7 +25,7 @@ import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { media, setMedia } from "./stores/MediaStore";
-import { ClientMode } from "./constants/Form";
+import { ClientMode } from "./constants";
 
 
 const Form: Component<{
@@ -1499,6 +1499,44 @@ const Form: Component<{
                   </div>
                   <div class="flex items-center space-x-3 sm:mt-7 mt-4">
                   </div>
+
+                  <Show when={getProp('clientMode') == ClientMode.PAPI}>
+                    <div class="flex relative flex-none min-w-full px-2 overflow-x-auto">
+                      <ul class="flex text-sm leading-6 text-slate-400  ">
+                        <For each={sidebar.details}>
+                          {(item, index) => (
+                            <Show when={true}>
+                              <li class="flex-none"
+                                classList={{
+                                  ' border-b-4 border-blue-800': item.dataKey === form.activeComponent.dataKey
+                                }}>
+                                <a class="block py-2 mb-1.5 px-4 rounded font-medium space-x-2 
+                                          hover:bg-blue-700 hover:text-white"
+                                  classList={{
+                                    'bg-blue-800 text-white': item.dataKey === form.activeComponent.dataKey
+                                  }}
+                                  href="javascript:void(0);"
+                                  onClick={(e) => {
+                                    var component = document.querySelector(".component-div");
+                                    window.scrollTo({ top: 0, behavior: "smooth" });
+                                    component.scrollTo({ top: 0, behavior: "smooth" });
+                                    // /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && sidebarCollapse(e);
+                                    getConfig().clientMode === ClientMode.CAPI && writeResponse();
+                                    setLoader({});
+                                    setTimeout(() => setActiveComponent({ dataKey: item.dataKey, label: item.label, index: JSON.parse(JSON.stringify(item.index)), position: index() }), 50);
+                                    refocusLastSelector();
+                                  }}
+                                >
+                                  {item.label}
+                                </a>
+                              </li>
+                            </Show>
+                          )}
+                        </For>
+                      </ul>
+                    </div>
+                  </Show>
+
                 </div>
 
                 <FormComponent
@@ -1519,7 +1557,8 @@ const Form: Component<{
                   classList={{
                     'flex': onMobile() === false,
                     'hidden': onMobile() === true,
-                    'sticky': getConfig().clientMode < 3
+                    'sticky': getConfig().clientMode < ClientMode.PAPI,
+                    'absolute': getConfig().clientMode == ClientMode.PAPI,
                   }}>
                   <div class=" flex justify-center items-center space-x-10 mx-10 col-start-2 col-end-6 py-2 rounded-full bg-gray-200/80 dark:bg-gray-800/90">
                     <button class="bg-blue-700  text-white p-2 rounded-full  focus:outline-none items-center h-10 w-10 hover:bg-blue-600 group inline-flex justify-center text-xs"

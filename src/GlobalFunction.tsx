@@ -12,6 +12,7 @@ import { template } from './stores/TemplateStore';
 import { validation } from './stores/ValidationStore';
 
 import Toastify from 'toastify-js';
+import { input } from './stores/InputStore';
 
 export const default_eval_enable = true
 export const default_eval_validation = true
@@ -75,7 +76,7 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
             })
         }
     }
-    
+
     if (parentIndex.length == 0) {
         newComp.index[newComp.index.length - 2] = nestedPosition;
         let label = newComp.label.replace('$NAME$', parentName);
@@ -84,9 +85,9 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
         newComp.index = JSON.parse(JSON.stringify(parentIndex));
         newComp.index = newComp.index.concat(0, componentPosition);
     }
-    
+
     newComp.sourceQuestion = newComp.sourceQuestion !== undefined ? newComp.sourceQuestion + '#' + nestedPosition : undefined;
-    
+
     let originSourceOption = newComp.sourceOption;
     if (originSourceOption !== undefined && originSourceOption !== '') {
         let tmpKey = originSourceOption.split('@');
@@ -574,7 +575,7 @@ export const runVariableComponent = (dataKey: string, activeComponentPosition: n
     const refPosition = referenceIndexLookup(dataKey)
     if (refPosition !== -1) {
         let updatedRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
-        
+
         try {
             let answerVariable = eval(updatedRef.expression);
             saveAnswer(dataKey, 'answer', answerVariable, activeComponentPosition, null);
@@ -772,7 +773,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
 
     if (attributeParam === 'answer' || attributeParam === 'enable') {
         let beforeAnswer = (typeof answer === 'number' || typeof answer === 'string') ? 0 : [];
-        beforeAnswer = (reference.details[refPosition].answer !== undefined && reference.details[refPosition].answer !== '') ? reference.details[refPosition].answer : beforeAnswer;
+        beforeAnswer = (reference.details[refPosition]?.answer !== undefined && reference.details[refPosition].answer !== '') ? reference.details[refPosition].answer : beforeAnswer;
         addHistory('saveAnswer', dataKey, refPosition, attributeParam, reference.details[refPosition][attributeParam])
         setReference('details', refPosition, attributeParam, answer);
         //validate for its own dataKey 
@@ -1337,17 +1338,53 @@ export function reloadDataFromHistory() {
     }
 }
 
-export const toastInfo = (text:string, duration:number, position:string, bgColor:string) => {
+export const toastInfo = (text: string, duration: number, position: string, bgColor: string) => {
     Toastify({
-      text: (text == '') ? locale.details.language[0].componentDeleted : text,
-      duration: (duration >= 0) ? duration : 500,
-      gravity: "top", 
-      position: (position == '') ? "right" : position, 
-      stopOnFocus: true, 
-      className: (bgColor == '') ? "bg-blue-600/80" : bgColor,
-      style: {
-        background: "rgba(8, 145, 178, 0.7)",
-        width: "400px"
-      }
+        text: (text == '') ? locale.details.language[0].componentDeleted : text,
+        duration: (duration >= 0) ? duration : 500,
+        gravity: "top",
+        position: (position == '') ? "right" : position,
+        stopOnFocus: true,
+        className: (bgColor == '') ? "bg-blue-600/80" : bgColor,
+        style: {
+            background: "rgba(8, 145, 178, 0.7)",
+            width: "400px"
+        }
     }).showToast();
+}
+
+export const focusFirstInput = () => {
+    const elem = document.querySelector("input:not(.hidden-input):not(:disabled),textarea:not(.hidden-input):not(:disabled)") as HTMLElement
+    elem?.focus()
+}
+
+export const refocusLastSelector = () => {
+    if (input.currentDataKey !== "") {
+        const lastElement = document.querySelector(`[name="${input.currentDataKey}"]`) as HTMLElement
+        if (lastElement) {
+            lastElement?.focus()
+        } else {
+            focusFirstInput()
+        }
+    }
+}
+
+export const scrollCenterInput = (elem: HTMLElement, container?: HTMLElement) => {
+    if (container == null) {
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            container = document.querySelector(".mobile-component-div");
+        } else {
+            container = document.querySelector(".component-div");
+        }
+    }
+
+    let center = container.clientHeight / 2
+    let top = elem.offsetTop
+
+    let middle = container.clientWidth / 2
+    let left = elem.offsetLeft
+
+    if (left > middle || top > center) {
+        container.scrollTo({ top: top - center, left: left - middle, behavior: "smooth" });
+    }
 }
