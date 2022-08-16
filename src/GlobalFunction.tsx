@@ -166,9 +166,8 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
             setNote('details', 'notes', updatedNote);
         }
     }
-    newComp.presetMaster = newComp.presetMaster !== undefined ? newComp.presetMaster : undefined
     if (tmp_type < 3) {
-        let comp_array = [];
+        let comp_array = []
         newComp.components[0].forEach((element, index) =>
             comp_array.push(createComponent(element.dataKey, nestedPosition, index, sidebarPosition, newComp.components[0][index], JSON.parse(JSON.stringify(newComp.index)), null))
         )
@@ -181,7 +180,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
     const refPosition = referenceIndexLookup(dataKey);
     let defaultRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
 
-    let components = [];
+    let components = []
     defaultRef.components[0].forEach((element, index) => {
         let newComp = createComponent(defaultRef.components[0][index].dataKey, (Number(answer.value)), Number(index), sidebarPosition, defaultRef.components[0][index], [], answer.label);
         components.push(newComp);
@@ -221,7 +220,8 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
     })
 
     components.forEach(newComp => {
-        let value = [];
+        let initial = 0;
+        let value = []
         value = (newComp.answer) ? newComp.answer : value;
 
         if (Number(newComp.type) === 4) {
@@ -233,7 +233,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
                 return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength - reducer]);
             }
             const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-            // if(Number(newComp.type) === 4) value = eval(newComp.expression);
+            initial = 1
             try {
                 let value_local = eval(newComp.expression)
                 value = value_local
@@ -246,11 +246,18 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
             value = (answerIndex !== -1 && response.details.answers[answerIndex] !== undefined) ? response.details.answers[answerIndex].answer : value;
 
             if (answerIndex === -1) {
+                initial = 1;
                 const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
-                value = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig.initialMode == 2) || (getConfig.initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : value;
+                if(presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig.initialMode == 2) || (getConfig.initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))){
+                    value = preset.details.predata[presetIndex].answer
+                    initial = 0
+                } else {
+                    initial = 1
+                }
             }
         }
-        saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null);
+        
+        saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null, initial);
     })
 
     let newSide = {
@@ -403,7 +410,7 @@ export const changeSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
 export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: any, sidebarPosition: number) => {
     const refPosition = referenceIndexLookup(dataKey);
     let defaultRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
-    let components = [];
+    let components = []
     let now = (Number(beforeAnswer) + 1);
     for (let c in defaultRef.components[0]) {
         let newComp = createComponent(defaultRef.components[0][c].dataKey, now, Number(c), sidebarPosition, defaultRef.components[0][c], [], now.toString());
@@ -444,7 +451,8 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
             setReference('details', updatedRef);
         })
         components.forEach(newComp => {
-            let value = [];
+            let initial = 0;
+            let value = []
             value = (newComp.answer) ? newComp.answer : value;
 
             if (Number(newComp.type) === 4) {
@@ -456,6 +464,7 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                     return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength - reducer]);
                 }
                 const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
+                initial = 1
                 try {
                     let value_local = eval(newComp.expression)
                     value = value_local
@@ -468,11 +477,17 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                 value = (answerIndex !== -1 && response.details.answers[answerIndex] !== undefined) ? response.details.answers[answerIndex].answer : value;
 
                 if (answerIndex === -1) {
+                    initial = 1
                     const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
-                    value = (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig.initialMode == 2) || (getConfig.initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) ? preset.details.predata[presetIndex].answer : value;
+                    if(presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig.initialMode == 2) || (getConfig.initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))){
+                        value = preset.details.predata[presetIndex].answer
+                        initial = 0
+                    } else {
+                        initial = 1
+                    }
                 }
             }
-            saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null);
+            saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null, initial);
         })
 
         let newSide = {
@@ -563,7 +578,7 @@ export const deleteSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
     }
 }
 
-export const runVariableComponent = (dataKey: string, activeComponentPosition: number) => {
+export const runVariableComponent = (dataKey: string, activeComponentPosition: number, initial: number) => {
     const getRowIndex = (positionOffset: number) => {
         let editedDataKey = dataKey.split('@');
         let splitDataKey = editedDataKey[0].split('#');
@@ -575,13 +590,14 @@ export const runVariableComponent = (dataKey: string, activeComponentPosition: n
     const refPosition = referenceIndexLookup(dataKey)
     if (refPosition !== -1) {
         let updatedRef = JSON.parse(JSON.stringify(reference.details[refPosition]));
-
         try {
             let answerVariable = eval(updatedRef.expression);
-            saveAnswer(dataKey, 'answer', answerVariable, activeComponentPosition, null);
+            let init = (initial == 1) ? 1 : (answerVariable == undefined || (answerVariable != undefined && answerVariable.length == 0)) ? 1 : 0
+            saveAnswer(dataKey, 'answer', answerVariable, activeComponentPosition, null, init);
         } catch (e) {
+            console.log(e, dataKey)
             toastInfo(locale.details.language[0].errorExpression + dataKey, 3000, "", "bg-pink-600/80");
-            saveAnswer(dataKey, 'answer', undefined, activeComponentPosition, null);
+            saveAnswer(dataKey, 'answer', undefined, activeComponentPosition, null, 1);
         }
 
     }
@@ -603,7 +619,7 @@ export const runEnabling = (dataKey: string, activeComponentPosition: number, pr
         try {
             return eval(eval_text)
         } catch (e) {
-            console.log(e)
+            console.log(e, dataKey, eval_text)
             toastInfo(locale.details.language[0].errorEnableExpression + dataKey, 3000, "", "bg-pink-600/80");
             return default_eval_enable
         }
@@ -619,7 +635,7 @@ export const runEnabling = (dataKey: string, activeComponentPosition: number, pr
     const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
 
     let enable = eval_enable(enableCondition, dataKey);
-    saveAnswer(dataKey, 'enable', enable, activeComponentPosition, null);
+    saveAnswer(dataKey, 'enable', enable, activeComponentPosition, null, 0);
 }
 
 export const runValidation = (dataKey: string, updatedRef: any, activeComponentPosition: number) => {
@@ -631,22 +647,24 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
         return ((splLength - reducer) < 1) ? Number(splitDataKey[1]) : Number(splitDataKey[splLength - reducer]);
     }
     const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
-    updatedRef.validationMessage = [];
+    updatedRef.validationMessage = []
     updatedRef.validationState = 0;
     if (!updatedRef.hasRemark) {
-        let biggest = 0;
-        for (let i in updatedRef.validations) {
+        // for (let i in updatedRef.validations) {
+        updatedRef.validations?.forEach((el,i) => {
             let result = default_eval_validation;
             try {
-                result = eval(updatedRef.validations[i].test)
+                result = eval(el.test)
             } catch (e) {
+                console.log(e, updatedRef.dataKey, el.test)
                 toastInfo(locale.details.language[0].errorValidationExpression + updatedRef.dataKey, 3000, "", "bg-pink-600/80");
             }
             if (result) {
-                updatedRef.validationMessage.push(updatedRef.validations[i].message);
-                biggest = (biggest < updatedRef.validations[i].type) ? updatedRef.validations[i].type : biggest;
+                updatedRef.validationMessage.push(el.message);
+                updatedRef.validationState = (updatedRef.validationState < el.type) ? el.type : updatedRef.validationState;
             }
-        }
+        // }
+        })
 
         if (updatedRef.urlValidation && (updatedRef.type == 24 || updatedRef.type == 25 || updatedRef.type == 28 || updatedRef.type == 30 || updatedRef.type == 31)) {
             let resultTest = false
@@ -668,9 +686,8 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
                 if (!resultTest || !fetchStatus) {
                     let validationMessage = locale.details.language[0].validationApi
                     updatedRef.validationMessage.push(validationMessage);
-                    biggest = 2;
-                    updatedRef.validationState = biggest;
-                    saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null);
+                    updatedRef.validationState = 2;
+                    saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null, 0);
                 }
             }).then((res: any) => {
                 if (res.status === 200) {
@@ -692,9 +709,8 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
                         validationMessage = res.message
                     }
                     updatedRef.validationMessage.push(validationMessage);
-                    biggest = 2;
-                    updatedRef.validationState = biggest;
-                    saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null);
+                    updatedRef.validationState = 2;
+                    saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null, 0);
                 }
             }));
             onlineValidation(url);
@@ -703,46 +719,38 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
         if (updatedRef.lengthInput !== undefined && updatedRef.lengthInput.length > 0 && updatedRef.answer !== undefined && typeof updatedRef.answer !== 'object') {
             if (updatedRef.lengthInput[0].maxlength !== undefined && updatedRef.answer.length > updatedRef.lengthInput[0].maxlength) {
                 updatedRef.validationMessage.push(locale.details.language[0].validationMaxLength + " " + updatedRef.lengthInput[0].maxlength);
-                biggest = 2;
+                updatedRef.validationState = 2;
             }
             if (updatedRef.lengthInput[0].minlength !== undefined && updatedRef.answer.length < updatedRef.lengthInput[0].minlength) {
                 updatedRef.validationMessage.push(locale.details.language[0].validationMinLength + " " + updatedRef.lengthInput[0].minlength);
-                biggest = 2;
+                updatedRef.validationState = 2;
             }
         }
         if (updatedRef.rangeInput !== undefined && updatedRef.rangeInput.length > 0 && updatedRef.answer !== undefined && typeof updatedRef.answer !== 'object') {
             if (updatedRef.rangeInput[0].max !== undefined && Number(updatedRef.answer) > updatedRef.rangeInput[0].max) {
                 updatedRef.validationMessage.push(locale.details.language[0].validationMax + " " + updatedRef.rangeInput[0].max);
-                biggest = 2;
+                updatedRef.validationState = 2;
             }
             if (updatedRef.rangeInput[0].min !== undefined && Number(updatedRef.answer) < updatedRef.rangeInput[0].min) {
                 updatedRef.validationMessage.push(locale.details.language[0].validationMin + " " + updatedRef.rangeInput[0].min);
-                biggest = 2;
+                updatedRef.validationState = 2;
             }
         }
         if (updatedRef.type == 31 && updatedRef.answer !== undefined && typeof updatedRef.answer !== 'object') {
             let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             if (!re.test(updatedRef.answer)) {
                 updatedRef.validationMessage.push(locale.details.language[0].validationEmail);
-                biggest = 2;
+                updatedRef.validationState = 2;
             }
         }
-        updatedRef.validationState = biggest;
     }
 
-    saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null);
+    saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null, 0);
 }
 
 export const setEnableFalse = () => {
-    const indexEnableFalse = [];
+    const indexEnableFalse = []
     setReferenceEnableFalse([]);
-    // reference.details.forEach((element) => {
-    //   if( (element.type < 3) && !(element.enable) ) {
-    //     indexEnableFalse.push({
-    //       parentIndex: element.index,
-    //     })
-    //   };
-    // })
     sidebar.details.forEach((element) => {
         if (!element.enable) {
             let idx = JSON.parse(JSON.stringify(element.index))
@@ -753,12 +761,9 @@ export const setEnableFalse = () => {
         }
     })
     setReferenceEnableFalse(JSON.parse(JSON.stringify(indexEnableFalse)));
-    // const indexEnableFalse_unique = indexEnableFalse.filter((object,index) => index === indexEnableFalse.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object))); 
-    // setReferenceEnableFalse([...indexEnableFalse_unique]);
-    // console.log('refEnableFalse', referenceEnableFalse())
 }
 
-export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, activeComponentPosition: number, prop: any | null) => {
+export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, activeComponentPosition: number, prop: any | null, initial: number) => {
     const eval_enable = (eval_text, dataKey) => {
         try {
             return eval(eval_text)
@@ -771,13 +776,13 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
 
     let refPosition = referenceIndexLookup(dataKey)
 
-    if (attributeParam === 'answer' || attributeParam === 'enable') {
+    if (refPosition > -1 && (attributeParam === 'answer' || attributeParam === 'enable')) {
         let beforeAnswer = (typeof answer === 'number' || typeof answer === 'string') ? 0 : [];
         beforeAnswer = (reference.details[refPosition]?.answer !== undefined && reference.details[refPosition].answer !== '') ? reference.details[refPosition].answer : beforeAnswer;
         addHistory('saveAnswer', dataKey, refPosition, attributeParam, reference.details[refPosition][attributeParam])
         setReference('details', refPosition, attributeParam, answer);
         //validate for its own dataKey 
-        if (referenceHistoryEnable()) runValidation(dataKey, JSON.parse(JSON.stringify(reference.details[refPosition])), activeComponentPosition);
+        if (referenceHistoryEnable() && (reference.details[refPosition].validations !== undefined || reference.details[refPosition].rangeInput !== undefined || reference.details[refPosition].lengthInput !== undefined) && initial == 0) runValidation(dataKey, JSON.parse(JSON.stringify(reference.details[refPosition])), activeComponentPosition);
 
         //do nothing if no changes, thanks to Budi's idea on pull request #5
         if (attributeParam === 'answer') {
@@ -833,17 +838,12 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                     addHistory('update_sidebar', null, null, null, JSON.parse(JSON.stringify(sidebar.details)))
                     setSidebar('details', sidePosition, 'enable', enableSide);
                     let updatedRef = JSON.parse(JSON.stringify(reference.details));
-                    let tmpVarComp = [];
-                    let tmpIndex = [];
+                    let tmpVarComp = []
+                    let tmpIndex = []
                     if (enableSide !== enableSideBefore) {
                         sidebarEnable.components[0].forEach((element, index) => {
                             let refPos = updatedRef.findIndex(objRef => objRef.dataKey === element.dataKey);
                             if (refPos !== -1) {
-                                // if(updatedRef[refPos].enableCondition === undefined || updatedRef[refPos].enableCondition === '') setReference('details',refPos,'enable',enableSide);
-                                // if(Number(updatedRef[refPos].type) === 4 && enableSide !== enableSideBefore){
-                                //     tmpVarComp.push(updatedRef[refPos])
-                                //     tmpIndex.push(index)
-                                // }
                                 if (!enableSide) {
                                     setReference('details', refPos, 'enable', enableSide);
                                 } else {
@@ -871,14 +871,12 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                             }
                             const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
                             tmpVarComp.forEach((t, i) => {
-                                // let evVal = eval(e.expression);
-                                // saveAnswer(e.dataKey, 'answer', evVal, tmpIndex[i], null);
                                 try {
                                     let evVal = eval(t.expression);
-                                    saveAnswer(t.dataKey, 'answer', evVal, tmpIndex[i], null);
+                                    saveAnswer(t.dataKey, 'answer', evVal, tmpIndex[i], null, 0);
                                 } catch (e) {
                                     toastInfo(locale.details.language[0].errorExpression + t.dataKey, 3000, "", "bg-pink-600/80");
-                                    saveAnswer(e.dataKey, 'answer', undefined, tmpIndex[i], null);
+                                    saveAnswer(e.dataKey, 'answer', undefined, tmpIndex[i], null, 1);
                                 }
                             })
                         }
@@ -899,24 +897,30 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
 
         if (reference.details[refPosition].enable) {
             //validating ~ run weel when answer or enable
-            const hasComponentValidation = JSON.parse(JSON.stringify(reference.details.filter(obj => {
-                let editedDataKey = obj.dataKey.split('@');
-                let newEdited = editedDataKey[0].split('#');
-                if ((obj.enable) && obj.componentValidation !== undefined) {
-                    if (obj.level < 2 || obj.level > 1 && newEdited[1] !== undefined) {
-                        const cekInsideIndex = obj.componentValidation.findIndex(objChild => {
-                            let newKey = dataKey.split('@');//reduce or split @
-                            let newNewKey = newKey[0].split('#');//remove the row
-                            return (objChild === newNewKey[0]) ? true : false;
-                        });
-                        return (cekInsideIndex == -1) ? false : true;
-                    }
+            if(initial == 0){
+                // const hasComponentValidation = JSON.parse(JSON.stringify(reference.details.filter(obj => {
+                //     let editedDataKey = obj.dataKey.split('@');
+                //     let newEdited = editedDataKey[0].split('#');
+                //     if ((obj.enable) && obj.componentValidation !== undefined) {
+                //         if (obj.level < 2 || obj.level > 1 && newEdited[1] !== undefined) {
+                //             const cekInsideIndex = obj.componentValidation.findIndex(objChild => {
+                //                 let newKey = dataKey.split('@');//reduce or split @
+                //                 let newNewKey = newKey[0].split('#');//remove the row
+                //                 return (objChild === newNewKey[0]) ? true : false;
+                //             });
+                //             return (cekInsideIndex == -1) ? false : true;
+                //         }
+                //     }
+                // })));
+                const hasComponentValidation = get_CompValid(dataKey)
+                if (hasComponentValidation.length > 0) {//at least this dataKey appears in minimum 1 validation
+                    hasComponentValidation.forEach(elementVal => {
+                        let componentIndex = referenceIndexLookup(elementVal)
+                        if(reference.details[componentIndex].enable)
+                            runValidation(elementVal, JSON.parse(JSON.stringify(reference.details[componentIndex])), activeComponentPosition);
+                        // runValidation(elementVal.dataKey, JSON.parse(JSON.stringify(elementVal)), activeComponentPosition);
+                    });
                 }
-            })));
-            if (hasComponentValidation.length > 0) {//at least this dataKey appears in minimum 1 validation
-                hasComponentValidation.forEach(elementVal => {
-                    runValidation(elementVal.dataKey, JSON.parse(JSON.stringify(elementVal)), activeComponentPosition);
-                });
             }
 
             //cek opt ~ run well on answer or enable
@@ -930,7 +934,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
             if (hasSourceOption.length > 0) {//at least dataKey appear in minimal 1 sourceOption
                 hasSourceOption.forEach(elementSourceOption => {
                     if (elementSourceOption.answer) {
-                        let x = [];
+                        let x = []
                         elementSourceOption.answer.forEach(val => {
                             answer.forEach(op => {
                                 if (val.value == op.value) {
@@ -938,12 +942,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                                 }
                             })
                         })
-                        // let sidebarPos = sidebar.details.findIndex((element,index) => {
-                        //     let tmpInd = element.components[0].findIndex((e,i) => (e.dataKey == elementSourceOption.dataKey))
-                        //     return (tmpInd !== -1) ? true : false
-                        // })
-
-                        saveAnswer(elementSourceOption.dataKey, 'answer', x, activeComponentPosition, null);
+                        saveAnswer(elementSourceOption.dataKey, 'answer', x, activeComponentPosition, null, 0);
                     }
                 });
             }
@@ -962,14 +961,14 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
 
             if (hasComponentVar.length > 0) {//at least dataKey appeasr in minimum 1 variable
                 hasComponentVar.forEach(elementVar => {
-                    runVariableComponent(elementVar.dataKey, 0);
+                    runVariableComponent(elementVar.dataKey, 0, initial);
                 });
             }
 
             const hasComponentUsing = JSON.parse(JSON.stringify(reference.details.filter(obj => (obj.type === 2 && obj.sourceQuestion == dataKey))));
             if (hasComponentUsing.length > 0) {//this dataKey is used as a source in Nested at minimum 1 component
                 if (reference.details[refPosition].answer == undefined && reference.details[refPosition].type === 4) beforeAnswer = [];
-                if (typeof answer !== 'boolean') {
+                if (typeof answer !== 'boolean' && !(answer == undefined && JSON.stringify(beforeAnswer) == '[]')) {
                     console.time('Nested 🚀');
                     hasComponentUsing.forEach(element => {
                         if (typeof answer === 'number' || typeof answer === 'string') {
@@ -1080,11 +1079,11 @@ export function referenceIndexLookup(datakey, index_lookup = 0) {
 
 // laad_reference_map, and add map for dependency for validasion, enable, componentVar, sourceOption and sourceQuestion
 export function initReferenceMap(reference_local = null) {
-    let compEnableMap_local = {}
-    let compValidMap_local = {}
-    let compSourceOption_local = {}
-    let compVar_local = {}
-    let compSourceQuestion_local = {}
+    let compEnableMap_local = new Object()
+    let compValidMap_local = new Object()
+    let compSourceOption_local = new Object()
+    let compVar_local = new Object()
+    let compSourceQuestion_local = new Object()
 
     const loopTemplate = (element) => {
         let el_len = element.length
@@ -1094,7 +1093,7 @@ export function initReferenceMap(reference_local = null) {
                 obj.componentEnable.forEach(item => {
                     let itemKeyBased = item.split('@')[0].split('#')[0];
                     if (!(itemKeyBased in compEnableMap_local)) {
-                        compEnableMap_local[itemKeyBased] = {}
+                        compEnableMap_local[itemKeyBased] = new Object()
                     }
                     if (!(item in compEnableMap_local[itemKeyBased])) {
                         compEnableMap_local[itemKeyBased][item] = []
@@ -1170,7 +1169,7 @@ export function loadReferenceMap(reference_local = null) {
     if (reference_local === null) {
         reference_local = JSON.parse(JSON.stringify(reference.details))
     }
-    let reference_map_local = {}
+    let reference_map_local = new Object()
     for (let index__ = 0; index__ < reference_local.length; index__++) {
         let fullDataKey = reference_local[index__].dataKey
         if (!(fullDataKey in reference_map_local)) {
@@ -1192,12 +1191,10 @@ export function loadReferenceMap(reference_local = null) {
 }
 
 export function get_CompEnable(dataKey) {
-    // console.log('get_CompEnable : '+dataKey)
     let itemKeyBased = dataKey.split('@')[0].split('#')[0];
     let returnDataKey = []
     if (itemKeyBased in compEnableMap()) {
         for (let key_comp in (compEnableMap()[itemKeyBased])) {
-            // console.log('Format : '+key_comp)
             compEnableMap()[itemKeyBased][key_comp].forEach(element_item => {
                 let list_key = referenceIndexLookup(element_item, 1)
                 if (list_key !== -1 && list_key) {

@@ -154,14 +154,13 @@ const Form: Component<{
       const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
 
       let answer = eval(element.expression);
-      saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') });
+      saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') }, 0);
     })
     // console.timeEnd('tmpVarComp ')
 
     // console.time('response ');
     props.preset.details.predata.forEach((element, index) => {
       let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
-      let run = 0;
       if (refPosition !== -1) {
         if ((config().initialMode == 1 && reference.details[refPosition].presetMaster !== undefined && (reference.details[refPosition].presetMaster)) || (config().initialMode == 2)) {
           let sidePosition = sidebar.details.findIndex(obj => {
@@ -169,7 +168,7 @@ const Form: Component<{
             return (cekInsideIndex == -1) ? 0 : index;
           });
           let answer = (typeof element.answer === 'object') ? JSON.parse(JSON.stringify(element.answer)) : element.answer;
-          saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') });
+          saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') }, 0);
         }
       }
     })
@@ -183,7 +182,7 @@ const Form: Component<{
             return (cekInsideIndex == -1) ? 0 : index;
           });
           let answer = (typeof element.answer === 'object') ? JSON.parse(JSON.stringify(element.answer)) : element.answer;
-          saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') });
+          saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') }, 0);
         }
       }
     })
@@ -208,7 +207,7 @@ const Form: Component<{
       const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
       let evEnable = eval(element.enableCondition);
       let enable = (evEnable === undefined) ? false : evEnable;
-      saveAnswer(element.dataKey, 'enable', enable, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') });
+      saveAnswer(element.dataKey, 'enable', enable, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl')}, 0);
     })
 
     for (let index = 0; index < reference.details.length; index++) {
@@ -374,9 +373,9 @@ const Form: Component<{
   }
 
   const setData = () => {
-    const dataForm = [];
-    const dataMedia = [];
-    const dataPrincipal = [];
+    const dataForm = []
+    const dataMedia = []
+    const dataPrincipal = []
 
     setLoader({});
     setTimeout(() => setEnableFalse(), 50);
@@ -1247,9 +1246,13 @@ const Form: Component<{
                   sidebar-span absolute inset-y-0 left-0 transform -translate-x-full transition-transform duration-500 ease-in-out md:relative md:translate-x-0 z-10">
 
                   <div class="sm:min-h-[7rem] py-3 text-gray-400 tracking-wider flex justify-between">
-                    <div class="text-lg block px-4 py-3 text-gray-600 dark:text-white font-bold sm:text-xl" innerHTML={props.template.details.acronym
-                      + '<div class="text-xs font-light text-gray-600 ">🚀' + gearVersion + ' 📋' + templateVersion + ' ✔️' + validationVersion + ' </div>  '} />
-
+                    <Switch fallback={<div class="text-lg block px-4 py-3 text-gray-600 dark:text-white font-bold sm:text-xl" innerHTML={props.template.details.acronym
+                      + '<div class="text-xs font-light text-gray-600 ">🚀' + gearVersion + ' 📋' + templateVersion + ' ✔️' + validationVersion + ' </div>  '} />}>
+                      <Match when={getConfig().clientMode == 1}>
+                        <div class="text-lg block px-4 py-3 text-gray-600 dark:text-white font-bold sm:text-xl" innerHTML={props.template.details.acronym} />
+                      </Match>
+                    </Switch>
+                    
                     <button type="button"
                       class="md:hidden p-2 mobile-menu-button " onClick={sidebarCollapse}>
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1465,7 +1468,12 @@ const Form: Component<{
                           'hidden': onMobile() === true,
                         }}
                       />
-                      <div class="text-xs font-light text-gray-600 "> {renderGear} &#177; {timeDiff} ms</div>
+                      <Switch>
+                        <Match when={getConfig().clientMode == 2}>
+                          <div class="text-xs font-light text-gray-600 "> {renderGear} &#177; {timeDiff} ms</div>
+                        </Match>
+                      </Switch>
+                      
                     </div>
                     <div class="ml-auto w-1/6 md:w-auto sm:flex items-center p-2 ">
                       <button onClick={toggleSwitch} type="button"

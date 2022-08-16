@@ -363,7 +363,7 @@ const SelectInput: FormComponentBase = props => {
                                     });
                                     return (cekInsideIndex == -1) ? 0 : index;
                                 });
-                                saveAnswer(ref.dataKey, 'answer', null, sidePosition, { 'clientMode': config.clientMode, 'baseUrl': config.baseUrl })
+                                saveAnswer(ref.dataKey, 'answer', null, sidePosition, { 'clientMode': config.clientMode, 'baseUrl': config.baseUrl }, 0)
                                 checkDependent(ref.dataKey)
                             } else {
                                 return
