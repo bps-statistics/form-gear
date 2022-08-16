@@ -30,6 +30,11 @@ import NowInput from "./components/NowInput"
 import SignatureInput from "./components/SignatureInput"
 import UnitInput from "./components/UnitInput"
 
+import {
+  TextInput as PAPITextInput
+}
+  from "./components/PAPI"
+
 export enum ControlType {
   Section = 1,
   NestedInput = 2,
@@ -64,13 +69,13 @@ export enum ControlType {
   UnitInput = 37
 }
 
-export type Option =  {
+export type Option = {
   label: string
   value: string
   open: boolean
 }
 
-export type RangeInput =  {
+export type RangeInput = {
   min: number | string
   max: number | string
   step?: number
@@ -140,7 +145,7 @@ export interface FormComponentBase extends Component<{
   onValueChange?: (value: any) => void
   onUserClick?: (dataKey: string) => void
   value?: any
-  config : any
+  config: any
   classValidation?: any
   validationMessage?: any
   comments?: number
@@ -149,13 +154,48 @@ export interface FormComponentBase extends Component<{
   MobileOfflineSearch?: (id: any, version: any, conditions: any, setter: any) => void
   MobileOnlineSearch?: (value: any) => void
   MobileOpenMap?: (value: any) => void
-  openRemark?: (dataKey: string) =>void
+  openRemark?: (dataKey: string) => void
   setResponseMobile?: any
 }> { }
 
 export const CONTROL_MAP = new Map<ControlType, FormComponentBase>([
   [ControlType.NestedInput, NestedInput],
   [ControlType.TextInput, TextInput],
+  [ControlType.RadioInput, RadioInput],
+  [ControlType.SelectInput, SelectInput],
+  [ControlType.NumberInput, NumberInput],
+  [ControlType.CheckboxInput, CheckboxInput],
+  [ControlType.TextAreaInput, TextAreaInput],
+  [ControlType.EmailInput, EmailInput],
+  [ControlType.UrlInput, UrlInput],
+  [ControlType.DateInput, DateInput],
+  [ControlType.DateTimeLocalInput, DateTimeLocalInput],
+  [ControlType.TimeInput, TimeInput],
+  [ControlType.MonthInput, MonthInput],
+  [ControlType.WeekInput, WeekInput],
+  [ControlType.SingleCheckInput, SingleCheckInput],
+  [ControlType.ToggleInput, ToggleInput],
+  [ControlType.RangeSliderInput, RangeSliderInput],
+  [ControlType.InnerHTML, InnerHTML],
+  [ControlType.CurrencyInput, CurrencyInput],
+  [ControlType.ListTextInputRepeat, ListTextInputRepeat],
+  [ControlType.ListSelectInputRepeat, ListSelectInputRepeat],
+  [ControlType.MultipleSelectInput, MultipleSelectInput],
+  [ControlType.MaskingInput, MaskingInput],
+  [ControlType.VariableInput, VariableInput],
+  [ControlType.PhotoInput, PhotoInput],
+  [ControlType.GpsInput, GpsInput],
+  [ControlType.CsvInput, CsvInput],
+  [ControlType.NowInput, NowInput],
+  [ControlType.SignatureInput, SignatureInput],
+  [ControlType.UnitInput, UnitInput]
+]);
+
+CONTROL_MAP.get()
+
+export const CONTROL_MAP_PAPI = new Map<ControlType, FormComponentBase>([
+  [ControlType.NestedInput, NestedInput],
+  [ControlType.TextInput, PAPITextInput],
   [ControlType.RadioInput, RadioInput],
   [ControlType.SelectInput, SelectInput],
   [ControlType.NumberInput, NumberInput],
