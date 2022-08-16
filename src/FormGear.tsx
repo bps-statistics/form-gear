@@ -239,10 +239,12 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                 const loopTemplate = (element, index, parent, level, sideEnable) => {
                   let el_len = element.length
                   for (let i = 0; i < el_len; i++) {
-                    if (dataKeyCollections.includes(element[i].dataKey)) {
-                      throw new Error('Duplicate Data Key Detected ' + element[i].dataKey);
+                    if(element[i].type > 1) {
+                      if (dataKeyCollections.includes(element[i].dataKey)) {
+                        throw new Error('Duplicate dataKey on ' + element[i].dataKey);
+                      }
+                      dataKeyCollections.push(element[i].dataKey)
                     }
-                    dataKeyCollections.push(element[i].dataKey)
                     let answer = element[i].answer;
                     
                     let el_type = element[i].type
