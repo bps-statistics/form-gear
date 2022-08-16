@@ -17,7 +17,7 @@ import { Questionnaire, template } from './stores/TemplateStore';
 import { Validation } from './stores/ValidationStore';
 
 import { toastInfo } from "./FormInput";
-import { globalConfig, referenceIndexLookup, runValidation, saveAnswer, setEnableFalse } from "./GlobalFunction";
+import { globalConfig, referenceIndexLookup, refocusLastSelector, runValidation, saveAnswer, setEnableFalse } from "./GlobalFunction";
 
 import { setReferenceHistoryEnable } from './stores/ReferenceStore';
 

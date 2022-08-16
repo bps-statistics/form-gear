@@ -13,6 +13,8 @@ import { validation } from './stores/ValidationStore';
 
 import Toastify from 'toastify-js';
 import { input } from './stores/InputStore';
+import { ControlType, OPTION_INPUT_CONTROL } from './FormType';
+import { ClientMode } from './constants';
 
 export const default_eval_enable = true
 export const default_eval_validation = true
@@ -638,7 +640,7 @@ export const runEnabling = (dataKey: string, activeComponentPosition: number, pr
     saveAnswer(dataKey, 'enable', enable, activeComponentPosition, null, 0);
 }
 
-export const runValidation = (dataKey: string, updatedRef: any, activeComponentPosition: number) => {
+export const runValidation = (dataKey: string, updatedRef: any, activeComponentPosition: number, clientMode?: ClientMode) => {
     const getRowIndex = (positionOffset: number) => {
         let editedDataKey = dataKey.split('@');
         let splitDataKey = editedDataKey[0].split('#');
@@ -743,6 +745,28 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
                 updatedRef.validationState = 2;
             }
         }
+
+        // Handle PAPI validation.
+        if (clientMode == ClientMode.PAPI) {
+            const val = updatedRef.answer
+            if (updatedRef.type == ControlType.RadioInput && updatedRef.answer !== undefined) {
+                const allowedVals = updatedRef.options?.map(opt => opt.value)
+                if (allowedVals !== undefined) {
+                    if (val[0] && !allowedVals.includes(val[0].value)) {
+                        const validationMessage = templating(locale.details.language[0].validationInclude, { values: allowedVals.join(",") })
+                        updatedRef.validationMessage.push(validationMessage)
+                        updatedRef.validationState = 2
+                    }
+                }
+            }
+
+            if (updatedRef.type == ControlType.DateInput && updatedRef.answer !== undefined) {
+                if (!validateDateString(updatedRef.answer)) {
+                    updatedRef.validationMessage.push(locale.details.language[0].validationDate)
+                    updatedRef.validationState = 2
+                }
+            }
+        }
     }
 
     saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null, 0);
@@ -782,7 +806,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
         addHistory('saveAnswer', dataKey, refPosition, attributeParam, reference.details[refPosition][attributeParam])
         setReference('details', refPosition, attributeParam, answer);
         //validate for its own dataKey 
-        if (referenceHistoryEnable() && (reference.details[refPosition].validations !== undefined || reference.details[refPosition].rangeInput !== undefined || reference.details[refPosition].lengthInput !== undefined) && initial == 0) runValidation(dataKey, JSON.parse(JSON.stringify(reference.details[refPosition])), activeComponentPosition);
+        if (referenceHistoryEnable() && (reference.details[refPosition].validations !== undefined || reference.details[refPosition].rangeInput !== undefined || reference.details[refPosition].lengthInput !== undefined) && initial == 0) runValidation(dataKey, JSON.parse(JSON.stringify(reference.details[refPosition])), activeComponentPosition, prop?.clientMode);
 
         //do nothing if no changes, thanks to Budi's idea on pull request #5
         if (attributeParam === 'answer') {
@@ -917,9 +941,11 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                     hasComponentValidation.forEach(elementVal => {
                         let componentIndex = referenceIndexLookup(elementVal)
                         if (reference.details[componentIndex].enable)
-                            runValidation(elementVal, JSON.parse(JSON.stringify(reference.details[componentIndex])), activeComponentPosition);
+                            runValidation(elementVal, JSON.parse(JSON.stringify(reference.details[componentIndex])), activeComponentPosition, prop?.clientMode);
                         // runValidation(elementVal.dataKey, JSON.parse(JSON.stringify(elementVal)), activeComponentPosition);
                     });
+                } else if (prop?.clientMode === ClientMode.PAPI && OPTION_INPUT_CONTROL.includes(reference.details[refPosition].type)) {
+                    runValidation(dataKey, JSON.parse(JSON.stringify(reference.details[refPosition])), activeComponentPosition, prop?.clientMode)
                 }
             }
 
@@ -1350,6 +1376,9 @@ export const toastInfo = (text: string, duration: number, position: string, bgCo
     }).showToast();
 }
 
+/**
+ * Handle additional PAPI input validation
+ */
 export const focusFirstInput = () => {
     const elem = document.querySelector("input:not(.hidden-input):not(:disabled),textarea:not(.hidden-input):not(:disabled)") as HTMLElement
     elem?.focus()
@@ -1386,6 +1415,11 @@ export const scrollCenterInput = (elem: HTMLElement, container?: HTMLElement) =>
     }
 }
 
+export const joinWords = (words: any[], delimiter: String, conjunction: String = "and") => {
+    const last = words.pop();
+    return `${words.join(delimiter + ' ')} ${conjunction} ${last}`;
+}
+
 export const cleanLabel = (label: String) => {
     if (label.includes("-")) {
         var splitchar = "-"
@@ -1400,4 +1434,22 @@ export const cleanLabel = (label: String) => {
     }
 
     return label
+}
+
+export const validateDateString = (date: string): Boolean => {
+    const dateObject = new Date(date) as any
+    const isValidDate =
+        dateObject.toString() != "Invalid Date"
+        && !isNaN(dateObject)
+        && dateObject.toISOString().split("T")[0] === date
+    return isValidDate
+}
+
+export const templating = (template: string, data: any) => {
+    return template.replace(
+        /\$(\w*)/g,
+        function (m, key) {
+            return data.hasOwnProperty(key) ? data[key] : "";
+        }
+    );
 }

@@ -200,6 +200,11 @@ CONTROL_MAP_PAPI.set(ControlType.RadioInput, PAPIRadioInput)
 
 export { CONTROL_MAP_PAPI }
 
+export const OPTION_INPUT_CONTROL = [
+  ControlType.SelectInput,
+  ControlType.RadioInput
+]
+
 // export const CONTROL_MAP_PAPI_ = new Map<ControlType, FormComponentBase>([
 //   [ControlType.NestedInput, NestedInput],
 //   [ControlType.TextInput, PAPITextInput],
