@@ -582,7 +582,6 @@ export const deleteSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
 }
 
 export const runVariableComponent = (dataKey: string, activeComponentPosition: number, initial: number) => {
-    console.log('runVal', dataKey)
     const getRowIndex = (positionOffset: number) => {
         let editedDataKey = dataKey.split('@');
         let splitDataKey = editedDataKey[0].split('#');
@@ -811,7 +810,6 @@ export const setEnableFalse = () => {
 }
 
 export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, activeComponentPosition: number, prop: any | null, initial: number) => {
-    console.log('saveAnswer', dataKey, attributeParam, answer)
     const eval_enable = (eval_text, dataKey) => {
         try {
             return eval(eval_text)
