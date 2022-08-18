@@ -1,3 +1,4 @@
+import CurrencyInput from "./CurrencyInput";
 import DateInput from "./DateInput";
 import DateTimeLocalInput from "./DateTimeLocalInput";
 import NumberInput from "./NumberInput";
@@ -15,5 +16,6 @@ export {
     DateInput as PAPIDateInput,
     DateTimeLocalInput as PAPIDateTimeLocalInput,
     RangeSliderInput as PAPIRangeSliderInput,
-    UnitInput as PAPIUnitInput
+    UnitInput as PAPIUnitInput,
+    CurrencyInput as PAPICurrencyInput
 }

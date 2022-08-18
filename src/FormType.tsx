@@ -31,6 +31,7 @@ import SignatureInput from "./components/SignatureInput"
 import UnitInput from "./components/UnitInput"
 
 import {
+  PAPICurrencyInput,
   PAPIDateInput,
   PAPIDateTimeLocalInput,
   PAPINumberInput,
@@ -231,7 +232,7 @@ export const CONTROL_MAP_PAPI = new Map<ControlType, FormComponentBase>([
   [ControlType.ToggleInput, ToggleInput],
   [ControlType.RangeSliderInput, PAPIRangeSliderInput],
   [ControlType.InnerHTML, InnerHTML],
-  [ControlType.CurrencyInput, CurrencyInput],
+  [ControlType.CurrencyInput, PAPICurrencyInput],
   [ControlType.ListTextInputRepeat, ListTextInputRepeat],
   [ControlType.ListSelectInputRepeat, ListSelectInputRepeat],
   [ControlType.MultipleSelectInput, MultipleSelectInput],
