@@ -1,6 +1,7 @@
 import CurrencyInput from "./CurrencyInput";
 import DateInput from "./DateInput";
 import DateTimeLocalInput from "./DateTimeLocalInput";
+import MaskingInput from "./MaskingInput";
 import NumberInput from "./NumberInput";
 import RadioInput from "./RadioInput";
 import RangeSliderInput from "./RangeSliderInput";
@@ -17,5 +18,6 @@ export {
     DateTimeLocalInput,
     RangeSliderInput,
     UnitInput,
-    CurrencyInput
+    CurrencyInput,
+    MaskingInput
 }

@@ -225,7 +225,7 @@ export const CONTROL_MAP_PAPI = new Map<ControlType, FormComponentBase>([
   [ControlType.ListTextInputRepeat, ListTextInputRepeat],
   [ControlType.ListSelectInputRepeat, ListSelectInputRepeat],
   [ControlType.MultipleSelectInput, MultipleSelectInput],
-  [ControlType.MaskingInput, MaskingInput],
+  [ControlType.MaskingInput, PAPI.MaskingInput],
   [ControlType.VariableInput, VariableInput],
   [ControlType.PhotoInput, PhotoInput],
   [ControlType.GpsInput, GpsInput],
