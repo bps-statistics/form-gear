@@ -30,18 +30,7 @@ import NowInput from "./components/NowInput"
 import SignatureInput from "./components/SignatureInput"
 import UnitInput from "./components/UnitInput"
 
-import {
-  PAPICurrencyInput,
-  PAPIDateInput,
-  PAPIDateTimeLocalInput,
-  PAPINumberInput,
-  PAPIRadioInput,
-  PAPIRangeSliderInput,
-  PAPITextAreaInput,
-  PAPITextInput,
-  PAPIUnitInput
-}
-  from "./components/PAPI"
+import * as PAPI from "./components/PAPI"
 
 export enum ControlType {
   Section = 1,
@@ -215,24 +204,24 @@ export const OPTION_INPUT_CONTROL = [
 
 export const CONTROL_MAP_PAPI = new Map<ControlType, FormComponentBase>([
   [ControlType.NestedInput, NestedInput],
-  [ControlType.TextInput, PAPITextInput],
-  [ControlType.RadioInput, PAPIRadioInput],
+  [ControlType.TextInput, PAPI.TextInput],
+  [ControlType.RadioInput, PAPI.RadioInput],
   [ControlType.SelectInput, SelectInput],
-  [ControlType.NumberInput, PAPINumberInput],
+  [ControlType.NumberInput, PAPI.NumberInput],
   [ControlType.CheckboxInput, CheckboxInput],
-  [ControlType.TextAreaInput, PAPITextAreaInput],
+  [ControlType.TextAreaInput, PAPI.TextAreaInput],
   [ControlType.EmailInput, EmailInput],
   [ControlType.UrlInput, UrlInput],
-  [ControlType.DateInput, PAPIDateInput],
-  [ControlType.DateTimeLocalInput, PAPIDateTimeLocalInput],
+  [ControlType.DateInput, PAPI.DateInput],
+  [ControlType.DateTimeLocalInput, PAPI.DateTimeLocalInput],
   [ControlType.TimeInput, TimeInput],
   [ControlType.MonthInput, MonthInput],
   [ControlType.WeekInput, WeekInput],
   [ControlType.SingleCheckInput, SingleCheckInput],
   [ControlType.ToggleInput, ToggleInput],
-  [ControlType.RangeSliderInput, PAPIRangeSliderInput],
+  [ControlType.RangeSliderInput, PAPI.RangeSliderInput],
   [ControlType.InnerHTML, InnerHTML],
-  [ControlType.CurrencyInput, PAPICurrencyInput],
+  [ControlType.CurrencyInput, PAPI.CurrencyInput],
   [ControlType.ListTextInputRepeat, ListTextInputRepeat],
   [ControlType.ListSelectInputRepeat, ListSelectInputRepeat],
   [ControlType.MultipleSelectInput, MultipleSelectInput],
@@ -243,5 +232,5 @@ export const CONTROL_MAP_PAPI = new Map<ControlType, FormComponentBase>([
   [ControlType.CsvInput, CsvInput],
   [ControlType.NowInput, NowInput],
   [ControlType.SignatureInput, SignatureInput],
-  [ControlType.UnitInput, PAPIUnitInput]
+  [ControlType.UnitInput, PAPI.UnitInput]
 ]);
