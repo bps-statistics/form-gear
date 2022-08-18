@@ -47,7 +47,7 @@ const RadioInput: FormComponentBase = props => {
 	}
 
 	return (
-		<InputContainer validationMessage={props.validationMessage} component={props.component} optionSection={optionSection}>
+		<InputContainer classValidation={props.classValidation} validationMessage={props.validationMessage} component={props.component} optionSection={optionSection}>
 			<Show when={props.component.lengthInput === undefined}>
 				<input value={settedValue} type="text"
 					name={props.component.dataKey}
