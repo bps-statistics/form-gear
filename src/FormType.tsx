@@ -35,6 +35,7 @@ import {
   PAPIDateTimeLocalInput,
   PAPINumberInput,
   PAPIRadioInput,
+  PAPIRangeSliderInput,
   PAPITextAreaInput,
   PAPITextInput
 }
@@ -227,7 +228,7 @@ export const CONTROL_MAP_PAPI = new Map<ControlType, FormComponentBase>([
   [ControlType.WeekInput, WeekInput],
   [ControlType.SingleCheckInput, SingleCheckInput],
   [ControlType.ToggleInput, ToggleInput],
-  [ControlType.RangeSliderInput, RangeSliderInput],
+  [ControlType.RangeSliderInput, PAPIRangeSliderInput],
   [ControlType.InnerHTML, InnerHTML],
   [ControlType.CurrencyInput, CurrencyInput],
   [ControlType.ListTextInputRepeat, ListTextInputRepeat],

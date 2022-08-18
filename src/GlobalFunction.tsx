@@ -772,14 +772,14 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
                     updatedRef.validationState = 2
                 } else {
                     const date = new Date(updatedRef.answer)
-                    if (updatedRef.rangeInput[0].max !== undefined) {
+                    if (updatedRef?.rangeInput[0]?.max !== undefined) {
                         const maxDate = updatedRef.rangeInput[0].max === 'today' ? new Date() : new Date(updatedRef.rangeInput[0].max)
                         if (date.getTime() > maxDate.getTime()) {
                             updatedRef.validationMessage.push(locale.details.language[0].validationMax + " " + dayjs(maxDate).format('DD/MM/YYYY'));
                             updatedRef.validationState = 2
                         }
                     }
-                    if (updatedRef.rangeInput[0].min !== undefined) {
+                    if (updatedRef?.rangeInput[0]?.min !== undefined) {
                         const minDate = updatedRef.rangeInput[0].min === 'today' ? new Date() : new Date(updatedRef.rangeInput[0].min)
                         if (date.getTime() < minDate.getTime()) {
                             updatedRef.validationMessage.push(locale.details.language[0].validationMin + " " + dayjs(minDate).format('DD/MM/YYYY'));
@@ -788,6 +788,16 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
                     }
                 }
             }
+
+            /** Validate range slider input*/
+            if (updatedRef.type == ControlType.RangeSliderInput) {
+                const step = updatedRef?.rangeInput[0]?.step
+                if (step !== undefined && updatedRef.answer % step !== 0) {
+                    updatedRef.validationMessage.push(locale.details.language[0].validationStep + " " + step);
+                    updatedRef.validationState = 2
+                }
+            }
+
         }
     }
 

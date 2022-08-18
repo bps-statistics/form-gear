@@ -29,6 +29,7 @@ export type Language = {
     validationMin: string
     validationMinLength: string
     validationRequired: string
+    validationStep: string
     verificationInvalid: string
     verificationSubmitted: string
     validationEmail: string
@@ -80,6 +81,7 @@ export const [locale, setLocale] = createStore<Questionnaire>({
                 validationMin: "The smallest value is",
                 validationMinLength: "The minimum of allowed character is",
                 validationRequired: "Required",
+                validationStep: "The value must be a multiple of",
                 verificationInvalid: "Please provide verification correctly",
                 verificationSubmitted: "The data is now being submitted. Thank you!",
                 validationEmail: "Email is not correct",
