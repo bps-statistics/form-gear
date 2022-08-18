@@ -1,4 +1,5 @@
 import DateInput from "./DateInput";
+import DateTimeLocalInput from "./DateTimeLocalInput";
 import NumberInput from "./NumberInput";
 import RadioInput from "./RadioInput";
 import TextAreaInput from "./TextAreaInput";
@@ -9,5 +10,6 @@ export {
     RadioInput as PAPIRadioInput,
     NumberInput as PAPINumberInput,
     TextAreaInput as PAPITextAreaInput,
-    DateInput as PAPIDateInput
+    DateInput as PAPIDateInput,
+    DateTimeLocalInput as PAPIDateTimeLocalInput
 }

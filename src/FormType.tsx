@@ -32,6 +32,7 @@ import UnitInput from "./components/UnitInput"
 
 import {
   PAPIDateInput,
+  PAPIDateTimeLocalInput,
   PAPINumberInput,
   PAPIRadioInput,
   PAPITextAreaInput,
@@ -220,7 +221,7 @@ export const CONTROL_MAP_PAPI = new Map<ControlType, FormComponentBase>([
   [ControlType.EmailInput, EmailInput],
   [ControlType.UrlInput, UrlInput],
   [ControlType.DateInput, PAPIDateInput],
-  [ControlType.DateTimeLocalInput, DateTimeLocalInput],
+  [ControlType.DateTimeLocalInput, PAPIDateTimeLocalInput],
   [ControlType.TimeInput, TimeInput],
   [ControlType.MonthInput, MonthInput],
   [ControlType.WeekInput, WeekInput],

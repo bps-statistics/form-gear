@@ -765,8 +765,8 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
                 }
             }
 
-            /** Validate date input */
-            if (updatedRef.type == ControlType.DateInput) {
+            /** Validate date && datetime input */
+            if (updatedRef.type == ControlType.DateInput || updatedRef.type == ControlType.DateTimeLocalInput) {
                 if (!validateDateString(updatedRef.answer)) {
                     updatedRef.validationMessage.push(locale.details.language[0].validationDate)
                     updatedRef.validationState = 2
@@ -1464,7 +1464,6 @@ export const validateDateString = (date: string): Boolean => {
     const isValidDate =
         dateObject.toString() != "Invalid Date"
         && !isNaN(dateObject)
-        && dateObject.toISOString().split("T")[0] === date
     return isValidDate
 }
 
