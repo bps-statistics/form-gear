@@ -3,7 +3,7 @@
 
 ## FormGear | Ver. 1.1.1
 
-> August 16, 2022
+> August 18, 2022
 
 ### Optimized Performance
 - Only run validation when it is needed (stop when the component doesn't have any validations or when creating new nested)
@@ -13,13 +13,17 @@
 - Use get_compValid filtering
 - Prevent comparing answer and before answer when both value are zero or undefined
 
-### Fixed
-- Fix absolute bootstrap css (on Client) overwriting Checkbox and SingleCheck Input
-- Prevent running variable component on first load
+### Added
+- PAPI entry module. Special thanks to [Muhammad Qadri - @mqad21](https://github.com/mqad21) for the idea on pull request [#8](https://github.com/AdityaSetyadi/form-gear/pull/8).
 
 ### Changed
 - Set view version attribute only available in CAPI
 - Optimize usability of referenceIndexLookup
+
+### Fixed
+- Fix absolute bootstrap css (on Client) overwriting Checkbox and SingleCheck Input
+- Prevent running variable component on first load
+
 
 
 ---
