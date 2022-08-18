@@ -1,10 +1,10 @@
-import { createSignal, createResource, createEffect, Show, For, Switch, Match } from "solid-js"
-import { FormComponentBase } from "../../FormType"
-import { Select, createOptions } from "@thisbeyond/solid-select"
-import { reference } from '../../stores/ReferenceStore'
-import Toastify from 'toastify-js'
-import { locale } from '../../stores/LocaleStore'
+import { createOptions, Select } from "@thisbeyond/solid-select"
 import { FiChevronDown } from 'solid-icons/fi'
+import { createEffect, createResource, createSignal, Show } from "solid-js"
+import Toastify from 'toastify-js'
+import { FormComponentBase } from "../../FormType"
+import { locale } from '../../stores/LocaleStore'
+import { reference } from '../../stores/ReferenceStore'
 import { InputContainer } from "./partials"
 
 const UnitInput: FormComponentBase = props => {
@@ -15,8 +15,6 @@ const UnitInput: FormComponentBase = props => {
     const [options, setOptions] = createSignal([]);
     const [selectedOption, setSelectedOption] = createSignal('');
     const isPublic = false;
-
-    let classInput = 'w-full rounded font-light px-4 py-2.5 text-sm text-gray-700 bg-white bg-clip-padding transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400';
 
     const toastInfo = (text: string) => {
         Toastify({
@@ -316,11 +314,9 @@ const UnitInput: FormComponentBase = props => {
                 <Show when={props.component.lengthInput === undefined}>
                     <input value={props.value != undefined ? props.value != '' ? props.value[0].value : '' : ''} type="number"
                         name={props.component.dataKey}
-                        class={classInput + 'block pr-20'}
+                        class="formgear-input-papi block pr-20"
                         classList={{
-                            ' border border-solid border-gray-300 ': props.classValidation === 0,
-                            ' border-orange-500 dark:bg-orange-100 ': props.classValidation === 1,
-                            ' border-pink-600 dark:bg-pink-100 ': props.classValidation === 2,
+                            ['formgear-input-papi-validation-' + props.classValidation]: true
                         }}
                         placeholder=""
                         disabled={disableInput()}
@@ -332,11 +328,9 @@ const UnitInput: FormComponentBase = props => {
                 <Show when={props.component.lengthInput !== undefined && props.component.lengthInput.length > 0}>
                     <input value={props.value != undefined ? props.value != '' ? props.value[0].value : '' : ''} type="number"
                         name={props.component.dataKey}
-                        class={classInput + 'block pr-20'}
+                        class="formgear-input-papi block pr-20"
                         classList={{
-                            ' border border-solid border-gray-300 ': props.classValidation === 0,
-                            ' border-orange-500 dark:bg-orange-100 ': props.classValidation === 1,
-                            ' border-pink-600 dark:bg-pink-100 ': props.classValidation === 2,
+                            ['formgear-input-papi-validation-' + props.classValidation]: true
                         }}
                         placeholder=""
                         disabled={disableInput()}

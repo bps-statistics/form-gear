@@ -6,18 +6,14 @@ const TextInput: FormComponentBase = props => {
   const config = props.config
   const [disableInput] = createSignal((config.formMode > 1 && config.initialMode == 2) ? true : (config.initialMode == 1 && props.component.disableInitial !== undefined) ? props.component.disableInitial : props.component.disableInput)
 
-  let classInput = 'w-full rounded font-light px-4 py-2.5 text-sm text-gray-700 bg-white bg-clip-padding transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400';
-
   return (
     <InputContainer component={props.component}>
       <Show when={props.component.lengthInput === undefined}>
         <input value={props.value} type="text"
           name={props.component.dataKey}
-          class={classInput}
+          class="formgear-input-papi"
           classList={{
-            ' border border-solid border-gray-300 ': props.classValidation === 0,
-            ' border-orange-500 dark:bg-orange-100 ': props.classValidation === 1,
-            ' border-pink-600 dark:bg-pink-100 ': props.classValidation === 2,
+            ['formgear-input-papi-validation-' + props.classValidation]: true
           }}
           placeholder=""
           disabled={disableInput()}
@@ -29,11 +25,9 @@ const TextInput: FormComponentBase = props => {
       <Show when={props.component.lengthInput !== undefined && props.component.lengthInput.length > 0}>
         <input value={props.value} type="text"
           name={props.component.dataKey}
-          class={classInput}
+          class="formgear-input-papi"
           classList={{
-            ' border border-solid border-gray-300 ': props.classValidation === 0,
-            ' border-orange-500 dark:bg-orange-100 ': props.classValidation === 1,
-            ' border-pink-600 dark:bg-pink-100 ': props.classValidation === 2,
+            ['formgear-input-papi-validation-' + props.classValidation]: true
           }}
           placeholder=""
           disabled={disableInput()}

@@ -11,8 +11,6 @@ const DateTimeLocalInput: FormComponentBase = props => {
   const config = props.config
   const [disableInput] = createSignal((config.formMode > 1) ? true : props.component.disableInput)
 
-  let classInput = 'w-full rounded font-light px-4 py-2.5 text-sm text-gray-700 bg-white bg-clip-padding transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400';
-
   const format = "DD/MM/YYYY HH:mm:ss"
   const maskingFormat = "99/99/9999 99:99:99"
   const formatMask = createInputMask(maskingFormat);
@@ -37,11 +35,9 @@ const DateTimeLocalInput: FormComponentBase = props => {
     <InputContainer component={props.component} classValidation={props.classValidation} validationMessage={props.validationMessage}>
       <input value={settedValue} type="text"
         id={"inputMask" + props.component.dataKey} ref={inputMask.ref}
-        class={classInput}
+        class="formgear-input-papi"
         classList={{
-          ' border border-solid border-gray-300 ': props.classValidation === 0,
-          ' border-orange-500 dark:bg-orange-100 ': props.classValidation === 1,
-          ' border-pink-600 dark:bg-pink-100 ': props.classValidation === 2,
+          ['formgear-input-papi-validation-' + props.classValidation]: true
         }}
         placeholder={maskingFormat.replace(/[a]/g, '__').replace(/[9]/g, '#')}
         disabled={disableInput()}
