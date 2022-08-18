@@ -1,34 +1,34 @@
 import { render } from "solid-js/web";
 
-import "./index.css";
 import Form from "./Form";
 import { FormProvider } from "./FormProvider";
+import "./index.css";
 
-import Loader from "./loader/Loader"
-import FormLoaderProvider from "./loader/FormLoaderProvider"
+import FormLoaderProvider from "./loader/FormLoaderProvider";
+import Loader from "./loader/Loader";
 
-import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
-import { preset, setPreset, Preset } from './stores/PresetStore';
-import { response, setResponse, Response } from './stores/ResponseStore';
-import { validation, setValidation, Validation } from './stores/ValidationStore';
-import { media, setMedia } from "./stores/MediaStore";
-import { remark, setRemark, Remark } from './stores/RemarkStore';
+import { setMedia } from "./stores/MediaStore";
 import { note, setNote } from './stores/NoteStore';
+import { preset, setPreset } from './stores/PresetStore';
+import { remark, setRemark } from './stores/RemarkStore';
+import { response, setResponse } from './stores/ResponseStore';
+import { setTemplate, template } from './stores/TemplateStore';
+import { setValidation, validation } from './stores/ValidationStore';
 
+import { nested } from './stores/NestedStore';
 import { reference, setReference } from './stores/ReferenceStore';
-import { nested, setNested } from './stores/NestedStore';
-import { sidebar, setSidebar } from './stores/SidebarStore';
+import { setSidebar } from './stores/SidebarStore';
 
 import { createSignal } from "solid-js";
 
 import semverCompare from "semver-compare";
 import { toastInfo } from "./FormInput";
 
-import presetJSON from './data/default/preset.json';
-import responseJSON from './data/default/response.json';
-import referenceJSON from './data/default/reference.json';
 import mediaJSON from './data/default/media.json';
+import presetJSON from './data/default/preset.json';
+import referenceJSON from './data/default/reference.json';
 import remarkJSON from './data/default/remark.json';
+import responseJSON from './data/default/response.json';
 
 import { initReferenceMap } from "./GlobalFunction";
 

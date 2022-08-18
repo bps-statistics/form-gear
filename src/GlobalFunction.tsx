@@ -1,25 +1,21 @@
-import { reference, referenceEnableFalse, setReference, setReferenceEnableFalse } from './stores/ReferenceStore';
-import { referenceMap, setReferenceMap } from './stores/ReferenceStore';
+import { reference, referenceMap, setReference, setReferenceEnableFalse, setReferenceMap } from './stores/ReferenceStore';
 // import { sidebarIndexMap, setSidebarIndexMap } from './stores/ReferenceStore';
-import { referenceHistoryEnable, setReferenceHistoryEnable } from './stores/ReferenceStore';
-import { referenceHistory, setReferenceHistory } from './stores/ReferenceStore';
-import { sidebarHistory, setSidebarHistory } from './stores/ReferenceStore';
-import { compEnableMap, setCompEnableMap } from './stores/ReferenceStore';
-import { compValidMap, setCompValidMap } from './stores/ReferenceStore';
-import { compSourceOptionMap, setCompSourceOptionMap } from './stores/ReferenceStore';
-import { compVarMap, setCompVarMap } from './stores/ReferenceStore';
-import { compSourceQuestionMap, setCompSourceQuestionMap } from './stores/ReferenceStore';
-import { validation, setValidation } from './stores/ValidationStore';
-import { sidebar, setSidebar } from './stores/SidebarStore';
-import { preset, setPreset, Preset } from './stores/PresetStore';
-import { response, setResponse, Response } from './stores/ResponseStore';
-import { remark, setRemark, Remark } from './stores/RemarkStore';
+import { batch, createSignal } from 'solid-js';
+import { locale } from './stores/LocaleStore';
 import { note, setNote } from './stores/NoteStore';
-import { createSignal, batch } from 'solid-js';
-import { locale, setLocale } from './stores/LocaleStore';
-import { template, setTemplate, Questionnaire } from './stores/TemplateStore';
+import { preset } from './stores/PresetStore';
+import { compEnableMap, compValidMap, compVarMap, referenceHistory, referenceHistoryEnable, setCompEnableMap, setCompSourceOptionMap, setCompSourceQuestionMap, setCompValidMap, setCompVarMap, setReferenceHistory, setSidebarHistory, sidebarHistory } from './stores/ReferenceStore';
+import { remark } from './stores/RemarkStore';
+import { response } from './stores/ResponseStore';
+import { setSidebar, sidebar } from './stores/SidebarStore';
+import { template } from './stores/TemplateStore';
+import { validation } from './stores/ValidationStore';
 
-import Toastify from 'toastify-js'
+import Toastify from 'toastify-js';
+import { input } from './stores/InputStore';
+import { ControlType, OPTION_INPUT_CONTROL } from './FormType';
+import { ClientMode } from './constants';
+import dayjs from 'dayjs';
 
 export const default_eval_enable = true
 export const default_eval_validation = true
@@ -83,7 +79,7 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
             })
         }
     }
-    
+
     if (parentIndex.length == 0) {
         newComp.index[newComp.index.length - 2] = nestedPosition;
         let label = newComp.label.replace('$NAME$', parentName);
@@ -92,9 +88,9 @@ export const createComponent = (dataKey: string, nestedPosition: number, compone
         newComp.index = JSON.parse(JSON.stringify(parentIndex));
         newComp.index = newComp.index.concat(0, componentPosition);
     }
-    
+
     newComp.sourceQuestion = newComp.sourceQuestion !== undefined ? newComp.sourceQuestion + '#' + nestedPosition : undefined;
-    
+
     let originSourceOption = newComp.sourceOption;
     if (originSourceOption !== undefined && originSourceOption !== '') {
         let tmpKey = originSourceOption.split('@');
@@ -255,7 +251,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
             if (answerIndex === -1) {
                 initial = 1;
                 const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
-                if(presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig.initialMode == 2) || (getConfig.initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))){
+                if (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig.initialMode == 2) || (getConfig.initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) {
                     value = preset.details.predata[presetIndex].answer
                     initial = 0
                 } else {
@@ -263,7 +259,7 @@ export const insertSidebarArray = (dataKey: string, answer: any, beforeAnswer: a
                 }
             }
         }
-        
+
         saveAnswer(newComp.dataKey, 'answer', value, sidebarPosition, null, initial);
     })
 
@@ -486,7 +482,7 @@ export const insertSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
                 if (answerIndex === -1) {
                     initial = 1
                     const presetIndex = preset.details.predata.findIndex(obj => obj.dataKey === newComp.dataKey);
-                    if(presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig.initialMode == 2) || (getConfig.initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))){
+                    if (presetIndex !== -1 && preset.details.predata[presetIndex] !== undefined && ((getConfig.initialMode == 2) || (getConfig.initialMode == 1 && newComp.presetMaster !== undefined && (newComp.presetMaster)))) {
                         value = preset.details.predata[presetIndex].answer
                         initial = 0
                     } else {
@@ -646,7 +642,7 @@ export const runEnabling = (dataKey: string, activeComponentPosition: number, pr
     saveAnswer(dataKey, 'enable', enable, activeComponentPosition, null, 0);
 }
 
-export const runValidation = (dataKey: string, updatedRef: any, activeComponentPosition: number) => {
+export const runValidation = (dataKey: string, updatedRef: any, activeComponentPosition: number, clientMode?: ClientMode) => {
     const getRowIndex = (positionOffset: number) => {
         let editedDataKey = dataKey.split('@');
         let splitDataKey = editedDataKey[0].split('#');
@@ -659,7 +655,7 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
     updatedRef.validationState = 0;
     if (!updatedRef.hasRemark) {
         // for (let i in updatedRef.validations) {
-        updatedRef.validations?.forEach((el,i) => {
+        updatedRef.validations?.forEach((el, i) => {
             let result = default_eval_validation;
             try {
                 result = eval(el.test)
@@ -671,7 +667,7 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
                 updatedRef.validationMessage.push(el.message);
                 updatedRef.validationState = (updatedRef.validationState < el.type) ? el.type : updatedRef.validationState;
             }
-        // }
+            // }
         })
 
         if (updatedRef.urlValidation && (updatedRef.type == 24 || updatedRef.type == 25 || updatedRef.type == 28 || updatedRef.type == 30 || updatedRef.type == 31)) {
@@ -751,6 +747,49 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
                 updatedRef.validationState = 2;
             }
         }
+
+        /**
+         * Handle PAPI validation.
+         */
+        if (clientMode == ClientMode.PAPI && updatedRef.answer !== undefined) {
+            const val = updatedRef.answer
+
+            /** Validate radio input */
+            if (updatedRef.type == ControlType.RadioInput) {
+                const allowedVals = updatedRef.options?.map(opt => opt.value)
+                if (allowedVals !== undefined) {
+                    if (val[0] && !allowedVals.includes(val[0].value)) {
+                        const validationMessage = templating(locale.details.language[0].validationInclude, { values: allowedVals.join(",") })
+                        updatedRef.validationMessage.push(validationMessage)
+                        updatedRef.validationState = 2
+                    }
+                }
+            }
+
+            /** Validate date input */
+            if (updatedRef.type == ControlType.DateInput) {
+                if (!validateDateString(updatedRef.answer)) {
+                    updatedRef.validationMessage.push(locale.details.language[0].validationDate)
+                    updatedRef.validationState = 2
+                } else {
+                    const date = new Date(updatedRef.answer)
+                    if (updatedRef.rangeInput[0].max !== undefined) {
+                        const maxDate = updatedRef.rangeInput[0].max === 'today' ? new Date() : new Date(updatedRef.rangeInput[0].max)
+                        if (date.getTime() > maxDate.getTime()) {
+                            updatedRef.validationMessage.push(locale.details.language[0].validationMax + " " + dayjs(maxDate).format('DD/MM/YYYY'));
+                            updatedRef.validationState = 2
+                        }
+                    }
+                    if (updatedRef.rangeInput[0].min !== undefined) {
+                        const minDate = updatedRef.rangeInput[0].min === 'today' ? new Date() : new Date(updatedRef.rangeInput[0].min)
+                        if (date.getTime() < minDate.getTime()) {
+                            updatedRef.validationMessage.push(locale.details.language[0].validationMin + " " + dayjs(minDate).format('DD/MM/YYYY'));
+                            updatedRef.validationState = 2
+                        }
+                    }
+                }
+            }
+        }
     }
 
     saveAnswer(dataKey, 'validate', updatedRef, activeComponentPosition, null, 0);
@@ -787,11 +826,11 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
 
     if (refPosition > -1 && (attributeParam === 'answer' || attributeParam === 'enable')) {
         let beforeAnswer = (typeof answer === 'number' || typeof answer === 'string') ? 0 : [];
-        beforeAnswer = (reference.details[refPosition].answer !== undefined && reference.details[refPosition].answer !== '') ? reference.details[refPosition].answer : beforeAnswer;
+        beforeAnswer = (reference.details[refPosition]?.answer !== undefined && reference.details[refPosition].answer !== '') ? reference.details[refPosition].answer : beforeAnswer;
         addHistory('saveAnswer', dataKey, refPosition, attributeParam, reference.details[refPosition][attributeParam])
         setReference('details', refPosition, attributeParam, answer);
         //validate for its own dataKey 
-        if (referenceHistoryEnable() && (reference.details[refPosition].validations !== undefined || reference.details[refPosition].rangeInput !== undefined || reference.details[refPosition].lengthInput !== undefined) && initial == 0) runValidation(dataKey, JSON.parse(JSON.stringify(reference.details[refPosition])), activeComponentPosition);
+        if (referenceHistoryEnable() && (reference.details[refPosition].validations !== undefined || reference.details[refPosition].rangeInput !== undefined || reference.details[refPosition].lengthInput !== undefined) && initial == 0) runValidation(dataKey, JSON.parse(JSON.stringify(reference.details[refPosition])), activeComponentPosition, prop?.clientMode);
 
         //do nothing if no changes, thanks to Budi's idea on pull request #5
         if (attributeParam === 'answer') {
@@ -907,7 +946,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
 
         if (reference.details[refPosition].enable) {
             //validating ~ run weel when answer or enable
-            if(initial == 0){
+            if (initial == 0) {
                 // const hasComponentValidation = JSON.parse(JSON.stringify(reference.details.filter(obj => {
                 //     let editedDataKey = obj.dataKey.split('@');
                 //     let newEdited = editedDataKey[0].split('#');
@@ -926,10 +965,12 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                 if (hasComponentValidation.length > 0) {//at least this dataKey appears in minimum 1 validation
                     hasComponentValidation.forEach(elementVal => {
                         let componentIndex = referenceIndexLookup(elementVal)
-                        if(reference.details[componentIndex].enable)
-                            runValidation(elementVal, JSON.parse(JSON.stringify(reference.details[componentIndex])), activeComponentPosition);
+                        if (reference.details[componentIndex].enable)
+                            runValidation(elementVal, JSON.parse(JSON.stringify(reference.details[componentIndex])), activeComponentPosition, prop?.clientMode);
                         // runValidation(elementVal.dataKey, JSON.parse(JSON.stringify(elementVal)), activeComponentPosition);
                     });
+                } else if (prop?.clientMode === ClientMode.PAPI && OPTION_INPUT_CONTROL.includes(reference.details[refPosition].type)) {
+                    runValidation(dataKey, JSON.parse(JSON.stringify(reference.details[refPosition])), activeComponentPosition, prop?.clientMode)
                 }
             }
 
@@ -1345,17 +1386,95 @@ export function reloadDataFromHistory() {
     }
 }
 
-export const toastInfo = (text:string, duration:number, position:string, bgColor:string) => {
+export const toastInfo = (text: string, duration: number, position: string, bgColor: string) => {
     Toastify({
-      text: (text == '') ? locale.details.language[0].componentDeleted : text,
-      duration: (duration >= 0) ? duration : 500,
-      gravity: "top", 
-      position: (position == '') ? "right" : position, 
-      stopOnFocus: true, 
-      className: (bgColor == '') ? "bg-blue-600/80" : bgColor,
-      style: {
-        background: "rgba(8, 145, 178, 0.7)",
-        width: "400px"
-      }
+        text: (text == '') ? locale.details.language[0].componentDeleted : text,
+        duration: (duration >= 0) ? duration : 500,
+        gravity: "top",
+        position: (position == '') ? "right" : position,
+        stopOnFocus: true,
+        className: (bgColor == '') ? "bg-blue-600/80" : bgColor,
+        style: {
+            background: "rgba(8, 145, 178, 0.7)",
+            width: "400px"
+        }
     }).showToast();
+}
+
+/**
+ * Handle additional PAPI input validation
+ */
+export const focusFirstInput = () => {
+    const elem = document.querySelector("input:not(.hidden-input):not(:disabled),textarea:not(.hidden-input):not(:disabled)") as HTMLElement
+    elem?.focus()
+}
+
+export const refocusLastSelector = () => {
+    if (input.currentDataKey !== "") {
+        const lastElement = document.querySelector(`[name="${input.currentDataKey}"]`) as HTMLElement
+        if (lastElement) {
+            lastElement?.focus()
+        } else {
+            focusFirstInput()
+        }
+    }
+}
+
+export const scrollCenterInput = (elem: HTMLElement, container?: HTMLElement) => {
+    if (container == null) {
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            container = document.querySelector(".mobile-component-div");
+        } else {
+            container = document.querySelector(".component-div");
+        }
+    }
+
+    let center = container.clientHeight / 2
+    let top = elem.offsetTop
+
+    let middle = container.clientWidth / 2
+    let left = elem.offsetLeft
+
+    if (left > middle || top > center) {
+        container.scrollTo({ top: top - center, left: left - middle, behavior: "smooth" });
+    }
+}
+
+export const joinWords = (words: any[], delimiter: String, conjunction: String = "and") => {
+    const last = words.pop();
+    return `${words.join(delimiter + ' ')} ${conjunction} ${last}`;
+}
+
+export const cleanLabel = (label: String) => {
+    if (label.includes("-")) {
+        var splitchar = "-"
+    } else if (label.includes(".")) {
+        var splitchar = "."
+    }
+
+    if (splitchar) {
+        const splitted = label.split(splitchar)
+        splitted.shift()
+        return splitted.join(splitchar).trim()
+    }
+
+    return label
+}
+
+export const validateDateString = (date: string): Boolean => {
+    const dateObject = new Date(date) as any
+    const isValidDate =
+        dateObject.toString() != "Invalid Date"
+        && !isNaN(dateObject)
+        && dateObject.toISOString().split("T")[0] === date
+    return isValidDate
+}
+
+export const templating = (template: string, data: any) => {
+    return template.replace(
+        /\$(\w*)/g,
+        function (m, key) {
+            return data.hasOwnProperty(key) ? data[key] : "";
+        }
+    );
 }

@@ -2,3 +2,6 @@ node_modules
 dist
 client/capi/data
 client/cawi/data
+src/data/*
+!src/data/default/*
+!src/data/*.json
