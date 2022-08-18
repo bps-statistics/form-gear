@@ -5,6 +5,7 @@ import RadioInput from "./RadioInput";
 import RangeSliderInput from "./RangeSliderInput";
 import TextAreaInput from "./TextAreaInput";
 import TextInput from "./TextInput";
+import UnitInput from "./UnitInput";
 
 export {
     TextInput as PAPITextInput,
@@ -13,5 +14,6 @@ export {
     TextAreaInput as PAPITextAreaInput,
     DateInput as PAPIDateInput,
     DateTimeLocalInput as PAPIDateTimeLocalInput,
-    RangeSliderInput as PAPIRangeSliderInput
+    RangeSliderInput as PAPIRangeSliderInput,
+    UnitInput as PAPIUnitInput
 }

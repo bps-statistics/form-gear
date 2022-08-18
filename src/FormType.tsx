@@ -37,7 +37,8 @@ import {
   PAPIRadioInput,
   PAPIRangeSliderInput,
   PAPITextAreaInput,
-  PAPITextInput
+  PAPITextInput,
+  PAPIUnitInput
 }
   from "./components/PAPI"
 
@@ -241,5 +242,5 @@ export const CONTROL_MAP_PAPI = new Map<ControlType, FormComponentBase>([
   [ControlType.CsvInput, CsvInput],
   [ControlType.NowInput, NowInput],
   [ControlType.SignatureInput, SignatureInput],
-  [ControlType.UnitInput, UnitInput]
+  [ControlType.UnitInput, PAPIUnitInput]
 ]);
