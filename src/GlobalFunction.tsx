@@ -15,6 +15,7 @@ import Toastify from 'toastify-js';
 import { input } from './stores/InputStore';
 import { ControlType, OPTION_INPUT_CONTROL } from './FormType';
 import { ClientMode } from './constants';
+import dayjs from 'dayjs';
 
 export const default_eval_enable = true
 export const default_eval_validation = true
@@ -746,10 +747,14 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
             }
         }
 
-        // Handle PAPI validation.
-        if (clientMode == ClientMode.PAPI) {
+        /**
+         * Handle PAPI validation.
+         */
+        if (clientMode == ClientMode.PAPI && updatedRef.answer !== undefined) {
             const val = updatedRef.answer
-            if (updatedRef.type == ControlType.RadioInput && updatedRef.answer !== undefined) {
+
+            /** Validate radio input */
+            if (updatedRef.type == ControlType.RadioInput) {
                 const allowedVals = updatedRef.options?.map(opt => opt.value)
                 if (allowedVals !== undefined) {
                     if (val[0] && !allowedVals.includes(val[0].value)) {
@@ -760,10 +765,27 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
                 }
             }
 
-            if (updatedRef.type == ControlType.DateInput && updatedRef.answer !== undefined) {
+            /** Validate date input */
+            if (updatedRef.type == ControlType.DateInput) {
                 if (!validateDateString(updatedRef.answer)) {
                     updatedRef.validationMessage.push(locale.details.language[0].validationDate)
                     updatedRef.validationState = 2
+                } else {
+                    const date = new Date(updatedRef.answer)
+                    if (updatedRef.rangeInput[0].max !== undefined) {
+                        const maxDate = updatedRef.rangeInput[0].max === 'today' ? new Date() : new Date(updatedRef.rangeInput[0].max)
+                        if (date.getTime() > maxDate.getTime()) {
+                            updatedRef.validationMessage.push(locale.details.language[0].validationMax + " " + dayjs(maxDate).format('DD/MM/YYYY'));
+                            updatedRef.validationState = 2
+                        }
+                    }
+                    if (updatedRef.rangeInput[0].min !== undefined) {
+                        const minDate = updatedRef.rangeInput[0].min === 'today' ? new Date() : new Date(updatedRef.rangeInput[0].min)
+                        if (date.getTime() < minDate.getTime()) {
+                            updatedRef.validationMessage.push(locale.details.language[0].validationMin + " " + dayjs(minDate).format('DD/MM/YYYY'));
+                            updatedRef.validationState = 2
+                        }
+                    }
                 }
             }
         }

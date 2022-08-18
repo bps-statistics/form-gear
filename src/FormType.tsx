@@ -31,8 +31,10 @@ import SignatureInput from "./components/SignatureInput"
 import UnitInput from "./components/UnitInput"
 
 import {
+  PAPIDateInput,
   PAPINumberInput,
   PAPIRadioInput,
+  PAPITextAreaInput,
   PAPITextInput
 }
   from "./components/PAPI"
@@ -197,6 +199,8 @@ const CONTROL_MAP_PAPI = CONTROL_MAP
 CONTROL_MAP_PAPI.set(ControlType.TextInput, PAPITextInput)
 CONTROL_MAP_PAPI.set(ControlType.NumberInput, PAPINumberInput)
 CONTROL_MAP_PAPI.set(ControlType.RadioInput, PAPIRadioInput)
+CONTROL_MAP_PAPI.set(ControlType.TextAreaInput, PAPITextAreaInput)
+CONTROL_MAP_PAPI.set(ControlType.DateInput, PAPIDateInput)
 
 export { CONTROL_MAP_PAPI }
 
