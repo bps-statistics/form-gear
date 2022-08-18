@@ -19,6 +19,7 @@
 
 ### Changed
 - Set view version attribute only available in CAPI
+- Optimize usability of referenceIndexLookup
 
 
 ---

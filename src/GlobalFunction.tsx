@@ -582,6 +582,7 @@ export const deleteSidebarNumber = (dataKey: string, answer: any, beforeAnswer: 
 }
 
 export const runVariableComponent = (dataKey: string, activeComponentPosition: number, initial: number) => {
+    console.log('runVal', dataKey)
     const getRowIndex = (positionOffset: number) => {
         let editedDataKey = dataKey.split('@');
         let splitDataKey = editedDataKey[0].split('#');
@@ -810,6 +811,7 @@ export const setEnableFalse = () => {
 }
 
 export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, activeComponentPosition: number, prop: any | null, initial: number) => {
+    console.log('saveAnswer', dataKey, attributeParam, answer)
     const eval_enable = (eval_text, dataKey) => {
         try {
             return eval(eval_text)
@@ -888,7 +890,8 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                     let tmpIndex = []
                     if (enableSide !== enableSideBefore) {
                         sidebarEnable.components[0].forEach((element, index) => {
-                            let refPos = updatedRef.findIndex(objRef => objRef.dataKey === element.dataKey);
+                            // let refPos = updatedRef.findIndex(objRef => objRef.dataKey === element.dataKey);
+                            let refPos = referenceIndexLookup(element.dataKey)
                             if (refPos !== -1) {
                                 if (!enableSide) {
                                     setReference('details', refPos, 'enable', enableSide);

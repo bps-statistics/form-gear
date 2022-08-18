@@ -154,13 +154,15 @@ const Form: Component<{
       const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
 
       let answer = eval(element.expression);
-      saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') }, 0);
+      if(answer !== undefined)
+        saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') }, 0);
     })
     // console.timeEnd('tmpVarComp ')
 
     // console.time('response ');
     props.preset.details.predata.forEach((element, index) => {
-      let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
+      // let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
+      let refPosition = referenceIndexLookup(element.dataKey)
       if (refPosition !== -1) {
         if ((config().initialMode == 1 && reference.details[refPosition].presetMaster !== undefined && (reference.details[refPosition].presetMaster)) || (config().initialMode == 2)) {
           let sidePosition = sidebar.details.findIndex(obj => {
@@ -174,15 +176,17 @@ const Form: Component<{
     })
 
     props.response.details.answers.forEach((element, index) => {
-      if (!element.dataKey.includes("#")) {
-        let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
+      if(!element.dataKey.includes("#")){
+        // let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
+        let refPosition = referenceIndexLookup(element.dataKey)
         if (refPosition !== -1) {
           let sidePosition = sidebar.details.findIndex(obj => {
             const cekInsideIndex = obj.components[0].findIndex(objChild => objChild.dataKey === element.dataKey);
             return (cekInsideIndex == -1) ? 0 : index;
           });
           let answer = (typeof element.answer === 'object') ? JSON.parse(JSON.stringify(element.answer)) : element.answer;
-          saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') }, 0);
+          if(answer !== undefined)
+            saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') }, 0);
         }
       }
     })
