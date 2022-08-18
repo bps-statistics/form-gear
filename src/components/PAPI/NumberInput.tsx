@@ -10,7 +10,7 @@ const NumberInput: FormComponentBase = props => {
   let classInput = 'w-full rounded font-light px-4 py-2.5 text-sm text-gray-700 bg-white bg-clip-padding transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400';
 
   return (
-    <InputContainer validationMessage={props.validationMessage} component={props.component}>
+    <InputContainer validationMessage={props.validationMessage} classValidation={props.classValidation} component={props.component}>
       <Show when={props.component.lengthInput === undefined}>
         <input value={props.value} type="number"
           name={props.component.dataKey}
