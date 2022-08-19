@@ -4,15 +4,15 @@ import DateTimeLocalInput from "./DateTimeLocalInput";
 import MaskingInput from "./MaskingInput";
 import MultipleSelectInput from "./MultipleSelectInput";
 import NumberInput from "./NumberInput";
-import RadioInput from "./RadioInput";
 import RangeSliderInput from "./RangeSliderInput";
+import SelectInput from "./SelectInput";
 import TextAreaInput from "./TextAreaInput";
 import TextInput from "./TextInput";
 import UnitInput from "./UnitInput";
 
 export {
     TextInput,
-    RadioInput,
+    SelectInput,
     NumberInput,
     TextAreaInput,
     DateInput,

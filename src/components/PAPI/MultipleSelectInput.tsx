@@ -39,7 +39,7 @@ const MultipleSelectInput: FormComponentBase = props => {
                 })
             }
         } else {
-            updatedAnswer = JSON.parse(JSON.stringify(props.value))
+            updatedAnswer = JSON.parse(JSON.stringify(transformedValue()))
             if (updatedAnswer) {
                 if (props.value.some(d => String(d.value) === String(value))) {
                     if (open) {
@@ -65,7 +65,7 @@ const MultipleSelectInput: FormComponentBase = props => {
             return transformCheckboxOptions(options())
                 .filter((option: Option) =>
                     props.value.find((value: any) =>
-                        option.value === value.value && option.label === value.label
+                        option.value === value.value
                     ))
         }
         return []

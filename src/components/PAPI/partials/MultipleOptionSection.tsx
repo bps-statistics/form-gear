@@ -39,7 +39,9 @@ const MultipleOptionSection: OptionSectionBase = props => {
                                             type="checkbox"
                                             disabled
                                             value={item.value}
-                                            checked={(item.value) ? tick(item.value) : false} id={"checkbox-" + props.component.dataKey + "-" + index()} />
+                                            checked={(item.value) ? tick(item.value) : false} id={"checkbox-" + props.component.dataKey + "-" + index()}
+                                            onChange={e => props.onValueChange(e.currentTarget.value, item.label, item.open)}
+                                        />
                                     </label>
                                 </div>
                                 <div class="col-span-11">
@@ -57,6 +59,7 @@ const MultipleOptionSection: OptionSectionBase = props => {
                                                             ease-in-out
                                                             m-0
                                                             focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                                        onChange={e => props.onValueChange(item.value, e.currentTarget.value, item.open)}
                                     />
                                 </div>
                             </div>

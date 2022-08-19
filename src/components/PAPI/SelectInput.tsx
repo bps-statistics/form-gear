@@ -4,15 +4,17 @@ import { FormComponentBase, Option } from "../../FormType";
 import { reference } from '../../stores/ReferenceStore';
 import { InputContainer, OptionSection } from "./partials";
 
-const RadioInput: FormComponentBase = props => {
+const SelectInput: FormComponentBase = props => {
 	const config = props.config
 	const [disableInput] = createSignal((config.formMode > 1) ? true : props.component.disableInput)
 
 	let settedValue = (props.value) ? props.value.length > 0 ? props.value[0].value : props.value : props.value
 
-	let handleOnChange = (value: any) => {
+	let handleOnChange = (value: any, label?: any) => {
 		let updatedAnswer = []
-		const label = options().find(it => it.value == value)?.label
+		if (label == null) {
+			label = options().find(it => it.value == value)?.label
+		}
 		updatedAnswer = [{ value, label }]
 		props.onValueChange([...updatedAnswer])
 	}
@@ -83,4 +85,4 @@ const RadioInput: FormComponentBase = props => {
 		</InputContainer>
 	)
 }
-export default RadioInput;
+export default SelectInput;

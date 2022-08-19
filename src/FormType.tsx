@@ -205,10 +205,10 @@ export const OPTION_INPUT_CONTROL = [
 export const CONTROL_MAP_PAPI = new Map<ControlType, FormComponentBase>([
   [ControlType.NestedInput, NestedInput],
   [ControlType.TextInput, PAPI.TextInput],
-  [ControlType.RadioInput, PAPI.RadioInput],
-  [ControlType.SelectInput, SelectInput],
+  [ControlType.RadioInput, PAPI.SelectInput],
+  [ControlType.SelectInput, PAPI.SelectInput],
   [ControlType.NumberInput, PAPI.NumberInput],
-  [ControlType.CheckboxInput, CheckboxInput],
+  [ControlType.CheckboxInput, PAPI.MultipleSelectInput],
   [ControlType.TextAreaInput, PAPI.TextAreaInput],
   [ControlType.EmailInput, EmailInput],
   [ControlType.UrlInput, UrlInput],
