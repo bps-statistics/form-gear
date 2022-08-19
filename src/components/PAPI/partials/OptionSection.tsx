@@ -22,7 +22,7 @@ const OptionSection: OptionSectionBase = props => {
                                     class="checked:disabled:bg-gray-500 checked:dark:disabled:bg-gray-300 disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
                                     value={item.value} name={props.component.dataKey} id={"radio-" + props.component.dataKey + "-" + index()}
                                     disabled
-                                    onChange={e => props.onValueChange(e.currentTarget.value, item.label)} />
+                                    onChange={e => props.onValueChange(e.currentTarget.value)} />
                             </label>
                         </div>
                         <Switch>
@@ -37,7 +37,7 @@ const OptionSection: OptionSectionBase = props => {
                                         disabled={props.disableInput}
                                         onKeyDown={e => handleInputKeyDown(e, props)}
                                         onFocus={e => handleInputFocus(e, props)}
-                                        onChange={e => props.onValueChange(item.value, e.currentTarget.value)}
+                                        onChange={e => props.onValueChange(item.value)}
                                     />
                                 </div>
                             </Match>

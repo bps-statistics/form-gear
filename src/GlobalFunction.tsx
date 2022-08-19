@@ -1485,3 +1485,34 @@ export const templating = (template: string, data: any) => {
         }
     );
 }
+
+export const findSumCombination = (number: number, listNumbers: number[]) => {
+    let sumCombination = []
+    const sortedNumbers = listNumbers.sort().reverse()
+    if (listNumbers.includes(number)) {
+        sumCombination.push(number)
+    } else {
+        let remaining = number
+        sortedNumbers.forEach(sortedNumber => {
+            if (sortedNumber <= remaining) {
+                sumCombination.push(sortedNumber)
+                remaining = remaining - sortedNumber
+            }
+        })
+        if (remaining !== 0) {
+            sumCombination = []
+        }
+    }
+    return sumCombination
+}
+
+export const sum = (arr: any[]) => {
+    return arr.reduce((sum, it) => Number(sum) + Number(it), 0)
+}
+
+export const transformCheckboxOptions = (options: any[]) => {
+    return options.map((option, index) => ({
+        ...option,
+        checkboxValue: Math.pow(2, index)
+    }))
+}

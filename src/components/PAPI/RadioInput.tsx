@@ -10,11 +10,9 @@ const RadioInput: FormComponentBase = props => {
 
 	let settedValue = (props.value) ? props.value.length > 0 ? props.value[0].value : props.value : props.value
 
-	let handleOnChange = (value: any, label: any = null) => {
+	let handleOnChange = (value: any) => {
 		let updatedAnswer = []
-		if (label == null) {
-			label = options().find(it => it.value == value)?.label
-		}
+		const label = options().find(it => it.value == value)?.label
 		updatedAnswer = [{ value, label }]
 		props.onValueChange([...updatedAnswer])
 	}

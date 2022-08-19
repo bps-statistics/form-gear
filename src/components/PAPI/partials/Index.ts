@@ -19,7 +19,7 @@ export interface OptionSectionBase extends Component<{
     component: ComponentType
     options: Option[]
     settedValue: any,
-    onValueChange?: (value: any, label: any) => void
+    onValueChange?: (value: any, label?: string, open?: boolean) => void
     disableInput: boolean
     value?: any
 }> { }
