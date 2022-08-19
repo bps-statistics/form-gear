@@ -46,7 +46,7 @@ export const getValue = (dataKey: string) => {
     }
 
     const componentIndex = referenceIndexLookup(dataKey)
-    let answer = (componentIndex !== -1 && (reference.details[componentIndex].answer) && (reference.details[componentIndex].enable)) ? reference.details[componentIndex].answer : ''
+    let answer = (componentIndex !== -1 && (reference.details[componentIndex]?.answer) && (reference.details[componentIndex]?.enable)) ? reference.details[componentIndex].answer : ''
     return answer;
 }
 
