@@ -24,8 +24,8 @@ import { setReferenceHistoryEnable } from './stores/ReferenceStore';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-import { media, setMedia } from "./stores/MediaStore";
 import { ClientMode } from "./constants";
+import { media, setMedia } from "./stores/MediaStore";
 
 
 const Form: Component<{
@@ -154,7 +154,7 @@ const Form: Component<{
       const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
 
       let answer = eval(element.expression);
-      if(answer !== undefined)
+      if (answer !== undefined)
         saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') }, 0);
     })
     // console.timeEnd('tmpVarComp ')
@@ -176,7 +176,7 @@ const Form: Component<{
     })
 
     props.response.details.answers.forEach((element, index) => {
-      if(!element.dataKey.includes("#")){
+      if (!element.dataKey.includes("#")) {
         // let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
         let refPosition = referenceIndexLookup(element.dataKey)
         if (refPosition !== -1) {
@@ -185,7 +185,7 @@ const Form: Component<{
             return (cekInsideIndex == -1) ? 0 : index;
           });
           let answer = (typeof element.answer === 'object') ? JSON.parse(JSON.stringify(element.answer)) : element.answer;
-          if(answer !== undefined)
+          if (answer !== undefined)
             saveAnswer(element.dataKey, 'answer', answer, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') }, 0);
         }
       }
@@ -211,7 +211,7 @@ const Form: Component<{
       const [rowIndex, setRowIndex] = createSignal(getRowIndex(0));
       let evEnable = eval(element.enableCondition);
       let enable = (evEnable === undefined) ? false : evEnable;
-      saveAnswer(element.dataKey, 'enable', enable, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl')}, 0);
+      saveAnswer(element.dataKey, 'enable', enable, sidePosition, { 'clientMode': getProp('clientMode'), 'baseUrl': getProp('baseUrl') }, 0);
     })
 
     for (let index = 0; index < reference.details.length; index++) {
@@ -1256,7 +1256,7 @@ const Form: Component<{
                         <div class="text-lg block px-4 py-3 text-gray-600 dark:text-white font-bold sm:text-xl" innerHTML={props.template.details.acronym} />
                       </Match>
                     </Switch>
-                    
+
                     <button type="button"
                       class="md:hidden p-2 mobile-menu-button " onClick={sidebarCollapse}>
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1462,7 +1462,10 @@ const Form: Component<{
                         scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-gray-50 dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-500 
                         overflow-y-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full " onScroll={checkScrollTopWeb}>
 
-                <div class="sm:px-7 sm:pt-7 px-4 pt-4 flex flex-col w-full border-b border-gray-200 bg-white dark:bg-gray-900 dark:text-white dark:border-gray-800 xl:sticky top-0 z-10">
+                <div class="sm:px-7 sm:pt-7 px-4 pt-4 flex flex-col w-full border-b border-gray-200 bg-white dark:bg-gray-900 dark:text-white dark:border-gray-800 z-10 xl:sticky" classList={{
+                  'top-0': getConfig().clientMode !== ClientMode.PAPI,
+                  '-top-[121px]': getConfig().clientMode === ClientMode.PAPI,
+                }}>
                   <div class="flex w-full items-center">
                     <div class="ml-3 w-4/6 md:w-auto md:text-2xl md:text-left font-medium text-left text-base text-gray-900 dark:text-white mt-1">
                       <div innerHTML={props.template.details.title} />
@@ -1477,7 +1480,7 @@ const Form: Component<{
                           <div class="text-xs font-light text-gray-600 "> {renderGear} &#177; {timeDiff} ms</div>
                         </Match>
                       </Switch>
-                      
+
                     </div>
                     <div class="ml-auto w-1/6 md:w-auto sm:flex items-center p-2 ">
                       <button onClick={toggleSwitch} type="button"
@@ -1513,8 +1516,8 @@ const Form: Component<{
                   </div>
 
                   <Show when={getProp('clientMode') == ClientMode.PAPI}>
-                    <div class="flex relative flex-none min-w-full px-2 overflow-x-auto">
-                      <ul class="flex text-sm leading-6 text-slate-400  ">
+                    <div class="flex relative flex-none min-w-full px-2 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-gray-50 dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-500 scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
+                      <ul class="flex text-sm leading-6 text-slate-400 pt-4">
                         <For each={sidebar.details}>
                           {(item, index) => (
                             <Show when={true}>
