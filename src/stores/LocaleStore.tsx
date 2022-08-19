@@ -1,5 +1,4 @@
 import { createStore } from "solid-js/store";
-import { joinWords } from "../GlobalFunction";
 
 export type Language = {
     componentAdded: string
@@ -22,6 +21,8 @@ export type Language = {
     summaryBlank: string
     summaryError: string
     summaryRemark: string
+    uploadImage: string
+    uploadCsv: string
     validationDate: string
     validationInclude: string,
     validationMax: string
@@ -74,6 +75,8 @@ export const [locale, setLocale] = createStore<Questionnaire>({
                 summaryBlank: "Blank",
                 summaryError: "Error",
                 summaryRemark: "Remark",
+                uploadCsv: "Upload CSV file",
+                uploadImage: "Upload image file",
                 validationDate: "Invalid date format",
                 validationInclude: "Allowed values are $values",
                 validationMax: "The biggest value is",

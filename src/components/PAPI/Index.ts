@@ -4,6 +4,7 @@ import DateTimeLocalInput from "./DateTimeLocalInput";
 import MaskingInput from "./MaskingInput";
 import MultipleSelectInput from "./MultipleSelectInput";
 import NumberInput from "./NumberInput";
+import PhotoInput from "./PhotoInput";
 import RangeSliderInput from "./RangeSliderInput";
 import SelectInput from "./SelectInput";
 import TextAreaInput from "./TextAreaInput";
@@ -21,5 +22,6 @@ export {
     UnitInput,
     CurrencyInput,
     MaskingInput,
-    MultipleSelectInput
+    MultipleSelectInput,
+    PhotoInput
 }
