@@ -19,6 +19,7 @@
 ### Changed
 - Set view version attribute only available in CAPI
 - Optimize usability of referenceIndexLookup
+- Remove hardcode in CSV and photo input
 
 ### Fixed
 - Fix absolute bootstrap css (on Client) overwriting Checkbox and SingleCheck Input
