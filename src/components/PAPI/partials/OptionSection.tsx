@@ -21,8 +21,7 @@ const OptionSection: OptionSectionBase = props => {
                                 <input type="radio" checked={props.settedValue === item.value}
                                     class="checked:disabled:bg-gray-500 checked:dark:disabled:bg-gray-300 disabled:bg-gray-200 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
                                     value={item.value} name={props.component.dataKey} id={"radio-" + props.component.dataKey + "-" + index()}
-                                    disabled
-                                    onChange={e => props.onValueChange(e.currentTarget.value, item.label, item.open)} />
+                                    disabled />
                             </label>
                         </div>
                         <Switch>

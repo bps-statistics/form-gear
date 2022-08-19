@@ -40,7 +40,6 @@ const MultipleOptionSection: OptionSectionBase = props => {
                                             disabled
                                             value={item.value}
                                             checked={(item.value) ? tick(item.value) : false} id={"checkbox-" + props.component.dataKey + "-" + index()}
-                                            onChange={e => props.onValueChange(e.currentTarget.value, item.label, item.open)}
                                         />
                                     </label>
                                 </div>

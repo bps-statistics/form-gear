@@ -1488,17 +1488,17 @@ export const templating = (template: string, data: any) => {
 
 export const findSumCombination = (number: number, listNumbers: number[]) => {
     let sumCombination = []
-    const sortedNumbers = listNumbers.sort().reverse()
+    const sortedNumbers = listNumbers.sort(function (a, b) { return b - a });
     if (listNumbers.includes(number)) {
         sumCombination.push(number)
     } else {
         let remaining = number
-        sortedNumbers.forEach(sortedNumber => {
-            if (sortedNumber <= remaining) {
-                sumCombination.push(sortedNumber)
-                remaining = remaining - sortedNumber
+        for (let i = 0; i < sortedNumbers.length; i++) {
+            if (sortedNumbers[i] <= remaining) {
+                sumCombination.push(sortedNumbers[i])
+                remaining -= sortedNumbers[i]
             }
-        })
+        }
         if (remaining !== 0) {
             sumCombination = []
         }
