@@ -161,7 +161,6 @@ const Form: Component<{
 
     // console.time('response ');
     props.preset.details.predata.forEach((element, index) => {
-      // let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
       let refPosition = referenceIndexLookup(element.dataKey)
       if (refPosition !== -1) {
         if ((config().initialMode == 1 && reference.details[refPosition].presetMaster !== undefined && (reference.details[refPosition].presetMaster)) || (config().initialMode == 2)) {
@@ -177,7 +176,6 @@ const Form: Component<{
 
     props.response.details.answers.forEach((element, index) => {
       if (!element.dataKey.includes("#")) {
-        // let refPosition = reference.details.findIndex(obj => obj.dataKey === element.dataKey);
         let refPosition = referenceIndexLookup(element.dataKey)
         if (refPosition !== -1) {
           let sidePosition = sidebar.details.findIndex(obj => {
@@ -224,7 +222,9 @@ const Form: Component<{
       }
 
       if ((obj.enable) && obj.sourceOption !== undefined) {
-        let sourceOptionObj = reference.details[referenceIndexLookup(obj.sourceOption)]
+        console.log(obj.sourceOption)
+        let editedSourceOption = obj.sourceOption.split('@');
+        let sourceOptionObj = reference.details[referenceIndexLookup(editedSourceOption[0])]
         if (obj.answer) {
           let x = [];
           obj.answer.forEach(val => {
@@ -240,7 +240,6 @@ const Form: Component<{
     }
     // console.timeEnd('tmpEnableComp ')
   } else {
-    // let hasRemarkComp = reference.details.filter(obj => obj.hasRemark == true);
     reference.details.forEach(e => {
       let remarkPosition = remark.details.notes.findIndex(obj => obj.dataKey === e.dataKey);
       if (remarkPosition !== -1) {
