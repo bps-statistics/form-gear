@@ -786,8 +786,8 @@ const Form: Component<{
               (updatedRef.answer !== undefined && typeAnswer === 'object' && Number(updatedRef.type) == 21 && updatedRef.answer.length < 2) ||
               (updatedRef.answer !== undefined && typeAnswer === 'object' && Number(updatedRef.type) == 22 && updatedRef.answer.length < 2) ||
               (updatedRef.answer !== undefined && typeAnswer === 'object' && updatedRef.type > 22 && updatedRef.answer.length == 0) ||
-              typeAnswer === 'object' && !isNaN(updatedRef.answer) ||
-              typeAnswer === 'number' && isNaN(updatedRef.answer) ||
+              (typeAnswer === 'object' && !isNaN(updatedRef.answer)) ||
+              (typeAnswer === 'number' && isNaN(updatedRef.answer)) ||
               JSON.stringify(updatedRef.answer) === '[]') {
               updatedRef.validationMessage.push(locale.details.language[0].validationRequired);
               updatedRef.validationState = 2;

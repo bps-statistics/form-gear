@@ -5,6 +5,7 @@
 
 ### Fixed
 - Fixing on run sourceOption when there is response file.
+- Fixing bug on finding blank answer when revalidating
 
 ## FormGear | Ver. 1.1.1
 
