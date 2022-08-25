@@ -1288,7 +1288,7 @@ const Form: Component<{
                                     window.scrollTo({ top: 0, behavior: "smooth" });
                                     component.scrollTo({ top: 0, behavior: "smooth" });
                                     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && sidebarCollapse(e);
-                                    getConfig().clientMode === 2 && writeResponse();
+                                    writeResponse();
                                     setLoader({});
                                     setTimeout(() => setActiveComponent({ dataKey: item_0.dataKey, label: item_0.label, index: JSON.parse(JSON.stringify(item_0.index)), position: index() }), 50);
                                   }}
@@ -1318,7 +1318,7 @@ const Form: Component<{
                                               window.scrollTo({ top: 0, behavior: "smooth" });
                                               component.scrollTo({ top: 0, behavior: "smooth" });
                                               /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && sidebarCollapse(e);
-                                              getConfig().clientMode === 2 && writeResponse();
+                                              writeResponse();
                                               setLoader({});
                                               setTimeout(() => setActiveComponent({ dataKey: item_1.dataKey, label: item_1.label, index: JSON.parse(JSON.stringify(item_1.index)), position: index() }), 50);
                                             }}
@@ -1352,7 +1352,7 @@ const Form: Component<{
                                                         window.scrollTo({ top: 0, behavior: "smooth" });
                                                         component.scrollTo({ top: 0, behavior: "smooth" });
                                                         /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && sidebarCollapse(e);
-                                                        getConfig().clientMode === 2 && writeResponse();
+                                                        writeResponse();
                                                         setLoader({});
                                                         setTimeout(() => setActiveComponent({ dataKey: item_2.dataKey, label: item_2.label, index: JSON.parse(JSON.stringify(item_2.index)), position: index() }), 50);
                                                       }}
@@ -1387,7 +1387,7 @@ const Form: Component<{
                                                                   window.scrollTo({ top: 0, behavior: "smooth" });
                                                                   component.scrollTo({ top: 0, behavior: "smooth" });
                                                                   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && sidebarCollapse(e);
-                                                                  getConfig().clientMode === 2 && writeResponse();
+                                                                  writeResponse();
                                                                   setLoader({});
                                                                   setTimeout(() => setActiveComponent({ dataKey: item_3.dataKey, label: item_3.label, index: JSON.parse(JSON.stringify(item_3.index)), position: index() }), 50);
                                                                 }}
