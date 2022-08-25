@@ -209,6 +209,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                 required: e.required,
                 presetMaster: e.presetMaster !== undefined ? e.presetMaster : undefined,
                 disableInput: e.disableInput !== undefined ? e.disableInput : undefined,
+                decimalLength: e.decimalLength !== undefined ? e.decimalLength : undefined,
                 disableInitial: e.disableInitial !== undefined ? e.disableInitial : undefined,
               })
               nestMasterComp ? nestMasterComp.push(nestEachComp[0]) : nestMasterComp.splice(nestMasterComp.length, 0, nestEachComp[0])
@@ -381,6 +382,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
                         required: element[i].required !== undefined ? element[i].required : undefined,
                         presetMaster: element[i].presetMaster !== undefined ? element[i].presetMaster : undefined,
                         disableInput: element[i].disableInput !== undefined ? element[i].disableInput : undefined,
+                        decimalLength: element[i].decimalLength !== undefined ? element[i].decimalLength : undefined,
                         disableInitial: element[i].disableInitial !== undefined ? element[i].disableInitial : undefined
                     }
                     

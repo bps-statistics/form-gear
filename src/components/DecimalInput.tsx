@@ -1,7 +1,8 @@
 import { createSignal, Show, For, Switch, Match } from "solid-js"
 import { FormComponentBase } from "../FormType"
+import createDebounce from "@solid-primitives/debounce";
 
-const NumberInput: FormComponentBase = props => {
+const DecimalInput: FormComponentBase = props => {
   const config = props.config
   const [disableInput] = createSignal((config.formMode > 1 ) ? true : props.component.disableInput)
 
@@ -11,6 +12,11 @@ const NumberInput: FormComponentBase = props => {
   const showInstruction = () => {
     (instruction()) ? setInstruction(false) : setInstruction(true);
   }
+
+  let handleOnKeyup = createDebounce((value: any) => {
+    let decimalLength = props.component.decimalLength ? props.component.decimalLength : 2
+    props.onValueChange(parseFloat(value).toFixed(decimalLength))
+  }, 1000)
 
   const [enableRemark] = createSignal(props.component.enableRemark !== undefined ? props.component.enableRemark : true );
   const [disableClickRemark] = createSignal((config.formMode > 2  && props.comments == 0 ) ? true : false);
@@ -54,11 +60,8 @@ const NumberInput: FormComponentBase = props => {
                   ' border-pink-600 dark:bg-pink-100 ' : props.classValidation === 2,
                 }}
                 placeholder="" 
-                onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                 disabled = { disableInput() }
-                onChange={(e) => {
-                  props.onValueChange(e.currentTarget.value);
-                } }
+                onkeyup={e => handleOnKeyup(e.currentTarget.value)} 
             />
           </Show>
           <Show when={props.component.lengthInput !== undefined && props.component.lengthInput.length > 0}>
@@ -72,10 +75,7 @@ const NumberInput: FormComponentBase = props => {
                 }}
                 placeholder="" 
                 disabled = { disableInput() }
-                onChange={(e) => {
-                  props.onValueChange(e.currentTarget.value);
-                } }
-                onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                onkeyup={e => handleOnKeyup(e.currentTarget.value)} 
                 oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 maxlength = {props.component.lengthInput[0].maxlength !== undefined ? props.component.lengthInput[0].maxlength : ''}
                 minlength = {props.component.lengthInput[0].minlength !== undefined ? props.component.lengthInput[0].minlength : ''}
@@ -140,4 +140,4 @@ const NumberInput: FormComponentBase = props => {
   )
 }
 
-export default NumberInput
+export default DecimalInput

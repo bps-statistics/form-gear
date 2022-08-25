@@ -29,6 +29,7 @@ import CsvInput from "./components/CsvInput"
 import NowInput from "./components/NowInput"
 import SignatureInput from "./components/SignatureInput"
 import UnitInput from "./components/UnitInput"
+import DecimalInput from "./components/DecimalInput"
 
 import * as PAPI from "./components/PAPI"
 
@@ -63,7 +64,8 @@ export enum ControlType {
   CsvInput = 34,
   NowInput = 35,
   SignatureInput = 36,
-  UnitInput = 37
+  UnitInput = 37,
+  DecimalInput = 38
 }
 
 export type Option = {
@@ -138,7 +140,7 @@ export type ComponentType = {
   required: boolean
   disableInitial?: boolean
   urlValidation?: string       //all
-
+  decimalLength?: number //decimal
 }
 
 export interface FormComponentBase extends Component<{
@@ -191,7 +193,8 @@ export const CONTROL_MAP = new Map<ControlType, FormComponentBase>([
   [ControlType.CsvInput, CsvInput],
   [ControlType.NowInput, NowInput],
   [ControlType.SignatureInput, SignatureInput],
-  [ControlType.UnitInput, UnitInput]
+  [ControlType.UnitInput, UnitInput],
+  [ControlType.DecimalInput, DecimalInput]
 ]);
 
 // const CONTROL_MAP_PAPI = CONTROL_MAP
@@ -238,5 +241,6 @@ export const CONTROL_MAP_PAPI = new Map<ControlType, FormComponentBase>([
   [ControlType.CsvInput, CsvInput],
   [ControlType.NowInput, NowInput],
   [ControlType.SignatureInput, SignatureInput],
-  [ControlType.UnitInput, PAPI.UnitInput]
+  [ControlType.UnitInput, PAPI.UnitInput],
+  [ControlType.DecimalInput, DecimalInput]
 ]);

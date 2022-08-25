@@ -35,12 +35,22 @@
 			}
 		]
 	```
+- Add decimal input component
+	```json
+		{
+		"label":"Income",
+		"dataKey":"income",
+		"decimalLength":3,
+		"type":38
+		},
+	```
 
 ### Changed
 - Set view version attribute only available in CAPI
 - Optimize usability of referenceIndexLookup
 - Remove hardcode in CSV and photo input
 - Trigger save on change section from sidebar
+- Prevent non numerical input on numeric input
 
 ### Fixed
 - Fix absolute bootstrap css (on Client) overwriting Checkbox and SingleCheck Input
