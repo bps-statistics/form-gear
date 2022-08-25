@@ -14,6 +14,7 @@
 
 ### Added
 - PAPI entry module. Special thanks to [Muhammad Qadri - @mqad21](https://github.com/mqad21) for the idea on pull request [#8](https://github.com/AdityaSetyadi/form-gear/pull/8).
+- Add loader when uploading csv file
 
 ### Changed
 - Set view version attribute only available in CAPI

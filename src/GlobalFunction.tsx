@@ -742,6 +742,7 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
         if (updatedRef.type == 31 && updatedRef.answer !== undefined && typeof updatedRef.answer !== 'object') {
             let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             if (!re.test(updatedRef.answer)) {
+
                 updatedRef.validationMessage.push(locale.details.language[0].validationEmail);
                 updatedRef.validationState = 2;
             }
@@ -838,7 +839,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
         addHistory('saveAnswer', dataKey, refPosition, attributeParam, reference.details[refPosition][attributeParam])
         setReference('details', refPosition, attributeParam, answer);
         //validate for its own dataKey 
-        if (referenceHistoryEnable() && (reference.details[refPosition].validations !== undefined || reference.details[refPosition].rangeInput !== undefined || reference.details[refPosition].lengthInput !== undefined) && initial == 0) runValidation(dataKey, JSON.parse(JSON.stringify(reference.details[refPosition])), activeComponentPosition, prop?.clientMode);
+        if (referenceHistoryEnable() && (reference.details[refPosition].validations !== undefined || reference.details[refPosition].rangeInput !== undefined || reference.details[refPosition].lengthInput !== undefined || reference.details[refPosition].type == 31) && initial == 0) runValidation(dataKey, JSON.parse(JSON.stringify(reference.details[refPosition])), activeComponentPosition, prop?.clientMode);
 
         //do nothing if no changes, thanks to Budi's idea on pull request #5
         if (attributeParam === 'answer') {
