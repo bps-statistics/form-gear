@@ -13,6 +13,16 @@
 - Prevent comparing answer and before answer when both value are zero or undefined
 
 ### Added
+- Counter attribute in response.json.
+	```json
+	"counter": 
+		[
+			{
+				"rendered": 1,
+				"validated": 5
+			}
+		]
+	```
 - PAPI entry module. Special thanks to [Muhammad Qadri - @mqad21](https://github.com/mqad21) for the idea on pull request [#8](https://github.com/AdityaSetyadi/form-gear/pull/8).
 - Add loader when uploading csv file
 - Add size range for `CsvInput`

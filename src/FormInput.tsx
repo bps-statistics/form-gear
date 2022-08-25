@@ -13,6 +13,7 @@ import { response, setResponse } from './stores/ResponseStore';
 import { sidebar } from './stores/SidebarStore';
 import { summary } from './stores/SummaryStore';
 import { template } from './stores/TemplateStore';
+import { counter } from './stores/CounterStore';
 
 import dayjs from 'dayjs';
 import Toastify from 'toastify-js';
@@ -95,8 +96,9 @@ const FormInput: FormComponentBase = props => {
     setResponse('details', 'gearVersion', gearVersion)
     setResponse('details', 'templateVersion', templateVersion)
     setResponse('details', 'validationVersion', validationVersion)
-    setResponse('details', 'docState', docState());
-    setResponse('details', 'summary', JSON.parse(JSON.stringify(summary)));
+    setResponse('details', 'docState', docState())
+    setResponse('details', 'summary', JSON.parse(JSON.stringify(summary)))
+    setResponse('details', 'counter', [JSON.parse(JSON.stringify(counter))])
 
     let now = dayjs().format('YYYY-MM-DD HH:mm:ss');
     (response.details.createdBy === undefined || (response.details.createdBy !== undefined && response.details.createdBy === '')) ?

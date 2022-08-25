@@ -1,5 +1,4 @@
 import { reference, referenceMap, setReference, setReferenceEnableFalse, setReferenceMap } from './stores/ReferenceStore';
-// import { sidebarIndexMap, setSidebarIndexMap } from './stores/ReferenceStore';
 import { batch, createSignal } from 'solid-js';
 import { locale } from './stores/LocaleStore';
 import { note, setNote } from './stores/NoteStore';
@@ -10,6 +9,7 @@ import { response } from './stores/ResponseStore';
 import { setSidebar, sidebar } from './stores/SidebarStore';
 import { template } from './stores/TemplateStore';
 import { validation } from './stores/ValidationStore';
+import { setCounter, counter } from './stores/CounterStore';
 
 import Toastify from 'toastify-js';
 import { input } from './stores/InputStore';
@@ -602,7 +602,6 @@ export const runVariableComponent = (dataKey: string, activeComponentPosition: n
             toastInfo(locale.details.language[0].errorExpression + dataKey, 3000, "", "bg-pink-600/80");
             saveAnswer(dataKey, 'answer', undefined, activeComponentPosition, null, 1);
         }
-
     }
 }
 
@@ -653,7 +652,6 @@ export const runValidation = (dataKey: string, updatedRef: any, activeComponentP
     updatedRef.validationMessage = []
     updatedRef.validationState = 0;
     if (!updatedRef.hasRemark) {
-        // for (let i in updatedRef.validations) {
         updatedRef.validations?.forEach((el, i) => {
             let result = default_eval_validation;
             try {
@@ -1100,6 +1098,8 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
 
         setEnableFalse();
     } else if (attributeParam === 'validate') {
+        let counterValidated = counter.validated
+        setCounter('validated', counterValidated += 1)
         let item_refff = JSON.parse(JSON.stringify(reference.details[refPosition]))
         addHistory('saveAnswer', dataKey, refPosition, attributeParam
             , { 'validationState': item_refff.validationState, 'validationMessage': item_refff.validationMessage })

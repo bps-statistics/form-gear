@@ -15,6 +15,7 @@ import { sidebar } from './stores/SidebarStore';
 import { setSummary, summary } from './stores/SummaryStore';
 import { Questionnaire, template } from './stores/TemplateStore';
 import { Validation } from './stores/ValidationStore';
+import { counter } from './stores/CounterStore';
 
 import { toastInfo } from "./FormInput";
 import { globalConfig, referenceIndexLookup, refocusLastSelector, runValidation, saveAnswer, setEnableFalse } from "./GlobalFunction";
@@ -442,8 +443,9 @@ const Form: Component<{
     setResponse('details', 'gearVersion', gearVersion)
     setResponse('details', 'templateVersion', templateVersion)
     setResponse('details', 'validationVersion', validationVersion)
-    setResponse('details', 'docState', docState());
-    setResponse('details', 'summary', JSON.parse(JSON.stringify(summary)));
+    setResponse('details', 'docState', docState())
+    setResponse('details', 'summary', JSON.parse(JSON.stringify(summary)))
+    setResponse('details', 'counter', [JSON.parse(JSON.stringify(counter))])
 
     let now = dayjs().format('YYYY-MM-DD HH:mm:ss');
     let dt = new Date();

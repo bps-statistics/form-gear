@@ -14,6 +14,7 @@ import { remark, setRemark } from './stores/RemarkStore';
 import { response, setResponse } from './stores/ResponseStore';
 import { setTemplate, template } from './stores/TemplateStore';
 import { setValidation, validation } from './stores/ValidationStore';
+import { setCounter, counter } from './stores/CounterStore';
 
 import { nested } from './stores/NestedStore';
 import { reference, setReference } from './stores/ReferenceStore';
@@ -75,7 +76,8 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
     (Object.keys(responseFetch).length > 0) ? setResponse({details: responseFetch}) : setResponse({details: JSON.parse(JSON.stringify(responseJSON))});
     (Object.keys(mediaFetch).length > 0) ? setMedia({details: mediaFetch}) : setMedia({details: JSON.parse(JSON.stringify(mediaJSON))});
     (Object.keys(remarkFetch).length > 0) ? setRemark({details: remarkFetch}) : setRemark({details: JSON.parse(JSON.stringify(remarkJSON))});
-
+    (Object.keys(responseFetch).length > 0 && response.details.counter !== undefined) && setCounter(JSON.parse(JSON.stringify(response.details.counter[0])))
+    
     const tmpVarComp = []
     const tmpEnableComp = [];
     const flagArr = [];
@@ -85,6 +87,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
     let referenceList = [];
     const nestedList = [];
     let len = template.details.components[0].length;
+    let counterRendered = counter.rendered;
 
     templateVersion = template.details.version !== undefined ? template.details.version : '0.0.1';
     validationVersion = validation.details.version !== undefined ? validation.details.version : '0.0.1';
@@ -113,13 +116,14 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
     // If the semver string b is greater than a, return 0. 
     // If a equals b, return 0;
     let runAll = 0;
-    if( gearVersionState == 0 && templateVersionState == 0 && validationVersionState == 0 && referenceLen > 0 && sidebarLen > 0 ){
+    if( gearVersionState == 0 && templateVersionState == 0 && validationVersionState == 0 && referenceLen > 0 && sidebarLen > 0){
       console.log('Reuse reference ♻️');      
       setReference(referenceFetch)
       initReferenceMap()
       setSidebar('details',referenceFetch.sidebar)
       runAll = 1;
-      
+
+      setCounter('rendered', counterRendered += 1)
       render(() => (
         <FormProvider>
           <FormLoaderProvider>
@@ -517,6 +521,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
           setReference('details', referenceList)
           setSidebar('details', sidebarList)
 
+          setCounter('rendered', counterRendered += 1)
           render(() => (
             <FormProvider>
               <FormLoaderProvider>
@@ -531,6 +536,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
 
     // console.timeEnd('FormGear renders successfully in ')
   } catch (e: unknown) {
+    console.log(e)
     toastInfo("Failed to render the questionnaire", 5000, "", "bg-pink-600/80");
   };  
   
