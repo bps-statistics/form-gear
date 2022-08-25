@@ -273,7 +273,8 @@ const Form: Component<{
 
   const [onMobile, setOnMobile] = createSignal(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
   const checkOnMobile = () => {
-    window.innerWidth < 720 ? setOnMobile(true) : setOnMobile(false)
+    window.innerWidth < 768 ? setOnMobile(true) : setOnMobile(false)
+    console.log(window.innerWidth)
   }
 
   createEffect(() => {
@@ -1241,7 +1242,9 @@ const Form: Component<{
         <div class="bg-gray-50 dark:bg-gray-900 dark:text-white h-screen shadow-xl text-gray-600 flex overflow-hidden text-sm font-montserrat xl:rounded-xl dark:shadow-gray-800">
           <div class="mobile-component-div flex-grow overflow-y-auto h-full flex flex-col overflow-x-hidden bg-white dark:bg-gray-900 z-0" onScroll={checkScrollTopMobile} >
 
-            <div class="relative h-screen md:flex sm:overflow-hidden  ">
+            <div class="relative h-screen md:flex md:overflow-hidden 
+                        scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-gray-50 dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-500 
+                        overflow-y-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full  ">
               {/* <div class="absolute pt-1 z-20 h-8 w-36 left-0 -ml-8 top-5 bg-teal-600/70 -rotate-45 text-white font-semibold text-center"  >&#946;eta 🤖</div> */}
 
               <Show when={getProp('clientMode') != ClientMode.PAPI}>

@@ -1,15 +1,8 @@
 # Changelog
-## FormGear | Ver. 1.1.2
-
-> August 22, 2022
-
-### Fixed
-- Fixing on run sourceOption when there is response file.
-- Fixing bug on finding blank answer when revalidating
 
 ## FormGear | Ver. 1.1.1
 
-> August 18, 2022
+> August 25, 2022
 
 ### Optimized Performance
 - Only run validation when it is needed (stop when the component doesn't have any validations or when creating new nested)
@@ -30,6 +23,9 @@
 ### Fixed
 - Fix absolute bootstrap css (on Client) overwriting Checkbox and SingleCheck Input
 - Prevent running variable component on first load
+- Fix on run sourceOption when there is response file.
+- Fix bug on finding blank answer when revalidating
+- Fix bug overflow hidden on sm and md width
 
 
 
