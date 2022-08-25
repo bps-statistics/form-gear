@@ -10,7 +10,7 @@ const CsvInput: FormComponentBase = props => {
     const [label, setLabel] = createSignal('');
     const [isUploading, setIsUploading] = createSignal(false);
     const [fileSource, setFileSource] = createSignal('');
-
+    
     let reader = new FileReader();
 
     const config = props.config
@@ -38,41 +38,67 @@ const CsvInput: FormComponentBase = props => {
             var allowedExtension = ['csv', 'txt'];
             let doc = data.target.files[0];
             let ext = doc.name.split('.').pop().toLowerCase()
+
             if (!allowedExtension.includes(ext)) {
                 toastInfo(locale.details.language[0].fileInvalidFormat, 'bg-pink-600/70')
             } else {
-                reader.readAsDataURL(doc)
+                
+                let docSize = (doc.size / (1024*1024)).toFixed(2)
 
-                reader.onload = e => {
+                let validMinDocSize = true, validMaxDocSize = true;
 
-                    Papa.parse(doc, {
-                        download: true,
-                        delimiter: "",	// auto-detect
-                        complete: function (results) {
-                            let keys = results.data[0];
-                            let rows = [...[results.data[1]], results.data[2], results.data[3], results.data[4], results.data[5]];
-                            let jsonCsv = results.data.slice(1).map((item) => {
-                                var arr = {};
-                                keys.forEach((i, v) => {
-                                    arr[i] = item[v]
-                                })
-                                return arr
-                            });
-                            // console.log('keys', keys)
-                            // console.log('rows', rows)
-                            // console.log('jsonCsv', jsonCsv)
+                if(props.component.sizeInput){
+                    validMinDocSize = props.component.sizeInput[0].min !== undefined ? 
+                                            ( Number(docSize) > Number(props.component.sizeInput[0].min) ) : true;
 
-                            setTHead(keys)
-                            setTbody(rows)
-
-                            setIsUploading(false)
-                            props.onValueChange(jsonCsv)
-                            toastInfo(locale.details.language[0].fileUploaded, '')
-
-                        }
-                    });
+                    validMaxDocSize = props.component.sizeInput[0].max !== undefined ? 
+                                            ( Number(docSize) < Number(props.component.sizeInput[0].max) ) : true;
+                    
+                    !(validMaxDocSize) && toastInfo(locale.details.language[0].fileInvalidMaxSize + props.component.sizeInput[0].max, 'bg-pink-600/70')
+                    !(validMinDocSize) && toastInfo(locale.details.language[0].fileInvalidMinSize + props.component.sizeInput[0].min, 'bg-pink-600/70')
+                    
+                    setIsUploading(false)
 
                 }
+
+                
+                if( (validMinDocSize) && (validMaxDocSize) ) {
+                        
+                    reader.readAsDataURL(doc)
+                    reader.onload = e => {
+
+                        Papa.parse(doc, {
+                            download: true,
+                            delimiter: "",	// auto-detect
+                            complete: function (results) {
+                                let keys = results.data[0];
+                                let rows = [...[results.data[1]], results.data[2], results.data[3], results.data[4], results.data[5]];
+                                let jsonCsv = results.data.slice(1).map((item) => {
+                                    var arr = {};
+                                    keys.forEach((i, v) => {
+                                        arr[i] = item[v]
+                                    })
+                                    return arr
+                                });
+                                // console.log('keys', keys)
+                                // console.log('rows', rows)
+                                // console.log('jsonCsv', jsonCsv)
+
+                                setTHead(keys)
+                                setTbody(rows)
+
+                                setIsUploading(false)
+                                props.onValueChange(jsonCsv)
+                                toastInfo(locale.details.language[0].fileUploaded, '')
+
+                            }
+                        });
+
+                    }
+
+                }
+                
+                 
             }
         }
 
@@ -222,7 +248,8 @@ const CsvInput: FormComponentBase = props => {
                     <div className="font-light text-sm space-x-2 py-2.5 px-2 col-span-12 space-y-4">
                         <div class="preview-class">
                             <div class="container mx-auto">
-                                <div class="overflow-x-auto">
+                                <div class="scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-gray-50 dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-500 
+                        overflow-x-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
                                     <table class="table-auto w-full">
                                         <thead class="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
                                             <tr>

@@ -78,6 +78,16 @@ export type RangeInput = {
   step?: number
 }
 
+export type LengthInput = {
+  maxlength?: number
+  minlength?: number
+}
+
+export type SizeInput = {
+  min?: number
+  max?: number
+}
+
 export type selectOption = {
   id: string,
   version: string,
@@ -85,11 +95,6 @@ export type selectOption = {
   value: string,
   desc: string,
   parentCondition: []
-}
-
-export type LengthInput = {
-  maxlength?: number
-  minlength?: number
 }
 
 export type ComponentType = {
@@ -103,6 +108,7 @@ export type ComponentType = {
   cols?: number                 //4, 7
   options?: Option[]            //4, 7, 22, 23
   rangeInput?: RangeInput[]     //18
+  sizeInput?: SizeInput[]     //34
   description?: string          //1, 2
   answer?: any                  //semua, (22, 23 wajib seperti ini: [{"label": "lastId#0","value": "0"}] )
   sourceQuestion?: string       //2

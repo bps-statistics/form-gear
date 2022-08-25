@@ -10,6 +10,8 @@ export type Language = {
     componentSelected: string
     fetchFailed: string
     fileInvalidFormat: string
+    fileInvalidMaxSize: string
+    fileInvalidMinSize: string
     fileUploaded: string
     locationAcquired: string
     remarkAdded: string
@@ -65,6 +67,8 @@ export const [locale, setLocale] = createStore<Questionnaire>({
                 componentSelected: "This component has already being selected",
                 fetchFailed: "Failed to fetch the data.",
                 fileInvalidFormat: "Please submit the appropriate format!",
+                fileInvalidMaxSize: "The maximum of allowed size is ",
+                fileInvalidMinSize: "The minimum of allowed size is ",
                 fileUploaded: "File uploaded successfully!",
                 locationAcquired: "Location successfully acquired!",
                 remarkAdded: "The remark was successfully added!",
