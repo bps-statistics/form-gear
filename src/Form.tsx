@@ -222,7 +222,7 @@ const Form: Component<{
       }
 
       if ((obj.enable) && obj.sourceOption !== undefined) {
-        console.log(obj.sourceOption)
+        // console.log(obj.sourceOption)
         let editedSourceOption = obj.sourceOption.split('@');
         let sourceOptionObj = reference.details[referenceIndexLookup(editedSourceOption[0])]
         if (obj.answer) {
@@ -274,7 +274,7 @@ const Form: Component<{
   const [onMobile, setOnMobile] = createSignal(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
   const checkOnMobile = () => {
     window.innerWidth < 768 ? setOnMobile(true) : setOnMobile(false)
-    console.log(window.innerWidth)
+    // console.log(window.innerWidth)
   }
 
   createEffect(() => {

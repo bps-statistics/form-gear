@@ -342,7 +342,7 @@
                         {
                           "label": "Email",
                           "dataKey": "email",
-                          "type": 25
+                          "type": 31
                         },
                         {
                           "label": "IG",

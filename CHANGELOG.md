@@ -27,6 +27,7 @@
 - Fix on run sourceOption when there is response file.
 - Fix bug on finding blank answer when revalidating
 - Fix bug overflow hidden on sm and md width
+- Validate Email and URL input on change
 
 
 

@@ -33,6 +33,7 @@ export type Language = {
     validationStep: string
     verificationInvalid: string
     verificationSubmitted: string
+    validationUrl: string
     validationEmail: string
     validationApi: string
     errorSaving: string
@@ -87,7 +88,8 @@ export const [locale, setLocale] = createStore<Questionnaire>({
                 validationStep: "The value must be a multiple of",
                 verificationInvalid: "Please provide verification correctly",
                 verificationSubmitted: "The data is now being submitted. Thank you!",
-                validationEmail: "Email is not correct",
+                validationUrl: "Invalid URL address, please provide with https://",
+                validationEmail: "Invalid email address",
                 validationApi: "Invalid input from api response",
                 errorSaving: "Something went wrong while saving on component ",
                 errorExpression: "Something went wrong while evaluating expression on component ",

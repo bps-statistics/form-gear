@@ -19,7 +19,7 @@
             "componentValidation":["address"],
             "validations": [
                 {
-                    "test":"console.log(getValue('address'));getValue('address').length < 5",
+                    "test":"getValue('address').length < 5",
                     "message":"Minimum characters allowed is 5",
                     "type":2
                 }
