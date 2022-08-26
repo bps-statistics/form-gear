@@ -9,6 +9,7 @@ import { note, setNote } from './stores/NoteStore';
 import { principal, setPrincipal } from './stores/PrincipalStore';
 import { reference, referenceEnableFalse, setReference } from './stores/ReferenceStore';
 import { remark, setRemark } from './stores/RemarkStore';
+import { media } from './stores/MediaStore';
 import { response, setResponse } from './stores/ResponseStore';
 import { sidebar } from './stores/SidebarStore';
 import { summary } from './stores/SummaryStore';
@@ -141,7 +142,8 @@ const FormInput: FormComponentBase = props => {
 
 
   const onUserClick = (dataKey: string) => {
-    setData();
+    setData();    
+    props.setResponseMobile(response.details, media.details, remark.details, principal.details, reference);
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
       var component = document.querySelector(".mobile-component-div");
     } else {

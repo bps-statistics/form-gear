@@ -42,12 +42,13 @@
 	"decimalLength":3,
 	"type":38
 	```
+- Trigger save on change section from sidebar
+- Trigger save on change section from nested button
 
 ### Changed
 - Set view version attribute only available in CAPI
 - Optimize usability of referenceIndexLookup
 - Remove hardcode in CSV and photo input
-- Trigger save on change section from sidebar
 - Prevent non numerical input on numeric input
 
 ### Fixed
