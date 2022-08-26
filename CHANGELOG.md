@@ -37,12 +37,10 @@
 	```
 - Add decimal input component
 	```json
-		{
-		"label":"Income",
-		"dataKey":"income",
-		"decimalLength":3,
-		"type":38
-		},
+	"label":"Galon",
+	"dataKey":"galon",
+	"decimalLength":3,
+	"type":38
 	```
 
 ### Changed
