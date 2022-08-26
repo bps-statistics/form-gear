@@ -87,7 +87,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
     let referenceList = [];
     const nestedList = [];
     let len = template.details.components[0].length;
-    let counterRendered = counter.rendered;
+    let counterRender = counter.render;
 
     templateVersion = template.details.version !== undefined ? template.details.version : '0.0.1';
     validationVersion = validation.details.version !== undefined ? validation.details.version : '0.0.1';
@@ -123,7 +123,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
       setSidebar('details',referenceFetch.sidebar)
       runAll = 1;
 
-      setCounter('rendered', counterRendered += 1)
+      setCounter('render', counterRender += 1)
       render(() => (
         <FormProvider>
           <FormLoaderProvider>
@@ -523,7 +523,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
           setReference('details', referenceList)
           setSidebar('details', sidebarList)
 
-          setCounter('rendered', counterRendered += 1)
+          setCounter('render', counterRender += 1)
           render(() => (
             <FormProvider>
               <FormLoaderProvider>

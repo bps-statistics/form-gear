@@ -18,8 +18,8 @@
 	"counter": 
 		[
 			{
-				"rendered": 1,
-				"validated": 5
+				"render": 1,
+				"validate": 5
 			}
 		]
 	```

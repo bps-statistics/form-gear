@@ -1098,8 +1098,8 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
 
         setEnableFalse();
     } else if (attributeParam === 'validate') {
-        let counterValidated = counter.validated
-        setCounter('validated', counterValidated += 1)
+        let counterValidate = counter.validate
+        setCounter('validate', counterValidate += 1)
         let item_refff = JSON.parse(JSON.stringify(reference.details[refPosition]))
         addHistory('saveAnswer', dataKey, refPosition, attributeParam
             , { 'validationState': item_refff.validationState, 'validationMessage': item_refff.validationMessage })
