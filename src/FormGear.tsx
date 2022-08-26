@@ -134,7 +134,8 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
       ), document.getElementById("FormGear-root") as HTMLElement);
     }else{
       console.log('Build reference 🚀')
-      
+      let dataKeyCollections = [];
+
       const nestComp = [];
       const getValue = (dataKey: string) => {
         let answer = '';
@@ -238,13 +239,12 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
             refList[j] = [];
             sideList[j] = [];
             flagArr[j] = 0;
-            let dataKeyCollections = [];
             setTimeout( () => {
               try {
                 const loopTemplate = (element, index, parent, level, sideEnable) => {
                   let el_len = element.length
                   for (let i = 0; i < el_len; i++) {
-                    if(element[i].type > 1) {
+                    if(element[i].type != 1 && element[i].type != 3) {
                       if (dataKeyCollections.includes(element[i].dataKey)) {
                         throw new Error('Duplicate dataKey on ' + element[i].dataKey);
                       }
