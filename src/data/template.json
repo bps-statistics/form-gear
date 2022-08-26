@@ -59,6 +59,12 @@
               ]
             },
             {
+              "label":"Galon",
+              "dataKey":"galon",
+              "decimalLength":3,
+              "type":38
+            },
+            {
               "label": "Location",
               "dataKey": "location",
               "type": 33
