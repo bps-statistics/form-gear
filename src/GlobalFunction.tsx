@@ -909,7 +909,6 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                     let tmpIndex = []
                     if (enableSide !== enableSideBefore) {
                         sidebarEnable.components[0].forEach((element, index) => {
-                            // let refPos = updatedRef.findIndex(objRef => objRef.dataKey === element.dataKey);
                             let refPos = referenceIndexLookup(element.dataKey)
                             if (refPos !== -1) {
                                 if (!enableSide) {
@@ -931,7 +930,7 @@ export const saveAnswer = (dataKey: string, attributeParam: any, answer: any, ac
                         });
                         if (tmpVarComp.length > 0) {
                             const getRowIndex = (positionOffset: number) => {
-                                let editedDataKey = dataKey.split('@');
+                                let editedDataKey = sidebarEnable.split('@');
                                 let splitDataKey = editedDataKey[0].split('#');
                                 let splLength = splitDataKey.length;
                                 let reducer = positionOffset + 1;

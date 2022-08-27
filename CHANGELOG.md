@@ -2,7 +2,7 @@
 
 ## FormGear | Ver. 1.1.1
 
-> August 25, 2022
+> August 27, 2022
 
 ### Optimized Performance
 - Only run validation when it is needed (stop when the component doesn't have any validations or when creating new nested)
@@ -58,6 +58,7 @@
 - Fix bug on finding blank answer when revalidating
 - Fix bug overflow hidden on sm and md width
 - Validate Email and URL input on change
+- Fix getting row index on enable nested
 
 
 
