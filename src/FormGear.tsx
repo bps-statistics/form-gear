@@ -33,7 +33,7 @@ import responseJSON from './data/default/response.json';
 
 import { initReferenceMap } from "./GlobalFunction";
 
-export const gearVersion = '1.1.0';
+export const gearVersion = '1.1.1';
 export let templateVersion = '0.0.0';
 export let validationVersion = '0.0.0';
 export function FormGear(referenceFetch, templateFetch, presetFetch, responseFetch, validationFetch, mediaFetch, remarkFetch, config, uploadHandler, GpsHandler, offlineSearch, onlineSearch, mobileExit, setResponseMobile, setSubmitMobile, openMap) {
@@ -60,7 +60,7 @@ export function FormGear(referenceFetch, templateFetch, presetFetch, responseFet
 
   let checkJson = (json : string, message : string) => {
     if(Object.keys(json).length == 0){
-      toastInfo(message, 30000, "", "bg-pink-600/80");
+      toastInfo(message, 5000, "", "bg-pink-600/80");
     }
   }
 
