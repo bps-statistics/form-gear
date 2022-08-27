@@ -52,12 +52,11 @@ const NumberInput: FormComponentBase = props => {
                   ' border border-solid border-gray-300 ' : props.classValidation === 0,
                   ' border-orange-500 dark:bg-orange-100 ' : props.classValidation === 1,
                   ' border-pink-600 dark:bg-pink-100 ' : props.classValidation === 2,
-                }}
-                placeholder="" 
-                onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                }} 
+                placeholder=""
                 disabled = { disableInput() }
                 onChange={(e) => {
-                  props.onValueChange(e.currentTarget.value);
+                  props.onValueChange(parseInt(e.currentTarget.value));
                 } }
             />
           </Show>
@@ -73,9 +72,8 @@ const NumberInput: FormComponentBase = props => {
                 placeholder="" 
                 disabled = { disableInput() }
                 onChange={(e) => {
-                  props.onValueChange(e.currentTarget.value);
+                  props.onValueChange(parseInt(e.currentTarget.value));
                 } }
-                onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                 oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 maxlength = {props.component.lengthInput[0].maxlength !== undefined ? props.component.lengthInput[0].maxlength : ''}
                 minlength = {props.component.lengthInput[0].minlength !== undefined ? props.component.lengthInput[0].minlength : ''}
