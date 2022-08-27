@@ -199,8 +199,8 @@ const SignatureInput: FormComponentBase = props => {
         
         <div className="font-light text-sm space-x-2 py-2.5 px-2 col-span-12 space-y-4 -mt-2">
           <div class="preview-class">
-            <div class="container mx-auto space-y-3">
-              <canvas id="signature-pad" class="relative w-full  border-b-8 border-gray-100  border"  />
+            <div class="container mx-auto space-y-3 ">
+              <canvas id="signature-pad" class="relative rounded-lg w-full bg-white border-b-8 border-gray-100  border"  />
               {/* <img class="relative w-full  border-b-8 border-gray-100  border" src={fileSource()}  id={"signature-img_" + props.component.dataKey} /> */}
             </div>
           </div>

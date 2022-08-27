@@ -42,14 +42,14 @@
 	"decimalLength":3,
 	"type":38
 	```
-- Trigger save on change section from sidebar
-- Trigger save on change section from nested button
+- Trigger save on change section from sidebar and nested button click
 
 ### Changed
 - Set view version attribute only available in CAPI
 - Optimize usability of referenceIndexLookup
 - Remove hardcode in CSV and photo input
 - Prevent non numerical input on numeric input
+- Set SignatureInput background to white with rounded border
 
 ### Fixed
 - Fix absolute bootstrap css (on Client) overwriting Checkbox and SingleCheck Input
