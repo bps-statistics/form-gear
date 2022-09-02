@@ -289,25 +289,20 @@ const Form: Component<{
       if (enableFalse == -1 && element.type > 4 && element.enable) {
         if ((element.answer !== undefined) && (element.answer !== '') && (element.answer !== null)) {
           _answer += 1;
-        }
-        if ((
-          (element.answer === undefined || element.answer === '') ||
-          ((element.type == 21) && element.answer.length == 1) ||
-          ((element.type == 22) && element.answer.length == 1)
-        )
-          && !(JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)) {
-          _blank += 1;
+          if ((
+            (element.answer === undefined || element.answer === '') ||
+            ((element.type == 21) && element.answer.length == 1) ||
+            ((element.type == 22) && element.answer.length == 1)
+          )
+            && !(JSON.parse(JSON.stringify(element.index[element.index.length - 2])) == 0 && element.level > 1)) {
+            _blank += 1;
+          }
+          if (element.validationState != 1 && element.validationState != 2){
+            _clean += 1;
+          }
         }
         if (element.validationState == 2) {
           _error += 1;
-        }
-        if (
-          (element.answer !== undefined) &&
-          (element.answer !== '') &&
-          (element.answer !== null) &&
-          (element.validationState != 1 && element.validationState != 2)
-        ) {
-          _clean += 1;
         }
       }
     })
