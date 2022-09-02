@@ -1,5 +1,37 @@
 # Changelog
 
+## FormGear | Ver. 2.0.0 - FormGear is now running independently. 🎉
+
+> September 02, 2022
+
+### Changed
+- Reformat `sourceSelect` to `sourceAPI` for select option from API
+	```json	
+	{
+		"label": "User",
+		"dataKey": "user_jsonplaceholder",
+		"typeOption": 2,
+		"type": 27,
+		"sourceAPI": [
+			{
+				"baseUrl": "https://jsonplaceholder.typicode.com/users",
+				"headers": {
+					"Content-Type": "application/json"
+				},
+				"data": "",
+				"value": "id",
+				"label": "name"
+			}
+		]
+	}
+	```
+### Fixed
+- Fix summary calculation filtration for undefined answer component
+
+
+---
+
+
 ## FormGear | Ver. 1.1.1
 
 > August 27, 2022

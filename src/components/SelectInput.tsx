@@ -1,5 +1,5 @@
 import { createEffect, createSignal, createResource, Show, Switch, Match, For } from "solid-js"
-import { FormComponentBase } from "../FormType"
+import { FormComponentBase, returnAPI } from "../FormType"
 import { Select, createOptions } from "@thisbeyond/solid-select"
 import { reference, setReference } from '../stores/ReferenceStore'
 import "@thisbeyond/solid-select/style.css"
@@ -7,8 +7,6 @@ import Toastify from 'toastify-js'
 import { locale, setLocale } from '../stores/LocaleStore'
 import { sidebar, setSidebar } from '../stores/SidebarStore';
 import { saveAnswer } from "../GlobalFunction";
-
-
 
 
 const SelectInput: FormComponentBase = props => {
@@ -19,18 +17,11 @@ const SelectInput: FormComponentBase = props => {
     const isPublic = false;
 
     const config = props.config
-    const [disableInput] = createSignal((config.formMode > 1) ? true : props.component.disableInput)
+    const [disableInput, setDisableInput] = createSignal((config.formMode > 1) ? true : props.component.disableInput)
 
     type contentMeta = {
         name: string,
         type: string
-    }
-
-    type optionSelect = {
-        success: boolean,
-        data: [],
-        message: string,
-
     }
 
     const toastInfo = (text: string) => {
@@ -77,42 +68,93 @@ const SelectInput: FormComponentBase = props => {
         case 2: {
             try {
                 if (config.lookupMode === 1) {
-                    let url
-                    let params
-                    let urlHead
-                    let urlParams
 
-                    if (!isPublic) {
-                        params = props.component.sourceSelect
-                        // url = `${config.baseUrl}/${params[0].id}`
-                        url = `${config.baseUrl}/${params[0].id}/filter?version=${params[0].version}`
-                        if (params[0].parentCondition.length > 0) {
-                            urlHead = url
+                    let sourceAPI = props.component.sourceAPI[0]
+                    let url = `${sourceAPI.baseUrl}`
+                
+                    if ( sourceAPI.filterDependencies !== undefined && sourceAPI.filterDependencies.length > 0) {
+                        let urlParams, urlParamsDummy
+                        let urlHead = url
 
-                            urlParams = params[0].parentCondition.map((item, index) => {
-                                let newParams = item.value.split('@');
-
-                                let tobeLookup = reference.details.find(obj => obj.dataKey == newParams[0])
-                                if (tobeLookup.answer) {
-                                    if (tobeLookup.answer.length > 0) {
-                                        let parentValue = encodeURI(tobeLookup.answer[tobeLookup.answer.length - 1].value)
-                                        url = `${config.lookupKey}=${item.key}&${config.lookupValue}=${parentValue}`
-                                    }
-                                } else {
-                                    url = `${config.lookupKey}=${item.key}&${config.lookupValue}=''`
+                        urlParams = sourceAPI.filterDependencies.map((item, index) => {
+                            let dataKey = item.sourceAnswer.split('@');
+                            let sourceAnswer = reference.details.find(obj => obj.dataKey == dataKey[0])
+                            if (sourceAnswer.answer) {
+                                if (sourceAnswer.answer.length > 0) {
+                                    let parentValue = encodeURI(sourceAnswer.answer[sourceAnswer.answer.length - 1].value)
+                                    urlParamsDummy = `${item.params}=${parentValue}`
                                 }
-                                return url
-                            }).join('&')
-                            // url = `${urlHead}?${urlParams}`
-                            url = `${urlHead}&${urlParams}`
-
-                        }
-                    } else {
-                        url = `${config.baseUrl}`
+                            } else {
+                                setDisableInput(true)
+                            }
+                            return urlParamsDummy
+                        }).join('&');
+                        
+                        url = `${urlHead}?${urlParams}`
                     }
-                    // console.log('Lookup URL ', url)
+                                    
+                    if ( sourceAPI.subResourceDependencies !== undefined && sourceAPI.subResourceDependencies.length > 0) {
+                        let urlParams, urlParamsDummy
+                        let urlHead = url
 
-                    const [fetched] = createResource<optionSelect>(url, props.MobileOnlineSearch);
+                        urlParams = sourceAPI.subResourceDependencies.map((item, index) => {
+                            let dataKey = item.sourceAnswer.split('@');
+                            let sourceAnswer = reference.details.find(obj => obj.dataKey == dataKey[0])
+                            if (sourceAnswer.answer) {
+                                if (sourceAnswer.answer.length > 0) {
+                                    let parentValue = encodeURI(sourceAnswer.answer[sourceAnswer.answer.length - 1].value)
+                                    urlParamsDummy = `${parentValue}/${item.params}`
+                                }
+                            } else {
+                                setDisableInput(true)
+                            }
+                            return urlParamsDummy
+                        }).join('/');
+
+                        url = `${urlHead}/${urlParams}` 
+                    }
+                    
+                    let head: RequestInit = {
+                        headers: JSON.stringify(sourceAPI.headers),
+                        method: "GET",
+                      }
+
+                    const onlineSearch = async (url:string) =>
+                        (await fetch(url, {head})
+                        .catch((error: any) => {
+                            return {
+                                success: false,
+                                data: {},
+                                message: '500'
+                            }
+                        }).then(async (res: any) => {
+                            /*the return format must in object of 
+                                {
+                                    success: false,
+                                    data: {}, --> the data property must in format array of object [{key: {key}, value : {value}}, ...]
+                                    message: status (200, 400 ,500 , etc )
+                                }
+                            }*/
+                            if (res.status === 200) {
+                                let response = await res.json();
+                                let temp : returnAPI = new Object();
+                                    temp.success = true;
+                                    temp.data = sourceAPI.data !== '' ? response[sourceAPI.data] : response;
+                                    temp.message = response.msg;
+                                return temp;
+                            } else {
+                                return {
+                                    success: false,
+                                    data: {},
+                                    message: res.status
+                                }
+                            }
+                        }).then((res: any) => {
+                            return res;
+                        })
+                    );
+
+                    const [fetched] = createResource(() => url, onlineSearch);
                     let checker = props.value ? props.value != '' ? props.value[0].value : '' : ''
 
                     createEffect(() => {
@@ -122,40 +164,14 @@ const SelectInput: FormComponentBase = props => {
                             if (!fetched().success) {
                                 toastInfo(locale.details.language[0].fetchFailed)
                             } else {
-                                let arr
-
-                                if (!isPublic) {
-                                    arr = []
-                                    // let cekValue = fetched().data.metadata.findIndex(item => item.name == params[0].value)
-                                    // let cekLabel = fetched().data.metadata.findIndex(item => item.name == params[0].desc)
-
-                                    let cekValue = params[0].value
-                                    let cekLabel = params[0].desc
-
-                                    // fetched().data.data.map((item, value) => {
-                                    //     arr.push(
-                                    //         {
-                                    //             value: item[cekValue],
-                                    //             label: item[cekLabel],
-                                    //         }
-                                    //     )
-                                    // })
-
-
-                                    fetched().data.map((item, value) => {
-                                        arr.push(
-                                            {
-                                                value: item[cekValue],
-                                                label: item[cekLabel],
-                                            }
-                                        )
+                                let arr = []
+                                fetched().data.map((item, value) => {
+                                    arr.push({
+                                        value: item[sourceAPI.value],
+                                        label: item[sourceAPI.label],
                                     })
-                                } else {
-                                    arr = fetched().data
-                                }
-
+                                })
                                 let ans = arr.find(obj => obj.value == checker) && checker != '' ? arr.find(obj => obj.value == checker).label : ''
-
                                 setOptions(arr)
                                 setSelectedOption(ans)
                                 setLoading(true)
@@ -167,7 +183,7 @@ const SelectInput: FormComponentBase = props => {
                     let params
                     let tempArr = []
 
-                    params = props.component.sourceSelect
+                    params = props.component.sourceAPI
                     let id = params[0].id
                     let version = params[0].version
 
@@ -184,16 +200,13 @@ const SelectInput: FormComponentBase = props => {
                             }
                         })
                     }
-                    // console.log('id : ', id)
-                    // console.log('version : ', version)
-                    // console.log('kondisi : ', tempArr)
 
                     let getResult = (result) => {
                         let arr = []
 
                         if (result.data.length > 0) {
                             let cekValue = params[0].value
-                            let cekLabel = params[0].desc
+                            let cekLabel = params[0].label
                             let checker = props.value ? props.value != '' ? props.value[0].value : '' : ''
 
                             result.data.map((item, value) => {
@@ -349,13 +362,30 @@ const SelectInput: FormComponentBase = props => {
 
     let checkDependent = (parentKey: any) => {
         reference.details.map((ref: any) => {
-            if (ref.sourceSelect) {
-                if (ref.sourceSelect.length > 0) {
-                    if (ref.sourceSelect[0].parentCondition.length > 0) {
-                        let check = ref.sourceSelect[0].parentCondition
+            if (ref.sourceAPI) {
+                if (ref.sourceAPI.length > 0) {
+                    if ( ref.sourceAPI[0].filterDependencies !== undefined  && ref.sourceAPI[0].filterDependencies.length > 0) {
+                        let check = ref.sourceAPI[0].filterDependencies
                         check.map((child: any) => {
-                            if (child.value == parentKey && ref.answer != null) {
-                                // console.log('this ', ref)
+                            if (child.sourceAnswer == parentKey && ref.answer != null) {
+                                let sidePosition = sidebar.details.findIndex((obj, index) => {
+                                    const cekInsideIndex = obj.components[0].findIndex((objChild, index) => {
+                                        objChild.dataKey === ref.dataKey;
+                                        return index;
+                                    });
+                                    return (cekInsideIndex == -1) ? 0 : index;
+                                });
+                                saveAnswer(ref.dataKey, 'answer', null, sidePosition, { 'clientMode': config.clientMode, 'baseUrl': config.baseUrl }, 0)
+                                checkDependent(ref.dataKey)
+                            } else {
+                                return
+                            }
+                        })
+                    }
+                    if ( ref.sourceAPI[0].subResourceDependencies !== undefined  && ref.sourceAPI[0].subResourceDependencies.length > 0) {
+                        let check = ref.sourceAPI[0].subResourceDependencies
+                        check.map((child: any) => {
+                            if (child.sourceAnswer == parentKey && ref.answer != null) {
                                 let sidePosition = sidebar.details.findIndex((obj, index) => {
                                     const cekInsideIndex = obj.components[0].findIndex((objChild, index) => {
                                         objChild.dataKey === ref.dataKey;

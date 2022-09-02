@@ -423,7 +423,7 @@
         }
     ],
     "templateDataKey": "family-characteristics-2022",
-    "gearVersion": "1.1.0-rc",
+    "gearVersion": "1.1.0",
     "templateVersion": "0.0.1",
     "validationVersion": "0.0.1",
     "docState": "E",

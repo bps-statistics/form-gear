@@ -90,13 +90,25 @@ export type SizeInput = {
   max?: number
 }
 
-export type selectOption = {
-  id: string,
-  version: string,
+export type sourceAPI = {
+  id?: string,
+  version?: string,
   tableName?: string,
+  baseUrl: string,
+  headers?: {},
+  data: string,
   value: string,
-  desc: string,
-  parentCondition: []
+  label: string,
+  filterDependencies?: [],
+  subResourceDependencies?: [],
+  parentCondition?: []
+}
+
+export type returnAPI = {
+  success?: boolean,
+  data?: [],
+  message?: string,
+
 }
 
 export type ComponentType = {
@@ -124,7 +136,7 @@ export type ComponentType = {
   componentVar?: string[]       //25 (array contoh: ["hobiku"])
   render?: boolean              //25 (true false)
   renderType?: number           //25 (0 untuk single value yang label aja, 1 untuk single value yg textbox dan readonly, 2 untuk array {"label":"labelname","value":valuenya})
-  sourceSelect?: selectOption[] //27
+  sourceAPI?: sourceAPI[] //27
   enable?: boolean              //semua
   enableCondition?: string      //semua
   componentEnable?: string[]    //semua

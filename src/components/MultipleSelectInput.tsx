@@ -1,5 +1,5 @@
 import { createSignal, createEffect, createResource, Show, For, Switch, Match } from "solid-js"
-import { FormComponentBase, Option } from "../FormType"
+import { FormComponentBase, Option, returnAPI } from "../FormType"
 import { reference } from '../stores/ReferenceStore'
 import { Select, createOptions } from "@thisbeyond/solid-select"
 import "@thisbeyond/solid-select/style.css"
@@ -11,7 +11,7 @@ const MultipleSelectInput: FormComponentBase = props => {
     const [options, setOptions] = createSignal<Option[]>([]);
 
     const config = props.config
-    const [disableInput] = createSignal((config.formMode > 1) ? true : props.component.disableInput)
+    const [disableInput, setDisableInput] = createSignal((config.formMode > 1) ? true : props.component.disableInput)
 
     let getOptions
     let optionsFetch
@@ -26,13 +26,6 @@ const MultipleSelectInput: FormComponentBase = props => {
         data: [],
         metadata: [],
         tableName: String,
-    }
-
-    type optionSelect = {
-        success: boolean,
-        data: [],
-        message: string,
-
     }
 
     const toastInfo = (text: string, color: string) => {
@@ -69,61 +62,110 @@ const MultipleSelectInput: FormComponentBase = props => {
         case 2: {
             try {
                 if (config.lookupMode === 1) {
-                    let url
-                    let params
-                    let urlHead
-                    let urlParams
 
-                    params = props.component.sourceSelect
-                    // url = `${config.baseUrl}/${params[0].id}`
-                    url = `${config.baseUrl}/${params[0].id}/filter?version=${params[0].version}`
 
-                    if (params[0].parentCondition.length > 0) {
-                        urlHead = url
 
-                        urlParams = params[0].parentCondition.map((item, index) => {
-                            let newParams = item.value.split('@');
-                            let tobeLookup = reference.details.find(obj => obj.dataKey == newParams[0])
-                            if (tobeLookup.answer) {
-                                if (tobeLookup.answer.length > 0) {
-                                    let parentValue = encodeURI(tobeLookup.answer[tobeLookup.answer.length - 1].value)
-                                    url = `${config.lookupKey}=${item.key}&${config.lookupValue}=${parentValue}`
+                    let sourceAPI = props.component.sourceAPI[0]
+                    let url = `${sourceAPI.baseUrl}`
+                
+                    if ( sourceAPI.filterDependencies !== undefined && sourceAPI.filterDependencies.length > 0) {
+                        let urlParams, urlParamsDummy
+                        let urlHead = url
+
+                        urlParams = sourceAPI.filterDependencies.map((item, index) => {
+                            let dataKey = item.sourceAnswer.split('@');
+                            let sourceAnswer = reference.details.find(obj => obj.dataKey == dataKey[0])
+                            if (sourceAnswer.answer) {
+                                if (sourceAnswer.answer.length > 0) {
+                                    let parentValue = encodeURI(sourceAnswer.answer[sourceAnswer.answer.length - 1].value)
+                                    urlParamsDummy = `${item.params}=${parentValue}`
                                 }
                             } else {
-                                url = `${config.lookupKey}=${item.key}&${config.lookupValue}=''`
+                                setDisableInput(true)
                             }
-
-                            return url
-                        }).join('&')
-
-                        // url = `${urlHead}?${urlParams}`
-                        url = `${urlHead}&${urlParams}`
+                            return urlParamsDummy
+                        }).join('&');
+                        
+                        url = `${urlHead}?${urlParams}`
                     }
+                                    
+                    if ( sourceAPI.subResourceDependencies !== undefined && sourceAPI.subResourceDependencies.length > 0) {
+                        let urlParams, urlParamsDummy
+                        let urlHead = url
 
-                    const [fetched] = createResource<optionSelect>(url, props.MobileOnlineSearch);
+                        urlParams = sourceAPI.subResourceDependencies.map((item, index) => {
+                            let dataKey = item.sourceAnswer.split('@');
+                            let sourceAnswer = reference.details.find(obj => obj.dataKey == dataKey[0])
+                            if (sourceAnswer.answer) {
+                                if (sourceAnswer.answer.length > 0) {
+                                    let parentValue = encodeURI(sourceAnswer.answer[sourceAnswer.answer.length - 1].value)
+                                    urlParamsDummy = `${parentValue}/${item.params}`
+                                }
+                            } else {
+                                setDisableInput(true)
+                            }
+                            return urlParamsDummy
+                        }).join('/');
+
+                        url = `${urlHead}/${urlParams}` 
+                    }
+                    
+                    let head: RequestInit = {
+                        headers: JSON.stringify(sourceAPI.headers),
+                        method: "GET",
+                      }
+
+                    const onlineSearch = async (url:string) =>
+                        (await fetch(url, {head})
+                        .catch((error: any) => {
+                            return {
+                                success: false,
+                                data: {},
+                                message: '500'
+                            }
+                        }).then(async (res: any) => {
+                            /*the return format must in object of 
+                                {
+                                    success: false,
+                                    data: {}, --> the data property must in format array of object [{key: {key}, value : {value}}, ...]
+                                    message: status (200, 400 ,500 , etc )
+                                }
+                            }*/
+                            if (res.status === 200) {
+                                let response = await res.json();
+                                let temp : returnAPI = new Object();
+                                    temp.success = true;
+                                    temp.data = sourceAPI.data !== '' ? response[sourceAPI.data] : response;
+                                    temp.message = response.msg;
+                                return temp;
+                            } else {
+                                return {
+                                    success: false,
+                                    data: {},
+                                    message: res.status
+                                }
+                            }
+                        }).then((res: any) => {
+                            return res;
+                        })
+                    );
+
+                    const [fetched] = createResource(() => url, onlineSearch);
+                    let checker = props.value ? props.value != '' ? props.value[0].value : '' : ''
 
                     createEffect(() => {
+
                         if (fetched()) {
                             if (!fetched().success) {
                                 toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
                             } else {
                                 let arr = []
-
-                                // let cekValue = fetched().data.metadata.findIndex(item => item.name == params[0].value)
-                                // let cekLabel = fetched().data.metadata.findIndex(item => item.name == params[0].desc)
-
-                                let cekValue = params[0].value
-                                let cekLabel = params[0].desc
-
                                 fetched().data.map((item, value) => {
-                                    arr.push(
-                                        {
-                                            value: item[cekValue],
-                                            label: item[cekLabel],
-                                        }
-                                    )
+                                    arr.push({
+                                        value: item[sourceAPI.value],
+                                        label: item[sourceAPI.label],
+                                    })
                                 })
-
                                 setOptions(arr)
                             }
                         }

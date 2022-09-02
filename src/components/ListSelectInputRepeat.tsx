@@ -1,4 +1,4 @@
-import { FormComponentBase } from "../FormType"
+import { FormComponentBase, returnAPI } from "../FormType"
 import { For, Switch, createResource, Match, Show, createMemo, createSignal, createEffect } from 'solid-js'
 import { reference, setReference } from '../stores/ReferenceStore'
 import { Select, createOptions } from "@thisbeyond/solid-select"
@@ -15,7 +15,7 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 	const [isError, setisError] = createSignal(false);
 
 	const config = props.config
-	const [disableInput] = createSignal((config.formMode > 1) ? true : props.component.disableInput)
+	const [disableInput, setDisableInput] = createSignal((config.formMode > 1) ? true : props.component.disableInput)
 
 	let getLastId = createMemo(() => {
 		return 0;
@@ -27,13 +27,6 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 	type contentMeta = {
 		name: string,
 		type: string
-	}
-
-	type optionSelect = {
-		success: boolean,
-		data: [],
-		message: string,
-
 	}
 
 	const toastInfo = (text: string, color: string) => {
@@ -85,62 +78,109 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 		case 2: {
 			try {
 				if (config.lookupMode === 1) {
-					let url
-					let params
-					let urlHead
-					let urlParams
+					
 
-					params = props.component.sourceSelect
-					// url = `${config.baseUrl}/${params[0].id}`
-					url = `${config.baseUrl}/${params[0].id}/filter?version=${params[0].version}`
+                    let sourceAPI = props.component.sourceAPI[0]
+                    let url = `${sourceAPI.baseUrl}`
+                
+                    if ( sourceAPI.filterDependencies !== undefined && sourceAPI.filterDependencies.length > 0) {
+                        let urlParams, urlParamsDummy
+                        let urlHead = url
 
+                        urlParams = sourceAPI.filterDependencies.map((item, index) => {
+                            let dataKey = item.sourceAnswer.split('@');
+                            let sourceAnswer = reference.details.find(obj => obj.dataKey == dataKey[0])
+                            if (sourceAnswer.answer) {
+                                if (sourceAnswer.answer.length > 0) {
+                                    let parentValue = encodeURI(sourceAnswer.answer[sourceAnswer.answer.length - 1].value)
+                                    urlParamsDummy = `${item.params}=${parentValue}`
+                                }
+                            } else {
+                                setDisableInput(true)
+                            }
+                            return urlParamsDummy
+                        }).join('&');
+                        
+                        url = `${urlHead}?${urlParams}`
+                    }
+                                    
+                    if ( sourceAPI.subResourceDependencies !== undefined && sourceAPI.subResourceDependencies.length > 0) {
+                        let urlParams, urlParamsDummy
+                        let urlHead = url
 
-					if (params[0].parentCondition.length > 0) {
-						urlHead = url
+                        urlParams = sourceAPI.subResourceDependencies.map((item, index) => {
+                            let dataKey = item.sourceAnswer.split('@');
+                            let sourceAnswer = reference.details.find(obj => obj.dataKey == dataKey[0])
+                            if (sourceAnswer.answer) {
+                                if (sourceAnswer.answer.length > 0) {
+                                    let parentValue = encodeURI(sourceAnswer.answer[sourceAnswer.answer.length - 1].value)
+                                    urlParamsDummy = `${parentValue}/${item.params}`
+                                }
+                            } else {
+                                setDisableInput(true)
+                            }
+                            return urlParamsDummy
+                        }).join('/');
 
-						urlParams = params[0].parentCondition.map((item, index) => {
-							let newParams = item.value.split('@');
-							let tobeLookup = reference.details.find(obj => obj.dataKey == newParams[0])
-							if (tobeLookup.answer) {
-								if (tobeLookup.answer.length > 0) {
-									let parentValue = encodeURI(tobeLookup.answer[tobeLookup.answer.length - 1].value)
-									url = `${config.lookupKey}=${item.key}&${config.lookupValue}=${parentValue}`
-								}
-							} else {
-								url = `${config.lookupKey}=${item.key}&${config.lookupValue}=''`
-							}
+                        url = `${urlHead}/${urlParams}` 
+                    }
+                    
+                    let head: RequestInit = {
+                        headers: JSON.stringify(sourceAPI.headers),
+                        method: "GET",
+                      }
 
-							return url
-						}).join('&')
+                    const onlineSearch = async (url:string) =>
+                        (await fetch(url, {head})
+                        .catch((error: any) => {
+                            return {
+                                success: false,
+                                data: {},
+                                message: '500'
+                            }
+                        }).then(async (res: any) => {
+                            /*the return format must in object of 
+                                {
+                                    success: false,
+                                    data: {}, --> the data property must in format array of object [{key: {key}, value : {value}}, ...]
+                                    message: status (200, 400 ,500 , etc )
+                                }
+                            }*/
+                            if (res.status === 200) {
+                                let response = await res.json();
+                                let temp : returnAPI = new Object();
+                                    temp.success = true;
+                                    temp.data = sourceAPI.data !== '' ? response[sourceAPI.data] : response;
+                                    temp.message = response.msg;
+                                return temp;
+                            } else {
+                                return {
+                                    success: false,
+                                    data: {},
+                                    message: res.status
+                                }
+                            }
+                        }).then((res: any) => {
+                            return res;
+                        })
+                    );
 
-						// url = `${urlHead}?${urlParams}`
-						url = `${urlHead}&${urlParams}`
-
-					}
-
-					const [fetched] = createResource<optionSelect>(url, props.MobileOnlineSearch);
-					let arr = []
+                    const [fetched] = createResource(() => url, onlineSearch);
 
 					getOptions = createMemo(() => {
-						if (fetched()) {
-							if (!fetched().success) {
+
+                        if (fetched()) {
+                            if (!fetched().success) {
 								setisError(true)
-								toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
-							} else {
-								// let cekValue = fetched().data.metadata.findIndex(item => item.name == params[0].value)
-								// let cekLabel = fetched().data.metadata.findIndex(item => item.name == params[0].desc)
-
-								let cekValue = params[0].value
-								let cekLabel = params[0].desc
-
-								fetched().data.map((item, value) => {
-									arr.push(
-										{
-											value: item[cekValue],
-											label: item[cekLabel],
-										}
-									)
-								})
+                                toastInfo(locale.details.language[0].fetchFailed, 'bg-pink-700/80')
+                            } else {
+                                let arr = []
+                                fetched().data.map((item, value) => {
+                                    arr.push({
+                                        value: item[sourceAPI.value],
+                                        label: item[sourceAPI.label],
+                                    })
+                                })
 								options = arr
 
 								const localAnswerLength = localAnswer().length;
@@ -158,8 +198,10 @@ const ListSelectInputRepeat: FormComponentBase = props => {
 								}
 
 								return options
-							}
-						}
+								
+                            }
+                        }
+
 					})
 				} else if (config.lookupMode === 2) {
                     let params

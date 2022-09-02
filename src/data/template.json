@@ -59,10 +59,10 @@
               ]
             },
             {
-              "label":"Galon",
-              "dataKey":"galon",
-              "decimalLength":3,
-              "type":38
+              "label": "Galon",
+              "dataKey": "galon",
+              "decimalLength": 3,
+              "type": 38
             },
             {
               "label": "Location",
@@ -452,6 +452,196 @@
               "componentVar": ["frec_coffee"],
               "render": true,
               "renderType": 1
+            }
+          ]
+        ]
+      },
+      {
+        "label": "Lookup",
+        "dataKey": "lookup-example",
+        "description": "Lookup Example",
+        "type": 1,
+        "components": [
+          [
+            {
+              "label": "<div class=\"text-center text-white border-2 p-4 rounded-lg\" style=\"background-color: #1e40af\"><b>Public API Select Example</b></div>",
+              "dataKey": "html_select",
+              "type": 3
+            },
+            {
+              "label": "User | <a style=\"color: #0000FF\" target=\"_blank\" href=\"https://jsonplaceholder.typicode.com/\">https://jsonplaceholder.typicode.com/</a>",
+              "dataKey": "user_jsonplaceholder",
+              "typeOption": 2,
+              "type": 27,
+              "sourceAPI": [
+                {
+                  "baseUrl": "https://jsonplaceholder.typicode.com/users",
+                  "headers": {
+                    "Content-Type": "application/json"
+                  },
+                  "data": "",
+                  "value": "id",
+                  "label": "name"
+                }
+              ]
+            },
+            {
+              "label": "User Email | <a style=\"color: #0000FF\" target=\"_blank\" href=\"https://dummyjson.com/\">https://dummyjson.com/</a>",
+              "dataKey": "email_dummyjson",
+              "typeOption": 2,
+              "type": 27,
+              "sourceAPI": [
+                {
+                  "baseUrl": "https://dummyjson.com/users",
+                  "headers": {
+                    "Content-Type": "application/json"
+                  },
+                  "data": "users",
+                  "value": "id",
+                  "label": "email"
+                }
+              ]
+            },  
+            {
+              "label": "<div class=\"text-center text-white border-2 p-4 rounded-lg\" style=\"background-color: #1e40af\"><b>Public API Dependent Select Example</b></div>",
+              "dataKey": "html_dependent",
+              "type": 3
+            },
+            {
+              "label": "Employee | <a style=\"color: #0000FF\" target=\"_blank\" href=\"https://api.onlinewebtutorblog.com/\">https://api.onlinewebtutorblog.com/</a>",
+              "dataKey": "employee",
+              "typeOption": 2,
+              "type": 27,
+              "sourceAPI": [
+                {
+                  "baseUrl": "https://api.onlinewebtutorblog.com/employees",
+                  "headers": {
+                    "Content-Type": "application/json"
+                  },
+                  "data": "data",
+                  "value": "id",
+                  "label": "name"
+                }
+              ]
+            },
+            {
+              "label": "Filter dependencies projects | <a style=\"color: #0000FF\" target=\"_blank\" href=\"https://api.onlinewebtutorblog.com/projects?employeeId=1\">.../projects?employeeId={id}</a>",
+              "dataKey": "project_filter",
+              "typeOption": 2,
+              "type": 27,
+              "sourceAPI": [
+                {
+                  "baseUrl": "https://api.onlinewebtutorblog.com/projects",
+                  "headers": {
+                    "Content-Type": "application/json"
+                  },
+                  "data": "data",
+                  "value": "id",
+                  "label": "project_domain",
+                  "filterDependencies": [
+                    {
+                      "params": "employeeId",
+                      "sourceAnswer": "employee"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Sub-resource dependencies projects | <a style=\"color: #0000FF\" target=\"_blank\" href=\"https://api.onlinewebtutorblog.com/employees/1/projects\">.../employees/{id}/projects</a>",
+              "dataKey": "project_subresources",
+              "typeOption": 2,
+              "type": 27,
+              "sourceAPI": [
+                {
+                  "baseUrl": "https://api.onlinewebtutorblog.com/employees",
+                  "headers": {
+                    "Content-Type": "application/json"
+                  },
+                  "data": "data",
+                  "value": "id",
+                  "label": "project_domain",
+                  "subResourceDependencies": [
+                    {
+                      "params": "projects",
+                      "sourceAnswer": "employee"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Sub-resource dependencies projects with ListSelectInput | <a style=\"color: #0000FF\" target=\"_blank\" href=\"https://api.onlinewebtutorblog.com/employees/1/projects\">.../employees/{id}/projects</a>",
+              "dataKey": "project_listselect_subresources",
+              "typeOption": 2,
+              "type": 22,
+              "answer": [
+                {
+                  "label": "lastId#0",
+                  "value": "0"
+                }
+              ],
+              "sourceAPI": [
+                {
+                  "baseUrl": "https://api.onlinewebtutorblog.com/employees",
+                  "headers": {
+                    "Content-Type": "application/json"
+                  },
+                  "data": "data",
+                  "value": "id",
+                  "label": "project_domain",
+                  "subResourceDependencies": [
+                    {
+                      "params": "projects",
+                      "sourceAnswer": "employee"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "<div class=\"text-center text-white border-2 p-4 rounded-lg\" style=\"background-color: #1e40af\"><b>Public API Unit Multi Select Example</b></div>",
+              "dataKey": "html_multi_select",
+              "type": 3
+            },
+            { 
+              "label": "Crypto Assets | <a style=\"color: #0000FF\" target=\"_blank\" href=\"https://nova.bitcambio.com.br/api/v3/public/getassets\">https://nova.bitcambio.com.br/api/v3/public/getassets</a>",
+              "dataKey": "crypto_assets_multi",
+              "type": 23,
+              "typeOption": 2,
+              "sourceAPI": [
+                {
+                  "baseUrl": "https://nova.bitcambio.com.br/api/v3/public/getassets",
+                  "headers": {
+                    "Content-Type": "application/json"
+                  },
+                  "data": "result",
+                  "value": "Asset",
+                  "label": "Asset"
+                }
+              ]
+            },
+            {
+              "label": "<div class=\"text-center text-white border-2 p-4 rounded-lg\" style=\"background-color: #1e40af\"><b>Public API Unit Input Select Example</b></div>",
+              "dataKey": "html_unit_select",
+              "type": 3
+            },
+            {
+              "label": "Amount of the top crypto assets",
+              "dataKey": "crypto_assets",
+              "type": 37,
+              "typeOption": 2,
+              "sourceAPI": [
+                {
+                  "baseUrl": "https://nova.bitcambio.com.br/api/v3/public/getassets",
+                  "headers": {
+                    "Content-Type": "application/json"
+                  },
+                  "data": "result",
+                  "value": "Asset",
+                  "label": "Asset"
+                }
+              ]
             }
           ]
         ]
